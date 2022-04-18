@@ -25,6 +25,13 @@ export class ApiController {
     });
   }
 
+  public getLukasErne(request: Request, response: Response): void {
+    response.status(200);
+    response.send({
+      name: 'Lukas Erne'
+    });
+  }
+
   public postNameInfo(request: Request, response: Response): void {
     console.log(request.params.id);
     console.log(request.body.requestedName);

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
+import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
 
 /**
  *  Hier können die verschiedenen Routen definiert werden.
@@ -13,6 +14,7 @@ import { LandingpageComponent } from './components/landingpage/landingpage.compo
 const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
+    { path: 'lukaserne' , component: LukaserneComponent },
 ];
 
 @NgModule({
