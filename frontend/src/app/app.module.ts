@@ -8,13 +8,15 @@ import { LandingpageComponent } from './components/landingpage/landingpage.compo
 import { HttpClientModule } from '@angular/common/http';
 import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
+import { ProfilepageComponent } from './components/profilepage/profilepage.component';
 
 @NgModule({
     declarations: [
         RootComponent,
         AboutComponent,
         LandingpageComponent,
-        SampleComponent
+        SampleComponent,
+        ProfilepageComponent
     ],
     imports: [
         BrowserModule,
