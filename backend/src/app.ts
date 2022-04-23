@@ -56,7 +56,11 @@ const api = new ApiController();
 app.get('/api', api.getInfo);
 app.get('/api/name', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
+
 app.get('/api/sophie-unterfranz',api.getSophieName);
+
+app.get('/api/lukas-erne', api.getLukasErne);
+
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
