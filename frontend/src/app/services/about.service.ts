@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 /**
  *  Via 'export' machen wir die Definition dieses Objektes anderen Klassen verfügbar
@@ -28,7 +28,8 @@ export class AboutService {
      *  Generell werden 'Services' als 'Singleton' instanziiert, d.h. es gibt nur eine
      *  Instanz dieses Objektes für die gesamte Anwendung.
      */
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
     public getNameInfo(): Observable<NameInfo> {
         /**
