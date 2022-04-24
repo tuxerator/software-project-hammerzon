@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AboutMeService, NameInfo} from "../../services/about-me.service";
+import {AboutMeService, NameInfo} from '../../services/about-me.service';
 
 @Component({
     selector: 'app-about-me',
@@ -27,8 +27,9 @@ export class AboutMeComponent implements OnInit {
             error: err => {
                 console.error(err);
                 this.myName = {
-                    firstName: 'Couldn\'t load first name.',
-                    lastName: 'Couldn\'t load last name.'
+                    firstName: 'Max',
+                    lastName: 'Mustermann',
+                    optionalAttribut: 'Dies ist ein Platzhalter!'
                 };
             }
         });

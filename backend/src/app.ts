@@ -2,7 +2,7 @@
  *  In dieser Datei konfigurieren wir einen Express Webserver, der es uns ermöglicht,
  *  verschiedene Routen anzugeben und zu programmieren.
  *  Hier verzichten wir auf die Klassendefinition, da diese nicht nötig ist.
- * 
+ *
  *  Weiterführende Links:
  *  https://expressjs.com/en/starter/basic-routing.html
  */
@@ -12,7 +12,7 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 
-import { ApiController } from './api';
+import {ApiController} from './api';
 
 // Express server instanziieren
 const app = express();
@@ -23,10 +23,10 @@ app.set('port', 80);
 // "JSON" Daten verarbeiten falls der Request zusätzliche Daten im Request hat
 app.use(express.json());
 // "UrlEncoded" Daten verarbeiten falls in der Request URL zusätzliche Daten stehen (normalerweise nicht nötig für Angular)
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
 // erlauben wir alles um eventuelle Fehler zu vermeiden.
-app.use(cors({ origin: '*' }));
+app.use(cors({origin: '*'}));
 
 /**
  *  API Routen festlegen
@@ -37,30 +37,30 @@ app.use(cors({ origin: '*' }));
  *       ↑     ↑          ↑
  *       |     |     Diese Methode wird aufgerufen, sobald ein Nutzer die angebene
  *       |     |     URL über einen HTTP GET Request aufruft.
- *       |     |      
+ *       |     |
  *       |   Hier definieren sie die "Route", d.h. diese Route
  *       |   ist unter "http://localhost/api" verfügbar
- *       |   
+ *       |
  *   Für diese Route erwarten wir einen GET Request.
  *   Auf derselben Route können wir auch einen POST
  *   Request angeben, für den dann eine andere Methode
  *   aufgerufen wird.
- * 
+ *
  *  Weiterführende Links:
  *  - Übersicht über verschiedene HTTP Request methoden (GET / POST / PUT / DELETE) https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
  *  - REST Architektur: https://de.wikipedia.org/wiki/Representational_State_Transfer
- * 
+ *
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
 const api = new ApiController();
 app.get('/api', api.getInfo);
-app.get('/api/name', api.getNameInfo);
+app.get('/api/:name', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
-  app.use(errorHandler());
+    app.use(errorHandler());
 }
 
 /**
@@ -78,7 +78,7 @@ app.use('/', express.static('public'));
  *  von Angular schicken müssen. Falls eine der zuvor angegebenen Routen passt, wird diese Methode nicht aufgerufen.
  */
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // Wir machen den konfigurierten Express Server für andere Dateien verfügbar, die diese z.B. Testen oder Starten können.
