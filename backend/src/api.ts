@@ -5,7 +5,7 @@
  *  Jede Methode, die mit einer Webroute verknüpft wird, muss einen
  *  "Request" (was angefragt wird) und eine "response" (was unser Server antwortet)
  *  entgegennehmen.
- *  *Wichtig ist, dass jede Response zeitgemäß abgeschlossen wird*, z.B. via 
+ *  *Wichtig ist, dass jede Response zeitgemäß abgeschlossen wird*, z.B. via
  *  response.send(...data...)
  *  oder response.end()
  */
@@ -46,5 +46,22 @@ export class ApiController {
     console.log(request.body.requestedName);
     response.status(200);
     response.send('ok');
+  }
+
+
+  public getHenriGrotzeckInfo(request: Request, response: Response):void {
+    response.status(200);
+    response.send({
+      firstName: 'Henri',
+      lastName: 'Grotzeck',
+      optionalAttribut:  'Ich bin ein weitere Person. Der teils am Frontend arbeitet'
+    });
+  }
+
+  public getProfileList(request: Request, response: Response):void{
+    response.status(200);
+    response.send({
+      list:['henri-grotzeck']
+    });
   }
 }
