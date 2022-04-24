@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
+import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
-import { ProfilepageComponent } from './components/profilepage/profilepage.component';
 
 
 /**
@@ -15,7 +15,7 @@ import { ProfilepageComponent } from './components/profilepage/profilepage.compo
 const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'profile/:name',component: ProfilepageComponent}
+    { path: 'about/:name',component: HenriAboutpageComponent}
 ];
 
 @NgModule({

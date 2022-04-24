@@ -7,8 +7,8 @@
 
 <h2> Vom Server geladene Daten: </h2>
 <ul>
-  <li *ngFor="let profileName of list">
-    <a [routerLink]="['/profile',profileName]"> {{profileName}} </a>
+  <li *ngFor="let name of list">
+    <a [routerLink]="['/about',name]"> {{name}} </a>
   </li>
 </ul>
 

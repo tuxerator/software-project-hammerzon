@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NameInfo } from 'src/app/services/about.service';
-import { ProfileService } from 'src/app/services/profile.service';
+import { HenriAboutService } from 'src/app/services/henriAbout.service';
 
 @Component({
-  templateUrl: './profilepage.component.html',
-  styleUrls: ['./profilepage.component.css']
+  templateUrl: './henriAboutpage.component.html',
+  styleUrls: ['./henriAboutpage.component.css']
 })
-export class ProfilepageComponent implements OnInit {
+export class HenriAboutpageComponent implements OnInit {
 
-  public profile?:NameInfo;
+  public nameInfo?:NameInfo;
 
 
-  constructor(public route:ActivatedRoute,private profileService:ProfileService) {
+  constructor(public route:ActivatedRoute,private profileService:HenriAboutService) {
 
   }
 
@@ -28,13 +28,13 @@ export class ProfilepageComponent implements OnInit {
     this.profileService.getProfileInfo(profileName).subscribe({
       // next: Unser Wert kam erfolgreich an!
       next: (val) => {
-        this.profile = val;
+        this.nameInfo = val;
       },
 
       // error: Es gab einen Fehler
       error: (err) => {
         console.error(err);
-        this.profile = {
+        this.nameInfo = {
           firstName: 'Error!',
           lastName: 'Error!'
         };

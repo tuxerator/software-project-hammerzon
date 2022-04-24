@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AboutService, NameInfo } from 'src/app/services/about.service';
-import { ProfileService } from 'src/app/services/profile.service';
+import { HenriAboutService } from 'src/app/services/henriAbout.service';
 import { SampleService } from 'src/app/services/sample.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class AboutComponent implements OnInit {
   constructor(
     private aboutService: AboutService,
     public sampleService: SampleService,
-    private profileService: ProfileService) {
+    private henriAboutService: HenriAboutService) {
       /**
        *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
        */
@@ -87,7 +87,7 @@ export class AboutComponent implements OnInit {
       }
     });*/
 
-    this.profileService.getProfileList().subscribe({
+    this.henriAboutService.getProfileList().subscribe({
       // next: Unser Wert kam erfolgreich an!
       next: (val) => {
         this.list = val.list;
