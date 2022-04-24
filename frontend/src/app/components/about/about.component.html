@@ -10,6 +10,12 @@
     <a routerLink="/lukaserne">Lukas Erne</a>
 </div>
 
+<ul>
+  <li *ngFor="let name of list">
+    <a [routerLink]="['/about',name]"> {{name}} </a>
+  </li>
+</ul>
+
 <p>
     Dies ist eine Beispielseite, die demonstriert wie man Daten von dem Server laden und anzeigen kann.
     Bitte schaut euch die dazugehörigen Komponenten <code>src/app/components/about/about.component.ts</code> und <code>src/app/services/about.service.ts</code> an!
@@ -18,6 +24,12 @@
 <h2> Vom Server geladene Daten: </h2>
 <div> Firstname: {{ myName?.firstName }} </div>
 <div> Lastname: {{ myName?.lastName }} </div>
+
+
+<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>
+
+
+
 
 
 <br/>
@@ -31,4 +43,3 @@
     Somit können Daten mithilfe von Services Komponenten-übergreifend geteilt werden.
 </p>
 
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>

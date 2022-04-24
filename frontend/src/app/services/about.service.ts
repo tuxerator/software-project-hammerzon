@@ -15,6 +15,7 @@ export type NameInfo = {
     optionalAttribut?: string
 }
 
+
 @Injectable({
     providedIn: 'root'
 })
@@ -39,4 +40,5 @@ export class AboutService {
          */
         return this.http.get<NameInfo>('/api/name');
     }
+
 }

@@ -2,7 +2,7 @@
  *  In dieser Datei konfigurieren wir einen Express Webserver, der es uns ermöglicht,
  *  verschiedene Routen anzugeben und zu programmieren.
  *  Hier verzichten wir auf die Klassendefinition, da diese nicht nötig ist.
- * 
+ *
  *  Weiterführende Links:
  *  https://expressjs.com/en/starter/basic-routing.html
  */
@@ -37,24 +37,26 @@ app.use(cors({ origin: '*' }));
  *       ↑     ↑          ↑
  *       |     |     Diese Methode wird aufgerufen, sobald ein Nutzer die angebene
  *       |     |     URL über einen HTTP GET Request aufruft.
- *       |     |      
+ *       |     |
  *       |   Hier definieren sie die "Route", d.h. diese Route
  *       |   ist unter "http://localhost/api" verfügbar
- *       |   
+ *       |
  *   Für diese Route erwarten wir einen GET Request.
  *   Auf derselben Route können wir auch einen POST
  *   Request angeben, für den dann eine andere Methode
  *   aufgerufen wird.
- * 
+ *
  *  Weiterführende Links:
  *  - Übersicht über verschiedene HTTP Request methoden (GET / POST / PUT / DELETE) https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
  *  - REST Architektur: https://de.wikipedia.org/wiki/Representational_State_Transfer
- * 
+ *
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
 const api = new ApiController();
 app.get('/api', api.getInfo);
 app.get('/api/name', api.getNameInfo);
+app.get('/api/profile-list', api.getProfileList);
+app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
 app.get('/api/sophie-unterfranz',api.getSophieName);
