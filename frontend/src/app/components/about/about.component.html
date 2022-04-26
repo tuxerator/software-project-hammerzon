@@ -9,8 +9,14 @@
 </p>
 
 <h2> Vom Server geladene Daten: </h2>
-<div> Firstname: {{ myName?.firstName }} </div>
-<div> Lastname: {{ myName?.lastName }} </div>
+<ul>
+  <li *ngFor="let name of list">
+    <a [routerLink]="['/about',name]"> {{name}} </a>
+  </li>
+</ul>
+
+
+
 
 <br/>
 <hr/>
@@ -22,4 +28,3 @@
     Somit können Daten mithilfe von Services Komponenten-übergreifend geteilt werden.
 </p>
 
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>

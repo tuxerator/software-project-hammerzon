@@ -10,13 +10,17 @@ import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
 
+
 @NgModule({
     declarations: [
         RootComponent,
         AboutComponent,
         LandingpageComponent,
         SampleComponent,
+<<<<<<< HEAD
         SophieunterfranzComponent
+=======
+>>>>>>> henri-grotzeck
     ],
     imports: [
         BrowserModule,
