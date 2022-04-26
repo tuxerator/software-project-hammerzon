@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
+import { CedricwieseComponent } from './components/cedricwiese/cedricwiese.component';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieu
         AboutComponent,
         LandingpageComponent,
         SampleComponent,
-        SophieunterfranzComponent
+        SophieunterfranzComponent,
+        CedricwieseComponent
     ],
     imports: [
         BrowserModule,
