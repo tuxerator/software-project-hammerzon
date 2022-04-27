@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AboutService, NameInfo } from 'src/app/services/about.service';
+import { HenriAboutService } from 'src/app/services/henriAbout.service';
 import { SampleService } from 'src/app/services/sample.service';
 
 @Component({
@@ -16,11 +17,13 @@ export class AboutComponent implements OnInit {
    *  public myName: NameInfo = { firstName: 'Erika', lastName: 'Musterfrau' };
    */
   public myName?: NameInfo;
-  
+  public list?:string[];
+
   constructor(
     private aboutService: AboutService,
-    public sampleService: SampleService) {
-      /** 
+    public sampleService: SampleService,
+    private henriAboutService: HenriAboutService) {
+      /**
        *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
        */
   }
@@ -36,7 +39,7 @@ export class AboutComponent implements OnInit {
      *  ↑                 ↑               ↑                       ↑
      *  |          Parameter werden       |                  Innerhalb der geschweiften Klammern {}
      *  |          innerhalb der ()       |                  kann ganz normal weiterprogrammiert werden
-     *  |          Klammern definiert.    |                  wie in einer normalen Funktion 
+     *  |          Klammern definiert.    |                  wie in einer normalen Funktion
      *  |          Der Typ der Parameter  |
      *  |          ist oftmals optional,  |
      *  |          kann aber sehr hilf-   |
@@ -50,25 +53,25 @@ export class AboutComponent implements OnInit {
      *  vorhanden ist können die
      *  Klammern auch ausgelassen
      *  werden.
-     * 
+     *
      *  **Bitte vermeidet die Verwendung der function() { ... } Syntax!**
      *  Diese werden üblicherweise in JavaScript verwendet, haben aber
      *  ungewöhnliche Seiteneffekte die wir in TypeScript vermeiden können
      *  (z.B. funktioniert die "this" Referenz in der "function" Syntax normalerweise nicht).
-     *  
+     *
      *  Der Wert des "Observable" kann auch mittels funktionaler Methoden (z.B. ähnlich wie in Haskell)
-     *  weiterverarbeitet werden, die mittels der 'pipe()' Methode aufgerufen werden können. 
+     *  weiterverarbeitet werden, die mittels der 'pipe()' Methode aufgerufen werden können.
      *  Beispiel:
      *  this.aboutService.getNameInfo().pipe(
      *    delay(200), // Warte 200ms bis die nächste Methode ausgeführt wird
      *    map(val => val.completeName = val.firstName + ' ' + val.lastName) // attribut hinzufügen
      *  ).subscribe(....)
-     * 
+     *
      *  Weiterführende Links (Optional / für erfahrenere Programmier*innen)
      *  - https://www.learnrxjs.io/
      *  - https://rxmarbles.com/
      */
-    this.aboutService.getNameInfo().subscribe({
+    /*this.aboutService.getNameInfo().subscribe({
       // next: Unser Wert kam erfolgreich an!
       next: (val) => {
         this.myName = val;
@@ -81,6 +84,19 @@ export class AboutComponent implements OnInit {
           firstName: 'Error!',
           lastName: 'Error!'
         };
+      }
+    });*/
+
+    this.henriAboutService.getProfileList().subscribe({
+      // next: Unser Wert kam erfolgreich an!
+      next: (val) => {
+        this.list = val.list;
+      },
+
+      // error: Es gab einen Fehler
+      error: (err) => {
+        console.error(err);
+        this.list = undefined;
       }
     });
   }

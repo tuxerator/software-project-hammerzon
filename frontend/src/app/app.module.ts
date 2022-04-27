@@ -10,6 +10,10 @@ import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
 import { CedricwieseComponent } from './components/cedricwiese/cedricwiese.component';
+import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
+import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
+
+
 
 @NgModule({
     declarations: [
@@ -18,7 +22,9 @@ import { CedricwieseComponent } from './components/cedricwiese/cedricwiese.compo
         LandingpageComponent,
         SampleComponent,
         SophieunterfranzComponent,
-        CedricwieseComponent
+        CedricwieseComponent,
+        LukaserneComponent,
+        HenriAboutpageComponent,
     ],
     imports: [
         BrowserModule,
