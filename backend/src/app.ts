@@ -58,7 +58,11 @@ app.get('/api/name', api.getNameInfo);
 app.get('/api/profile-list', api.getProfileList);
 app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
 app.post('/api/name/:id', api.postNameInfo);
+
 app.get('/api/sophie-unterfranz',api.getSophieName);
+
+app.get('/api/lukas-erne', api.getLukasErne);
+
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

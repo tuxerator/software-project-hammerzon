@@ -4,7 +4,7 @@ import { AboutComponent } from './components/about/about.component';
 import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
-
+import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
 
 /**
  *  Hier können die verschiedenen Routen definiert werden.
@@ -16,8 +16,12 @@ import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieu
 const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
+
     { path: 'sophieunterfranz', component: SophieunterfranzComponent},
-    { path: 'about/:name',component: HenriAboutpageComponent}
+
+    { path: 'about/:name',component: HenriAboutpageComponent},
+    { path: 'lukaserne' , component: LukaserneComponent },
+
 ];
 
 @NgModule({

@@ -9,6 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
+import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
+
 
 
 @NgModule({
@@ -17,7 +19,8 @@ import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieu
         AboutComponent,
         LandingpageComponent,
         SampleComponent,
-        SophieunterfranzComponent
+        SophieunterfranzComponent,
+        LukaserneComponent
     ],
     imports: [
         BrowserModule,
