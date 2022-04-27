@@ -10,6 +10,7 @@ import { SampleComponent } from './components/sample/sample.component';
 import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
 import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
+import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
 
 
 
@@ -20,7 +21,8 @@ import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
         LandingpageComponent,
         SampleComponent,
         SophieunterfranzComponent,
-        LukaserneComponent
+        LukaserneComponent,
+        HenriAboutpageComponent,
     ],
     imports: [
         BrowserModule,
