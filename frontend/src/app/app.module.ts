@@ -17,10 +17,7 @@ import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieu
         AboutComponent,
         LandingpageComponent,
         SampleComponent,
-<<<<<<< HEAD
         SophieunterfranzComponent
-=======
->>>>>>> henri-grotzeck
     ],
     imports: [
         BrowserModule,
