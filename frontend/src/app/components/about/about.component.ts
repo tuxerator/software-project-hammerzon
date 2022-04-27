@@ -4,8 +4,8 @@ import { HenriAboutService } from 'src/app/services/henriAbout.service';
 import { SampleService } from 'src/app/services/sample.service';
 
 @Component({
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.css']
+    templateUrl: './about.component.html',
+    styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
   /**

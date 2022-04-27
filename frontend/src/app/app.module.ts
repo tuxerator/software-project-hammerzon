@@ -11,8 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
 import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
 import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
-
-
+import {AboutMeComponent} from './components/about-me/about-me.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +21,8 @@ import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutp
         SampleComponent,
         SophieunterfranzComponent,
         LukaserneComponent,
-        HenriAboutpageComponent
+        HenriAboutpageComponent,
+        AboutMeComponent
     ],
     imports: [
         BrowserModule,

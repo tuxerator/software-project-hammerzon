@@ -54,9 +54,9 @@ app.use(cors({ origin: '*' }));
  */
 const api = new ApiController();
 app.get('/api', api.getInfo);
-app.get('/api/name', api.getNameInfo);
 app.get('/api/profile-list', api.getProfileList);
 app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
+app.get('/api/:name', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
 app.get('/api/sophie-unterfranz',api.getSophieName);
