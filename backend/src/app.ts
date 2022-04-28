@@ -60,6 +60,7 @@ app.get('/api/:name', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
 app.get('/api/sophie-unterfranz',api.getSophieName);
+app.get('/api/cedric-wiese',api.getCedricInfo); 
 
 app.get('/api/lukas-erne', api.getLukasErne);
 

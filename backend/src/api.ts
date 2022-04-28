@@ -72,6 +72,14 @@ export class ApiController {
     });
   }
 
+  public getCedricInfo(request: Request, response: Response): void {
+    response.status(200);
+    response.send({
+      firstName: 'Cedric',
+      lastName: 'Wiese'
+    });
+  }
+
   public postNameInfo(request: Request, response: Response): void {
     console.log(request.params.id);
     console.log(request.body.requestedName);
