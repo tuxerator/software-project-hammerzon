@@ -20,7 +20,7 @@ const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'sophieunterfranz', component: SophieunterfranzComponent},
     { path: 'lukaserne' , component: LukaserneComponent },
-    { path: 'about/:name',component: HenriAboutpageComponent}
+    { path: 'about/:name',component: HenriAboutpageComponent},
     { path: 'cedricwiese', component: CedricwieseComponent}
 ];
 

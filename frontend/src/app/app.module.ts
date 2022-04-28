@@ -23,7 +23,7 @@ import { CedricwieseComponent } from './components/cedricwiese/cedricwiese.compo
         SophieunterfranzComponent,
         LukaserneComponent,
         HenriAboutpageComponent,
-        AboutMeComponent
+        AboutMeComponent,
         CedricwieseComponent
     ],
     imports: [
