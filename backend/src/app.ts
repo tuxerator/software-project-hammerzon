@@ -11,8 +11,11 @@ import errorHandler from 'errorhandler';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-
-import { ApiController } from './api';
+import {Sequelize} from 'sequelize';
+// created by us
+import DBConfig from './dbConfig';
+import ApiController  from './Controller/api';
+import AboutController from './Controller/about';
 
 // Express server instanziieren
 const app = express();
@@ -52,17 +55,47 @@ app.use(cors({ origin: '*' }));
  *
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
+const sequelize = new Sequelize(DBConfig.dbNAME, DBConfig.dbUSER, DBConfig.dbPASSWORD, DBConfig.dbOptions);
+
+// important information about this api
 const api = new ApiController();
+// information about the creator of this api
+const about = new AboutController(sequelize);
+
 app.get('/api', api.getInfo);
-app.get('/api/profile-list', api.getProfileList);
-app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
-app.get('/api/:name', api.getNameInfo);
-app.post('/api/name/:id', api.postNameInfo);
 
-app.get('/api/sophie-unterfranz',api.getSophieName);
-app.get('/api/cedric-wiese',api.getCedricInfo); 
+// aboutController endpoints
+app.get('/api/nameinfo-list',about.getNameInfoList);
 
-app.get('/api/lukas-erne', api.getLukasErne);
+// AuthController endpoints
+
+// register ...
+
+// login ...
+
+// logout ...
+
+// ProductController endpoints
+
+// 10-products ...
+
+// product details ...
+
+// OrderController endpoints
+
+
+
+sequelize.sync();
+
+//app.get('/api/profile-list', api.getProfileList);
+//app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
+//app.get('/api/:name', api.getNameInfo);
+//app.post('/api/name/:id', api.postNameInfo);
+
+//app.get('/api/sophie-unterfranz',api.getSophieName);
+//app.get('/api/cedric-wiese',api.getCedricInfo);
+
+//app.get('/api/lukas-erne', api.getLukasErne);
 
 
 // Falls ein Fehler auftritt, gib den Stack trace aus

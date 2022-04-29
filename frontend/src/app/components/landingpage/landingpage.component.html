@@ -1,43 +1,28 @@
-<h2>Startseite</h2>
+<div>
+    <h2>Startseite</h2>
 
-<p> Auf der Startseite kann das Produkt vorgestellt werden, sowie Links auf bspw. Login-Seiten dargestellt werden. </p>
-<p class="highlight"> Bitte macht euch mit der Angular Dokumentation vertraut! </p>
+    <p class>
+        Test Seite um zu testen wie sich Bootstrap verhält
+    </p>
 
-<ul>
-    <li *ngFor="let link of links">
-        <a target="_blank" href="{{ link.url }}">
-            {{ link.name }}
-        </a>
-    </li>
-</ul>
+    <!--Test bootstrap styling-->
+    <div *ngFor="let i of list">
 
-<br/>
-<hr/>
-<br/>
+        <h5 class="mt-4">
+            Überschrift {{i}}
+        </h5>
+        <p class="mt-1">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Id diam vel quam elementum pulvinar etiam non quam lacus.
+            Massa placerat duis ultricies lacus sed turpis tincidunt id aliquet.
+            Tristique senectus et netus et malesuada fames ac turpis egestas.
+            Nisi lacus sed viverra tellus in hac habitasse. Dignissim convallis aenean et tortor at risus viverra adipiscing at.
+            Amet aliquam id diam maecenas ultricies mi eget. Sed blandit libero volutpat sed cras ornare.
+            Varius duis at consectetur lorem donec massa sapien. Elit sed vulputate mi sit amet mauris commodo quis imperdiet.
+            Sed blandit libero volutpat sed.
+            Quis risus sed vulputate odio ut enim blandit volutpat.
+            Dolor sit amet consectetur adipiscing elit pellentesque.
+        </p>
+    </div>
+</div>
 
-<p>
-    Mithilfe von <code>Components</code> können Bestandteile des Frontends ausgekapselt und in anderen
-    <code>Components</code> wiederverwendet werden.
-    Die <code>Components</code> können dann mithilfe dem (in der jeweiligen <code>.component.ts</code> Datei)
-    definierten <code>selector</code> ganz einfach als HTML Komponente eingebunden werden.
-    Bitte verwendet entweder den <code>ng generate</code> Befehl oder das Kontextmenü von Visual Studio Code zur
-    Erstellung neuer Komponenten, da die Komponente auch in der <code>app.module.ts</code> Datei eingetragen werden
-    muss!
-</p>
-
-<p>
-    Hier ein Beispiel von zwei <code>Input</code> Elementen, die Daten mittels ihrem definiertem <code>@Input</code>
-    teilen:
-</p>
-
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<p> Der Text lautet: {{ sharedTextObject.text }} </p>
-
-
-<p>
-    Hier ein weiteres Beispiel von einem <code>Input</code> Element, das Daten mittels einem Service speichert (bis die
-    Seite neu geladen wird):
-</p>
-
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>

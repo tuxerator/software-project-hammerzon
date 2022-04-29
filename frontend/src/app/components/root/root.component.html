@@ -1,20 +1,9 @@
-<div class="container">
-    <h1>Softwareprojekt 2022 (Uni Konstanz)</h1>
+<div class="bg-dark text-white">
 
-    <div class="links">
-        <a routerLink="/">Startseite</a>
-        <a routerLink="/about">Über uns</a>
-    </div>
-
-    <p> Folgender Bereich wird dynamisch über Angular ausgetauscht: </p>
-    <div class="routing-box">
+    <!---... Header ...-->
+    <!---... Container which contains -:)- the currentpage ...-->
+    <div class="container p-4 bg-dark">
         <router-outlet></router-outlet>
     </div>
-
-    <br/>
-    <hr/>
-    <br/>
-    <div>
-        Elemente können auch als Footer unter dem <code>&lt;router-outlet&gt;</code> angezeigt werden!
-    </div>
+    <app-footer></app-footer>
 </div>

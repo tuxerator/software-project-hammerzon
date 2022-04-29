@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
-import { HenriAboutpageComponent } from './components/henriAboutpage/henriAboutpage.component';
-import { CedricwieseComponent } from './components/cedricwiese/cedricwiese.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
-import { SophieunterfranzComponent } from './components/sophieunterfranz/sophieunterfranz.component';
-import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
+import { AboutMeComponent } from './components/about-me/about-me.component';
 
 
 /**
@@ -18,10 +15,7 @@ import { LukaserneComponent } from './components/lukaserne/lukaserne.component';
 const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'sophieunterfranz', component: SophieunterfranzComponent},
-    { path: 'lukaserne' , component: LukaserneComponent },
-    { path: 'about/:name',component: HenriAboutpageComponent},
-    { path: 'cedricwiese', component: CedricwieseComponent}
+    { path: 'about/:name',component: AboutMeComponent},
 ];
 
 @NgModule({
