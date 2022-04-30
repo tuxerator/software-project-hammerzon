@@ -17,10 +17,10 @@ export class AboutMeService {
     }
 
     /**
-     * Returns the NameInfo of name from the api.
-     * @param name Name of the Person in the form '[firstName]-[lastName]'
+     * Returns the NameInfo of nameID from the api.
+     * @param nameID Name of the Person in the form '[firstName]-[lastName]'
      */
-    public getNameInfo(name: string): Observable<NameInfo> {
-        return this.http.get<NameInfo>('/api/' + name);
+    public getNameInfo(nameID: string): Observable<NameInfo> {
+        return this.http.get<NameInfo>(`/api/about/${nameID}`);
     }
 }

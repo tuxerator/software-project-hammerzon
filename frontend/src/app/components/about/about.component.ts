@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AboutService, NameInfo } from 'src/app/services/about.service';
-import { HenriAboutService } from 'src/app/services/henriAbout.service';
 import { SampleService } from 'src/app/services/sample.service';
 
 @Component({
-    templateUrl: './about.component.html',
-    styleUrls: ['./about.component.css']
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
   /**
@@ -17,15 +16,14 @@ export class AboutComponent implements OnInit {
    *  public myName: NameInfo = { firstName: 'Erika', lastName: 'Musterfrau' };
    */
   public myName?: NameInfo;
-  public list?:string[];
+  public list?: string[];
 
   constructor(
     private aboutService: AboutService,
-    public sampleService: SampleService,
-    private henriAboutService: HenriAboutService) {
-      /**
-       *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
-       */
+    public sampleService: SampleService ) {
+    /**
+     *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
+     */
   }
 
   ngOnInit(): void {
@@ -71,26 +69,11 @@ export class AboutComponent implements OnInit {
      *  - https://www.learnrxjs.io/
      *  - https://rxmarbles.com/
      */
-    this.aboutService.getNameInfo().subscribe({
-      // next: Unser Wert kam erfolgreich an!
-      next: (val) => {
-        this.myName = val;
-      },
-
-      // error: Es gab einen Fehler
-      error: (err) => {
-        console.error(err);
-        this.myName = {
-          firstName: 'Error!',
-          lastName: 'Error!'
-        };
-      }
-    });
-
-    this.henriAboutService.getProfileList().subscribe({
+    this.aboutService.getProfileList().subscribe({
       // next: Unser Wert kam erfolgreich an!
       next: (val) => {
         this.list = val.list;
+        console.log(this.list);
       },
 
       // error: Es gab einen Fehler
@@ -99,5 +82,7 @@ export class AboutComponent implements OnInit {
         this.list = undefined;
       }
     });
+    console.log('Site initialised');
+    console.log(this.list);
   }
 }
