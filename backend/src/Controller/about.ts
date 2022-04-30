@@ -5,11 +5,6 @@ import NameInfo from '../Models/NameInfo';
 // Request NameInfos from database and send them to 'Requestors'
 class AboutController
 {
-    constructor(sequlize:Sequelize)
-    {
-        //Setups NameInfo-Table
-        NameInfo.setup(sequlize);
-    }
     // Retrives every entry of NameInfo-Table
     public getNameInfoList(request: Request, response: Response): void
     {

@@ -16,6 +16,7 @@ import {Sequelize} from 'sequelize';
 import DBConfig from './dbConfig';
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
+import DatabaseController from './Controller/database';
 
 // Express server instanziieren
 const app = express();
@@ -55,12 +56,14 @@ app.use(cors({ origin: '*' }));
  *
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
-const sequelize = new Sequelize(DBConfig.dbNAME, DBConfig.dbUSER, DBConfig.dbPASSWORD, DBConfig.dbOptions);
+
+
 
 // important information about this api
 const api = new ApiController();
+const database = new DatabaseController();
 // information about the creator of this api
-const about = new AboutController(sequelize);
+const about = new AboutController();
 
 app.get('/api', api.getInfo);
 
@@ -84,8 +87,6 @@ app.get('/api/nameinfo-list',about.getNameInfoList);
 // OrderController endpoints
 
 
-
-sequelize.sync();
 
 //app.get('/api/profile-list', api.getProfileList);
 //app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
