@@ -66,6 +66,9 @@ const database = new DatabaseController();
 const about = new AboutController();
 
 app.get('/api', api.getInfo);
+app.get('/api/about/profile-list', api.getProfileList);
+app.get('/api/about/:nameID', api.getNameInfo);
+app.post('/api/name/:id', api.postNameInfo);
 
 // aboutController endpoints
 app.get('/api/nameinfo-list',about.getNameInfoList);
@@ -87,16 +90,6 @@ app.get('/api/nameinfo-list',about.getNameInfoList);
 // OrderController endpoints
 
 
-
-//app.get('/api/profile-list', api.getProfileList);
-//app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
-//app.get('/api/:name', api.getNameInfo);
-//app.post('/api/name/:id', api.postNameInfo);
-
-//app.get('/api/sophie-unterfranz',api.getSophieName);
-//app.get('/api/cedric-wiese',api.getCedricInfo);
-
-//app.get('/api/lukas-erne', api.getLukasErne);
 
 
 // Falls ein Fehler auftritt, gib den Stack trace aus

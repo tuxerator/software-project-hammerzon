@@ -9,7 +9,7 @@ import {AboutMeService, NameInfo} from '../../services/about-me.service';
 export class AboutMeComponent implements OnInit {
 
     @Input()
-    public name = '';
+    public nameID = '';
 
     public myName?: NameInfo;
 
@@ -17,7 +17,7 @@ export class AboutMeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.aboutMeService.getNameInfo(this.name).subscribe({
+        this.aboutMeService.getNameInfo(this.nameID).subscribe({
             // next: Value arrived successfully!
             next: value => {
                 this.myName = value;

@@ -10,59 +10,64 @@
  *  oder response.end()
  */
 import { Request, Response } from 'express';
+
+interface NameInfo {
+  firstName: string;
+  lastName: string;
+  optionalAttribut?: string;
+}
+
 /**
  * Array of all NameInfo-objects.
  */
+const names: NameInfo[] = [
+  {
+    firstName: 'Jakob',
+    lastName: 'Sanowski',
+    optionalAttribut: 'Hey, ich bin Jakob Sanowski. Ich studiere Informatik im 4. Semester. ' +
+      'Falls es nicht regnet, bin ich ziemlich sicher auf einem Beachvolleyball-Feld.'
+  },
+  {
+    firstName: 'Sophie',
+    lastName: 'Unterfranz',
+    optionalAttribut: 'Hey, ich bin Sophie Unterfranz. Ich studiere Informatik im 4.Semester. ' +
+      'Wenn ich grad mal nichts zu tun hab, dann findet man mich meistens mit einem Buch in der Hand.'
+  },
+  {
+    firstName: 'Lukas',
+    lastName: 'Erne',
+    optionalAttribut: 'Hi, ich bin Lukas Erne. Ich studiere Informatik im dritten Semester. ' +
+      'In meiner Freizeit gehe ich am liebsten auf lange Wanderungen.'
+  },
+  {
+    firstName: 'Henri',
+    lastName: 'Grotzeck',
+    optionalAttribut: 'Ich bin ein weitere Person. Der teils am Frontend arbeitet'
+  }
+];
+
 export default class ApiController {
-    public getInfo(request: Request, response: Response): void {
-        response.status(200);
-        response.send('ok');
-    }
-
-    /**
-     * Returns NameInfo of the name in the request. If name doesn't exist a placeholder is returned.
-     */
-    /*
-    public getNameInfo(request: Request, response: Response): void {
-        switch (request.params.name) {
-            case 'jakob-sanowski': {
-                response.status(200);
-                response.send(names[0]);
-                break;
-            }
-            default: {
-                response.status(200);
-                response.send({
-                    firstName: 'Max',
-                    lastName: 'Mustermann'
-                });
-                break;
-            }
-        }
-    }
-
-  public getSophieName(request: Request, response: Response): void {
+  public getInfo(request: Request, response: Response): void {
     response.status(200);
-    response.send({
-      firstName: 'Sophie',
-      lastName: 'Unterfranz'
-    });
+    response.send('ok');
   }
 
-  public getLukasErne(request: Request, response: Response): void {
-    response.status(200);
-    response.send({
-      name: 'Lukas Erne'
-
-    });
-  }
-
-  public getCedricInfo(request: Request, response: Response): void {
-    response.status(200);
-    response.send({
-      firstName: 'Cedric',
-      lastName: 'Wiese'
-    });
+  /**
+   * Returns NameInfo of the name in the request. If name doesn't exist a placeholder is returned.
+   */
+  public getNameInfo(request: Request, response: Response): void {
+    const nameID = Number(request.params.nameID);
+    console.log(nameID);
+    if (names[nameID] != undefined) {
+      response.status(200);
+      response.send(names[nameID]);
+    } else {
+      response.status(200);
+      response.send({
+        firstName: 'Max',
+        lastName: 'Mustermann'
+      });
+    }
   }
 
   public postNameInfo(request: Request, response: Response): void {
@@ -72,21 +77,11 @@ export default class ApiController {
     response.send('ok');
   }
 
-
-  public getHenriGrotzeckInfo(request: Request, response: Response):void {
+  public getProfileList(request: Request, response: Response): void {
+    let list: number[];
+    list = names.map((value, index) => index);
     response.status(200);
-    response.send({
-      firstName: 'Henri',
-      lastName: 'Grotzeck',
-      optionalAttribut:  'Ich bin ein weitere Person. Der teils am Frontend arbeitet'
-    });
+    response.send({ list });
+    console.log(list);
   }
-
-  public getProfileList(request: Request, response: Response):void{
-    response.status(200);
-    response.send({
-      list:['henri-grotzeck']
-    });
-  }
-  */
 }
