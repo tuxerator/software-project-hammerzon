@@ -13,10 +13,9 @@ import path from 'path';
 import cors from 'cors';
 import {Sequelize} from 'sequelize';
 // created by us
-import DBConfig from './dbConfig';
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
-import DatabaseController from './Controller/database';
+import { MongoDBController } from './Controller/mongoDB';
 
 // Express server instanziieren
 const app = express();
@@ -61,9 +60,10 @@ app.use(cors({ origin: '*' }));
 
 // important information about this api
 const api = new ApiController();
-const database = new DatabaseController();
+// const database = new DatabaseController();
+const mongodb = new MongoDBController();
 // information about the creator of this api
-const about = new AboutController();
+// const about = new AboutController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -71,7 +71,7 @@ app.get('/api/about/:nameID', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
 // aboutController endpoints
-app.get('/api/nameinfo-list',about.getNameInfoList);
+//app.get('/api/nameinfo-list',about.getNameInfoList);
 
 // AuthController endpoints
 
