@@ -1,6 +1,45 @@
 <div class="bg-dark text-white">
+    
+    <div class="container p-4 bg-dark">
+        <!---... Header ... -->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand h1" routerLink="/">Handwerkerportal</a>
+            <!-- the navbar collapses into a button when there's not enough space -->
+            <button
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            class="navbar-toggler"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div 
+                class="collapse navbar-collapse"
+                id="navbarNav">
+                <ul class="navbar-nav">
+                    <!-- add to this List for more navbar links -->
+                    <li class="nav-item active">
+                        <a class="nav-link" routerLink="#">Products</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" routerLink="#">Login</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" routerLink="#">Register</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" routerLink="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-    <!---... Header ...-->
+    </div>
+
+
+
     <!---... Container which contains -:)- the currentpage ...-->
     <div class="container p-4 bg-dark">
         <router-outlet></router-outlet>
