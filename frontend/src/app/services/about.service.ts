@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {AboutList} from './henriAbout.service';
-
 /**
  *  Via 'export' machen wir die Definition dieses Objektes anderen Klassen verfügbar
  *  - d.h. andere Klassen können via es "import { NameInfo } from 'src/app/services/about.service'"
@@ -14,8 +12,9 @@ export type NameInfo = {
   firstName: string,
   lastName: string,
   optionalAttribut?: string
-}
+};
 
+export type AboutList = {list: string};
 
 @Injectable({
   providedIn: 'root'
