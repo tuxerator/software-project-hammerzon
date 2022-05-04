@@ -16,7 +16,7 @@ import {Sequelize} from 'sequelize';
 import DBConfig from './dbConfig';
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
-import DatabaseController from './Controller/database';
+import ProductController from './Controller/productCon';
 
 // Express server instanziieren
 const app = express();
@@ -61,9 +61,10 @@ app.use(cors({ origin: '*' }));
 
 // important information about this api
 const api = new ApiController();
-const database = new DatabaseController();
 // information about the creator of this api
 const about = new AboutController();
+
+const product = new ProductController();
 
 app.get('/api', api.getInfo);
 
@@ -81,6 +82,7 @@ app.get('/api/nameinfo-list',about.getNameInfoList);
 // ProductController endpoints
 
 // 10-products ...
+app.get('/api/productlist', product.getList);
 
 // product details ...
 
