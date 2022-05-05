@@ -11,12 +11,9 @@ import errorHandler from 'errorhandler';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import {Sequelize} from 'sequelize';
 // created by us
-import DBConfig from './dbConfig';
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
-import DatabaseController from './Controller/database';
 
 // Express server instanziieren
 const app = express();
@@ -61,7 +58,6 @@ app.use(cors({ origin: '*' }));
 
 // important information about this api
 const api = new ApiController();
-const database = new DatabaseController();
 // information about the creator of this api
 const about = new AboutController();
 

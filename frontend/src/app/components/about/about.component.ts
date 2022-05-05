@@ -68,7 +68,7 @@ export class AboutComponent implements OnInit {
     this.aboutService.getProfileList().subscribe({
       // next: Unser Wert kam erfolgreich an!
       next: (val) => {
-        this.list = val.list;
+        this.list = val;
         console.log(this.list);
       },
 

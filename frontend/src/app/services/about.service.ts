@@ -14,8 +14,6 @@ export type NameInfo = {
   optionalAttribut?: string
 };
 
-export type AboutList = {list: string};
-
 @Injectable({
   providedIn: 'root'
 })
@@ -43,8 +41,8 @@ export class AboutService
     return this.http.get<NameInfo>('/api/name');
   }
 
-  public getProfileList(): Observable<AboutList> {
-    return this.http.get<AboutList>('/api/about/profile-list');
+  public getProfileList(): Observable<string[]> {
+    return this.http.get<string[]>('/api/about/profile-list');
   }
 
   }

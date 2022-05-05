@@ -58,7 +58,7 @@ export default class ApiController {
   public getNameInfo(request: Request, response: Response): void {
     const nameID = Number(request.params.nameID);
     console.log(nameID);
-    if (names[nameID] != undefined) {
+    if (names[nameID] !== undefined) {
       response.status(200);
       response.send(names[nameID]);
     } else {
@@ -78,8 +78,7 @@ export default class ApiController {
   }
 
   public getProfileList(request: Request, response: Response): void {
-    let list: number[];
-    list = names.map((value, index) => index);
+    const list: number[] = names.map((value, index) => index);
     response.status(200);
     response.send({ list });
     console.log(list);
