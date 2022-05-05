@@ -10,7 +10,6 @@
  * {@link https://mongoosejs.com/docs/index.html mongoose}
  */
 import mongoose from 'mongoose';
-import nameInfoSchema from '../Models/NameInfoSchema';
 
 export class MongoDBController {
 
@@ -18,16 +17,8 @@ export class MongoDBController {
     this.initConnection().catch(err => console.log(err));
   }
 
-  async initConnection() {
+  async initConnection(): Promise<void> {
     await mongoose.connect('mongodb://localhost:27017/swp'); // Connect to MongoDB
     console.log(mongoose.connection.readyState); // Prints 1 if connected successfully
-
-    const testSchema = new mongoose.Schema({ test: String }, { collection: 'test' });
-    const test = mongoose.model('test', testSchema);
-
-    test.findOne({}, function (err: any, result: { test: any; }) {
-      if (err) console.log(err);
-      console.log(result.test);
-    });
   }
 }
