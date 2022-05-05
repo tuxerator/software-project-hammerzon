@@ -1,11 +1,14 @@
 
-interface Product{
+interface IProduct{
     name:string
     user:string
+    description:string
     prize:number
-
-    currency:'€/hr'
+    duration:Date
+    timeslots:Date[]
 }
 
 
-export default Product;
+
+
+export {IProduct};

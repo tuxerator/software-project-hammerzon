@@ -1,49 +1,61 @@
 import { Request, Response } from 'express';
-import Product from '../Models/Product';
+import Helper from '../helpers';
+import {IProduct} from '../Models/Product';
 import { ListInfo } from '../types';
-
 
 
 class ProductController
 {
+    public list : IProduct[] = [
+        {
+            name:'Holz Stuhl',
+            user:'Holzig GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Dachleiter',
+            user:'Aufstiegs GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+    ];
 
     public getList(request: Request, response: Response): void {
+        // Parse Limit und Start von Query
+        //                                                      min,      max,   replace
+        const start = Helper.parseQueryInt(request.query,'start',0,this.list.length,0);
+        // Falls start sehr nah am Ende ist gilt this.list.length - start sonst einfach nur 10
+        const maxLimit = Math.min(this.list.length - start, 10);
 
-        const list : Product[] = [
-            {name:'Holz Stuhl',user:'Holzig GmbH', prize:10, currency:'€/hr'},
-            {name:'Dachleiter',user:'Aufstiegs GmbH', prize:10, currency:'€/hr'},
-            {name:'Zimmerstreichen',user:'Streich-ich GmbH', prize:10, currency:'€/hr'},
-        ];
-        let limit = 10;
-        let start = 0;
+        const limit = Helper.parseQueryInt(request.query,'limit',0,10,10);
+        const requestable = Math.max(this.list.length - limit - start,0);
 
-        console.log(list);
-
-        if(request.query)
-        {
-            limit = parseInt(request.query.limit as string);
-            start = parseInt(request.query.start as string);
-            console.log();
-            if(!limit  || limit > 10 )
-            {
-                limit = 10;
-            }
-
-            if(!start || start > list.length)
-            {
-                start = 0;
-            }
-        }
-
-        const listInfo : ListInfo<Product> = {
-            list : list,
-            requestable: 0
+        const listInfo : ListInfo<IProduct> = {
+            list : this.list.slice(start,start + limit),
+            requestable
         };
+
         response.status(200);
         response.send(listInfo);
     }
+
+
 
 }
 
 
 export default ProductController;
+

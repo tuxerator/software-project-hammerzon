@@ -82,7 +82,7 @@ app.get('/api/nameinfo-list',about.getNameInfoList);
 // ProductController endpoints
 
 // 10-products ...
-app.get('/api/productlist', product.getList);
+app.get('/api/productlist', product.getList.bind(product));
 
 // product details ...
 
