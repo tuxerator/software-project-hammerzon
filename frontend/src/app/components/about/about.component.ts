@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
-
+import { AboutService } from 'src/app/services/about.service';
 @Component({
-    templateUrl: './about.component.html',
-    styleUrls: ['./about.component.css']
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
   /**
@@ -14,10 +13,13 @@ export class AboutComponent implements OnInit {
    *  Standardwert zuweisen, z.B. als
    *  public myName: NameInfo = { firstName: 'Erika', lastName: 'Musterfrau' };
    */
-  constructor() {
-      /**
-       *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
-       */
+  public list?: string[];
+
+  constructor(
+    private aboutService: AboutService ) {
+    /**
+     *  Üblicherweise bleibt der Konstruktor von Komponenten in Angular leer!
+     */
   }
 
   ngOnInit(): void {
@@ -63,5 +65,20 @@ export class AboutComponent implements OnInit {
      *  - https://www.learnrxjs.io/
      *  - https://rxmarbles.com/
      */
+    this.aboutService.getProfileList().subscribe({
+      // next: Unser Wert kam erfolgreich an!
+      next: (val) => {
+        this.list = val;
+        console.log(this.list);
+      },
+
+      // error: Es gab einen Fehler
+      error: (err) => {
+        console.error(err);
+        this.list = undefined;
+      }
+    });
+    console.log('Site initialised');
+    console.log(this.list);
   }
 }
