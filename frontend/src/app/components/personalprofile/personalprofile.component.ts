@@ -10,6 +10,8 @@ export class PersonalProfileComponent {
     email?: String;
     strasse?: String;
     hausnummer?: Number;
+    stadt?: String;
+    postleitzahl?: Number;
     land?: String;
     editMode: boolean = false;
 
