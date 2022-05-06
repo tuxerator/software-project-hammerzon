@@ -15,7 +15,7 @@ import { AboutMeComponent } from './components/about-me/about-me.component';
 const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'about/:name',component: AboutMeComponent},
+    { path: 'about/:name',component: AboutMeComponent}
 ];
 
 @NgModule({
