@@ -10,10 +10,11 @@
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"tsc -w\" \"nodemon --inspect dist/src/server.js\""
     },
     "dependencies": {
+        "@types/mongoose": "^5.11.97",
         "cors": "2.8.5",
         "errorhandler": "1.5.1",
         "express": "4.17.3",
-        "mongoose": "^6.3.1",
+        "mongoose": "^6.3.2",
         "pg": "^8.7.3",
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.19.0",
