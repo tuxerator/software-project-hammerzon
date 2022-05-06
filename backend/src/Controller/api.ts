@@ -20,6 +20,7 @@ interface NameInfo {
 /**
  * Array of all NameInfo-objects.
  */
+
 const names: NameInfo[] = [
   {
     firstName: 'Jakob',
