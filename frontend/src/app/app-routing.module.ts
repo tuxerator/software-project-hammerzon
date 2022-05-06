@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { AboutMeComponent } from './components/about-me/about-me.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 
 
 /**
@@ -16,6 +17,7 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
+    { path: "registration",component: RegistrationComponent}
 ];
 
 @NgModule({
