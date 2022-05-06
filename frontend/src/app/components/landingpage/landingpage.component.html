@@ -24,7 +24,15 @@
         </div>
     </div>
     <!-- Knöpfe um mehr Elemente and zeigen zu können -->
-    <button (click)="[previous()]" class="btn btn-primary" [class.disabled]="!(currentStart>0)" >previous</button>
-    <button (click)="[next()]" class="btn btn-primary" [class.disabled]="!(productListInfo.requestable>0)">next</button>
+    <nav aria-label="Search results pages">
+      <ul class="pagination pagination-dark  justify-content-center m-4">
+      <li class="page-item" [class.disabled]="!(currentStart > 0)">
+        <a class="page-link"  (click)="previous()">&laquo;</a>
+      </li>
+      <li class="page-item" [class.disabled]="!(productListInfo.requestable>0)" >
+        <a class="page-link" (click)="next()">&raquo;</a>
+      </li>
+    </ul>
+    </nav>
 </div>
 
