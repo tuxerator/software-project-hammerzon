@@ -14,10 +14,7 @@ import cors from 'cors';
 // created by us
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
-<<<<<<< HEAD
-=======
 import { MongoDBController } from './Controller/mongoDB';
->>>>>>> mongoDB
 
 // Express server instanziieren
 const app = express();
