@@ -31,6 +31,78 @@ class ProductController
             duration:new Date(), // 1 Sekunde
             timeslots:[]
         },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
+        {
+            name:'Zimmerstreichen',
+            user:'Streich-ich GmbH',
+            prize:10,
+            description:'Beschreibung ...',
+            duration:new Date(), // 1 Sekunde
+            timeslots:[]
+        },
     ];
 
     public getList(request: Request, response: Response): void {

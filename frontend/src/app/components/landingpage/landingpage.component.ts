@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { LandingpageService,Product } from 'src/app/services/landingpage.service';
+import { LandingpageService,ProductInfo,ListInfo } from 'src/app/services/landingpage.service';
 
 
 
@@ -9,8 +9,14 @@ import { LandingpageService,Product } from 'src/app/services/landingpage.service
     styleUrls: ['./landingpage.component.css']
 })
 export class LandingpageComponent implements OnInit {
-    public productName?: Product;
-    public productname='';
+    //
+    public productListInfo : ListInfo<ProductInfo> = {
+                                                        list:[],
+                                                        requestable:0
+                                                      };
+    public currentStart = 0;
+    public currentLimit = 10;
+
     constructor(private LandingpageService: LandingpageService) {
     }
 
@@ -43,24 +49,37 @@ export class LandingpageComponent implements OnInit {
      */
     ngOnInit(): void {
         console.log('LandingPage initialized!');
-        this.LandingpageService.getProductName(this.productname).subscribe({
+        //
+        this.requestList();
+    }
+    // fragt nächsten Elemente die nach currentStart und currentLimit kommen
+    // z.B currentStart= 0 currentLimit= 10 => currentStart= 10 currentLimit= 10
+    //     Bei liste im Backend von z.B [0...99] würde das zu der liste im Frontend führen [10..29] mit requestable:70
+    next(): void {
+        this.currentStart += this.currentLimit;
+        this.requestList(this.currentStart,this.currentLimit);
+    }
+    // fragt Elemente die vor currentStart und currentLimit kommen
+    // z.B currentStart= 10 currentLimit= 10 => currentStart= 0 currentLimit= 10
+    previous(): void {
+        this.currentStart -= this.currentLimit;
+        this.requestList(this.currentStart,this.currentLimit);
+    }
+    // Frägt nach Productliste bei dem Landingpageservice nach
+    requestList(start:number= 0,limit:number=10) : void
+    {
+        this.LandingpageService.getProductList(start,limit).subscribe({
             // next: Value arrived successfully!
             next: value => {
-                this.productName = value;
+                console.log(value);
+                this.productListInfo = value;
             },
 
             // error: There was an error.
             error: err => {
                 console.error(err);
-                this.productName = {
-                    name: 'Error',
-                    user: 'Error',
-                    prize: 0,
-                    currency: '€/hr'
-                };
             }
         });
-
     }
 
 }

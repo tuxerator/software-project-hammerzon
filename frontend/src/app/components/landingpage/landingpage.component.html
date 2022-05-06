@@ -7,25 +7,24 @@
         <div class="col-lg-8 mx-auto">
             <ul class="list-group shadow">
                 <!--Produkt 1-->
-                <li *ngFor="let productName for products" class="list-group-item">
+                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item">
                     <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1" *ngFor="let Product of ">
-                            <h5> {{productName?.name}}</h5>
-                            <p>{{productName?.user}}</p>
+                        <div class="media-body order-2 order-lg-1">
+                            <h5> {{productInfo?.name}}</h5>
+                            <p>{{productInfo?.user}}</p>
                             <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2">{{productName?.prize}}{{productName?.currency}}</h6>
+                                <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
                             </div>
-
                         </div>
                         <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
-
                     </div>
                 </li>
                 <!--Ende Produkt 1-->
             </ul>
         </div>
-        
     </div>
-
+    <!-- Knöpfe um mehr Elemente and zeigen zu können -->
+    <button (click)="[previous()]" class="btn btn-primary" [class.disabled]="!(currentStart>0)" >previous</button>
+    <button (click)="[next()]" class="btn btn-primary" [class.disabled]="!(productListInfo.requestable>0)">next</button>
 </div>
 
