@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import { LandingpageService,Product } from 'src/app/services/landingpage.service';
+
+
 
 @Component({
     selector: 'app-landingpage',
@@ -6,7 +9,12 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./landingpage.component.css']
 })
 export class LandingpageComponent implements OnInit {
-    public list = [0,1,2,3,4,5,6,7,8,9];
+    public productName?: Product;
+    public productname='';
+    constructor(private LandingpageService: LandingpageService) {
+    }
+
+    //public list = [0,1,2,3,4,5,6,7,8,9];
     /**
      *  Wir packen unseren Text in ein Object, damit wir die *Referenz* zu dem Text teilen können.
      *  Würden wir einfach den String teilen, würden wir eine *Kopie* weitergeben!
@@ -35,6 +43,24 @@ export class LandingpageComponent implements OnInit {
      */
     ngOnInit(): void {
         console.log('LandingPage initialized!');
+        this.LandingpageService.getProductName(this.productname).subscribe({
+            // next: Value arrived successfully!
+            next: value => {
+                this.productName = value;
+            },
+
+            // error: There was an error.
+            error: err => {
+                console.error(err);
+                this.productName = {
+                    name: 'Error',
+                    user: 'Error',
+                    prize: 0,
+                    currency: '€/hr'
+                };
+            }
+        });
+
     }
 
 }

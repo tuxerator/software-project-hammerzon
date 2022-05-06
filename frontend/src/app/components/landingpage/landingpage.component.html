@@ -7,13 +7,13 @@
         <div class="col-lg-8 mx-auto">
             <ul class="list-group shadow">
                 <!--Produkt 1-->
-                <li class="list-group-item">
+                <li *ngFor="let productName for products" class="list-group-item">
                     <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1">
-                            <h5> Produkt 1</h5>
-                            <p>Marke</p>
+                        <div class="media-body order-2 order-lg-1" *ngFor="let Product of ">
+                            <h5> {{productName?.name}}</h5>
+                            <p>{{productName?.user}}</p>
                             <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2"> 30€</h6>
+                                <h6 class="font-weight-bold my-2">{{productName?.prize}}{{productName?.currency}}</h6>
                             </div>
 
                         </div>
@@ -22,55 +22,6 @@
                     </div>
                 </li>
                 <!--Ende Produkt 1-->
-                <!--Produkt 2-->
-                <li class="list-group-item">
-                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1">
-                            <h5> Produkt 2</h5>
-                            <p>Marke</p>
-                            <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2"> 30€</h6>
-                            </div>
-
-                        </div>
-                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
-
-                    </div>
-                </li>
-                <!--Ende Produkt 2-->
-                <!--Produkt 3-->
-                <li class="list-group-item">
-                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1">
-                            <h5> Produkt 3</h5>
-                            <p>Marke</p>
-                            <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2"> 30€</h6>
-                            </div>
-
-                        </div>
-                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
-
-                    </div>
-                </li>
-                <!--Ende Produkt 3-->
-                <!--Produkt 4-->
-                <li class="list-group-item">
-                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1">
-                            <h5> Produkt 4</h5>
-                            <p>Marke</p>
-                            <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2"> 30€</h6>
-                            </div>
-
-                        </div>
-                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
-
-                    </div>
-                </li>
-                <!--Ende Produkt 4-->
-
             </ul>
         </div>
         
