@@ -1,3 +1,4 @@
+import {Response} from 'express';
 // Hilfs funktionen die Abfragen allgemein Vereinfachen
 class Helper{
 
@@ -29,6 +30,20 @@ class Helper{
         // sonst gib wert zurücl
         return val;
     }
+
+
+    public static valueExists<T>(obj:T,key:string|number|symbol,response:Response): key is keyof T
+    {
+        if(!(key in obj))
+        {
+            response.status(400);
+            response.send(`${key.toString()} does not exist`);
+            return false;
+        }
+        return true;
+    }
+
+
 }
 
 export default Helper;

@@ -1,8 +1,8 @@
-<div class="bg-dark text-white">
-    
-    <div class="container p-4 bg-dark">
+<div class="text-white">
+
+    <div class="container p-4 bg-light">
         <!---... Header ... -->
-        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar fixed-top navbar-expand-lg p-4 bg-light border-bottom border-secondary">
             <a class="navbar-brand h1" routerLink="/">Handwerkerportal</a>
             <!-- the navbar collapses into a button when there's not enough space -->
             <button
@@ -15,7 +15,7 @@
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
-            <div 
+            <div
                 class="collapse navbar-collapse"
                 id="navbarNav">
                 <ul class="navbar-nav">
@@ -41,7 +41,7 @@
 
 
     <!---... Container which contains -:)- the currentpage ...-->
-    <div class="container p-4 bg-dark">
+    <div class="container p-4">
         <router-outlet></router-outlet>
     </div>
     <app-footer></app-footer>
