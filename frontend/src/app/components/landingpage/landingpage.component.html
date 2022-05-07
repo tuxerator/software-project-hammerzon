@@ -10,7 +10,7 @@
                 <li *ngFor="let productInfo of productListInfo.list" class="list-group-item">
                     <div class="media align-items-lg-center flex-column flex-lg-row p-3">
                         <div class="media-body order-2 order-lg-1">
-                            <h5> {{productInfo?.name}}</h5>
+                            <h5> <a routerLink="'',productInfo._id">{{productInfo?.name}}</a></h5>
                             <p>{{productInfo?.user}}</p>
                             <div class="d-flex align-items-center justify-content-between mt-1">
                                 <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>

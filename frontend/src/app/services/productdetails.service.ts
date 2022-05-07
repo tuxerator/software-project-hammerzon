@@ -4,7 +4,7 @@ import { ProductInfo } from './landingpage.service';
 
 
 // Product details ist das gleich wie Product info nur mit zusätzliche Infos
-type ProductDetails = ProductInfo & {
+export type ProductDetails = ProductInfo & {
   descritpion:string,
   duration:Date,
   timeslots:Date[]
