@@ -17,7 +17,7 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
-    { path: ':_id',component:ProductdetailsComponent}
+    { path: 'productdetails/:id',component:ProductdetailsComponent}
 ];
 
 @NgModule({
