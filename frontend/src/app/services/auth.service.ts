@@ -1,20 +1,11 @@
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from '../models/User';
 
-
-export type User={
-  name:string,
-  email:string,
-  password?:string,
-  address:{
-    street:string,
-    houseNum:string,
-    city:string,
-    postCode:string,
-    country:string,
-  }
-}
-
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
   constructor(private http:HttpClient) {
