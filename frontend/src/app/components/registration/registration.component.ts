@@ -1,15 +1,16 @@
-import { Component, OnInit } from "@angular/core";
+import { Component} from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators,ReactiveFormsModule } from '@angular/forms';
-import { Router } from "@angular/router";
-import { Address, User } from "../../models/User";
+import { Router } from '@angular/router';
+import { Address, User } from '../../models/User';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
-    selector: "app-registration",
-    templateUrl: "./registration.component.html",
-    styleUrls: ['./registration.component.css']
+    styleUrls: ['./registration.component.css'],
+    selector: 'app-registration',
+    templateUrl: './registration.component.html'
+
 })
-export class RegistrationComponent implements OnInit{
+export class RegistrationComponent{
     public errorMessage?: string;
 
     public passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -33,9 +34,6 @@ export class RegistrationComponent implements OnInit{
 
     constructor(private formBuilder: FormBuilder,private authService:AuthService,private router:Router){}
 
-    ngOnInit(): void {
-
-    }
 
     public onSubmit()
     {
