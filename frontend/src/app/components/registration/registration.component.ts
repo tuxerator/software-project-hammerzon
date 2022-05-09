@@ -39,10 +39,12 @@ export class RegistrationComponent implements OnInit{
 
     public onSubmit()
     {
+      console.log('Create Debug Log');
       this.registerForm.markAllAsTouched();
       // Sind alle Eingaben valid
+      console.log(this.registerForm);
       if(this.registerForm.invalid)return;
-
+      console.log('Through Validation Debug Log');
       // Für besser lesbarkeit des Code
       const form = this.registerForm.value;
 
@@ -61,10 +63,5 @@ export class RegistrationComponent implements OnInit{
           console.error(err);
         }
       });
-    }
-
-    public inputIsInvalid(inputName:string )
-    {
-
     }
 }

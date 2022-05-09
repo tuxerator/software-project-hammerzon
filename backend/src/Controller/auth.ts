@@ -28,8 +28,10 @@ class AuthController{
         if(!Helper.valueExists(newUser,'email',response)) return;
         // Password exists
         if(!Helper.valueExists(newUser,'password',response)) return;
-        // Name exists
-        if(!Helper.valueExists(newUser,'name',response)) return;
+        // Names exists
+        if(!Helper.valueExists(newUser,'firstName',response)) return;
+
+        if(!Helper.valueExists(newUser,'lastName',response)) return;
         // adress exists
         if(!Helper.valueExists(newUser,'address',response)) return;
         // street exists
@@ -48,7 +50,7 @@ class AuthController{
         if(!correctEmail.test(newUser.email.toString()))
         {
             response.status(400);
-            response.send('Not a valid email');
+            response.send({message:'Not a valid email'});
             return;
         }
         // Testen ob es die Email schon gibt
@@ -57,14 +59,14 @@ class AuthController{
         if(userMail)
         {
             response.status(400);
-            response.send('Email already exists');
+            response.send({message:'Email already exists'});
             return;
         }
         // check password length
         if(newUser.password.length < 8)
         {
             response.status(400);
-            response.send('Not secure password');
+            response.send({message:'Not secure password'});
             return;
         }
         // Set default Role
@@ -74,15 +76,11 @@ class AuthController{
         // Save into mongoDB
         const user = new User(newUser);
         await user.save();
-
-
         //delete user.password;
-
         // created new User
         response.status(201);
-        response.send('User registered');
+        response.send({message:'User registered'});
     }
-
 }
 
 

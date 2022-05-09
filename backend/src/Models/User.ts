@@ -4,7 +4,8 @@ import {Number,Schema,Model,model,Document} from 'mongoose';
 // Model for Products
 interface IUser extends Document{
     // Name der Dienstleistung
-    name:string,
+    firstName:string,
+    lastName:string,
     // Anbieter der Dienstleistung
     email:String,
     // Genauere Beschreibung des Dienstleistung
@@ -24,7 +25,8 @@ interface IUser extends Document{
 
 // create the Schema of IProduct
 const userSchema : Schema = new Schema<IUser>({
-  name:       { type: String, required: true },
+  firstName:       { type: String, required: true },
+  lastName:       { type: String, required: true },
   email:      { type: String, required: true },
   password:   { type: String, required: true },
   role:       { type: String, default: 'user'},

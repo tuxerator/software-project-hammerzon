@@ -42,8 +42,6 @@ class Helper{
         }
         return true;
     }
-
-
 }
 
 export default Helper;

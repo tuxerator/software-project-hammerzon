@@ -19,7 +19,7 @@ import session from 'express-session';
 import ProductController from './Controller/productCon';
 import { MongoDBController } from './Controller/mongoDB';
 import { IUser } from './Models/User';
-import AuthController from './Controller/authController';
+import AuthController from './Controller/auth';
 
 // Damit im request.session user exisitiert
 declare global {

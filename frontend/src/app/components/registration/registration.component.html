@@ -6,9 +6,9 @@
     <!-- Vorname -->
 	  <div class="mb-3 input-group has-validation">
       <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
-      <input class="form-control" id="validationCustom01"  placeholder="Vorname" formControlName="firstName" type="text" required>
-      <div *ngIf="registerForm.controls['firstName'].touched && !registerForm.controls['firstName']?.invalid" class="valid-feedback">Looks Good</div>
-      <div *ngIf="registerForm.controls['firstName'].touched && registerForm.controls['firstName']?.invalid" class="invalid-feedback was-validated">Set Firstname</div>
+      <input class="form-control" placeholder="Vorname" formControlName="firstName" type="text" required>
+      <div *ngIf="registerForm.controls['firstName'].touched && !registerForm.controls['firstName']?.invalid" class="valid-feedback was-validated">Looks Good</div>
+      <div *ngIf="registerForm.controls['firstName'].touched && registerForm.controls['firstName']?.invalid" class="invalid-feedback was-validated">Vorname wird erwarted</div>
     </div>
     <!-- Nachname -->
     <div class="mb-3 input-group has-validation">
@@ -50,11 +50,11 @@
     <!-- Passwort -->
     <div class="mb-3 input-group">
 		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
-        <input class="form-control" placeholder="Passwort erstellen" type="password">
+        <input class="form-control" placeholder="Passwort erstellen" type="password" formControlName="password">
     </div>
     <div class="mb-3 input-group">
         <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
-        <input class="form-control" placeholder="Passwort bestätigen" type="password">
+        <input class="form-control" placeholder="Passwort bestätigen" type="password" formControlName="confirmPassword">
     </div>
     <div class="d-grid">
       <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
