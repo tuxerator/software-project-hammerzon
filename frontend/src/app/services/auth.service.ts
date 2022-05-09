@@ -14,6 +14,6 @@ export class AuthService {
 
    register(user:User):Observable<string>
    {
-      return this.http.post<string>('api/register',user);
+      return this.http.post<string>('api/auth/register',user);
    }
 }

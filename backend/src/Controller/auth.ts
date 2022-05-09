@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { mapFinderOptions } from 'sequelize/types/utils';
 import Helper from '../helpers';
-import { User } from '../Models/User';
+import { getUserWithOutPassword, User } from '../Models/User';
 import { IUser } from '../Models/User';
 
 import { SessionRequest } from '../types';
@@ -81,6 +81,56 @@ class AuthController{
         response.status(201);
         response.send({message:'User registered'});
     }
+
+    async login(request: SessionRequest, response: Response):Promise<void>
+    {
+        if(request.session.user)
+        {
+            response.status(409);
+            response.send('User is already logged in');
+        }
+        const loginRequest = request.body;
+        if(!Helper.valueExists(loginRequest,'password',response)) return;
+        if(!Helper.valueExists(loginRequest,'email',response)) return;
+
+        const email = loginRequest.email;
+        const user:(IUser|undefined) = await User.findOne({email}).exec();
+        console.log(user);
+        if(!user)
+        {
+            response.status(401);
+            response.send({code:401,message:'Mail address not found'});
+            return;
+        }
+
+        const password = loginRequest.password;
+
+        if (!bcrypt.compareSync(password, user?.password.toString() )) {
+            response.status(401); // 401: Unauthorized
+            response.send({ code: 401, message: 'Wrong password' });
+            return;
+        }
+
+        request.session.user = user;
+
+        response.status(200);
+        response.send({ code: 200, message: 'Login successful', });
+    }
+    getUser(request: SessionRequest, response: Response):void
+    {
+        console.log(request.session.user);
+        if(request.session.user)
+        {
+            const userWithoutPass = getUserWithOutPassword(request.session.user);
+            response.status(200);
+            response.send(userWithoutPass);
+        }else
+        {
+            response.status(409);
+            response.send({code:409,message:'Not authorized'});
+        }
+    }
+
 }
 
 

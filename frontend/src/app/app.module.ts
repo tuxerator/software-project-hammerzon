@@ -18,7 +18,7 @@ import { RegistrationComponent } from './components/registration/registration.co
         LandingpageComponent,
         AboutMeComponent,
         FooterComponent,
-        RegistrationComponent
+        RegistrationComponent,
     ],
     imports: [
         BrowserModule,

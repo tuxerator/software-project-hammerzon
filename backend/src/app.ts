@@ -11,6 +11,7 @@ import errorHandler from 'errorhandler';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 // created by us
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
@@ -40,16 +41,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
 // erlauben wir alles um eventuelle Fehler zu vermeiden.
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: true,credentials: true}));
+app.use(cookieParser('6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB'));
 
+app.set('trust proxy', 1); // trust first proxy
 app.use(session({
         secret:'6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
         resave:true,
         saveUninitialized:true,
-        cookie:{
-            secure:true,
-            maxAge: 60000
-        }
+        name:'guid'
     }
 ));
 
@@ -102,11 +102,11 @@ app.post('/api/name/:id', api.postNameInfo);
 // AuthController endpoints
 
 // register ...
-
+app.post('/api/auth/register', auth.register);
 // login ...
-app.post('/api/register', auth.register);
+app.post('/api/auth/login', auth.login);
 // logout ...
-
+app.get('/api/auth/logintest', auth.getUser);
 // ProductController endpoints
 
 // 10-products ...
