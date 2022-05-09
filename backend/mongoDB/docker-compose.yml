@@ -2,6 +2,7 @@ version: '3.9'
 services:
   swp-mongoDB:
     image:  mongo:latest
+    restart: unless-stopped
     ports:
       - '27017:27017'
     volumes:
