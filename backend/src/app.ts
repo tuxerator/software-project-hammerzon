@@ -16,7 +16,9 @@ import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
 
 import ProductController from './Controller/productCon';
+import OrderController from './Controller/orderCon';
 import { MongoDBController } from './Controller/mongoDB';
+import { Order } from './Models/Order';
 
 
 // Express server instanziieren
@@ -69,6 +71,7 @@ const mongodb = new MongoDBController();
 // const about = new AboutController();
 
 const product = new ProductController();
+const order = new OrderController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -95,6 +98,8 @@ app.get('/api/productlist', product.getList.bind(product));
 
 // OrderController endpoints
 
+// list all orders for the admin page
+app.get('/api/orderlist', order.listAllOrders);
 
 
 
