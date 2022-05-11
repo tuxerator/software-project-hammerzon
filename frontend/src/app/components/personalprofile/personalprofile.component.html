@@ -89,24 +89,36 @@
                           <form *ngIf="editMode == true" class="row mb-3">
                             <div class="col-auto">
                               <label for="staticEmail2" class="visually-hidden">Pw1</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Passwort:">
+                              <input type="text" readonly class="form-control-plaintext" value="Aktuelles Passwort:">
                             </div>
                             <div class="col-auto">
                               <label for="inputPassword2" class="visually-hidden">Password</label>
-                              <input type="password" class="form-control" placeholder="Password">
+                              <input type="password" class="form-control" placeholder="Aktuelles Passwort">
                             </div>
                           </form>
 
                           <form *ngIf="editMode == true" class="row mb-3">
                             <div class="col-auto">
                               <label for="staticEmail2" class="visually-hidden">Pw1</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Passwort bestätigen:">
+                              <input type="text" readonly class="form-control-plaintext" value="Neues Passwort:">
                             </div>
                             <div class="col-auto">
                               <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
-                              <input type="password" class="form-control" placeholder="Password bestätigen:">
+                              <input type="password" class="form-control" placeholder="Neues Password">
                             </div>
                           </form>
+
+                          <form *ngIf="editMode == true" class="row mb-3">
+                            <div class="col-auto">
+                              <label for="staticEmail2" class="visually-hidden">Pw1</label>
+                              <input type="text" readonly class="form-control-plaintext" value="Neues Passwort bestätigen:">
+                            </div>
+                            <div class="col-auto">
+                              <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
+                              <input type="password" class="form-control" placeholder="Neues Password bestätigen">
+                            </div>
+                          </form>
+
                         <div class="row">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9 text-secondary">
