@@ -7,7 +7,7 @@ import { IProduct, Product } from './Product';
 interface IOrder extends Document{
 
     // Bestelltes Produkt
-    product : string
+    product : mongoose.Types.ObjectId
     // Bestellender User, soll Referenz zum UserObject sein?
     orderingUser: string
     // Bestellzeitpunkt
@@ -15,7 +15,7 @@ interface IOrder extends Document{
 
 }
 const orderSchema : Schema = new Schema<IOrder>({
-    product:        { type: String, required: true },
+    product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
     orderingUser:   { type: String, required: true },
     timeOfOrder:    { type: Date, required: true }
 });

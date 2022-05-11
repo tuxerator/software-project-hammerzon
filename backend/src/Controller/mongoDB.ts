@@ -11,7 +11,7 @@
  */
 import mongoose from 'mongoose';
 import ProductTestData from '../productTestData';
-import OrderTestData from '../OrderTestData';
+import OrderTestData from '../orderTestData';
 
 export class MongoDBController {
 

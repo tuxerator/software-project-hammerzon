@@ -5,12 +5,12 @@ export default class OrderTestData{
     // productCon = new ProductController();
     public list : any[] = [
         {
-            product :  'Stuhl',          // add get id function in Product controller?
+            product :  '627a59fe6c23242357e841b1',
             orderingUser : 'Max Mustermann',
             timeOfOrder: new Date()
         },
         {
-            product : 'Leiter',
+            product : '627a59fe6c23242357e841b2',
             orderingUser : 'Jürgen',
             timeOfOrder : new Date()
         }
