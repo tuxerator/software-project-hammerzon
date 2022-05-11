@@ -11,6 +11,7 @@ import {AboutMeComponent} from './components/about-me/about-me.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AdminpageComponent } from './components/adminpage/adminpage.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +19,8 @@ import { RegistrationComponent } from './components/registration/registration.co
         AboutComponent,
         LandingpageComponent,
         AboutMeComponent,
+        FooterComponent,
+        PersonalProfileComponent,
         FooterComponent,
         AdminpageComponent,
         RegistrationComponent
