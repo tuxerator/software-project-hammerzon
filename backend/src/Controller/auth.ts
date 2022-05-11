@@ -50,7 +50,7 @@ class AuthController{
         if(!correctEmail.test(newUser.email.toString()))
         {
             response.status(400);
-            response.send({message:'Not a valid email'});
+            response.send({code:400, message:'Not a valid email'});
             return;
         }
         // Testen ob es die Email schon gibt
@@ -59,14 +59,14 @@ class AuthController{
         if(userMail)
         {
             response.status(400);
-            response.send({message:'Email already exists'});
+            response.send({code:400,message:'Email already exists'});
             return;
         }
         // check password length
         if(newUser.password.length < 8)
         {
             response.status(400);
-            response.send({message:'Not secure password'});
+            response.send({code:400,message:'Not secure password'});
             return;
         }
         // Set default Role
