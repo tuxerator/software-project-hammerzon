@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component,OnInit} from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators,ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address, User } from '../../models/User';
@@ -10,7 +10,7 @@ import {AuthService} from '../../services/auth.service';
     templateUrl: './registration.component.html'
 
 })
-export class RegistrationComponent{
+export class RegistrationComponent implements OnInit{
     public errorMessage?: string;
 
     public passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -34,8 +34,22 @@ export class RegistrationComponent{
 
     constructor(private formBuilder: FormBuilder,private authService:AuthService,private router:Router){}
 
+    ngOnInit(): void {
+      this.authService.getUser().subscribe({
+        next: (user) => {
+          if (user) {
+            this.router.navigate(['']);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
 
-    public onSubmit()
+
+
+    public onSubmit():void
     {
       console.log('Create Debug Log');
       this.registerForm.markAllAsTouched();

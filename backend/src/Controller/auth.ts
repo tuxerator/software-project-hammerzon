@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { mapFinderOptions } from 'sequelize/types/utils';
+import { Response } from 'express';
+
 import Helper from '../helpers';
 import { getUserWithOutPassword, User } from '../Models/User';
 import { IUser } from '../Models/User';
@@ -131,6 +131,19 @@ class AuthController{
         }
     }
 
+    logout(request: SessionRequest, response: Response):void
+    {
+        if(request.session.user)
+        {
+            request.session.destroy(err => console.log(err));
+            response.status(200);
+            response.send({code:200,message:'loged out'});
+        }else
+        {
+            response.status(409);
+            response.send({code:409,message:'Not authorized'});
+        }
+    }
 }
 
 
