@@ -13,13 +13,7 @@ export class AdminpageComponent implements OnInit {
   public orderList : OrderList<OrderInfo> = {
                                             list:[]
   };
-  /*
-  public orderInfo : OrderInfo = {
-                                    product: '',
-                                    orderingUser: '',
-                                    timeOfOrder: ''
-                                 };
-  */
+
   constructor(private OrderService: OrderService) { }
 
   ngOnInit(): void {

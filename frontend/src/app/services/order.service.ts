@@ -8,6 +8,7 @@ export type OrderList<T>={
 }
 
 export type OrderInfo={
+  _id : string,
   product : string,
   orderingUser: string,
   timeOfOrder: Date,
@@ -36,6 +37,7 @@ export class OrderService {
   registerOrder(productId:string, timeslot:Date): Observable<OrderInfo>
   {
     const postOrder: PostOrder = {productId, timeslot};
+    
     const orderObservable: Observable<OrderInfo> = this.http.post<OrderInfo>('api/registerOrder', postOrder);
     orderObservable.subscribe({
       next: (val) => {
@@ -46,6 +48,10 @@ export class OrderService {
       }
     });
     return orderObservable;
+  }
+  finalizeOrder(orderId:string): void
+  {
+    this.http.post<string>('api/finalizeOrder',orderId);
   }
 }
 

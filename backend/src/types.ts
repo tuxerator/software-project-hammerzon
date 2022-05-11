@@ -6,5 +6,17 @@ interface ListInfo<T> {
 
 type SessionRequest = Request & { session: Session };
 
+type PostOrder={
+    productId : string,
+    timeslot: Date
+}
+type OrderInfo={
+    _id : string,
+    product : string,
+    orderingUser: string,
+    timeOfOrder: Date,
+    finalized: boolean,
+    timeslot: Date
+  }  
 
-export {ListInfo,SessionRequest};
+export {ListInfo,SessionRequest,PostOrder,OrderInfo};

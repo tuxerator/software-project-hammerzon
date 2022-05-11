@@ -122,6 +122,11 @@ app.get('/api/productlist', product.getList.bind(product));
 
 // OrderController endpoints
 
+// register a new Order
+app.post('/api/registerOrder', order.registerOrder);
+
+// finalize an order
+app.post('/api/finalizeOrder', order.finalizeOrder);
 
 // list all orders for the admin page
 app.get('/api/orderlist', order.listAllOrders);
