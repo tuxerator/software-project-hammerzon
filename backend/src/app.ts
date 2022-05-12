@@ -115,6 +115,8 @@ app.post('/api/auth/login', auth.login);
 app.get('/api/auth/logintest', auth.getUser);
 // logout ...
 app.get('/api/auth/logout', auth.logout);
+
+
 // ProductController endpoints
 
 // 10-products ...

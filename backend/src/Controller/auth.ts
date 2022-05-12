@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 import Helper from '../helpers';
-import { getUserWithOutPassword, User } from '../Models/User';
+import { getUserWithOutPassword, IUser, User } from '../Models/User';
 import { IUser } from '../Models/User';
 
 import { SessionRequest } from '../types';
@@ -143,6 +143,38 @@ class AuthController{
             response.status(409);
             response.send({code:409,message:'Not authorized'});
         }
+    }
+
+    async update(request: SessionRequest, response: Response):Promise<void>{
+        if(!request.session.user)
+        {
+            response.status(409);
+            response.send({code:409,message:'Not authorized'});
+            return;
+        }
+        const userDBObj : (IUser|undefined) = await User.findOne({_id:request.session.user._id}).exec();
+        if(!userDBObj)
+        {
+            response.status(500);
+            response.send({code:500,message:'User doent exist'});
+            return;
+        }
+
+        const userUpdate:IUser = request.body;
+
+        userDBObj.firstName = userUpdate.firstName;
+        userDBObj.lastName = userUpdate.lastName;
+        userDBObj.address.street = userUpdate.address.street;
+        userDBObj.address.houseNum = userUpdate.address.houseNum;
+        userDBObj.address.city = userUpdate.address.city;
+        userDBObj.address.postCode = userUpdate.address.postCode;
+        userDBObj.address.country = userUpdate.address.country;
+        userDBObj.markModified('address');
+
+        if(password){
+
+        }
+
     }
 }
 

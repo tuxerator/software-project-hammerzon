@@ -5,12 +5,11 @@ export default class OrderTestData{
     // productCon = new ProductController();
     public list : any[] = [
         {
-            product :  '627a59fe6c23242357e841b1',
             orderingUser : 'Max Mustermann',
             timeOfOrder: new Date()
+
         },
         {
-            product : '627a59fe6c23242357e841b2',
             orderingUser : 'Jürgen',
             timeOfOrder : new Date()
         }
@@ -18,10 +17,10 @@ export default class OrderTestData{
 
     constructor()
     {
-        this.insertIfNotExistend();
+        //this.insertIfNotExistend();
         //Order.deleteMany({}).exec();
     }
-  
+
     async insertIfNotExistend(): Promise<void>  {
       const vals : IOrder[] = await Order.find({});
       if(!vals || vals.length <= 0)

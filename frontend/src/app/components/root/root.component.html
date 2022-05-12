@@ -20,15 +20,18 @@
                 id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- add to this List for more navbar links -->
-                    <li *ngIf="!authService.user"  class="nav-item active">
+                    <li *ngIf="!authService.isLogedIn()"  class="nav-item active">
                         <a class="nav-link" routerLink="/login">Login</a>
                     </li>
-                    <li *ngIf="!authService.user" class="nav-item active">
+                    <li *ngIf="!authService.isLogedIn()" class="nav-item active">
                         <a class="nav-link" routerLink="/register">Register</a>
                     </li>
-                    <li *ngIf="authService.user" class="nav-item active">
+                    <li *ngIf="authService.isLogedIn()" class="nav-item active">
                       <a class="nav-link" (click)="logout()">logout</a>
                   </li>
+                  <li *ngIf="authService.isLogedIn()" class="nav-item active">
+                    <a class="nav-link" routerLink="/personalprofile">personalprofile</a>
+                </li>
                     <li class="nav-item active">
                         <a class="nav-link" routerLink="/about">About</a>
                     </li>

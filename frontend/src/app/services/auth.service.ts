@@ -14,6 +14,15 @@ export class AuthService {
 
    }
 
+   public isLogedIn():boolean
+   {
+    return this.user !== null;
+   }
+
+   public isAdmin():boolean{
+    return this.user?.role === 'admin';
+   }
+
    register(user:User):Observable<string>
    {
       return this.http.post<string>('api/auth/register',user);

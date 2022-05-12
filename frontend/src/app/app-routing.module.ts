@@ -7,7 +7,7 @@ import { PersonalProfileComponent } from './components/personalprofile/personalp
 import { LoginComponent } from './components/login/login.component';
 import { AdminpageComponent } from './components/adminpage/adminpage.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-
+import { AuthGuardService } from './services/auth-guard.service';
 
 
 /**
@@ -21,7 +21,7 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
-    { path: 'personalprofile', component: PersonalProfileComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent,canActivate:[AuthGuardService]},
     { path: 'login',component: LoginComponent},
     { path: 'adminpage', component: AdminpageComponent},
     { path: 'register',component: RegistrationComponent}
@@ -29,6 +29,9 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [
+      AuthGuardService
+    ]
 })
 export class AppRoutingModule { }
