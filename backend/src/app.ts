@@ -14,9 +14,23 @@ import cors from 'cors';
 // created by us
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';
+import session from 'express-session';
 
 import ProductController from './Controller/productCon';
+import OrderController from './Controller/orderCon';
 import { MongoDBController } from './Controller/mongoDB';
+
+import { Order } from './Models/Order';
+
+import { IUser } from './Models/User';
+import AuthController from './Controller/auth';
+
+// Damit im request.session user exisitiert
+declare global {
+        interface Session {
+            user?: IUser,
+        }
+}
 
 
 // Express server instanziieren
@@ -32,6 +46,17 @@ app.use(express.urlencoded({ extended: true }));
 // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
 // erlauben wir alles um eventuelle Fehler zu vermeiden.
 app.use(cors({ origin: '*' }));
+
+app.use(session({
+        secret:'6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
+        resave:true,
+        saveUninitialized:true,
+        cookie:{
+            secure:true,
+            maxAge: 60000
+        }
+    }
+));
 
 /**
  *  API Routen festlegen
@@ -65,10 +90,12 @@ const api = new ApiController();
 // const database = new DatabaseController();
 const mongodb = new MongoDBController();
 
+const auth = new AuthController();
 // information about the creator of this api
 // const about = new AboutController();
 
 const product = new ProductController();
+const order = new OrderController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -83,7 +110,7 @@ app.post('/api/name/:id', api.postNameInfo);
 // register ...
 
 // login ...
-
+app.post('/api/register', auth.register);
 // logout ...
 
 // ProductController endpoints
@@ -96,7 +123,8 @@ app.get('/api/productlist', product.getList.bind(product));
 // OrderController endpoints
 
 
-
+// list all orders for the admin page
+app.get('/api/orderlist', order.listAllOrders);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

@@ -1,0 +1,18 @@
+<div>
+    <div class="row text-center">
+        <h2>Alle Bestellungen</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <ul class="list-group shadow">
+                <h5> Test </h5>
+                <tbody>
+                    <tr *ngFor="let orderInfo of orderList.list">
+                        <td>{{orderInfo.orderingUser}} </td>
+                    </tr>
+                </tbody>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="container">
+<div class="card bg-light">
+<article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="card-title mt-3 text-center text-dark">Account erstellen</h4>
+	<form [formGroup]="registerForm"  (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <!-- Vorname -->
+	  <div class="mb-3 input-group has-validation">
+      <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+      <input class="form-control" placeholder="Vorname" formControlName="firstName" type="text" required>
+      <div *ngIf="registerForm.controls['firstName'].touched && !registerForm.controls['firstName']?.invalid" class="valid-feedback was-validated">Looks Good</div>
+      <div *ngIf="registerForm.controls['firstName'].touched && registerForm.controls['firstName']?.invalid" class="invalid-feedback was-validated">Vorname wird erwarted</div>
+    </div>
+    <!-- Nachname -->
+    <div class="mb-3 input-group has-validation">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+        <input class="form-control" placeholder="Nachname" type="text" formControlName="lastName" required>
+    </div>
+    <!-- Email -->
+    <div class="mb-3 input-group">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
+        <input  class="form-control" placeholder="Email-Addresse" type="email" formControlName="email" required>
+    </div>
+     <!-- Adresse -->
+    <div class="form-group">
+        <div class="mb-3 input-group">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Strasse" type="text" formControlName="street" required>
+        </div>
+
+      <div class="mb-3 input-group">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input class="form-control" placeholder="Hausnummer" type="text" formControlName="houseNum">
+        </div>
+
+      <div class="mb-3 input-group">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Postleitzahl" type="text" formControlName="postCode">
+        </div>
+
+      <div class="mb-3 input-group">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Stadt" type="text" formControlName="city">
+      </div>
+
+      <div class="mb-3 input-group">
+        <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+        <input name="" class="form-control" placeholder="Land" type="text" formControlName="country">
+    </div>
+    </div>
+    <!-- Passwort -->
+    <div class="mb-3 input-group">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
+        <input class="form-control" placeholder="Passwort erstellen" type="password" formControlName="password">
+    </div>
+    <div class="mb-3 input-group">
+        <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
+        <input class="form-control" placeholder="Passwort bestätigen" type="password" formControlName="confirmPassword">
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+    </div>
+    <p class="text-center text-dark">Haben Sie sich bereits registriert? <a href="login">Log In</a> </p>
+</form>
+</article>
+</div> <!-- card.// -->
+
+</div>
+<!--container end.//-->
+
