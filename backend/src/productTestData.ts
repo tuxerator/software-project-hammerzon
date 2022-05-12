@@ -1,4 +1,4 @@
-import { IProduct, Product } from './Models/Product';
+import { IAppointment, IProduct, Product } from './Models/Product';
 
 export default class ProductTestData{
   public list : any[] = [
@@ -8,7 +8,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Dachleiter',
@@ -16,7 +16,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:true}]
     },
     {
         name:'Zimmerstreichen',
@@ -24,7 +24,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:true}]
     },
     {
         name:'Zimmerstreichen',
@@ -32,7 +32,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:true}]
     },
     {
         name:'Zimmerstreichen',
@@ -40,7 +40,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:true}]
     },
     {
         name:'Zimmerstreichen',
@@ -48,7 +48,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -56,7 +56,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -64,7 +64,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -72,7 +72,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -80,7 +80,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -88,7 +88,7 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
     {
         name:'Zimmerstreichen',
@@ -96,16 +96,18 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        timeslots:[]
+        appointments:[{date:new Date(),isReserved:false}]
     },
   ];
 
   constructor()
   {
+
     this.insertIfNotExistend();
   }
 
   async insertIfNotExistend(): Promise<void>  {
+    await Product.deleteMany({});
     const vals : IProduct[] = await Product.find({});
     if(!vals || vals.length <= 0)
     {

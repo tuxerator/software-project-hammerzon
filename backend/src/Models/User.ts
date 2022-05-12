@@ -42,6 +42,16 @@ const userSchema : Schema = new Schema<IUser>({
 // 3. Create a Model.
 const User : Model<IUser>  = model<IUser>('User', userSchema);
 
+const getUserWithOutPassword = (user :IUser):IUser =>
+{
+    return new User({
+        firstName:user.firstName,
+        lastName:user.lastName,
+        email:user.email,
+        password:'',
+        role:user.role,
+        address: user.address
+    });
+};
 
-
-export {IUser,User};
+export {IUser,User,getUserWithOutPassword};
