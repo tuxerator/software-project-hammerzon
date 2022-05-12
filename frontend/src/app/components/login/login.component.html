@@ -1,0 +1,26 @@
+
+
+<div class="container">
+<div class="card bg-light">
+<article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="card-title mt-3 text-center text-dark">Anmelden</h4>
+	<form [formGroup]="loginForm"  (ngSubmit)="onSubmit()">
+    <div class="mb-3 input-group">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
+        <input name="" class="form-control" placeholder="Email-Addresse" formControlName="email" type="email">
+    </div>
+    <div class="mb-3 input-group">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
+        <input class="form-control" placeholder="Passwort bestätigen" formControlName="password" type="password">
+    </div>
+    <div class="d-grid" >
+        <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
+    </div>
+   <p class="text-center text-dark">Noch kein Konto?<a routerLink="/register">Jetzt registrieren</a> </p>
+</form>
+</article>
+</div> <!-- card.// -->
+
+</div>
+<!--container end.//-->
+
