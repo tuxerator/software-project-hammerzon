@@ -6,13 +6,17 @@ export default class OrderTestData{
     public list : any[] = [
         {
             product :  '627a59fe6c23242357e841b1',
-            orderingUser : 'Max Mustermann',
-            timeOfOrder: new Date()
+            orderingUser : '627d4654fef29f275ceab461',
+            timeOfOrder: new Date(),
+            finalized : false,
+            timeslot : new Date(),
         },
         {
             product : '627a59fe6c23242357e841b2',
-            orderingUser : 'Jürgen',
-            timeOfOrder : new Date()
+            orderingUser : '627d4654fef29f275ceab461',
+            timeOfOrder : new Date(),
+            finalized : false,
+            timeslot : new Date()
         }
     ];
 

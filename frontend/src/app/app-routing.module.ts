@@ -5,6 +5,7 @@ import { LandingpageComponent } from './components/landingpage/landingpage.compo
 import { AboutMeComponent } from './components/about-me/about-me.component';
 import { AdminpageComponent } from './components/adminpage/adminpage.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { AllOrdersComponent } from './components/all-orders/all-orders.component';
 
 
 
@@ -20,7 +21,8 @@ const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
     { path: 'adminpage', component: AdminpageComponent},
-    { path: 'register',component: RegistrationComponent}
+    { path: 'register',component: RegistrationComponent},
+    { path: 'all-orders', component: AllOrdersComponent}
 
 ];
 

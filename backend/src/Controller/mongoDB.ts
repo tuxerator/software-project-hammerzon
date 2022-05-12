@@ -12,6 +12,8 @@
 import mongoose from 'mongoose';
 import ProductTestData from '../productTestData';
 import OrderTestData from '../orderTestData';
+import UserTestData from '../userTestData';
+
 
 export class MongoDBController {
 
@@ -24,5 +26,6 @@ export class MongoDBController {
     console.log(`Database is ${(mongoose.connection.readyState === 1) ?'ready' : 'errored' }`); // Prints 1 if connected successfully
     new ProductTestData();
     new OrderTestData();
+    new UserTestData();
   }
 }
