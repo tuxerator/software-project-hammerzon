@@ -18,7 +18,11 @@ import AboutController from './Controller/about';
 import session from 'express-session';
 
 import ProductController from './Controller/productCon';
+import OrderController from './Controller/orderCon';
 import { MongoDBController } from './Controller/mongoDB';
+
+import { Order } from './Models/Order';
+
 import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 
@@ -28,6 +32,7 @@ declare global {
             user?: IUser,
         }
 }
+
 
 // Express server instanziieren
 const app = express();
@@ -90,6 +95,7 @@ const auth = new AuthController();
 // const about = new AboutController();
 
 const product = new ProductController();
+const order = new OrderController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -117,6 +123,10 @@ app.get('/api/productlist', product.getList.bind(product));
 // product details ...
 
 // OrderController endpoints
+
+
+// list all orders for the admin page
+app.get('/api/orderlist', order.listAllOrders);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

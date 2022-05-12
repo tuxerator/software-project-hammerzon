@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {AboutMeComponent} from './components/about-me/about-me.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { AdminpageComponent } from './components/adminpage/adminpage.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { LoginComponent } from './components/login/login.component';
 
@@ -20,7 +21,9 @@ import { LoginComponent } from './components/login/login.component';
         AboutMeComponent,
         FooterComponent,
         RegistrationComponent,
-        LoginComponent
+        LoginComponent,
+        AdminpageComponent,
+        RegistrationComponent
     ],
     imports: [
         BrowserModule,
