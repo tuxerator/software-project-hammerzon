@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { OrderInfo, OrderList, OrderService } from 'src/app/services/order.service';
 
 
@@ -7,8 +7,11 @@ import { OrderInfo, OrderList, OrderService } from 'src/app/services/order.servi
   styleUrls: ['./all-orders.component.css']
 })
 export class AllOrdersComponent implements OnInit {
-  public orderList? : OrderList<OrderInfo>;
-  constructor(private OrderService: OrderService) { }
+  public orderList? : OrderList<OrderInfo> = {list:[]};
+
+  constructor(private OrderService: OrderService, 
+              private changeDetection: ChangeDetectorRef
+    ) { }
 
   ngOnInit(): void {
     this.listAllOrders();
@@ -21,6 +24,8 @@ export class AllOrdersComponent implements OnInit {
           console.log('List of all Orders:');
           console.log(value);
           this.orderList = value;
+          this.changeDetection.detectChanges();
+          console.log(this.orderList);
       },
 
       // error: There was an error.

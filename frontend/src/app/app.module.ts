@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {AboutMeComponent} from './components/about-me/about-me.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AllOrdersComponent } from './components/all-orders/all-orders.component';
-import { AdminpageComponent } from './components/adminpage/adminpage.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { RegistrationComponent } from './components/registration/registration.co
         AboutMeComponent,
         FooterComponent,
         AllOrdersComponent,
-        AdminpageComponent,
         RegistrationComponent
     ],
     imports: [
