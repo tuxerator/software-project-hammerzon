@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import Helper from '../helpers';
 import { getUserWithOutPassword, User } from '../Models/User';
@@ -6,6 +6,8 @@ import { IUser } from '../Models/User';
 
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
+
+import {Types} from 'mongoose';
 
 class AuthController{
     constructor()
@@ -130,7 +132,22 @@ class AuthController{
             response.send({code:409,message:'Not authorized'});
         }
     }
+    public async getUserById(request: Request, response: Response): Promise<void>
+    {
+        const id = request.params.id;
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const user : IUser = await User.findById(id).exec();
+            response.status(200);
+            response.send(user);
+        }
+        else
+        {
+            response.status(500);
+            response.send('there is no user with such an id');
+        }
 
+    }
     logout(request: SessionRequest, response: Response):void
     {
         if(request.session.user)

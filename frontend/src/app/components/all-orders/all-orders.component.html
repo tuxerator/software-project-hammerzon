@@ -1,10 +1,10 @@
 <div>
     <div class="container mt-5">
         <div class="d-flex justify-content-center row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="rounded">
-                    <div class="table-responsive table-borderless">
-                        <table class="table-dark">
+                    <div class="table-responsive">
+                        <table class="table table-dark">
                             <thead>
                                 <tr>
                                     <th class="text-center"></th>
@@ -14,23 +14,21 @@
                                     <th scope="col">Preis</th>
                                     <th scope="col">Kunde</th>
                                     <th scope="col">Bestelldatum</th>
-                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body">
                                 <tr *ngFor="let elem of combined">
                                     <td class="text-center"></td>
                                     <td>{{elem.order._id}}</td>
-                                    <td>{{elem.product.name}} </td>
-                                    <td>{{elem.product.user}} </td>                                 
-                                    <td>{{elem.product.prize}}</td>
-                                    <td>Max Mustermann
-                                    Musterstraße 1
-                                    12345 Stadt
-                                    Deutschland
-                                    Email</td>
-                                    <td>01.01.2022</td>
-                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td>{{elem.product?.name}} </td>
+                                    <td>{{elem.product?.user}} </td>                                 
+                                    <td>{{elem.product?.prize}}</td>
+                                    <td>{{elem.orderingUser?.firstName}}
+                                        {{elem.orderingUser?.lastName}}
+                                        {{elem.orderingUser?.address?.postCode}}
+                                        {{elem.orderingUser?.address?.city}}
+                                    </td>
+                                    <td>{{elem.order.timeOfOrder}} </td>
                                 </tr>
                             </tbody>
                     </table>

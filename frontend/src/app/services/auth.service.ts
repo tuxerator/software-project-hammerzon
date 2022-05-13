@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../models/User';
+import { ProductDetails } from './productdetails.service';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,10 @@ export class AuthService {
        error: (err) => console.log(err)
      });
      return oberservable;
+   }
+
+   getUserById(id:string): Observable<User>
+   {
+     return this.http.get<User>(`api/getUserById/${id}`);
    }
 }

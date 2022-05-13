@@ -113,6 +113,8 @@ app.post('/api/auth/register', auth.register);
 app.post('/api/auth/login', auth.login);
 
 app.get('/api/auth/logintest', auth.getUser);
+
+app.get('/api/getUserById/:id', auth.getUserById);
 // logout ...
 app.get('/api/auth/logout', auth.logout);
 // ProductController endpoints
