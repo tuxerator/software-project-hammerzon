@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import { LandingpageService, ProductInfo } from 'src/app/services/landingpage.service';
-import { OrderInfo, OrderList, OrderService } from 'src/app/services/order.service';
+import {  ProductInfo } from 'src/app/services/landingpage.service';
+import { OrderInfo, OrderService } from 'src/app/services/order.service';
 import { ProductDetails, ProductdetailsService } from 'src/app/services/productdetails.service';
 
-// works only when logged out right now! 
+/**
+ * Es ist möglich, dass das component wegen den Testdaten nicht funktioniert,
+ * weil die in der Arrays gespeicherten IDs andere sein können.
+ * Wenn die IDs richtig generiert werden sollte alles funktionieren. 
+ */
 
 @Component({
   templateUrl: './all-orders.component.html',

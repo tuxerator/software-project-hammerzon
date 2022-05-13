@@ -11,6 +11,7 @@ import { PersonalProfileComponent } from './components/personalprofile/personalp
 import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
 
 
+
 /**
  *  Hier können die verschiedenen Routen definiert werden.
  *  Jeder Eintrag ist eine URL, die von Angular selbst kontrolliert wird.
@@ -28,7 +29,11 @@ const routes: Routes = [
     { path: 'login',component: LoginComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
-    { path: 'productdetails/:id',component:ProductdetailsComponent}
+    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'order-product', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'login',component: LoginComponent},
+    { path: 'register',component: RegistrationComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent},
 ];
 
 @NgModule({
