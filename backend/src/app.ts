@@ -11,7 +11,6 @@ import errorHandler from 'errorhandler';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import {Sequelize} from 'sequelize';
 // created by us
 import ApiController  from './Controller/api';
 import AboutController from './Controller/about';

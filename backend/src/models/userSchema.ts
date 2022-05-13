@@ -1,11 +1,26 @@
-import { Model, model, Schema, Types } from 'mongoose';
+import { Number, Model, model, Schema, Types, Document } from 'mongoose';
 
-export interface IOrder {
+interface IOrder {
   service_id: Types.ObjectId;
-  orderTime: Date;
+  orderTime: string;
 }
 
-export interface IUser {
+interface IUser extends Document {
+  schema_V: number;
+  name: string;
+  email: string;
+  password: string;
+  address?: {
+    street: string;
+    houseNumber: number;
+    postCode: string;
+    city: string;
+    country?: string;
+  }
+  orders: IOrder[];
+}
+
+/*type UserDocumentProps = {
   schema: number;
   name: string;
   email: string;
@@ -18,19 +33,21 @@ export interface IUser {
     country?: string;
   }
   orders: Types.DocumentArray<IOrder>;
-}
+}*/
 
-const orderSchema = new Schema<IOrder, Model<IOrder>>({
+// type UserModelType = Model<IUser, {}, UserDocumentProps>;
+
+const orderSchema: Schema = new Schema<IOrder, Model<IOrder>>({
   service_id: {
     type: Schema.Types.ObjectId,
     ref: 'Service',
     required: true
   },
-  orderTime: { type: Date, required: true, default: Date.now }
+  orderTime: { type: String, required: true }
 });
 
-const userSchema = new Schema<IUser, Model<IUser>>({
-  schema: { type: Number, required: true, default: 1, immutable: true },
+const userSchema: Schema = new Schema<IUser>({
+  schema_V: { type: Number, required: true, default: 1, immutable: true },
   name: {type: String, required: true},
   email:{type: String, required: true},
   password:{type: String, required: true},
@@ -41,8 +58,10 @@ const userSchema = new Schema<IUser, Model<IUser>>({
     city: String,
     country: String
   },
-  orders: { type: [orderSchema], default: undefined }
+  orders: { type: [orderSchema], required: true }
 });
 
-export const Order = model<IOrder>('Order', orderSchema);
-export const User = model<IUser>('User', userSchema);
+const Order: Model<IOrder> = model<IOrder>('Order', orderSchema);
+const User: Model<IUser> = model<IUser>('User', userSchema);
+
+export {Order, IOrder, IUser,User};

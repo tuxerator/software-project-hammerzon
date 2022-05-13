@@ -1,20 +1,21 @@
 import mongoose, { Schema, model, Types } from 'mongoose';
+import {ObjectId} from 'mongodb';
 
 export interface IService {
-  schema: number,
-  offeredBy: Types.ObjectId,
-  name: string,
-  description?: string,
+  schema_v: number;
+  offeredBy: Types.ObjectId;
+  name: string;
+  description?: string;
   timeSlots: [{
-    date: Date,
-    slot: number,
-    bookedStatus: IBookedStatus
+    date: Date;
+    slot: number;
+    bookedStatus: IBookedStatus;
   }]
 }
 
-interface IBookedStatus {
-  booked: boolean,
-  bookedBy?: Types.ObjectId
+export interface IBookedStatus {
+  booked: boolean;
+  bookedBy?: Types.ObjectId;
 }
 
 const bookedStatusSchema = new Schema<IBookedStatus>({
@@ -26,10 +27,10 @@ const bookedStatusSchema = new Schema<IBookedStatus>({
       return this.booked;
     }
   }
-})
+});
 
 const serviceSchema = new Schema<IService>({
-  schema: { type: Number, required: true, default: 1, immutable: true },
+  schema_v: { type: Number, required: true, default: 1, immutable: true },
   offeredBy: { type: Schema.Types.ObjectId, required: true },
   name: { type: String, required: true },
   description: String,
@@ -38,6 +39,4 @@ const serviceSchema = new Schema<IService>({
     slot: { type: Number, required: true, min: 0, max: 23 },
     bookedStatus: { type: bookedStatusSchema, required: true},
   }]
-})
-
-export const Service = model<IService>('Service', serviceSchema);
+});
