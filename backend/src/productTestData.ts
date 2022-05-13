@@ -102,12 +102,25 @@ export default class ProductTestData{
 
   constructor()
   {
-
     this.insertIfNotExistend();
   }
 
   async insertIfNotExistend(): Promise<void>  {
     await Product.deleteMany({});
+
+
+    const product = new Product({
+        name:'Zimmerstreichen',
+        user:'Streich-ich GmbH',
+        prize:10,
+        description:'Beschreibung ...',
+        duration:new Date(), // 1 Sekunde
+        appointments:[{date:new Date(),isReserved:false}]
+    });
+    product.save();
+
+
+    
     const vals : IProduct[] = await Product.find({});
     if(!vals || vals.length <= 0)
     {
