@@ -11,6 +11,7 @@ import {AboutMeComponent} from './components/about-me/about-me.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AllOrdersComponent } from './components/all-orders/all-orders.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { OrderProductComponent } from './components/order-product/order-product.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { RegistrationComponent } from './components/registration/registration.co
         AboutMeComponent,
         FooterComponent,
         AllOrdersComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        OrderProductComponent
     ],
     imports: [
         BrowserModule,

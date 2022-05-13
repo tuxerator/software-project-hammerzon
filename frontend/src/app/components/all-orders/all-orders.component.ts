@@ -7,7 +7,7 @@ import { OrderInfo, OrderList, OrderService } from 'src/app/services/order.servi
   styleUrls: ['./all-orders.component.css']
 })
 export class AllOrdersComponent implements OnInit {
-  public orderList? : OrderList<OrderInfo> = {list:[]};
+  public orderList : OrderList<OrderInfo> = {list:[]};
 
   constructor(private OrderService: OrderService, 
               private changeDetection: ChangeDetectorRef

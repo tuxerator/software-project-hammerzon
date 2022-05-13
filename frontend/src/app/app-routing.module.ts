@@ -5,6 +5,7 @@ import { LandingpageComponent } from './components/landingpage/landingpage.compo
 import { AboutMeComponent } from './components/about-me/about-me.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AllOrdersComponent } from './components/all-orders/all-orders.component';
+import { OrderProductComponent } from './components/order-product/order-product.component';
 
 
 
@@ -20,8 +21,8 @@ const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
     { path: 'register',component: RegistrationComponent},
-    { path: 'all-orders', component: AllOrdersComponent}
-
+    { path: 'all-orders', component: AllOrdersComponent},
+    { path: 'order-product', component: OrderProductComponent}  // should be: product/order-product
 ];
 
 @NgModule({
