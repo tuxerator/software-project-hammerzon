@@ -121,6 +121,7 @@ app.get('/api/auth/logout', auth.logout);
 app.get('/api/productlist', product.getList.bind(product));
 
 // product details ...
+app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
 
 // OrderController endpoints
 

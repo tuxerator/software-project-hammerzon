@@ -8,6 +8,7 @@ import { AllOrdersComponent } from './components/all-orders/all-orders.component
 import { OrderProductComponent } from './components/order-product/order-product.component';
 import { LoginComponent } from './components/login/login.component';
 import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
+import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
 
 
 /**
@@ -27,6 +28,7 @@ const routes: Routes = [
     { path: 'login',component: LoginComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
+    { path: 'productdetails/:id',component:ProductdetailsComponent}
 ];
 
 @NgModule({

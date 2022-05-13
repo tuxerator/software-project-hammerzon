@@ -2,10 +2,13 @@ import { Request, Response } from 'express';
 import Helper from '../helpers';
 import {IProduct, Product} from '../Models/Product';
 import { ListInfo } from '../types';
-
-
+import {Types} from 'mongoose';
 class ProductController
 {
+    // Gibt die ProductInfos die zwischen start und start+limit liegen
+    // und eine zusätzliche Informationen requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, zurück
+    // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
+    //     die Liste [1,2] geben und requestable wäre 1 also {list:[1,2] requestable:1} (vom Type ListInfo<number>)
     public async getList(request: Request, response: Response): Promise<void> {
         const productCount = await Product.countDocuments().exec();
         // Parse Limit und Start von Query
@@ -28,7 +31,20 @@ class ProductController
         response.send(listInfo);
     }
 
+    public async getProductDetail(request: Request, response: Response): Promise<void>{
 
+        const id = request.params.id;
+        console.log(id);
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const product : IProduct = await Product.findById(id);
+            response.status(200);
+            response.send(product);
+        }else {
+            response.status(500);
+            response.send('there is no product with such an id');
+        }
+    }
 
 }
 
