@@ -15,6 +15,7 @@ import { PersonalProfileComponent } from './components/personalprofile/personalp
 import { LoginComponent } from './components/login/login.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { ProductdetailsComponent } from './components/productdetails/productdeta
         FooterComponent,
         RegistrationComponent,
         LoginComponent,
-        ProductdetailsComponent
+        ProductdetailsComponent,
+        OrderHistoryComponent
     ],
     imports: [
         BrowserModule,
