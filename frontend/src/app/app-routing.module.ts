@@ -3,17 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { AboutMeComponent } from './components/about-me/about-me.component';
-<<<<<<< HEAD
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AllOrdersComponent } from './components/all-orders/all-orders.component';
 import { OrderProductComponent } from './components/order-product/order-product.component';
-
-=======
 import { LoginComponent } from './components/login/login.component';
-import { AdminpageComponent } from './components/adminpage/adminpage.component';
-import { RegistrationComponent } from './components/registration/registration.component';
 import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
->>>>>>> develop
 
 
 /**
@@ -27,16 +21,12 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
-<<<<<<< HEAD
     { path: 'register',component: RegistrationComponent},
     { path: 'all-orders', component: AllOrdersComponent},
-    { path: 'order-product', component: OrderProductComponent}  // should be: product/order-product
-=======
+    { path: 'order-product', component: OrderProductComponent},  // should be: product/order-product
     { path: 'login',component: LoginComponent},
-    { path: 'adminpage', component: AdminpageComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
->>>>>>> develop
 ];
 
 @NgModule({
