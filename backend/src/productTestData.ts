@@ -106,7 +106,7 @@ export default class ProductTestData{
   }
 
   async insertIfNotExistend(): Promise<void>  {
-    await Product.deleteMany({});
+    //await Product.deleteMany({});
 
 
     const product = new Product({

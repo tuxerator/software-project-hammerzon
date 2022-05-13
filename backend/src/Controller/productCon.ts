@@ -37,10 +37,13 @@ class ProductController
         console.log(id);
         if(id && Types.ObjectId.isValid(id))
         {
-            const product : IProduct = await Product.findById(id);
+            const product : IProduct = await Product.findById(id).exec();
+            console.log('searching');
+            console.log(product);
             response.status(200);
             response.send(product);
         }else {
+            console.log('error');
             response.status(500);
             response.send('there is no product with such an id');
         }

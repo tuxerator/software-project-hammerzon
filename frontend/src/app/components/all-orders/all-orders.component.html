@@ -1,116 +1,41 @@
 <div>
-<!--
-<div class="container mt-5">
-    div class="d-flex justify-content-center row">
-        <div class="col-md-10">
-            <div class="rounded">
-                <div class="table-responsive table-borderless">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="text-center">
-                                    
-                                </th>
-                                <th>Bild</th>
-                                <th>Bestell #</th>
-                                <th>Produktname</th>
-                                <th>Company name</th>
-                                <th>Preis</th>
-                                <th>Kunde</th>
-                                <th>Bestelldatum</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body">
-                            <tr class="cell-1">
-                                <td class="text-center">
-                                   
-                                </td>
-                                <td></td>
-                                <td>#SO-13487</td>
-                                <td>Holzstuhl</td>
-                                <td>Bau ich GmbH</td>                                 
-                                <td>10€/hr</td>
-                                <td>Max Mustermann
-                                Musterstraße 1
-                                12345 Stadt
-                                Deutschland
-                                Email</td>
-                                <td>01.01.2022</td>
-                                <td><span class="badge badge-success">Fullfilled</span></td>
-                            </tr>
-                            <tr class="cell-1">
-                                <td class="text-center">
-                                   
-                                </td>
-                               <td></td>
-                                <td>#SO-13487</td>
-                                <td>Holzstuhl</td>
-                                <td>Bau ich GmbH</td>                                 
-                                <td>10€/hr</td>
-                                <td>Max Mustermann
-                                Musterstraße 1
-                                12345 Stadt
-                                Deutschland
-                                Email</td>
-                                <td>01.01.2022</td>
-                                <td><span class="badge badge-success">Fullfilled</span></td>
-                            </tr>
-                            <tr class="cell-1">
-                                <td class="text-center">
-                                    
-                                </td>
-                               <td></td>
-                                <td>#SO-13487</td>
-                                <td>Holzstuhl</td>
-                                <td>Bau ich GmbH</td>                                 
-                                <td>10€/hr</td>
-                                <td>Max Mustermann
-                                Musterstraße 1
-                                12345 Stadt
-                                Deutschland
-                                Email</td>
-                                <td>01.01.2022</td>
-                                <td><span class="badge badge-success">Fullfilled</span></td>
-                            </tr>
-                            <tr class="cell-1">
-                                <td class="text-center">
-                                  
-                                </td>
-                               <td></td>
-                                <td>#SO-13487</td>
-                                <td>Holzstuhl</td>
-                                <td>Bau ich GmbH</td>                                 
-                                <td>10€/hr</td>
-                                <td>Max Mustermann
-                                Musterstraße 1
-                                12345 Stadt
-                                Deutschland
-                                Email</td>
-                                <td>01.01.2022</td>
-                                <td><span class="badge badge-success">Fullfilled</span></td>
-                            </tr>
-                        </tbody>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-12">
+                <div class="rounded">
+                    <div class="table-responsive table-borderless">
+                        <table class="table-dark">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th scope="col">Bestell #</th>
+                                    <th scope="col">Produktname</th>
+                                    <th scope="col">Company name</th>
+                                    <th scope="col">Preis</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <tr *ngFor="let elem of combined">
+                                    <td class="text-center"></td>
+                                    <td>{{elem.order._id}}</td>
+                                    <td>{{elem.product.name}} </td>
+                                    <td>{{elem.product.user}} </td>                                 
+                                    <td>{{elem.product.prize}}</td>
+                                    <td>Max Mustermann
+                                    Musterstraße 1
+                                    12345 Stadt
+                                    Deutschland
+                                    Email</td>
+                                    <td>01.01.2022</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                </tr>
+                            </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-    </div>-->
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <ul class="list-group shadow">
-                <li *ngFor="let orderInfo of orderList.list" class="list-group-item">
-                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                        <div class="media-body order-2 order-lg-1">
-                            <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2">Test</h6>
-                            </div>
-                        </div>
-                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
-                    </div>
-                </li>
-                <!--Ende Produkt 1-->
-            </ul>
         </div>
     </div>
 </div>

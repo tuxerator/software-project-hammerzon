@@ -5,14 +5,14 @@ export default class OrderTestData{
     // productCon = new ProductController();
     public list : any[] = [
         {
-            product :  '627a59fe6c23242357e841b1',
+            product :  '627e5c84abdf91cb14e80306',
             orderingUser : '627d4654fef29f275ceab461',
             timeOfOrder: new Date(),
             finalized : false,
             timeslot : new Date(),
         },
         {
-            product : '627a59fe6c23242357e841b2',
+            product : '627e5c84abdf91cb14e80308',
             orderingUser : '627d4654fef29f275ceab461',
             timeOfOrder : new Date(),
             finalized : false,
@@ -22,7 +22,7 @@ export default class OrderTestData{
 
     constructor()
     {
-        //this.insertIfNotExistend();
+        this.insertIfNotExistend();
         //Order.deleteMany({}).exec();
     }
 

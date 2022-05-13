@@ -21,17 +21,17 @@
                                 <td>
                                     <div class="flex-lg-grow1 ms3">
                                         <!-- product information -->
-                                        <h6 class="small mb-0 text-white">Bestellte Dienstleistung</h6>
-                                        <span class="small text-white">Name des Anbieters</span>
+                                        <h6 class="small mb-0 text-white">{{product?.name}}</h6>
+                                        <span class="small text-white">{{product?.user}}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <!-- Zeitslot -->
-                                    <div class="text-white">10:00 - 11:00</div>
+                                    <div class="text-white">{{product?.timeslots}}</div>
                                 </td>
                                 <td>
                                     <!-- Preis -->
-                                    <div class="text-white">62,94 €</div>
+                                    <div class="text-white">{{product?.prize}} € / hr</div>
                                 </td>
                             </tr>
                             
@@ -45,9 +45,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="text-white">Name</div>
-                            <div class="text-white">Adresse</div>
-                            <div class="text-white">E-Mail Adresse</div>
+                            <div class="text-white">{{user?.firstName}} {{user?.lastName}}</div>
+                            <div class="text-white">{{user?.address?.street}} {{user?.address?.houseNum}}, {{user?.address?.city}}</div>
+                            <div class="text-white">{{user?.email}}</div>
                         </div>
                         <div class="col-lg-6 align-self-center">
                             <div class="d-flex justify-content-center">
@@ -71,7 +71,9 @@
             <div class="card mb-4 bg-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary btn-lg">Zurück zum Produkt</button>
+                        <a routerLink="..">
+                            <button type="button" class="btn btn-primary btn-lg">Zurück zum Produkt</button>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -29,9 +29,9 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  listAllOrders(): Observable<OrderList<OrderInfo>>
+  listAllOrders(): Observable<OrderInfo[]>
   {
-    return this.http.get<OrderList<OrderInfo>>('api/orderlist');
+    return this.http.get<OrderInfo[]>('api/orderlist');
   }
 
   registerOrder(productId:string, timeslot:Date): Observable<OrderInfo>

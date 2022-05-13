@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { User } from 'src/app/models/User';
+import { AuthService } from 'src/app/services/auth.service';
 import { ProductdetailsService,ProductDetails} from 'src/app/services/productdetails.service';
 
 @Component({
@@ -9,9 +11,12 @@ import { ProductdetailsService,ProductDetails} from 'src/app/services/productdet
 export class ProductdetailsComponent implements OnInit {
   product: ProductDetails|undefined;
   //public productID: string;
+  user : User|undefined;
 
 
-  constructor(private route:ActivatedRoute,private productService:ProductdetailsService) {
+  constructor(private route:ActivatedRoute,
+              private productService:ProductdetailsService,
+              private authService: AuthService) {
     console.log('kommt zu Params');
   }
 
@@ -29,6 +34,18 @@ export class ProductdetailsComponent implements OnInit {
       {
         next: (val)=>{
           this.product = val;
+        },
+        error: (err)=> {
+          console.log(err);
+        }
+      }
+    );
+
+    // is there a user logged in? get the user.
+    this.authService.getUser().subscribe(
+      {
+        next: (val)=>{
+          this.user = val;
         },
         error: (err)=> {
           console.log(err);

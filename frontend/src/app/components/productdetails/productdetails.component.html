@@ -13,7 +13,13 @@
                     <h4 class="box-title mt-5">{{product?.duration}}</h4>
                     <p>...</p>
                     <h2 class="mt-5 text-black">{{product?.prize}}€/hr</h2>
-                    <button class="btn btn-primary btn-rounded">Buy Now</button>
+                    <div *ngIf="user; else elseBlock"> <!-- authorize user to continue -->
+                        <a routerLink="order-product">
+                            <button class="btn btn-primary btn-rounded">Buy Now</button>
+                        </a>
+                    </div>
+                    <ng-template #elseBlock> Please log in to place an Order </ng-template>
+
                 </div>
             </div>
         </div>
