@@ -126,6 +126,9 @@ app.get('/api/productlist', product.getList.bind(product));
 // product details ...
 app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
 
+// add product
+app.post('/api/addproduct',product.addProduct);
+
 // OrderController endpoints
 
 // register a new Order

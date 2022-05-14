@@ -34,7 +34,7 @@ const Appointment : Schema = new Schema<IAppointment>(
 const productSchema : Schema = new Schema<IProduct>({
   name:          { type: String, required: true },
   user:          { type: String, required: true },
-  description:   { type: String, required: true },
+  description:   { type: String},
   prize:         { type: Number, required: true },
   duration:      { type: Date,   required: true },
   appointments:  { type: [Appointment], required: true }

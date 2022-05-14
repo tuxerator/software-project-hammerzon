@@ -17,6 +17,7 @@ type OrderInfo={
     timeOfOrder: Date,
     finalized: boolean,
     timeslot: Date
-  }  
+  }
+
 
 export {ListInfo,SessionRequest,PostOrder,OrderInfo};

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Helper from '../helpers';
 import {IProduct, Product} from '../Models/Product';
-import { ListInfo } from '../types';
+import { ListInfo, SessionRequest } from '../types';
 import {Types} from 'mongoose';
 class ProductController
 {
@@ -47,6 +47,44 @@ class ProductController
             response.status(500);
             response.send('there is no product with such an id');
         }
+    }
+
+
+    public async addProduct(request:SessionRequest,response:Response):Promise<void>
+    {
+        if(!request.session.user)
+        {
+            response.status(403);
+            response.send('Not Authorized');
+            return;
+        }
+
+        const product = request.body; //
+        console.log(product);
+        // Wenn ein Wert nicht existiert dann Antworte mit eine Fehler meldung
+        if(!Helper.valueExists(product,'name',response)) return;
+        if(!Helper.valueExists(product,'description',response)) return;
+        if(!Helper.valueExists(product,'prize',response)) return;
+        if(!Helper.valueExists(product,'duration',response)) return;
+        if(!Helper.valueExists(product,'appointments',response)) return;
+
+        product.user = request.session.user._id;
+
+        if(product.name.length <= 3)
+        {
+            response.status(403);
+            response.send({code:403,message:'Name needs to be at least 4 Chars'});
+            return;
+        }
+
+        const dbProduct = new Product(product);
+
+        dbProduct.user = request.session.user._id;
+
+        await dbProduct.save();
+
+        response.status(200);
+        response.send({code:200,message:'Added Product'});
     }
 
 }
