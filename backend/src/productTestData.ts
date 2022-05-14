@@ -120,7 +120,7 @@ export default class ProductTestData{
     product.save();
 
 
-    
+
     const vals : IProduct[] = await Product.find({});
     if(!vals || vals.length <= 0)
     {
@@ -132,6 +132,9 @@ export default class ProductTestData{
         console.log('Products already exist');
     }
   }
+
+
+
 }
 
 

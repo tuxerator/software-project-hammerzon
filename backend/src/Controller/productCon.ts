@@ -18,12 +18,36 @@ class ProductController
         const maxLimit = Math.min(productCount - start, 10);
 
         const limit = Helper.parseQueryInt(request.query,'limit',0,maxLimit,10);
-        const requestable = Math.max(productCount - limit - start,0);
 
-        const list : IProduct[] = await Product.find({}).skip(start).limit(limit).exec();
+        // Falls es einen Search Term gibt nutzt diesen Anstelle von
+        const searchTerm = request.query.search;
+        let list : IProduct[];
+        if(searchTerm)
+        {
+            // Wenn es nur eine Zahl gibt dann ntze es für preis
+            let testPrize = parseFloat(searchTerm as string);
+            if(!testPrize)
+            {
+                testPrize = 0;
+            }
+
+            console.log(searchTerm);
+            const query = {$or:[
+                // und sonst überprufen durch regex den namen des Products
+                {name:{$regex:searchTerm}},
+                {prize:{$lte:testPrize}}
+              ]};
+            list = await Product.find(query).skip(start).exec();
+        }
+        else{
+            // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
+            list = await Product.find({}).skip(start).limit(limit).exec();
+        }
+
+        const requestable = Math.max(list.length - limit - start,0);
 
         const listInfo : ListInfo<IProduct> = {
-            list,//this.list.slice(start,start + limit),
+            list:list.splice(0,limit),//this.list.slice(start,start + limit),
             requestable
         };
 
@@ -38,14 +62,14 @@ class ProductController
         if(id && Types.ObjectId.isValid(id))
         {
             const product : IProduct = await Product.findById(id).exec();
-            console.log('searching');
+            console.log('Searching');
             console.log(product);
             response.status(200);
             response.send(product);
         }else {
             console.log('error');
             response.status(500);
-            response.send('there is no product with such an id');
+            response.send('There is no product with such an id');
         }
     }
 
@@ -86,6 +110,7 @@ class ProductController
         response.status(200);
         response.send({code:200,message:'Added Product'});
     }
+
 
 }
 
