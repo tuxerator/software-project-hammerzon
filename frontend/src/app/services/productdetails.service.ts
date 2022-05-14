@@ -7,7 +7,12 @@ import { Injectable } from '@angular/core';
 export type ProductDetails = ProductInfo & {
   descritpion:string,
   duration:Date,
-  timeslots:Date[]
+  appointments:Appointment[]
+}
+
+export type Appointment = {
+  date : Date,
+  isReserved : Boolean
 }
 
 @Injectable({

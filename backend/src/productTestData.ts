@@ -8,7 +8,19 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}]
+        appointments:[{date:new Date(),isReserved:false},
+                       {date:new Date(2022, 6, 15, 13),isReserved:false},
+                       {date:new Date(), isReserved:true},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},
+                       {date:new Date(), isReserved:false},]
+
     },
     {
         name:'Dachleiter',
@@ -106,7 +118,7 @@ export default class ProductTestData{
   }
 
   async insertIfNotExistend(): Promise<void>  {
-    //await Product.deleteMany({});
+    await Product.deleteMany({});
 
 
     const product = new Product({

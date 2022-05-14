@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Appointment } from './productdetails.service';
 
 
 export type OrderList<T>={
@@ -13,11 +14,11 @@ export type OrderInfo={
   orderingUser: string,
   timeOfOrder: Date,
   finalized: boolean,
-  timeslot: Date
+  appointment : Appointment
 }
 export type PostOrder={
   productId : string,
-  timeslot: Date
+  appointment : Appointment
 }
 
 @Injectable({
@@ -33,10 +34,19 @@ export class OrderService {
   {
     return this.http.get<OrderInfo[]>('api/orderlist');
   }
-
-  registerOrder(productId:string, timeslot:Date): Observable<OrderInfo>
+  /**
+   * change appointment reservation status (in product model)
+   */
+  reserveAppointment(appointment:Appointment) : void
   {
-    const postOrder: PostOrder = {productId, timeslot};
+    this.http.post<Appointment>('api/reserveAppointment', appointment);
+  }
+  /**
+   * register an order with productID and a single appointment.
+   */
+  registerOrder(productId:string, appointment:Appointment): Observable<OrderInfo>
+  {
+    const postOrder: PostOrder = {productId, appointment};
     
     const orderObservable: Observable<OrderInfo> = this.http.post<OrderInfo>('api/registerOrder', postOrder);
     orderObservable.subscribe({

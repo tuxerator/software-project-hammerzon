@@ -9,14 +9,14 @@ export default class OrderTestData{
             orderingUser : '627e212da0cc80c799cbefae',
             timeOfOrder: new Date(),
             finalized : false,
-            timeslot : new Date(),
+            appointment : {date: new Date() , isReserved : false}
         },
         {
             product : '627e5c84abdf91cb14e80308',
             orderingUser : '627e212da0cc80c799cbefae',
             timeOfOrder : new Date(),
             finalized : false,
-            timeslot : new Date()
+            appointment : {date: new Date, isReserved : true}
         }
     ];
 

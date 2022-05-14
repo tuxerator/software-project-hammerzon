@@ -25,7 +25,7 @@ const routes: Routes = [
     { path: 'about/:name',component: AboutMeComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'all-orders', component: AllOrdersComponent},
-    { path: 'productdetails/:id/order-product', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'productdetails/:id/order-product/:date', component: OrderProductComponent},  // should be: product/order-product
     { path: 'login',component: LoginComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},

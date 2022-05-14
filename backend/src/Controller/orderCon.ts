@@ -30,7 +30,7 @@ class OrderController{
                 orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
                 timeOfOrder : new Date(),
                 finalized : false,
-                timeslot : postedOrder.timeslot
+                appointment : postedOrder.appointment
             });
             await newOrder.save();
             const orderInfo : OrderInfo = {
@@ -39,7 +39,7 @@ class OrderController{
                 orderingUser : newOrder.orderingUser.toString(),
                 timeOfOrder : newOrder.timeOfOrder,
                 finalized : newOrder.finalized,
-                timeslot : newOrder.timeslot
+                appointment : newOrder.appointment
             };
 
             response.status(201);
