@@ -14,9 +14,9 @@
                     <h2 class="mt-5 ">{{product?.prize}}€/hr</h2>
                     <div *ngIf="user; else elseBlock"> <!-- authorize user to continue -->
                             <div class="btn-group flex-wrap"role="group">
-                                <div *ngFor="let a of product?.appointments">
+                                <div *ngFor="let a of product?.appointments; let i = index">
                                     <div *ngIf="!a.isReserved">
-                                        <div [routerLink]="['order-product',a.date]">
+                                        <div [routerLink]="['order-product',i]">
                                             <button class="btn btn-primary mb-2 mr-2"> {{a?.date}} </button>
                                         </div>
                                     </div>

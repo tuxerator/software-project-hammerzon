@@ -22,14 +22,16 @@ export class OrderProductComponent implements OnInit {
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
-    const aDate = new Date(String(routeParams.get('date')));
-    // reserve the appointment
-    this.appointment = {date: aDate, isReserved:true};
+    const appointmentIndex = parseInt(String(routeParams.get('i')));
+    
 
     this.productService.getProductDetails(productIDFromRoute).subscribe(
       {
         next: (val)=>{
           this.product = val;
+          this.appointment = this.product.appointments[appointmentIndex];
+          console.log('registering order');
+          this.orderService.registerOrder(this.product._id , appointmentIndex);
         },
         error: (err)=> {
           console.log(err);
@@ -47,11 +49,11 @@ export class OrderProductComponent implements OnInit {
         }
       }
     );
-    // register the order
-    if(this.product)
-    {
-      this.orderService.registerOrder(this.product._id , this.appointment); // timeslot is placeholder
-    }
+  }
+  cancel() : void
+  {
+    // delete order and set product appointment to not reserved
+    
   }
 
 }

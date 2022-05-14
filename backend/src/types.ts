@@ -9,7 +9,7 @@ type SessionRequest = Request & { session: Session };
 
 type PostOrder={
     productId : string,
-    appointment : IAppointment
+    appointmentIndex : Number
 }
 type OrderInfo={
     _id : string,

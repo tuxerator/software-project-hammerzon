@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Appointment } from './productdetails.service';
+import { Appointment, ProductDetails } from './productdetails.service';
+import { ProductInfo } from './landingpage.service';
 
 
 export type OrderList<T>={
@@ -18,7 +19,7 @@ export type OrderInfo={
 }
 export type PostOrder={
   productId : string,
-  appointment : Appointment
+  appointmentIndex : Number
 }
 
 @Injectable({
@@ -37,16 +38,16 @@ export class OrderService {
   /**
    * change appointment reservation status (in product model)
    */
-  reserveAppointment(appointment:Appointment) : void
+  reserveAppointment(product: ProductDetails) : void
   {
-    this.http.post<Appointment>('api/reserveAppointment', appointment);
+    this.http.post<Appointment>('api/reserveAppointment', product);
   }
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId:string, appointment:Appointment): Observable<OrderInfo>
+  registerOrder(productId:string, appointmentIndex: Number): Observable<OrderInfo>
   {
-    const postOrder: PostOrder = {productId, appointment};
+    const postOrder: PostOrder = {productId, appointmentIndex};
     
     const orderObservable: Observable<OrderInfo> = this.http.post<OrderInfo>('api/registerOrder', postOrder);
     orderObservable.subscribe({
