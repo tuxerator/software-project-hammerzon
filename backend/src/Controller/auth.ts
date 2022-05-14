@@ -2,8 +2,6 @@ import { Response } from 'express';
 
 import Helper from '../helpers';
 import { getUserWithOutPassword, IUser, User } from '../Models/User';
-import { IUser } from '../Models/User';
-
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
 
@@ -160,7 +158,8 @@ class AuthController{
             return;
         }
 
-        const userUpdate:IUser = request.body;
+        const userUpdate:IUser= request.body.updatedUser;
+        const oldPassword:string = request.body.oldPassword;
 
         userDBObj.firstName = userUpdate.firstName;
         userDBObj.lastName = userUpdate.lastName;
@@ -171,10 +170,29 @@ class AuthController{
         userDBObj.address.country = userUpdate.address.country;
         userDBObj.markModified('address');
 
-        if(password){
+        if(!bcrypt.compareSync(oldPassword, userDBObj.password.toString() )){
+            response.status(401); // 401: Unauthorized
+            response.send({ code: 401, message: 'Wrong password' });
 
+            return;
         }
 
+        if(userUpdate.password.length < 8)
+        {
+            response.status(401); // 401: Unauthorized
+            response.send({ code: 401, message: 'Password to short' });
+
+            return;
+        }
+
+        userDBObj.password = bcrypt.hashSync(userUpdate.password.toString(),10);
+
+        await userDBObj.save();
+
+        request.session.user = userDBObj;
+
+        response.status(200); // 401: Unauthorized
+        response.send({ code: 401, message: 'Updated User' });
     }
 }
 
