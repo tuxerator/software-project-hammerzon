@@ -4,7 +4,7 @@ import { ProductdetailsService,ProductDetails, Appointment} from 'src/app/servic
 import { OrderInfo, OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
   templateUrl: './order-product.component.html',
@@ -16,12 +16,15 @@ export class OrderProductComponent implements OnInit , OnDestroy{
   appointment:Appointment|undefined;
   appointmentIndex:Number|undefined;
   order : OrderInfo|undefined;
+  cancelled : Boolean = false;
   constructor(private route:ActivatedRoute,
               private productService:ProductdetailsService,
               private authService: AuthService,
-              private orderService: OrderService) { }
+              private orderService: OrderService,
+              private router: Router) { }
 
   ngOnInit(): void {
+    this.detectRouterEvent();
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
@@ -77,7 +80,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
    */
   cancel() : void
   {
-    if(this.order?.finalized === false)
+    if(this.order?.finalized === false && this.cancelled === false)
     { 
       // delete order and set product appointment to not reserved
       console.log('order cancelled');
@@ -94,6 +97,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
         console.log('resetting appointment');
         this.orderService.resetProduct(this.product._id, this.appointmentIndex).subscribe();
       }
+      this.cancelled = true;
     }
   }
 
@@ -119,6 +123,17 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     }
   }
 
+  detectRouterEvent() : void
+  {
+    this.router.events.forEach((event) =>{
+      if(event instanceof NavigationStart){
+        if (event.navigationTrigger === 'popstate'){
+          console.log('pressed back button');
+          this.cancel();
+        }
+      }
+   });
+  }
   
 
 }
