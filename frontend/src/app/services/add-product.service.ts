@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/Product';
+import { IdMessageResponse } from '../components/types';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,8 +11,8 @@ export class AddProductService {
 
   constructor(private http:HttpClient) { }
 
-  addProduct(product:Product):Observable<string>
+  addProduct(product:Product):Observable<IdMessageResponse>
   {
-     return this.http.post<string>('api/productCon/addProduct',product);
+    return this.http.post<IdMessageResponse>('api/addproduct',product);
   }
 }

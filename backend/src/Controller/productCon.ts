@@ -77,14 +77,17 @@ class ProductController
             return;
         }
 
+        delete product._id;
+
+
         const dbProduct = new Product(product);
 
-        dbProduct.user = request.session.user._id;
+        dbProduct.user = request.session.user._id.toString();
 
         await dbProduct.save();
 
         response.status(200);
-        response.send({code:200,message:'Added Product'});
+        response.send({code:200,message:'Added Product',id:dbProduct._id});
     }
 
 }

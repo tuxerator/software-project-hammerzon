@@ -27,7 +27,7 @@ export class AuthService {
 
    getUser():Observable<User>
    {
-    const userObservable: Observable<User> = this.http.get<User>('/api/auth/logintest');
+    const userObservable: Observable<User> = this.http.get<User>('api/auth/logintest');
     userObservable.subscribe({
       next: (val) => {
         this.user = val;
