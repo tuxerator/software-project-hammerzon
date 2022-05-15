@@ -114,6 +114,8 @@ export class OrderProductComponent implements OnInit , OnDestroy{
           next: (val) => {
             this.order = val;
             console.log(this.order);
+            const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+            this.router.navigateByUrl(url);
           },
           error: (err) => {
             console.error(err);
@@ -121,8 +123,8 @@ export class OrderProductComponent implements OnInit , OnDestroy{
         }
       );
       // has to navigate here so the order isn't deleted
-      const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
-      this.router.navigateByUrl(url);
+      // const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+      // this.router.navigateByUrl(url);
     }
     else
     {

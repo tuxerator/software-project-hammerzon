@@ -22,8 +22,8 @@ export default class OrderTestData{
 
     constructor()
     {
-        this.insertIfNotExistend();
-        //Order.deleteMany({}).exec();
+        //this.insertIfNotExistend();
+        Order.deleteMany({}).exec();
     }
 
     async insertIfNotExistend(): Promise<void>  {
