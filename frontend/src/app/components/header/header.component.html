@@ -1,0 +1,43 @@
+<div class="container p-4 bg-dark m-2">
+  <!---... Header ... -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark p-2 border-bottom border-secondary">
+      <a class="navbar-brand h1" routerLink="/">Handwerkerportal</a>
+      <!-- the navbar collapses into a button when there's not enough space -->
+      <button
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      class="navbar-toggler"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+          class="collapse navbar-collapse"
+          id="navbarNav">
+          <div class="d-flex me-auto ms-auto">
+            <input class="form-control me-2" type="search" placeholder="Suchen ..." aria-label="Search" [(ngModel)]="searchTerm" (change)="search()">
+            <button class="btn btn-outline-light" (click)="search()" >Search</button>
+          </div>
+          <ul class="navbar-nav mb-2 mb-lg-0">
+              <!-- add to this List for more navbar links -->
+
+              <li *ngIf="authService.user" class="nav-item active">
+                <a class="nav-link" (click)="logout()">logout</a>
+              </li>
+              <li class="nav-item active">
+                  <a class="nav-link" routerLink="/about">About</a>
+              </li>
+              <li *ngIf="!authService.user"  class="nav-item active">
+                <a class="nav-link" routerLink="/login">Login</a>
+            </li>
+            <li *ngIf="!authService.user" class="nav-item active">
+                <a class="nav-link" routerLink="/register">Register</a>
+            </li>
+          </ul>
+
+      </div>
+  </nav>
+</div>
+

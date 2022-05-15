@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LandingpageService,ProductInfo,ListInfo } from 'src/app/services/landingpage.service';
 
 
@@ -17,7 +18,7 @@ export class LandingpageComponent implements OnInit {
     public currentStart = 0;
     public currentLimit = 10;
 
-    constructor(private LandingpageService: LandingpageService) {
+    constructor(private LandingpageService: LandingpageService,private route: ActivatedRoute) {
     }
 
     //public list = [0,1,2,3,4,5,6,7,8,9];
@@ -49,9 +50,28 @@ export class LandingpageComponent implements OnInit {
      */
     ngOnInit(): void {
         console.log('LandingPage initialized!');
-        //
-        this.requestList();
+        // Gib die Query Params as der Rout und gebe sie weiter an das Backend
+        this.route.queryParams.subscribe(params => {
+            console.log(params);
+            let search = params['search'];
+            search = search ? search : '';
+            const start = this.parseToInt(params['start'],0);
+            const limit = this.parseToInt(params['limit'],10);
+            console.log(`${start} ${limit} ${search}`);
+            this.requestList(start,limit,search);
+          }
+      );
     }
+
+    parseToInt(value:string,alternative:number):number{
+        const new_val = parseInt(value);
+        if(new_val)
+        {
+          return new_val;
+        }
+        return alternative;
+    }
+
     // fragt nächsten Elemente die nach currentStart und currentLimit kommen
     // z.B currentStart= 0 currentLimit= 10 => currentStart= 10 currentLimit= 10
     //     Bei liste im Backend von z.B [0...99] würde das zu der liste im Frontend führen [10..29] mit requestable:70
@@ -66,9 +86,9 @@ export class LandingpageComponent implements OnInit {
         this.requestList(this.currentStart,this.currentLimit);
     }
     // Frägt nach Productliste bei dem Landingpageservice nach
-    requestList(start:number= 0,limit:number=10) : void
+    requestList(start:number= 0,limit:number=10,search:string='') : void
     {
-        this.LandingpageService.getProductList(start,limit).subscribe({
+        this.LandingpageService.getProductList(start,limit,search).subscribe({
             // next: Value arrived successfully!
             next: value => {
                 console.log(value);

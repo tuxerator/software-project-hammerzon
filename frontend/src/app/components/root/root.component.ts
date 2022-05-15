@@ -7,34 +7,8 @@ import { AuthService } from 'src/app/services/auth.service';
     styleUrls: ['./root.component.css'],
     selector: 'app-root'
 })
-export class RootComponent implements OnInit{
+export class RootComponent{
+    constructor() {
 
-    constructor(public authService:AuthService,private router:Router ) {
     }
-
-    ngOnInit(): void {
-      this.authService.getUser().subscribe({
-        next: (user) => {
-          if (user) {
-            this.router.navigate(['']);
-          }
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
-    }
-
-    logout():void
-    {
-      console.log('Log out');
-      this.authService.logout().subscribe({
-        next: () =>
-        {
-          this.router.navigate(['/']);
-        },
-        error:(err) => console.log(err)
-      });
-    }
-
 }
