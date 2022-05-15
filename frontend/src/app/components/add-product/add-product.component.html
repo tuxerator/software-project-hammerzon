@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center text-dark">Produkt hinzufügen</h4>
+        <form [formGroup]="addProductForm"  (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+        <!--Produktname-->
+        <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['firstName'].touched">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+            <input class="form-control" placeholder="Produktname" formControlName="productName" type="text" required>
+            <div *ngIf="addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger Produktname.</div>
+            <div *ngIf="addProductForm.controls['productName']?.invalid" class="invalid-feedback was-validated">Produktname wird erwartet.</div>
+          </div>
+        <!--Marke-->
+        <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['company'].touched">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+            <input class="form-control" placeholder="Unternehmen" formControlName="company" type="text" required>
+            <div *ngIf="addProductForm.controls['company']?.invalid" class="valid-feedback was-validated">Gültiges Unternehmen.</div>
+            <div *ngIf="addProductForm.controls['company']?.invalid" class="invalid-feedback was-validated">Unternehmen wird erwartet.</div>
+          </div>
+        <!--Preis-->
+        <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['prize'].touched">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+            <input class="form-control" placeholder="Preis" formControlName="prize" type="text" required>
+            <div *ngIf="addProductForm.controls['prize']?.invalid" class="valid-feedback was-validated">Gültiger Preis.</div>
+            <div *ngIf="addProductForm.controls['prize']?.invalid" class="invalid-feedback was-validated">Preis wird erwartet.</div>
+          </div>
+        <!--Beschreibung-->
+        <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['description'].touched">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+            <input class="form-control" placeholder="Beschreibung" formControlName="description" type="text" required>
+            <div *ngIf="addProductForm.controls['description']?.invalid" class="valid-feedback was-validated">Gültige Beschreibung.</div>
+            <div *ngIf="addProductForm.controls['description']?.invalid" class="invalid-feedback was-validated">Beschreibung wird erwartet.</div>
+          </div>
+        <!--Bild hinzufügen-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="filebutton">Bild</label>
+            <div class="col-md-4">
+                <input id="filebutton" name="filebutton" class="input-file" type="file">
+            </div>
+        </div>
+        <!--Produkt hinzufügen-->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-block"> Add Product  </button>
+          </div>
+        </form>
+
+    </article>  
+    </div>
+</div>     
