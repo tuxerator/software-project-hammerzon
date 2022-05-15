@@ -126,8 +126,13 @@ app.get('/api/productlist', product.getList.bind(product));
 // product details ...
 app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
 
+<<<<<<< HEAD
 // reset appointment
 app.post('/api/resetAppointment', product.resetAppointment);
+=======
+// add product
+app.post('/api/addproduct',product.addProduct);
+>>>>>>> develop
 
 // OrderController endpoints
 
