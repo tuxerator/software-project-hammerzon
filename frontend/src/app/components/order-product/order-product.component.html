@@ -1,5 +1,5 @@
 <!-- find better colors -->
-<div class="container bg-dark">
+<div class="container bg-dark" > 
     <div class="row">
         <!-- left column of cards-->
         <div class="col-lg-8 align-self-center">
@@ -27,7 +27,7 @@
                                 </td>
                                 <td>
                                     <!-- Zeitslot -->
-                                    <div class="text-white">{{product?.timeslots}}</div>
+                                    <div class="text-white">{{ appointment?.date }}</div> <!-- should be only one appointment here-->
                                 </td>
                                 <td>
                                     <!-- Preis -->
@@ -51,7 +51,9 @@
                         </div>
                         <div class="col-lg-6 align-self-center">
                             <div class="d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary btn-lg">Zahlungspflichtig Bestellen</button>
+                                <a routerLink="order-finalized">
+                                    <button type="button" class="btn btn-primary btn-lg" (click)="finalize()">Zahlungspflichtig Bestellen</button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -71,8 +73,8 @@
             <div class="card mb-4 bg-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        <a routerLink="..">
-                            <button type="button" class="btn btn-primary btn-lg">Zurück zum Produkt</button>
+                        <a routerLink="../../"> 
+                            <button type="button" class="btn btn-primary btn-lg" (click)="cancel()" >Zurück zum Produkt</button> 
                         </a>
                     </div>
                 </div>

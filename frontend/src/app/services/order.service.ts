@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
+import { Appointment, ProductDetails } from './productdetails.service';
+import { ProductInfo } from './landingpage.service';
 
 
 export type OrderList<T>={
@@ -13,11 +15,11 @@ export type OrderInfo={
   orderingUser: string,
   timeOfOrder: Date,
   finalized: boolean,
-  timeslot: Date
+  appointment : Appointment
 }
 export type PostOrder={
   productId : string,
-  timeslot: Date
+  appointmentIndex : Number
 }
 
 @Injectable({
@@ -33,25 +35,49 @@ export class OrderService {
   {
     return this.http.get<OrderInfo[]>('api/orderlist');
   }
-
-  registerOrder(productId:string, timeslot:Date): Observable<OrderInfo>
+  
+  /**
+   * register an order with productID and a single appointment.
+   */
+  registerOrder(productId:string, appointmentIndex: Number): Observable<OrderInfo>
   {
-    const postOrder: PostOrder = {productId, timeslot};
+    const postOrder: PostOrder = {productId, appointmentIndex};
     
-    const orderObservable: Observable<OrderInfo> = this.http.post<OrderInfo>('api/registerOrder', postOrder);
-    orderObservable.subscribe({
+    return this.http.post<OrderInfo>('api/registerOrder', postOrder);
+    /*
+    orderObservable.subscribe(
+      {
       next: (val) => {
         this.currentOrder = val;
       },
       error: (err) => {
         console.error(err);
       }
-    });
+      }
+      );
     return orderObservable;
+    */
   }
-  finalizeOrder(orderId:string): void
+  /**
+   * deletes an order when it is cancelled
+   */
+  deleteOrder(orderId:string) : Observable<void>
   {
-    this.http.post<string>('api/finalizeOrder',orderId);
+    return this.http.delete<void>(`api/deleteOrder/${orderId}`);
+  }
+  /**
+   * resets the isReserved status of an appointment to false
+   */
+  resetProduct(productId:string, appointmentIndex:Number) : Observable<PostOrder>
+  {
+    const postOrder:PostOrder = {productId, appointmentIndex};
+    console.log('reset appointment service');
+    return this.http.post<PostOrder>('api/resetAppointment', postOrder);
+  }
+
+  finalizeOrder(orderId:string): Observable<OrderInfo>
+  {
+    return this.http.post<OrderInfo>(`api/finalizeOrder/${orderId}`,orderId);
   }
 }
 

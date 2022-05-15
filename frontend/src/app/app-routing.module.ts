@@ -10,6 +10,8 @@ import { LoginComponent } from './components/login/login.component';
 import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
 import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
+
 
 
 /**
@@ -25,7 +27,7 @@ const routes: Routes = [
     { path: 'about/:name',component: AboutMeComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'all-orders', component: AllOrdersComponent},
-    { path: 'productdetails/:id/order-product', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
     { path: 'login',component: LoginComponent},
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
@@ -35,6 +37,7 @@ const routes: Routes = [
     { path: 'register',component: RegistrationComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
     { path: 'order-history', component: OrderHistoryComponent},
+    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent}
 ];
 
 @NgModule({

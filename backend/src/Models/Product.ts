@@ -34,7 +34,7 @@ const Appointment : Schema = new Schema<IAppointment>(
 const productSchema : Schema = new Schema<IProduct>({
   name:          { type: String, required: true },
   user:          { type: String, required: true },
-  description:   { type: String, required: true },
+  description:   { type: String},
   prize:         { type: Number, required: true },
   duration:      { type: Date,   required: true },
   appointments:  { type: [Appointment], required: true }
@@ -45,4 +45,5 @@ const productSchema : Schema = new Schema<IProduct>({
 // 3. Create a Model.
 const Product : Model<IProduct>  = model<IProduct>('Product', productSchema);
 
-export {IProduct,Product,IAppointment};
+
+export {IProduct,Product,IAppointment, Appointment};

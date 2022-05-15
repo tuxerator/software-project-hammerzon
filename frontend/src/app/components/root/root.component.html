@@ -28,7 +28,10 @@
                     </li>
                     <li *ngIf="authService.user" class="nav-item active">
                       <a class="nav-link" (click)="logout()">logout</a>
-                  </li>
+                    </li>
+                    <li *ngIf="authService.user" class="nav-item active">
+                        <a class="nav-link" routerLink="/order-history">Order history</a>
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" routerLink="/about">About</a>
                     </li>

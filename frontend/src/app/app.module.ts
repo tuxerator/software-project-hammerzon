@@ -16,6 +16,7 @@ import { LoginComponent } from './components/login/login.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
         RegistrationComponent,
         LoginComponent,
         ProductdetailsComponent,
-        OrderHistoryComponent
+        OrderHistoryComponent,
+        OrderFinalizedComponent
     ],
     imports: [
         BrowserModule,
