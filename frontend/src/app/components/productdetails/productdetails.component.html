@@ -15,11 +15,13 @@
                     <div *ngIf="user; else elseBlock"> <!-- authorize user to continue -->
                             <div class="btn-group flex-wrap"role="group">
                                 <div *ngFor="let a of product?.appointments; let i = index">
-                                    <div *ngIf="!a.isReserved">
+                                    
                                         <div [routerLink]="['order-product',i]">
-                                            <button class="btn btn-primary mb-2 mr-2"> {{a?.date}} </button>
+                                            <div *ngIf="!a.isReserved">
+                                                <button class="btn btn-primary mb-2 mr-2"> {{a?.date}} </button>
+                                            </div>
                                         </div>
-                                    </div>
+                                 
                                 </div>
                              </div>
                     </div>
