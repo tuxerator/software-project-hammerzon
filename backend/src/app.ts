@@ -8,7 +8,7 @@
  */
 
 import errorHandler from 'errorhandler';
-import express from 'express';
+import express, { application } from 'express';
 import path from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -126,13 +126,19 @@ app.get('/api/productlist', product.getList.bind(product));
 // product details ...
 app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
 
+// reset appointment
+app.post('/api/resetAppointment', product.resetAppointment);
+
 // OrderController endpoints
 
 // register a new Order
 app.post('/api/registerOrder', order.registerOrder);
 
 // finalize an order
-app.post('/api/finalizeOrder', order.finalizeOrder);
+app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+
+// delete an order
+app.delete('/api/deleteOrder/:id',order.deleteOrder);
 
 // list all orders for the admin page
 app.get('/api/orderlist', order.listAllOrders);
