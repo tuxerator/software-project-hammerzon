@@ -99,6 +99,10 @@ export class OrderProductComponent implements OnInit , OnDestroy{
       }
       this.cancelled = true;
     }
+    else
+    {
+      console.log('order finalized or already cancelled.');
+    }
   }
 
   finalize() : void
@@ -116,6 +120,9 @@ export class OrderProductComponent implements OnInit , OnDestroy{
           }
         }
       );
+      // has to navigate here so the order isn't deleted
+      const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+      this.router.navigateByUrl(url);
     }
     else
     {

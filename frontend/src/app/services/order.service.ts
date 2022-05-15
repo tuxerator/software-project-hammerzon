@@ -35,7 +35,11 @@ export class OrderService {
   {
     return this.http.get<OrderInfo[]>('api/orderlist');
   }
-  
+
+  listAllOrdersByUser() : Observable<OrderInfo[]>
+  {
+    return this.http.get<OrderInfo[]>('api/orderlistbyuser');
+  }
   /**
    * register an order with productID and a single appointment.
    */
@@ -44,19 +48,7 @@ export class OrderService {
     const postOrder: PostOrder = {productId, appointmentIndex};
     
     return this.http.post<OrderInfo>('api/registerOrder', postOrder);
-    /*
-    orderObservable.subscribe(
-      {
-      next: (val) => {
-        this.currentOrder = val;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-      }
-      );
-    return orderObservable;
-    */
+
   }
   /**
    * deletes an order when it is cancelled

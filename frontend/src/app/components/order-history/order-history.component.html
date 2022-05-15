@@ -18,13 +18,13 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                <tr ><!--*ngFor="let elem of combined"-->
+                                <tr *ngFor="let elem of combined">
                                     <td class="text-center"></td>
-                                    <td>01</td><!--{{elem.order._id}}-->
-                                    <td>Holzstuhl </td> <!--{{elem.product?.name}}-->
-                                    <td>Bau ich GmbH </td> <!--{{elem.product?.user}}-->                                
-                                    <td>10€/hr</td> <!--{{elem.product?.prize}}-->                                   
-                                    <td>01.01.2022 </td> <!--{{elem.order.timeOfOrder}}-->
+                                    <td>{{elem.order._id}}</td>
+                                    <td>{{elem.product?.name}} </td> <!--{{elem.product?.name}}-->
+                                    <td>{{elem.product?.user}} </td> <!--{{elem.product?.user}}-->                                
+                                    <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->                                   
+                                    <td>{{elem.order.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
                                     <td> <span class="p-2 mb-2 bg-success">Versandt</span> </td>
 
                                 </tr>
