@@ -1,11 +1,11 @@
-import { HttpClient } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import { AuthService } from "src/app/services/auth.service";
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { Address, User } from '../../models/User';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators,ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'personalprofile',
+    selector: 'app-personalprofile',
     templateUrl: './personalprofile.component.html'
 })
 export class PersonalProfileComponent implements OnInit{
@@ -22,20 +22,19 @@ export class PersonalProfileComponent implements OnInit{
 
 
     public profileForm: FormGroup = this.formBuilder.group({
-        firstName: new FormControl('', [Validators.required]),
-        lastName: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        street: new FormControl('', [Validators.required]),
-        houseNum: new FormControl('', [Validators.required]),
-        city: new FormControl('', [Validators.required]),
-        postCode: new FormControl('', [Validators.required]),
-        country: new FormControl('', [Validators.required]),
         oldPassword: new FormControl('', [Validators.required]),
         newPassword: new FormControl('', [Validators.required]),
-        confirmPassword: new FormControl('', [Validators.required])
+        confirmPassword: new FormControl('', [Validators.required]),
+        firstName:new FormControl('Test', [Validators.required]),
+        lastName:new FormControl('Test',[Validators.required]),
+        street: new FormControl('Test', [Validators.required]),
+        houseNum: new FormControl('Test', [Validators.required]),
+        city: new FormControl('Test', [Validators.required]),
+        postCode: new FormControl('Test', [Validators.required]),
+        country: new FormControl('Test', [Validators.required])
       }, {validators: this.passwordMatchingValidator});
 
-      
+
 
     constructor(private formBuilder: FormBuilder,private authService: AuthService){
 
@@ -46,6 +45,14 @@ export class PersonalProfileComponent implements OnInit{
             next: (user) => {
                 if (user){
                     this.user = user;
+                    //Erstelle für jeden Wert im Nutzer einen
+                    this.profileForm.get('firstName')?.setValue(user?.firstName);
+                    this.profileForm.get('lastName')?.setValue(user?.lastName);
+                    this.profileForm.get('street')?.setValue(user?.address.street);
+                    this.profileForm.get('houseNum')?.setValue(user?.address.houseNum);
+                    this.profileForm.get('city')?.setValue(user?.address.city);
+                    this.profileForm.get('postCode')?.setValue(user?.address.postCode);
+                    this.profileForm.get('country')?.setValue(user?.address.country);
                 }
             },
             error: (err) => {
@@ -55,26 +62,26 @@ export class PersonalProfileComponent implements OnInit{
     }
 
     activeEditMode(){
-        this.editMode = !(this.editMode);
+        this.editMode = true;
     }
 
     public onSubmit(): void{
         console.log('Create Debug Log');
         this.profileForm.markAllAsTouched();
-        
+        console.log(this.profileForm);
         if(this.profileForm.invalid)return;
         console.log('Through Validation Debug Log');
         const form = this.profileForm.value;
         const address : Address = new Address(form.street,form.houseNum,form.city,form.postCode,form.country);
         const newUser:User = new User(form.email,form.newPassword,form.firstName,form.lastName,address);
-        this.authService.updateUser(form.oldPassword,newUser);
-            
-        
-        
+        this.authService.updateUser(form.oldPassword,newUser).subscribe({
+          next: () => this.editMode = false,
+          error: (err) => console.error(err)
+        });
     }
 
-    
-    
+
+
 }
 
 

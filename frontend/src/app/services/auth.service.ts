@@ -60,8 +60,8 @@ export class AuthService {
      return oberservable;
    }
 
-   updateUser(oldPassword:string, updatedUser:User)
+   updateUser(oldPassword:string, updatedUser:User):Observable<{code:number,message:string}>
    {
-      this.http.post('api/auth/update',{oldPassword,updatedUser});
+      return this.http.post<{code:number,message:string}>('api/auth/update',{oldPassword,updatedUser});
    }
 }
