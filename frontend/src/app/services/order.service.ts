@@ -15,7 +15,8 @@ export type OrderInfo={
   orderingUser: string,
   timeOfOrder: Date,
   finalized: boolean,
-  appointment : Appointment
+  appointment : Appointment,
+  confirmed : boolean
 }
 export type PostOrder={
   productId : string,

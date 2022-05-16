@@ -7,10 +7,10 @@ import {Types} from 'mongoose';
 
 class OrderController{
     /**
-     * gets every Order from the schema in a list.
+     * gets every finalized Order from the schema in a list.
      */
     public async listAllOrders(request: Request, response: Response): Promise<void>{
-        const list : IOrder[] = await Order.find({});
+        const list : IOrder[] = await Order.find({finalized : true});
 
         response.status(200);
         response.send(list);
@@ -60,7 +60,8 @@ class OrderController{
                 orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
                 timeOfOrder : new Date(),
                 finalized : false,
-                appointment : (await updateProduct).appointments[index]
+                appointment : (await updateProduct).appointments[index],
+                confirmed : false
             });
             await newOrder.save();
             const orderInfo : OrderInfo = {
@@ -69,7 +70,8 @@ class OrderController{
                 orderingUser : newOrder.orderingUser.toString(),
                 timeOfOrder : newOrder.timeOfOrder,
                 finalized : newOrder.finalized,
-                appointment : newOrder.appointment
+                appointment : newOrder.appointment,
+                confirmed : newOrder.confirmed
             };
             (await updateProduct).appointments[index].isReserved = true;
             (await updateProduct).save();

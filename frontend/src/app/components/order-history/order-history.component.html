@@ -1,6 +1,6 @@
 <h2>Bestellhistorie</h2>
 <div>
-    <div class="container mt-5">
+    <div class="container-fluid">
         <div class="d-flex justify-content-center row">
             <div class="col-md-8">
                 <div class="rounded">
@@ -25,8 +25,12 @@
                                     <td>{{elem.product?.user}} </td> <!--{{elem.product?.user}}-->                                
                                     <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->                                   
                                     <td>{{elem.order.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
-                                    <td> <span class="p-2 mb-2 bg-success">Versandt</span> </td>
-
+                                    <div *ngIf="elem.order.confirmed; else elseBlock">
+                                        <td> <span class="p-2 mb-2 bg-success">Bestätigt</span> </td>
+                                    </div>
+                                    <ng-template #elseBlock> 
+                                        <td> <span class="p-2 mb-2 bg-info text-nowrap">Nicht bestätigt</span> </td>
+                                    </ng-template>
                                 </tr>
                             </tbody>
                     </table>

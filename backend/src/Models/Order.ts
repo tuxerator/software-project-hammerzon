@@ -10,14 +10,18 @@ interface IOrder extends Document{
     // Bestelltes Produkt
     product : mongoose.Types.ObjectId
     // Bestellender User, soll Referenz zum UserObject sein?
-    orderingUser: mongoose.Types.ObjectId
+    orderingUser : mongoose.Types.ObjectId
     // Bestellzeitpunkt
-    timeOfOrder: Date
+    timeOfOrder : Date
 
-    finalized: boolean
+    finalized : boolean
 
     appointment : IAppointment
+
+    confirmed : boolean
 }
+
+
 
 const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },

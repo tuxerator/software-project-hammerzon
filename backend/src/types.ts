@@ -17,7 +17,8 @@ type OrderInfo={
     orderingUser: string,
     timeOfOrder: Date,
     finalized: boolean,
-    appointment : IAppointment
+    appointment : IAppointment,
+    confirmed : boolean
 }
 
 
