@@ -13,14 +13,14 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-
+                      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
                         <form class="row mb-3">
                             <div class="col-auto">
                               <label for="staticEmail2" class="visually-hidden">Email</label>
                               <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="E-Mailadresse:">
                             </div>
                             <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="E-Mail">
+                              <input type="text" formControlName="email" readonly class="form-control-plaintext" value="{{user?.email}}">
                             </div>
                           </form>
 
@@ -30,8 +30,8 @@
                               <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="Vorname:">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Vorname">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Vorname">
+                              <input *ngIf="editMode == false" formControlName="firstName" type="text" readonly class="form-control-plaintext" value="{{user?.firstName}}">
+                              <input *ngIf="editMode == true" formControlName="firstName" type="text" class="form-control" value="{{user?.firstName}}">
                             </div>
                           </form>
 
@@ -41,8 +41,8 @@
                               <input type="text" readonly class="form-control-plaintext" value="Nachname:">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Nachname">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Nachname">
+                              <input *ngIf="editMode == false" formControlName="lastName" type="text" readonly class="form-control-plaintext" value="{{user?.lastName}}">
+                              <input *ngIf="editMode == true" formControlName="lastName" type="text" class="form-control" value="{{user?.lastName}}">
                             </div>
                           </form>
 
@@ -51,8 +51,8 @@
                               <input type="text" readonly class="form-control-plaintext" value="Strasse">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Strasse">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Strasse">
+                              <input *ngIf="editMode == false" type="text" formControlName="street" readonly class="form-control-plaintext" value="{{user?.address?.street}}">
+                              <input *ngIf="editMode == true" type="text" formControlName="street" class="form-control" value="{{user?.address?.street}}">
                             </div>
                           </form>
 
@@ -61,8 +61,8 @@
                               <input type="text" readonly class="form-control-plaintext" value="Hausnummer:">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Hausnummer">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Hausnummer">
+                              <input *ngIf="editMode == false" type="text" formControlName="houseNum" readonly class="form-control-plaintext" value="{{user?.address?.houseNum}}">
+                              <input *ngIf="editMode == true" type="text" formControlName="houseNum" class="form-control" value="{{user?.address?.houseNum}}">
                             </div>
                           </form>
 
@@ -71,8 +71,8 @@
                               <input type="text" readonly class="form-control-plaintext" value="Postleitzahl:">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Postleitzahl">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Postleitzahl">
+                              <input *ngIf="editMode == false" type="text" formControlName="postCode" readonly class="form-control-plaintext" value="{{user?.address?.postCode}}">
+                              <input *ngIf="editMode == true" type="text" formControlName="postCode" class="form-control" value="{{user?.address?.postCode}}">
                             </div>
                           </form>
 
@@ -81,8 +81,18 @@
                               <input type="text" readonly class="form-control-plaintext" value="Stadt:">
                             </div>
                             <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Stadt">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Stadt">
+                              <input *ngIf="editMode == false" type="text" formControlName="city" readonly class="form-control-plaintext" value="{{user?.address?.city}}">
+                              <input *ngIf="editMode == true" type="text" formControlName="city" class="form-control" value="{{user?.address?.city}}">
+                            </div>
+                          </form>
+
+                          <form class="row mb-3">
+                            <div class="col-auto">
+                              <input type="text" readonly class="form-control-plaintext" value="Land:">
+                            </div>
+                            <div class="col-auto">
+                              <input *ngIf="editMode == false" type="text" formControlName="country" readonly class="form-control-plaintext" value="{{user?.address?.country}}">
+                              <input *ngIf="editMode == true" type="text" formControlName="country" class="form-control" value="{{user?.address?.country}}">
                             </div>
                           </form>
 
@@ -93,7 +103,7 @@
                             </div>
                             <div class="col-auto">
                               <label for="inputPassword2" class="visually-hidden">Password</label>
-                              <input type="password" class="form-control" placeholder="Aktuelles Passwort">
+                              <input type="password" formControlName="oldPassword" class="form-control" placeholder="Aktuelles Passwort">
                             </div>
                           </form>
 
@@ -104,7 +114,7 @@
                             </div>
                             <div class="col-auto">
                               <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
-                              <input type="password" class="form-control" placeholder="Neues Password">
+                              <input type="password" class="form-control" formControlName="newPassword" placeholder="Neues Password">
                             </div>
                           </form>
 
@@ -115,7 +125,7 @@
                             </div>
                             <div class="col-auto">
                               <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
-                              <input type="password" class="form-control" placeholder="Neues Password bestätigen">
+                              <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Neues Password bestätigen">
                             </div>
                           </form>
 
@@ -123,9 +133,10 @@
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9 text-secondary">
                                 <input *ngIf="editMode == false" (click)="activeEditMode()" type="button"  class="btn btn-primary px-4" value="Persönliche Daten bearbeiten">
-                                <input *ngIf="editMode == true" (click)="activeEditMode()" type="button" class="btn btn-primary px-4" value="Änderungen speichern">
+                                <input *ngIf="editMode == true" (click)="activeEditMode()" type="submit" class="btn btn-primary px-4" value="Änderungen speichern">
                             </div>
                         </div>
+                      </form>
                     </div>
                 </div>
             </div>
