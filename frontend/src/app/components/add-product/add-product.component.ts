@@ -3,8 +3,16 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AddProductService } from 'src/app/services/add-product.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ImageService } from 'src/app/services/image.service';
 import { Appointment, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
+
+
+class ImageSnippet {
+  constructor(public src: string, public file: File) {}
+}
+
+
 @Component({
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css']
@@ -13,6 +21,8 @@ export class AddProductComponent implements OnInit {
   public appointmentsCount = 1;
 
   public appointmentIndexs:string[] = ['appointment0'];
+
+  public imageId?:string = undefined;
 
   public errorMessage?: string;
   public addProductForm: FormGroup = this.formBuilder.group({
@@ -25,7 +35,7 @@ export class AddProductComponent implements OnInit {
   });
 
 
-  constructor(private formBuilder: FormBuilder,private addProductService:AddProductService,private authService:AuthService,private router:Router) { }
+  constructor(private formBuilder: FormBuilder,private addProductService:AddProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
 
   ngOnInit(): void {
     this.authService.getUser().subscribe({
@@ -51,6 +61,28 @@ export class AddProductComponent implements OnInit {
     //this.addProductForm.addControl(`appointment${this.appointmentsCount}`,new FormControl('',[Validators.required]));
   }
 
+  uploadImage(inputElement:any) {
+    const file: File = inputElement.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+
+      const selectedFile = new ImageSnippet(event.target.result, file);
+
+      this.imageService.uploadImage(selectedFile.file).subscribe({
+        next: (res) => {
+          this.imageId = res.id;
+        },
+        error: (err) => {
+          console.log(err);
+        }}
+        );
+    });
+
+    reader.readAsDataURL(file);
+
+
+  }
 
 
 

@@ -52,14 +52,19 @@
           </div>
           <p *ngIf="appointmentIndexs.length <= 0" class="text-danger fs-6">Es muss mindestens einen Termin geben</p>
         </div>
-        <!--Bild hinzufügen
-        <div class="form-group ">
-            <label class="col-md-4 control-label" for="filebutton">Bild</label>
-            <div class="col-md-4">
-                <input id="filebutton" name="filebutton" class="input-file" type="file">
-            </div>
+
+        <label for="appointmentInputs" class="form-label text-black">Product Bild</label>
+        <div class="form-group input-group mb-3">
+          <input #imageInput  type="file" class="form-control" id="inputGroupFile02" (change)="uploadImage(imageInput)">
+          <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
-        -->
+
+        <figure *ngIf="imageId" class="figure">
+          <img src="/api/img/{{imageId}}" class="figure-img img-fluid rounded" alt="...">
+          <figcaption class="figure-caption text-end">Product Bild</figcaption>
+        </figure>
+
+
 
         <!--Produkt hinzufügen-->
           <div class="d-grid mt-4">

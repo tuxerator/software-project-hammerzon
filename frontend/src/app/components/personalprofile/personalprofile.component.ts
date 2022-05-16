@@ -1,10 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models/User';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'personalprofile',
+
+    selector: 'app-personalprofile',
     templateUrl: './personalprofile.component.html'
 })
-export class PersonalProfileComponent {
+export class PersonalProfileComponent implements OnInit{
     vorname?: String;
     nachname?: String;
     email?: String;
@@ -15,11 +18,31 @@ export class PersonalProfileComponent {
     land?: String;
     editMode: boolean = false;
 
+    user?:User;
+
+    constructor(private authService:AuthService)
+    {
+
+    }
+
+    ngOnInit(): void {
+      this.authService.getUser().subscribe({
+        next: (user) => {
+          if (user) {
+            this.user= user;
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+
     activeEditMode(){
         this.editMode = !(this.editMode);
     }
 
-    
+
 }
 
 
