@@ -10,8 +10,9 @@
  * {@link https://mongoosejs.com/docs/index.html mongoose}
  */
 import mongoose, {model, Model, Schema, Types} from 'mongoose';
-import {IOrder, IUser, User} from '../models/userSchema';
+import {IOrder, IUser, User} from '../models/user';
 import {Product} from '../models/Product';
+import { IService, Service } from '../models/service';
 
 export class MongoDBController {
   constructor() {
@@ -24,27 +25,155 @@ export class MongoDBController {
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
 
-    await Product.deleteMany({});
+    this.createTestData().catch(err => console.log(err));
+  }
 
+  private userTestData= [
+    new User({
+      schema_V: 1,
+      name: "Max Mustermann",
+      email: 'max.mustermann@email.com',
+      password: 'musterPW',
+      address: {
+        street: 'Muserstraße',
+        houseNumber: 44,
+        postCode: '89123',
+        city: 'Musterstadt',
+        country: 'Germany'
+      },
+      orders: []
+    }),
+    new User({
+      schema_V: 1,
+      name: "Max Mustermann",
+      email: 'max.mustermann@email.com',
+      password: 'musterPW',
+      address: {
+        street: 'Muserstraße',
+        houseNumber: 44,
+        postCode: '89123',
+        city: 'Musterstadt',
+        country: 'Germany'
+      },
+      orders: []
+    }),
+    new User({
+      schema_V: 1,
+      name: "Max Mustermann",
+      email: 'max.mustermann@email.com',
+      password: 'musterPW',
+      address: {
+        street: 'Muserstraße',
+        houseNumber: 44,
+        postCode: '89123',
+        city: 'Musterstadt',
+        country: 'Germany'
+      },
+      orders: []
+    }),
+    new User({
+      schema_V: 1,
+      name: "Max Mustermann",
+      email: 'max.mustermann@email.com',
+      password: 'musterPW',
+      address: {
+        street: 'Muserstraße',
+        houseNumber: 44,
+        postCode: '89123',
+        city: 'Musterstadt',
+        country: 'Germany'
+      },
+      orders: []
+    }),
+    new User({
+      schema_V: 1,
+      name: "Max Mustermann",
+      email: 'max.mustermann@email.com',
+      password: 'musterPW',
+      address: {
+        street: 'Muserstraße',
+        houseNumber: 44,
+        postCode: '89123',
+        city: 'Musterstadt',
+        country: 'Germany'
+      },
+      orders: []
+    })
+  ];
 
-    const product = new Product({
-      name:'Zimmerstreichen',
-      user:'Streich-ich GmbH',
-      prize:10,
-      description:'Beschreibung ...',
-      duration:new Date(), // 1 Sekunde
-      appointments:[{date:new Date(),isReserved:false}]
-    });
-    product.save();
+  private serviceTestData= [
+    new Service({
+      schema_V: 1,
+      name: 'Schreinerarbeiten',
+      description: 'Biete Schreinerarbeiten jeglicher Art an.',
+      offeredBy: this.userTestData[0]._id,
+      timeSlots: [
+        {
+          date: new Date('2022-06-01'),
+          slot: 5,
+          bookedStatus: {
+            booked: false
+          }
+        }
+      ]
+    }),
+    new Service({
+      schema_V: 1,
+      name: 'Schweißen von Rohren',
+      offeredBy: this.userTestData[2]._id,
+      timeSlots: [
+        {
+          date: new Date('2022-06-03'),
+          slot: 7,
+          bookedStatus: {
+            booked: false
+          }
+        },
+        {
+          date: new Date('2022-06-03'),
+          slot: 8,
+          bookedStatus: {
+            booked: false
+          }
+        },
+        {
+          date: new Date('2022-06-03'),
+          slot: 7,
+          bookedStatus: {
+            booked: false
+          }
+        }
+      ]
+    }),
+    new Service({
+      schema_V: 1,
+      name: 'Schreinerarbeiten',
+      description: 'Biete Schreinerarbeiten jeglicher Art an.',
+      offeredBy: this.userTestData[0]._id,
+      timeSlots: [
+        {
+          date: new Date('2022-06-01'),
+          slot: 5,
+          bookedStatus: {
+            booked: false
+          }
+        }
+      ]
+    })
+  ];
 
+  private async createTestData() {
+    // Delete everything in the Users collection so the state of the db is known when starting the server.
     await User.deleteMany({});
-    const user = new User({
-      schema: 1,
-      name: 'Max Mustermann',
-      email: 'max.muserman@email.com',
-      password: 'sicheresPW',
-      orders: [{orderTime: new Date().toString()}]
-    });
-    await user.save();
+    await User.insertMany(this.userTestData);
+
+    await Service.deleteMany({});
+    await Service.insertMany(this.serviceTestData);
+
+    this.userTestData[1].orders.push({
+      service_id: this.serviceTestData[0]._id,
+      orderTime: new Date()
+    })
+    await this.userTestData[1].save();
   }
 }
