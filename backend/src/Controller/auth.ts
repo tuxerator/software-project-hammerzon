@@ -97,7 +97,7 @@ class AuthController{
 
         const email = loginRequest.email;
         const user:(IUser|undefined) = await User.findOne({email}).exec();
-        console.log(user);
+        //console.log(user);
         if(!user)
         {
             response.status(401);

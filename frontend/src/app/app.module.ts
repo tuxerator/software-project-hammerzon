@@ -16,6 +16,8 @@ import { LoginComponent } from './components/login/login.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +34,9 @@ import { AddProductComponent } from './components/add-product/add-product.compon
         RegistrationComponent,
         LoginComponent,
         ProductdetailsComponent,
-        AddProductComponent
+        AddProductComponent,
+        OrderHistoryComponent,
+        OrderFinalizedComponent
     ],
     imports: [
         BrowserModule,

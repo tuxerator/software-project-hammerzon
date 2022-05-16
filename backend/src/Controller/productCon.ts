@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Helper from '../helpers';
 import {IProduct, Product} from '../Models/Product';
-import { ListInfo, SessionRequest } from '../types';
+import { ListInfo, SessionRequest, PostOrder} from '../types';
 import {Types} from 'mongoose';
 class ProductController
 {
@@ -62,12 +62,28 @@ class ProductController
         if(id && Types.ObjectId.isValid(id))
         {
             const product : IProduct = await Product.findById(id).exec();
-            console.log('Searching');
-            console.log(product);
             response.status(200);
             response.send(product);
         }else {
-            console.log('error');
+            response.status(500);
+            response.send('there is no product with such an id');
+        }
+    }
+    public async resetAppointment(request: Request, response: Response): Promise<void>{
+        console.log('resetting');
+        const product : PostOrder = request.body;
+        const index = parseInt(String(product.appointmentIndex));
+        const id = product.productId;
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const updateProduct = await Product.findById(id);
+            (await updateProduct).appointments[index].isReserved = false;
+            (await updateProduct).save();
+            console.log('appointment reset');
+            response.status(200);
+        }
+        else
+        {
             response.status(500);
             response.send('There is no product with such an id');
         }
