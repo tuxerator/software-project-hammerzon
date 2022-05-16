@@ -1,28 +1,34 @@
-<div>
-    <h2>Startseite</h2>
-
-    <p class>
-        Test Seite um zu testen wie sich Bootstrap verhält
-    </p>
-
-    <!--Test bootstrap styling-->
-    <div *ngFor="let i of list">
-
-        <h5 class="mt-4">
-            Überschrift {{i}}
-        </h5>
-        <p class="mt-1">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Id diam vel quam elementum pulvinar etiam non quam lacus.
-            Massa placerat duis ultricies lacus sed turpis tincidunt id aliquet.
-            Tristique senectus et netus et malesuada fames ac turpis egestas.
-            Nisi lacus sed viverra tellus in hac habitasse. Dignissim convallis aenean et tortor at risus viverra adipiscing at.
-            Amet aliquam id diam maecenas ultricies mi eget. Sed blandit libero volutpat sed cras ornare.
-            Varius duis at consectetur lorem donec massa sapien. Elit sed vulputate mi sit amet mauris commodo quis imperdiet.
-            Sed blandit libero volutpat sed.
-            Quis risus sed vulputate odio ut enim blandit volutpat.
-            Dolor sit amet consectetur adipiscing elit pellentesque.
-        </p>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <ul class="list-group shadow">
+                <!--Produkt 1-->
+                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item">
+                    <div [routerLink]="['productdetails',productInfo._id]" class="media align-items-lg-center flex-column flex-lg-row p-3">
+                      <div class="media-body order-2 order-lg-1">
+                            <h5> <a routerLink="productdetails,productInfo._id">{{productInfo?.name}}</a></h5>
+                            <p>{{productInfo?.user}}</p>
+                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
+                            </div>
+                        </div>
+                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
+                    </div>
+                </li>
+                <!--Ende Produkt 1-->
+            </ul>
+        </div>
     </div>
+    <!-- Knöpfe um mehr Elemente and zeigen zu können -->
+    <nav aria-label="Search results pages">
+      <ul class="pagination pagination-dark  justify-content-center m-4">
+      <li class="page-item" [class.disabled]="!(currentStart > 0)">
+        <a class="page-link"  (click)="previous()">&laquo;</a>
+      </li>
+      <li class="page-item" [class.disabled]="!(productListInfo.requestable>0)" >
+        <a class="page-link" (click)="next()">&raquo;</a>
+      </li>
+    </ul>
+    </nav>
 </div>
 

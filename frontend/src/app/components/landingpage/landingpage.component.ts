@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import { LandingpageService,ProductInfo,ListInfo } from 'src/app/services/landingpage.service';
+
+
 
 @Component({
     selector: 'app-landingpage',
@@ -6,7 +9,18 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./landingpage.component.css']
 })
 export class LandingpageComponent implements OnInit {
-    public list = [0,1,2,3,4,5,6,7,8,9];
+    //
+    public productListInfo : ListInfo<ProductInfo> = {
+                                                        list:[],
+                                                        requestable:0
+                                                      };
+    public currentStart = 0;
+    public currentLimit = 10;
+
+    constructor(private LandingpageService: LandingpageService) {
+    }
+
+    //public list = [0,1,2,3,4,5,6,7,8,9];
     /**
      *  Wir packen unseren Text in ein Object, damit wir die *Referenz* zu dem Text teilen können.
      *  Würden wir einfach den String teilen, würden wir eine *Kopie* weitergeben!
@@ -35,6 +49,37 @@ export class LandingpageComponent implements OnInit {
      */
     ngOnInit(): void {
         console.log('LandingPage initialized!');
+        //
+        this.requestList();
+    }
+    // fragt nächsten Elemente die nach currentStart und currentLimit kommen
+    // z.B currentStart= 0 currentLimit= 10 => currentStart= 10 currentLimit= 10
+    //     Bei liste im Backend von z.B [0...99] würde das zu der liste im Frontend führen [10..29] mit requestable:70
+    next(): void {
+        this.currentStart += this.currentLimit;
+        this.requestList(this.currentStart,this.currentLimit);
+    }
+    // fragt Elemente die vor currentStart und currentLimit kommen
+    // z.B currentStart= 10 currentLimit= 10 => currentStart= 0 currentLimit= 10
+    previous(): void {
+        this.currentStart -= this.currentLimit;
+        this.requestList(this.currentStart,this.currentLimit);
+    }
+    // Frägt nach Productliste bei dem Landingpageservice nach
+    requestList(start:number= 0,limit:number=10) : void
+    {
+        this.LandingpageService.getProductList(start,limit).subscribe({
+            // next: Value arrived successfully!
+            next: value => {
+                console.log(value);
+                this.productListInfo = value;
+            },
+
+            // error: There was an error.
+            error: err => {
+                console.error(err);
+            }
+        });
     }
 
 }

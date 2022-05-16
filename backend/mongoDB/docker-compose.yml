@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   swp-mongoDB:
+    restart: unless-stopped
     image:  mongo:latest
     restart: unless-stopped
     ports:

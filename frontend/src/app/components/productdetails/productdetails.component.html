@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="card">
+        <div class="card body  bg-secondary text-white">
+            <h3 class="card-title">{{product?.name}}</h3>
+            <h6 class="card-subtitle">{{product?.user}}</h6>
+            <div class="row">
+                <div class="col-lg-5 col-md-5 col-sm-6">
+                    <div class="white-box text-center text-black"><img src="https://via.placeholder.com/430x600/00CED1/000000" class="img-responsive"></div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6">
+                    <h4 class="box-title mt-5">{{product?.descritpion}}</h4>
+                    <p>...</p>
+                    <h4 class="box-title mt-5">{{product?.duration}}</h4>
+                    <h2 class="mt-5 ">{{product?.prize}}€/hr</h2>
+                    <div *ngIf="user; else elseBlock"> <!-- authorize user to continue -->
+                            <div class="btn-group flex-wrap"role="group">
+                                <div *ngFor="let a of product?.appointments; let i = index">
+                                    
+                                        <div [routerLink]="['order-product',i]">
+                                            <div *ngIf="!a.isReserved">
+                                                <button class="btn btn-primary mb-2 mr-2"> {{a?.date}} </button>
+                                            </div>
+                                        </div>
+                                 
+                                </div>
+                             </div>
+                    </div>
+                    <ng-template #elseBlock> Please log in to place an Order </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { AboutMeComponent } from './components/about-me/about-me.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { AllOrdersComponent } from './components/all-orders/all-orders.component';
+import { OrderProductComponent } from './components/order-product/order-product.component';
+import { LoginComponent } from './components/login/login.component';
+import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
+import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
+import { AddProductComponent } from './components/add-product/add-product.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
+
 
 
 /**
@@ -16,6 +26,20 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
+    { path: 'register',component: RegistrationComponent},
+    { path: 'all-orders', component: AllOrdersComponent},
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'login',component: LoginComponent},
+    { path: 'register',component: RegistrationComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent},
+    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'order-product', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'login',component: LoginComponent},
+    { path: 'register',component: RegistrationComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent},
+    { path: 'add-product', component: AddProductComponent},
+    { path: 'order-history', component: OrderHistoryComponent},
+    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent}
 ];
 
 @NgModule({
