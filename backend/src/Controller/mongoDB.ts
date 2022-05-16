@@ -31,7 +31,7 @@ export class MongoDBController {
   private userTestData= [
     new User({
       schema_V: 1,
-      name: "Max Mustermann",
+      name: 'Max Mustermann',
       email: 'max.mustermann@email.com',
       password: 'musterPW',
       address: {
@@ -45,7 +45,7 @@ export class MongoDBController {
     }),
     new User({
       schema_V: 1,
-      name: "Max Mustermann",
+      name: 'Max Mustermann',
       email: 'max.mustermann@email.com',
       password: 'musterPW',
       address: {
@@ -59,7 +59,7 @@ export class MongoDBController {
     }),
     new User({
       schema_V: 1,
-      name: "Max Mustermann",
+      name: 'Max Mustermann',
       email: 'max.mustermann@email.com',
       password: 'musterPW',
       address: {
@@ -73,7 +73,7 @@ export class MongoDBController {
     }),
     new User({
       schema_V: 1,
-      name: "Max Mustermann",
+      name: 'Max Mustermann',
       email: 'max.mustermann@email.com',
       password: 'musterPW',
       address: {
@@ -87,7 +87,7 @@ export class MongoDBController {
     }),
     new User({
       schema_V: 1,
-      name: "Max Mustermann",
+      name: 'Max Mustermann',
       email: 'max.mustermann@email.com',
       password: 'musterPW',
       address: {
@@ -173,7 +173,7 @@ export class MongoDBController {
     this.userTestData[1].orders.push({
       service_id: this.serviceTestData[0]._id,
       orderTime: new Date()
-    })
+    });
     await this.userTestData[1].save();
   }
 }
