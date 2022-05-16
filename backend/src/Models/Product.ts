@@ -45,4 +45,5 @@ const productSchema : Schema = new Schema<IProduct>({
 // 3. Create a Model.
 const Product : Model<IProduct>  = model<IProduct>('Product', productSchema);
 
-export {IProduct,Product,IAppointment};
+
+export {IProduct,Product,IAppointment, Appointment};

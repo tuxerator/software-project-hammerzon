@@ -16,11 +16,12 @@ export class RootComponent implements OnInit{
       this.authService.getUser().subscribe({
         next: (user) => {
           if (user) {
-            this.router.navigate(['']);
+            //this.router.navigate(['']);
           }
         },
         error: (err) => {
           console.error(err);
+          //this.router.navigate(['']);
         }
       });
     }

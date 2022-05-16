@@ -1,4 +1,5 @@
 import {Request,Express} from 'express';
+import { Appointment, IAppointment } from './Models/Product';
 interface ListInfo<T> {
     list: T[], // Ergebnis Liste der Abfrage
     requestable : number // Anzahl an noch abfragbaren Elementen
@@ -9,7 +10,7 @@ export type FileRequest = Request & { file:any };
 
 type PostOrder={
     productId : string,
-    timeslot: Date
+    appointmentIndex : Number
 }
 type OrderInfo={
     _id : string,
@@ -17,8 +18,8 @@ type OrderInfo={
     orderingUser: string,
     timeOfOrder: Date,
     finalized: boolean,
-    timeslot: Date
-  }
+    appointment : IAppointment
+}
 
 
 export {ListInfo,SessionRequest,PostOrder,OrderInfo};
