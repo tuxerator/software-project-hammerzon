@@ -1,14 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductInfo } from './landingpage.service';
 import { Injectable } from '@angular/core';
+import { Product } from '../models/Product';
 
 // Product details ist das gleich wie Product info nur mit zusätzliche Infos
-export type ProductDetails = ProductInfo & {
-  descritpion:string,
-  duration:Date,
-  appointments:Appointment[]
-}
 
 export type Appointment = {
   date : Date,
@@ -21,9 +16,9 @@ export type Appointment = {
 export class ProductdetailsService {
   constructor(public http: HttpClient) {}
 
-  getProductDetails(id:string): Observable<ProductDetails>
+  getProductDetails(id:string): Observable<Product>
   {
     console.log(id);
-    return this.http.get<ProductDetails>(`api/productdetails/${id}`);
+    return this.http.get<Product>(`api/productdetails/${id}`);
   }
 }

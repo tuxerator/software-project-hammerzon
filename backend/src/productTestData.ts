@@ -20,7 +20,6 @@ export default class ProductTestData{
                        {date:new Date(), isReserved:false},
                        {date:new Date(), isReserved:false},
                        {date:new Date(), isReserved:false},]
-
     },
     {
         name:'Dachleiter',
@@ -114,7 +113,8 @@ export default class ProductTestData{
 
   constructor()
   {
-    this.insertIfNotExistend();
+    //Product.deleteMany({});
+    //this.insertIfNotExistend();
   }
 
   async insertIfNotExistend(): Promise<void>  {

@@ -1,34 +1,37 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <ul class="list-group shadow">
+            <ol class="list-group shadow bg-dark">
                 <!--Produkt 1-->
-                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item">
-                    <div [routerLink]="['productdetails',productInfo._id]" class="media align-items-lg-center flex-column flex-lg-row p-3">
-                      <div class="media-body order-2 order-lg-1">
-                            <h5> <a routerLink="productdetails,productInfo._id">{{productInfo?.name}}</a></h5>
-                            <p>{{productInfo?.user}}</p>
-                            <div class="d-flex align-items-center justify-content-between mt-1">
-                                <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
-                            </div>
-                        </div>
-                        <!--<img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
+                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item bg-dark border-secondary text-white" [routerLink]="['productdetails',productInfo._id]">
+                  <div class="row">
+                    <div class="col-3 p-2">
+                      <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
                     </div>
+                    <div  class="col-9 p-2">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h4> {{productInfo?.name}}</h4>
+                        <h6>{{productInfo?.prize}} €/std.</h6>
+                      </div>
+                      <p>{{productInfo?.user}}</p>
+                      <!-- <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
+
+                      <img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
+                    </div>
+                  </div>
                 </li>
                 <!--Ende Produkt 1-->
-            </ul>
+            </ol>
         </div>
     </div>
     <!-- Knöpfe um mehr Elemente and zeigen zu können -->
-    <nav aria-label="Search results pages">
-      <ul class="pagination pagination-dark  justify-content-center m-4">
-      <li class="page-item" [class.disabled]="!(currentStart > 0)">
-        <a class="page-link"  (click)="previous()">&laquo;</a>
-      </li>
-      <li class="page-item" [class.disabled]="!(productListInfo.requestable>0)" >
-        <a class="page-link" (click)="next()">&raquo;</a>
-      </li>
-    </ul>
-    </nav>
+
+    <div class="btn-toolbar justify-content-center mt-4">
+      <div class="btn-group" role="group">
+        <button type="button" class=" btn btn-primary"  [class.disabled]="!(currentStart > 0)" (click)="previous()">&laquo;</button>
+        <button type="button" class="btn btn-primary" (click)="next()"  [class.disabled]="!(productListInfo.requestable>0)">&raquo;</button>
+      </div>
+    </div>
+
 </div>
 

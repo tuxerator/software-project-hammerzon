@@ -25,6 +25,8 @@ import { Order } from './Models/Order';
 
 import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
+import multer from 'multer';
+import { ImageController } from './Controller/imageCon';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -58,6 +60,8 @@ app.use(session({
     }
 ));
 
+
+
 /**
  *  API Routen festlegen
  *  Hier legen wir in dem "Express" Server neue Routen fest. Wir übergeben die Methoden
@@ -83,6 +87,8 @@ app.use(session({
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
 
+// Wird für das Photouploaden verwendet
+const upload = multer({ dest: './uploads/'});
 
 
 // important information about this api
@@ -96,6 +102,8 @@ const auth = new AuthController();
 
 const product = new ProductController();
 const order = new OrderController();
+
+const image = new ImageController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -130,6 +138,13 @@ app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
 app.post('/api/resetAppointment', product.resetAppointment);
 // add product
 app.post('/api/addproduct',product.addProduct);
+
+// Imager Controller endpoints
+// Add Images
+app.post('/api/img/upload',upload.single('img'),image.postImage);
+
+// Removed Images
+app.get('/api/img/:id',image.getImage);
 
 // OrderController endpoints
 

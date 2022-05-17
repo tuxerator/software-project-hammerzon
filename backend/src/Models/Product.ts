@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import {Number,Schema,Model,model,Document} from 'mongoose';
 
 // Model for Products
@@ -5,7 +6,7 @@ interface IProduct extends Document{
     // Name der Dienstleistung
     name:string
     // Anbieter der Dienstleistung
-    user:string
+    user:mongoose.Types.ObjectId
     // Genauere Beschreibung des Dienstleistung
     description:string
     // Preis der Dienstleistung
@@ -14,6 +15,8 @@ interface IProduct extends Document{
     duration:Date
     // Möglichen daten wo man die Dienstleistung kaufen kann
     appointments:IAppointment[]
+
+    image_id:mongoose.Types.ObjectId
 }
 
 interface IAppointment{
@@ -33,11 +36,12 @@ const Appointment : Schema = new Schema<IAppointment>(
 // create the Schema of IProduct
 const productSchema : Schema = new Schema<IProduct>({
   name:          { type: String, required: true },
-  user:          { type: String, required: true },
+  user:          { type: mongoose.Schema.Types.ObjectId, required: true },
   description:   { type: String},
   prize:         { type: Number, required: true },
   duration:      { type: Date,   required: true },
-  appointments:  { type: [Appointment], required: true }
+  appointments:  { type: [Appointment], required: true },
+  image_id:      { type: mongoose.Schema.Types.ObjectId, required: true }
 });
 
 

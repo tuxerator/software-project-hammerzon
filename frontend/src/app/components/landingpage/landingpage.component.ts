@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { LandingpageService,ProductInfo,ListInfo } from 'src/app/services/landingpage.service';
+import { Product } from 'src/app/models/Product';
+import { LandingpageService,ListInfo } from 'src/app/services/landingpage.service';
 
 
 
@@ -10,10 +11,10 @@ import { LandingpageService,ProductInfo,ListInfo } from 'src/app/services/landin
 })
 export class LandingpageComponent implements OnInit {
     //
-    public productListInfo : ListInfo<ProductInfo> = {
-                                                        list:[],
-                                                        requestable:0
-                                                      };
+    public productListInfo : ListInfo<Product> = {
+                                                    list:[],
+                                                    requestable:0
+                                                  };
     public currentStart = 0;
     public currentLimit = 10;
 

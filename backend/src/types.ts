@@ -6,6 +6,7 @@ interface ListInfo<T> {
 }
 
 type SessionRequest = Request & { session: Session };
+export type FileRequest = Request & { file:any };
 
 type PostOrder={
     productId : string,

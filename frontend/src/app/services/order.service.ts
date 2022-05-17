@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
-import { Appointment, ProductDetails } from './productdetails.service';
-import { ProductInfo } from './landingpage.service';
+import { Appointment } from './productdetails.service';
+
 
 
 export type OrderList<T>={
@@ -47,7 +47,7 @@ export class OrderService {
   registerOrder(productId:string, appointmentIndex: Number): Observable<OrderInfo>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
-    
+
     return this.http.post<OrderInfo>('api/registerOrder', postOrder);
 
   }
