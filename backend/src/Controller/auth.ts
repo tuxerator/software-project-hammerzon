@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 
 import Helper from '../helpers';
-import { getUserWithOutPassword, User } from '../Models/User';
-import { IUser } from '../Models/User';
-
+import { getUserWithOutPassword, IUser, User } from '../Models/User';
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
 
@@ -160,6 +158,58 @@ class AuthController{
             response.status(409);
             response.send({code:409,message:'Not authorized'});
         }
+    }
+
+    async update(request: SessionRequest, response: Response):Promise<void>{
+        if(!request.session.user)
+        {
+            response.status(409);
+            response.send({code:409,message:'Not authorized'});
+            return;
+        }
+        const userDBObj : (IUser|undefined) = await User.findOne({_id:request.session.user._id}).exec();
+        if(!userDBObj)
+        {
+            response.status(500);
+            response.send({code:500,message:'User doent exist'});
+            return;
+        }
+
+        const userUpdate:IUser= request.body.updatedUser;
+        const oldPassword:string = request.body.oldPassword;
+
+        userDBObj.firstName = userUpdate.firstName;
+        userDBObj.lastName = userUpdate.lastName;
+        userDBObj.address.street = userUpdate.address.street;
+        userDBObj.address.houseNum = userUpdate.address.houseNum;
+        userDBObj.address.city = userUpdate.address.city;
+        userDBObj.address.postCode = userUpdate.address.postCode;
+        userDBObj.address.country = userUpdate.address.country;
+        userDBObj.markModified('address');
+
+        if(!bcrypt.compareSync(oldPassword, userDBObj.password.toString() )){
+            response.status(401); // 401: Unauthorized
+            response.send({ code: 401, message: 'Wrong password' });
+
+            return;
+        }
+
+        if(userUpdate.password.length < 8)
+        {
+            response.status(401); // 401: Unauthorized
+            response.send({ code: 401, message: 'Password to short' });
+
+            return;
+        }
+
+        userDBObj.password = bcrypt.hashSync(userUpdate.password.toString(),10);
+
+        await userDBObj.save();
+
+        request.session.user = userDBObj;
+
+        response.status(200); // 401: Unauthorized
+        response.send({ code: 401, message: 'Updated User' });
     }
 }
 

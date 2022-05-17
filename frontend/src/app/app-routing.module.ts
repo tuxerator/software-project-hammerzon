@@ -13,6 +13,7 @@ import { AddProductComponent } from './components/add-product/add-product.compon
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 
+import { AuthGuardService } from './services/auth-guard.service';
 
 
 /**
@@ -26,24 +27,25 @@ const routes: Routes = [
     { path: '', component: LandingpageComponent },
     { path: 'about', component: AboutComponent },
     { path: 'about/:name',component: AboutMeComponent},
+    // Auth
     { path: 'register',component: RegistrationComponent},
+    { path: 'login',component: LoginComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent},
+    // Order
     { path: 'all-orders', component: AllOrdersComponent},
-    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
-    { path: 'login',component: LoginComponent},
-    { path: 'register',component: RegistrationComponent},
-    { path: 'personalprofile', component: PersonalProfileComponent},
-    { path: 'productdetails/:id',component:ProductdetailsComponent},
-    { path: 'order-product', component: OrderProductComponent},  // should be: product/order-product
-    { path: 'login',component: LoginComponent},
-    { path: 'register',component: RegistrationComponent},
-    { path: 'personalprofile', component: PersonalProfileComponent},
-    { path: 'add-product', component: AddProductComponent},
     { path: 'order-history', component: OrderHistoryComponent},
+    // product
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'add-product', component: AddProductComponent},
     { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent}
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [
+      AuthGuardService
+    ]
 })
 export class AppRoutingModule { }

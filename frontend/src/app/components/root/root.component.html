@@ -20,18 +20,21 @@
                 id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- add to this List for more navbar links -->
-                    <li *ngIf="!authService.user"  class="nav-item active">
+                    <li *ngIf="!authService.isLogedIn()"  class="nav-item active">
                         <a class="nav-link" routerLink="/login">Login</a>
                     </li>
-                    <li *ngIf="!authService.user" class="nav-item active">
+                    <li *ngIf="!authService.isLogedIn()" class="nav-item active">
                         <a class="nav-link" routerLink="/register">Register</a>
                     </li>
-                    <li *ngIf="authService.user" class="nav-item active">
-                      <a class="nav-link" (click)="logout()">logout</a>
-                    </li>
-                    <li *ngIf="authService.user" class="nav-item active">
-                        <a class="nav-link" routerLink="/order-history">Order history</a>
-                    </li>
+                    <li *ngIf="authService.isLogedIn()" class="nav-item active">
+                      <a class="nav-link" (click)="logout()">Logout</a>
+                  </li>
+                  <li *ngIf="authService.isLogedIn()" class="nav-item active">
+                      <a class="nav-link" routerLink="/personalprofile">Persönliches Profile</a>
+                  </li>
+                  <li *ngIf="authService.isLogedIn()" class="nav-item active">
+                    <a class="nav-link" routerLink="/orderhistory">Bestell History</a>
+                </li>
                     <li class="nav-item active">
                         <a class="nav-link" routerLink="/about">About</a>
                     </li>
@@ -47,5 +50,6 @@
     <div class="container p-4 bg-dark">
         <router-outlet></router-outlet>
     </div>
+
     <app-footer></app-footer>
 </div>

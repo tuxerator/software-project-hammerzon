@@ -15,6 +15,15 @@ export class AuthService {
 
    }
 
+   public isLogedIn():boolean
+   {
+    return this.user !== null;
+   }
+
+   public isAdmin():boolean{
+    return this.user?.role === 'admin';
+   }
+
    register(user:User):Observable<string>
    {
       return this.http.post<string>('api/auth/register',user);
@@ -55,5 +64,10 @@ export class AuthService {
    getUserById(id:string): Observable<User>
    {
      return this.http.get<User>(`api/getUserById/${id}`);
+   }
+
+   updateUser(oldPassword:string, updatedUser:User):Observable<{code:number,message:string}>
+   {
+      return this.http.post<{code:number,message:string}>('api/auth/update',{oldPassword,updatedUser});
    }
 }

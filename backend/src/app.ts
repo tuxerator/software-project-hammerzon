@@ -115,16 +115,19 @@ app.post('/api/name/:id', api.postNameInfo);
 
 // AuthController endpoints
 
-// register ...
+// register
 app.post('/api/auth/register', auth.register);
-// login ...
+// login
 app.post('/api/auth/login', auth.login);
-
 app.get('/api/auth/logintest', auth.getUser);
 
 app.get('/api/getUserById/:id', auth.getUserById);
 // logout ...
+// logout
 app.get('/api/auth/logout', auth.logout);
+// update
+app.post('/api/auth/update', auth.update);
+
 // ProductController endpoints
 
 // 10-products ...

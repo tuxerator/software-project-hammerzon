@@ -13,119 +13,95 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
+                      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                        <div class="row mb-3">
+                          <label for="staticEmail" class="col-sm-4 col-form-label text-black">Email</label>
+                          <div class="col-sm-6">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="user?.email">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="staticFirstName" class="col-sm-4 col-form-label text-black">Vorname</label>
+                            <div class="col-sm-6">
+                              <input *ngIf="!editMode" id="staticFirstName" formControlName="firstName" type="text" class="form-control-plaintext" readonly>
+                              <input *ngIf="editMode" formControlName="firstName" type="text" class="form-control">
+                            </div>
+                        </div>
 
-                        <form class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Email</label>
-                              <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="E-Mailadresse:">
+                          <div class="row mb-3">
+                            <label for="staticLastName" class="col-sm-4 col-form-label text-black">Nachname</label>
+                            <div class="col-sm-6">
+                              <input *ngIf="editMode == false" formControlName="lastName" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="lastName" type="text" class="form-control">
                             </div>
-                            <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="E-Mail">
+                          </div>
+                          <div class="row mb-3">
+                            <label for="staticStreet" class="col-sm-4 col-form-label text-black">Straße</label>
+                            <div class="col-sm-6">
+                              <input id="staticStreet" *ngIf="editMode == false" formControlName="street" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="street" type="text" class="form-control">
                             </div>
-                          </form>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="staticHouseNum" class="col-sm-4 col-form-label text-black">Hausnummer</label>
+                            <div class="col-sm-6">
+                              <input id="staticHouseNum" *ngIf="editMode == false" formControlName="houseNum" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="houseNum" type="text" class="form-control">
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="staticPostCode" class="col-sm-4 col-form-label text-black">Postleitzahl</label>
+                            <div class="col-sm-6">
+                              <input id="staticPostCode" *ngIf="editMode == false" formControlName="postCode" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="postCode" type="text" class="form-control">
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="staticCity" class="col-sm-4 col-form-label text-black">Stadt</label>
+                            <div class="col-sm-6">
+                              <input id="staticCity" *ngIf="editMode == false" formControlName="city" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="city" type="text" class="form-control">
+                            </div>
+                          </div>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Vorname</label>
-                              <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="Vorname:">
-                            </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Vorname">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Vorname">
-                            </div>
-                          </form>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Nachname</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Nachname:">
+                          <div class="row mb-3">
+                            <label for="staticCountry" class="col-sm-4 col-form-label text-black">Land</label>
+                            <div class="col-sm-6">
+                              <input id="staticCountry" *ngIf="editMode == false" formControlName="country" type="text" readonly class="form-control-plaintext">
+                              <input *ngIf="editMode == true" formControlName="country" type="text" class="form-control">
                             </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Nachname">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Nachname">
-                            </div>
-                          </form>
+                          </div>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="Strasse">
-                            </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Strasse">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Strasse">
-                            </div>
-                          </form>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="Hausnummer:">
+                          <div *ngIf="editMode == true" class="row mb-3">
+                              <label for="inputPassword1" class="col-sm-4 col-form-label text-black">Altes Password</label>
+                            <div class="col-sm-6">
+                              <input id="inputPassword1" type="password" formControlName="oldPassword" class="form-control" placeholder="Aktuelles Passwort">
                             </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Hausnummer">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Hausnummer">
-                            </div>
-                          </form>
+                          </div>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="Postleitzahl:">
-                            </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Postleitzahl">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Postleitzahl">
-                            </div>
-                          </form>
+                          <div *ngIf="editMode == true" class="row mb-3">
+                              <label for="inputPassword2" class="col-sm-4 col-form-label text-black">Password</label>
+                              <div class="col-sm-6">
+                                <input id="inputPassword2" type="password" type="newPassword" class="form-control" formControlName="newPassword" placeholder="Neues Password">
+                              </div>
+                          </div>
 
-                          <form class="row mb-3">
-                            <div class="col-auto">
-                              <input type="text" readonly class="form-control-plaintext" value="Stadt:">
+                          <div *ngIf="editMode == true" class="row mb-3">
+                            <label for="inputPassword3" class="col-sm-4 col-form-label text-black">Password bestätigen</label>
+                            <div class="col-sm-6">
+                              <input id="inputPassword3" type="password" type="confirmPassword" class="form-control" formControlName="confirmPassword" placeholder="Neues Password bestätigen">
                             </div>
-                            <div class="col-auto">
-                              <input *ngIf="editMode == false" type="text" readonly class="form-control-plaintext" value="Stadt">
-                              <input *ngIf="editMode == true" type="text" class="form-control" value="Stadt">
-                            </div>
-                          </form>
-
-                          <form *ngIf="editMode == true" class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Pw1</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Aktuelles Passwort:">
-                            </div>
-                            <div class="col-auto">
-                              <label for="inputPassword2" class="visually-hidden">Password</label>
-                              <input type="password" class="form-control" placeholder="Aktuelles Passwort">
-                            </div>
-                          </form>
-
-                          <form *ngIf="editMode == true" class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Pw1</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Neues Passwort:">
-                            </div>
-                            <div class="col-auto">
-                              <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
-                              <input type="password" class="form-control" placeholder="Neues Password">
-                            </div>
-                          </form>
-
-                          <form *ngIf="editMode == true" class="row mb-3">
-                            <div class="col-auto">
-                              <label for="staticEmail2" class="visually-hidden">Pw1</label>
-                              <input type="text" readonly class="form-control-plaintext" value="Neues Passwort bestätigen:">
-                            </div>
-                            <div class="col-auto">
-                              <label for="inputPassword2" class="visually-hidden">Password bestätigen</label>
-                              <input type="password" class="form-control" placeholder="Neues Password bestätigen">
-                            </div>
-                          </form>
-
+                          </div>
                         <div class="row">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9 text-secondary">
                                 <input *ngIf="editMode == false" (click)="activeEditMode()" type="button"  class="btn btn-primary px-4" value="Persönliche Daten bearbeiten">
-                                <input *ngIf="editMode == true" (click)="activeEditMode()" type="button" class="btn btn-primary px-4" value="Änderungen speichern">
+                                <input *ngIf="editMode == true" type="submit" class="btn btn-primary px-4" value="Änderungen speichern">
                             </div>
                         </div>
+                      </form>
                     </div>
                 </div>
             </div>
