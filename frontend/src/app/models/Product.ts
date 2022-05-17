@@ -14,13 +14,16 @@ export class Product{
   // Möglichen daten wo man die Dienstleistung kaufen kann
   appointments:Appointment[];
 
-  constructor(name:string,description:string,prize:number,duration:Date,appointments:Appointment[]){
+  image_id: string;
+
+  constructor(name:string,description:string,prize:number,duration:Date,appointments:Appointment[],image_id:string){
     this.name = name;
     this.user = '';
     this.description = description;
     this.prize = prize;
     this.duration = duration;
     this.appointments = appointments;
+    this.image_id = image_id;
   }
 }
 
@@ -36,5 +39,28 @@ export class Appointment{
       this.isReserved = false;
     }
 }
+
+const dateFormater = Intl.DateTimeFormat(
+  'default', // a locale name; "default" chooses automatically
+  {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+  }
+);
+
+export const  getDurationString = (duration?:Date):string =>
+{
+    return duration?.getHours() + ' std. ' + duration?.getMinutes() + ' min';
+};
+
+
+export const getAppointmentString = (date?:Date):string =>
+{
+    return dateFormater.format(date);
+};
 
 

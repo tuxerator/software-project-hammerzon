@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from 'src/app/models/Product';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import {  ProductInfo } from 'src/app/services/landingpage.service';
 import { OrderInfo, OrderService } from 'src/app/services/order.service';
-import { ProductDetails, ProductdetailsService } from 'src/app/services/productdetails.service';
+import { ProductdetailsService } from 'src/app/services/productdetails.service';
 
 /**
  * Es ist möglich, dass das component wegen den Testdaten nicht funktioniert,
  * weil die in der Arrays gespeicherten IDs andere sein können.
- * Wenn die IDs richtig generiert werden sollte alles funktionieren. 
+ * Wenn die IDs richtig generiert werden sollte alles funktionieren.
  */
 
 @Component({
@@ -17,8 +17,8 @@ import { ProductDetails, ProductdetailsService } from 'src/app/services/productd
 })
 export class AllOrdersComponent implements OnInit {
   public orderList? : OrderInfo[];
-  public productList? : ProductDetails[] = [];
-  public combined? : {order: OrderInfo, product: ProductInfo, orderingUser: User}[] = [];
+  public productList? : Product[] = [];
+  public combined? : {order: OrderInfo, product: Product, orderingUser: User}[] = [];
 
   constructor(private OrderService: OrderService,
               private productService: ProductdetailsService,
@@ -44,7 +44,7 @@ export class AllOrdersComponent implements OnInit {
           console.error(err);
       }
     });
-    
+
   }
   /**
    * get additional information about the orders from the user and product schemas
@@ -81,7 +81,7 @@ export class AllOrdersComponent implements OnInit {
         );
       });
     }
-  } 
+  }
 
 
 }

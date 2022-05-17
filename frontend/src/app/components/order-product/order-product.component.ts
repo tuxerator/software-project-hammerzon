@@ -1,17 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductdetailsService,ProductDetails, Appointment} from 'src/app/services/productdetails.service';
+import { ProductdetailsService, Appointment} from 'src/app/services/productdetails.service';
 import { OrderInfo, OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { NavigationStart, Router } from '@angular/router';
+import { getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
 
 @Component({
   templateUrl: './order-product.component.html',
   styleUrls: ['./order-product.component.css']
 })
 export class OrderProductComponent implements OnInit , OnDestroy{
-  product : ProductDetails|undefined;
+  product : Product|undefined;
   user: User|undefined;
   appointment:Appointment|undefined;
   appointmentIndex:Number|undefined;
@@ -37,7 +38,9 @@ export class OrderProductComponent implements OnInit , OnDestroy{
       {
         next: (val)=>{
           this.product = val;
+          this.product.duration = new Date(this.product.duration);
           this.appointment = this.product.appointments[appointmentIndex];
+          this.appointment.date = new Date(this.appointment.date);
           console.log('registering order');
           this.orderService.registerOrder(this.product._id , appointmentIndex).subscribe(
             {
@@ -81,7 +84,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
   cancel() : void
   {
     if(this.order?.finalized === false && this.cancelled === false)
-    { 
+    {
       // delete order and set product appointment to not reserved
       console.log('order cancelled');
       if(this.order)
@@ -103,6 +106,8 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     {
       console.log('order finalized or already cancelled.');
     }
+
+
   }
 
   finalize() : void
@@ -143,6 +148,16 @@ export class OrderProductComponent implements OnInit , OnDestroy{
       }
    });
   }
-  
+
+  getDurString():string
+  {
+    return getDurationString(this.product?.duration);
+  }
+
+  getAppointString():string
+  {
+    return getAppointmentString(this.appointment?.date);
+  }
+
 
 }

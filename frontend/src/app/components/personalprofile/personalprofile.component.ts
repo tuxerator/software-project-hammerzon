@@ -41,8 +41,6 @@ export class PersonalProfileComponent implements OnInit{
     activeEditMode(){
         this.editMode = !(this.editMode);
     }
-
-
 }
 
 

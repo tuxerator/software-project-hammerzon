@@ -1,21 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import { ProductdetailsService,ProductDetails} from 'src/app/services/productdetails.service';
+import { ProductdetailsService} from 'src/app/services/productdetails.service';
+import { Product,getAppointmentString,getDurationString } from 'src/app/models/Product';
 
 @Component({
   templateUrl: './productdetails.component.html',
   styleUrls: ['./productdetails.component.css']
 })
 export class ProductdetailsComponent implements OnInit {
-  product: ProductDetails|undefined;
+  product: Product|undefined;
   //public productID: string;
   user : User|undefined;
+  // Zum formatieren der Daten
+
 
 
   constructor(private route:ActivatedRoute,
               private productService:ProductdetailsService,
+              private router:Router,
               private authService: AuthService) {
     console.log('kommt zu Params');
   }
@@ -34,9 +38,16 @@ export class ProductdetailsComponent implements OnInit {
       {
         next: (val)=>{
           this.product = val;
+          this.product.duration = new Date(this.product.duration);
+          for(let i = 0; i < this.product.appointments.length;i++)
+          {
+            this.product.appointments[i].date = new Date(this.product.appointments[i].date);
+          }
         },
         error: (err)=> {
           console.log(err);
+          // Wenn etwas schief läuft einfach wieder zu landing page
+          this.router.navigate(['/']);
         }
       }
     );
@@ -52,6 +63,16 @@ export class ProductdetailsComponent implements OnInit {
         }
       }
     );
+  }
+
+  getDurString():string
+  {
+    return getDurationString(this.product?.duration);
+  }
+
+  getAppointString(date?:Date):string
+  {
+    return getAppointmentString(date);
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="container">
-    <div class="card bg-light">
+    <div class="bg-dark text-white">
     <article class="card-body mx-auto" style="max-width: 400px;">
-        <h4 class="card-title mt-3 text-center text-dark">Produkt hinzufügen</h4>
+        <h4 class="card-title mt-3 text-center text-white">Produkt hinzufügen</h4>
       <form [formGroup]="addProductForm"  (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
         <!--Produktname-->
         <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['productName'].touched">
@@ -25,7 +25,7 @@
             <div *ngIf="!addProductForm.controls['description']?.invalid" class="valid-feedback was-validated">Gültige Beschreibung.</div>
             <div *ngIf="addProductForm.controls['description']?.invalid" class="invalid-feedback was-validated">Beschreibung wird erwartet.</div>
         </div>
-        <label for="durationInput" class="form-label text-black">Dauer</label>
+        <label for="durationInput" class="form-label">Dauer</label>
         <div class="input-group mb-3 has-validation" [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched" id="durationInput">
             <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
             <input type="text"  class="form-control" formControlName="durationHour" placeholder="Stunden" aria-label="Stunden" required>
@@ -38,7 +38,7 @@
         <div class="row">
             <!-- Add Appointment -->
           <div class="d-flex mb-2 has-validation">
-              <label for="appointmentInputs" class="form-label text-black">Termine</label>
+              <label for="appointmentInputs" class="form-label">Termine</label>
               <button class="ms-auto btn btn-success" (click)="addAppointment()">+</button>
           </div>
           <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3" id="durationInput" [class.was-validated]="addProductForm.controls[name].touched">
@@ -52,13 +52,15 @@
           </div>
           <p *ngIf="appointmentIndexs.length <= 0" class="text-danger fs-6">Es muss mindestens einen Termin geben</p>
         </div>
-
-        <label for="appointmentInputs" class="form-label text-black">Product Bild</label>
+        <!-- Bild hinzufügen -->
+        <label for="appointmentInputs" class="form-label">Product Bild</label>
         <div class="form-group input-group mb-3">
           <input #imageInput  type="file" class="form-control" id="inputGroupFile02" (change)="uploadImage(imageInput)">
           <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
+        <span *ngIF="isChecked && !imageId"class="text-danger">Es muss ein Bild hochgeladen werden</span>
 
+        <!-- Bild anzeigen -->
         <figure *ngIf="imageId" class="figure">
           <img src="/api/img/{{imageId}}" class="figure-img img-fluid rounded" alt="...">
           <figcaption class="figure-caption text-end">Product Bild</figcaption>

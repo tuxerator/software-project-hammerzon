@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { getAppointmentString, Product } from 'src/app/models/Product';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import {  ProductInfo } from 'src/app/services/landingpage.service';
 import { OrderInfo, OrderService } from 'src/app/services/order.service';
-import { ProductDetails, ProductdetailsService } from 'src/app/services/productdetails.service';
+import { ProductdetailsService } from 'src/app/services/productdetails.service';
 
 @Component({
   templateUrl: './order-history.component.html',
@@ -11,7 +11,7 @@ import { ProductDetails, ProductdetailsService } from 'src/app/services/productd
 })
 export class OrderHistoryComponent implements OnInit {
   orderList? : OrderInfo[];
-  combined? : {order: OrderInfo, product: ProductInfo}[] = [];
+  combined? : {order: OrderInfo, product: Product}[] = [];
   user: User|undefined;
 
   constructor(private OrderService: OrderService,
@@ -22,7 +22,7 @@ export class OrderHistoryComponent implements OnInit {
     ngOnInit(): void {
       this.listAllOrdersByUser();
     }
-  
+
     listAllOrdersByUser() : void{
       this.OrderService.listAllOrdersByUser().subscribe({
         // next: Value arrived successfully!
@@ -32,7 +32,7 @@ export class OrderHistoryComponent implements OnInit {
             console.log(this.orderList);
             this.getProductInfo();
         },
-  
+
         // error: There was an error.
         error: err => {
             console.error(err);
@@ -56,9 +56,11 @@ export class OrderHistoryComponent implements OnInit {
           );
         });
       }
-    } 
+    }
 
-    
+    getTimeOrderString(date?:Date):string{
+      return getAppointmentString(date);
+    }
 
   // get order data by userid
   // combine with productdata

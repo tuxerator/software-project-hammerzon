@@ -54,7 +54,7 @@ class ProductController
         response.status(200);
         response.send(listInfo);
     }
-
+    // Gibt die Produkt details zurück
     public async getProductDetail(request: Request, response: Response): Promise<void>{
 
         const id = request.params.id;
@@ -69,6 +69,8 @@ class ProductController
             response.send('there is no product with such an id');
         }
     }
+
+
     public async resetAppointment(request: Request, response: Response): Promise<void>{
         console.log('resetting');
         const product : PostOrder = request.body;
@@ -107,6 +109,14 @@ class ProductController
         if(!Helper.valueExists(product,'prize',response)) return;
         if(!Helper.valueExists(product,'duration',response)) return;
         if(!Helper.valueExists(product,'appointments',response)) return;
+        if(!Helper.valueExists(product,'image_id',response)) return;
+
+        if(!Types.ObjectId.isValid(product.image_id))
+        {
+            response.status(403);
+            response.send({code:403,message:'Invalid Image Id'});
+            return;
+        }
 
         product.user = request.session.user._id;
 
@@ -129,8 +139,6 @@ class ProductController
         response.status(200);
         response.send({code:200,message:'Added Product',id:dbProduct._id});
     }
-
-
 }
 
 

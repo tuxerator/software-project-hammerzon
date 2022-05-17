@@ -1,20 +1,20 @@
 <!-- find better colors -->
-<div class="container bg-dark" > 
+<div class="container bg-dark" >
     <div class="row">
         <!-- left column of cards-->
         <div class="col-lg-8 align-self-center">
             <!-- product info-->
             <p class="text-ligth">Ihre Bestellung:</p>
-            <div class="card mb-4 bg-secondary">
+            <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-body">
                     <table class="table table-borderless">
-                        <tbody> 
-                            
-                            <tr> 
+                        <tbody>
+
+                            <tr>
                                 <td> <!-- column in the table -->
                                     <div class="d-flex mb-2">
                                         <div class="flex-shrink-0">
-                                            <!-- product thumbnail --> <img src="https://user-images.githubusercontent.com/101482/29592647-40da86ca-875a-11e7-8bc3-941700b0a323.png" alt="" width="100" class="img-fluid">
+                                            <!-- product thumbnail --> <img src="api/img/{{product?.image_id}}" alt="" width="100" class="img-fluid">
                                         </div>
                                     </div>
                                 </td>
@@ -27,21 +27,21 @@
                                 </td>
                                 <td>
                                     <!-- Zeitslot -->
-                                    <div class="text-white">{{ appointment?.date }}</div> <!-- should be only one appointment here-->
+                                    <div class="text-white">{{ getAppointString() }}</div> <!-- should be only one appointment here-->
                                 </td>
                                 <td>
                                     <!-- Preis -->
-                                    <div class="text-white">{{product?.prize}} € / hr</div>
+                                    <div class="text-white">{{product?.prize}} €/std.</div>
                                 </td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                 </div>
             </div>
             <!-- customer info and order button -->
-            <p class="text-ligth">Bestellung abschließen:</p>
-            <div class="card mb-4 bg-secondary">
+            <p class="text-ligth ">Bestellung abschließen:</p>
+            <div class="card mb-4 bg-dark border-secondary text">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6">
@@ -70,11 +70,11 @@
             </div>
             -->
             <p class="text-ligth">Bestellung ändern:</p>
-            <div class="card mb-4 bg-secondary">
+            <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        <a routerLink="../../"> 
-                            <button type="button" class="btn btn-primary btn-lg" (click)="cancel()" >Zurück zum Produkt</button> 
+                        <a routerLink="../../">
+                            <button type="button" class="btn btn-primary btn-lg" (click)="cancel()" >Zurück zum Produkt</button>
                         </a>
                     </div>
                 </div>

@@ -24,6 +24,8 @@ export class AddProductComponent implements OnInit {
 
   public imageId?:string = undefined;
 
+  public isChecked = false;
+
   public errorMessage?: string;
   public addProductForm: FormGroup = this.formBuilder.group({
     productName: new FormControl('', [Validators.required]),
@@ -88,11 +90,12 @@ export class AddProductComponent implements OnInit {
 
   public onSubmit():void
     {
+      this.isChecked = true;
       console.log('Create Debug Log');
       this.addProductForm.markAllAsTouched();
       // Sind alle Eingaben valid
       console.log(this.addProductForm);
-      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0)return;
+      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
       console.log('Through Validation Debug Log');
       // Für besser lesbarkeit des Code
       const form = this.addProductForm.value;
@@ -121,7 +124,7 @@ export class AddProductComponent implements OnInit {
       }
 
       // Neues Product erstellen
-      const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments);
+      const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
       this.addProductService.addProduct(newProduct).subscribe({
         next: (_message:IdMessageResponse) => {
