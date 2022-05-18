@@ -74,24 +74,24 @@
                           </div>
 
 
-                          <div *ngIf="editMode == true" class="row mb-3">
+                          <div *ngIf="editMode" class="row mb-3">
                               <label for="inputPassword1" class="col-sm-4 col-form-label text-black">Altes Password</label>
                             <div class="col-sm-6">
                               <input id="inputPassword1" type="password" formControlName="oldPassword" class="form-control" placeholder="Aktuelles Passwort">
                             </div>
                           </div>
 
-                          <div *ngIf="editMode == true" class="row mb-3">
+                          <div *ngIf="editMode" class="row mb-3">
                               <label for="inputPassword2" class="col-sm-4 col-form-label text-black">Password</label>
                               <div class="col-sm-6">
-                                <input id="inputPassword2" type="password" type="newPassword" class="form-control" formControlName="newPassword" placeholder="Neues Password">
+                                <input id="inputPassword2" type="password"  class="form-control" formControlName="newPassword" placeholder="Neues Password">
                               </div>
                           </div>
 
-                          <div *ngIf="editMode == true" class="row mb-3">
+                          <div *ngIf="editMode" class="row mb-3">
                             <label for="inputPassword3" class="col-sm-4 col-form-label text-black">Password bestätigen</label>
                             <div class="col-sm-6">
-                              <input id="inputPassword3" type="password" type="confirmPassword" class="form-control" formControlName="confirmPassword" placeholder="Neues Password bestätigen">
+                              <input id="inputPassword3" type="password" class="form-control" formControlName="confirmPassword" placeholder="Neues Password bestätigen">
                             </div>
                           </div>
                         <div class="row">

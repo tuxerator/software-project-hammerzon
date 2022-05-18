@@ -25,13 +25,13 @@ export class PersonalProfileComponent implements OnInit{
         oldPassword: new FormControl('', [Validators.required]),
         newPassword: new FormControl('', [Validators.required]),
         confirmPassword: new FormControl('', [Validators.required]),
-        firstName:new FormControl('Test', [Validators.required]),
-        lastName:new FormControl('Test',[Validators.required]),
-        street: new FormControl('Test', [Validators.required]),
-        houseNum: new FormControl('Test', [Validators.required]),
-        city: new FormControl('Test', [Validators.required]),
-        postCode: new FormControl('Test', [Validators.required]),
-        country: new FormControl('Test', [Validators.required])
+        firstName:new FormControl('', [Validators.required]),
+        lastName:new FormControl('',[Validators.required]),
+        street: new FormControl('', [Validators.required]),
+        houseNum: new FormControl('', [Validators.required]),
+        city: new FormControl('', [Validators.required]),
+        postCode: new FormControl('', [Validators.required]),
+        country: new FormControl('', [Validators.required])
       }, {validators: this.passwordMatchingValidator});
 
 
