@@ -12,6 +12,7 @@ import {ObjectId} from 'mongodb';
 interface IService {
   schema_V: number;
   offeredBy: Types.ObjectId;
+  companyName?: string;
   name: string;
   description?: string;
   timeSlots: [{
@@ -47,6 +48,7 @@ const bookedStatusSchema: Schema<IBookedStatus> = new Schema<IBookedStatus>({
 const serviceSchema: Schema<IService> = new Schema<IService>({
   schema_V: { type: Number, required: true, default: 1, immutable: true },
   offeredBy: { type: Schema.Types.ObjectId, required: true },
+  companyName: {type: String},
   name: { type: String, required: true },
   description: String,
   timeSlots: [{

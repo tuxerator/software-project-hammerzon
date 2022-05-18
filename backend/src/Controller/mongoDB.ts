@@ -11,11 +11,7 @@
  */
 import mongoose, {model, Model, Schema, Types} from 'mongoose';
 import {IOrder, IUser, User} from '../models/user';
-import {Product} from '../models/Product';
 import { IService, Service } from '../models/service';
-import ProductTestData from '../productTestData';
-import OrderTestData from '../orderTestData';
-import UserTestData from '../userTestData';
 
 
 export class MongoDBController {
@@ -27,9 +23,6 @@ export class MongoDBController {
   async initConnection(): Promise<void> {
     await mongoose.connect('mongodb://localhost:27017/swp'); // Connect to MongoDB
     console.log(`Database is ${(mongoose.connection.readyState === 1) ?'ready' : 'errored' }`); // Prints 1 if connected successfully
-    new ProductTestData();
-    new OrderTestData();
-    new UserTestData();
 
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -181,8 +174,12 @@ export class MongoDBController {
 
     this.userTestData[1].orders.push({
       service_id: this.serviceTestData[0]._id,
-      orderTime: new Date()
+      orderTime: new Date(),
+      finalized: false
     });
     await this.userTestData[1].save();
+
+    const user0= await User.find( {'orders.finalized': false}, 'orders');
+    console.log(user0);
   }
 }

@@ -73,7 +73,7 @@ class ProductController
         console.log('resetting');
         const product : PostOrder = request.body;
         const index = parseInt(String(product.appointmentIndex));
-        const id = product.productId;
+        const id = product.serviceId;
         if(id && Types.ObjectId.isValid(id))
         {
             const updateProduct = await Product.findById(id);

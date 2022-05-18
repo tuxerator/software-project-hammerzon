@@ -23,8 +23,9 @@ import { MongoDBController } from './Controller/mongoDB';
 
 import { Order } from './Models/Order';
 
-import { IUser } from './Models/User';
+// import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
+import {IUser} from './models/user';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -90,22 +91,23 @@ const api = new ApiController();
 // const database = new DatabaseController();
 const mongodb = new MongoDBController();
 
-const auth = new AuthController();
+// const auth = new AuthController();
 // information about the creator of this api
 // const about = new AboutController();
 
-const product = new ProductController();
-const order = new OrderController();
+// const product = new ProductController();
+// const order = new OrderController();
 
-app.get('/api', api.getInfo);
+/*app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
 app.get('/api/about/:nameID', api.getNameInfo);
-app.post('/api/name/:id', api.postNameInfo);
+app.post('/api/name/:id', api.postNameInfo);*/
 
 // aboutController endpoints
 //app.get('/api/nameinfo-list',about.getNameInfoList);
 
 // AuthController endpoints
+/*
 
 // register ...
 app.post('/api/auth/register', auth.register);
@@ -131,22 +133,23 @@ app.post('/api/resetAppointment', product.resetAppointment);
 // add product
 app.post('/api/addproduct',product.addProduct);
 
+*/
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/registerOrder', order.registerOrder);
+// app.post('/api/registerOrder', order.registerOrder);
 
 // finalize an order
-app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+// app.post('/api/finalizeOrder/:id', order.finalizeOrder);
 
 // delete an order
-app.delete('/api/deleteOrder/:id',order.deleteOrder);
+// app.delete('/api/deleteOrder/:id',order.deleteOrder);
 
 // list all orders for the admin page
-app.get('/api/orderlist', order.listAllOrders);
+// app.get('/api/orderlist', order.listAllOrders);
 
 // list all orders by user
-app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
+// app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

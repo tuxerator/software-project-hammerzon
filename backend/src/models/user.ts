@@ -1,4 +1,4 @@
-import { Number, Model, model, Schema, Types, Document } from 'mongoose';
+import { Number, Model, model, Schema, Types, Document, Query } from 'mongoose';
 
 /**
  * Interface which describes an order.
@@ -8,6 +8,7 @@ import { Number, Model, model, Schema, Types, Document } from 'mongoose';
 interface IOrder {
   service_id: Types.ObjectId;
   orderTime: Date;
+  finalized: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ interface IOrder {
  * @property {IOrder[]} orders Array of all orders this user made.
  */
 interface IUser {
+  _id: Types.ObjectId;
   schema_V: number;
   name: string;
   email: string;
@@ -41,7 +43,8 @@ const orderSchema: Schema = new Schema<IOrder, Model<IOrder>>({
     ref: 'Service',
     required: true
   },
-  orderTime: { type: Date, required: true }
+  orderTime: { type: Date, required: true },
+  finalized: { type: Boolean, required: true, default: false }
 });
 
 // Schema of user
@@ -65,8 +68,26 @@ const user: Schema = new Schema<IUser>({
  */
 const Order: Model<IOrder> = model<IOrder>('Order', orderSchema);
 /**
- * Moder of user
+ * Model of user
  */
-const User: Model<IUser> = model<IUser>('User', user);
 
-export {Order, IOrder, IUser, User};
+interface UserQueryHelpers {
+  allOrdersOfUser(): Query<any, Document<IUser>> & UserQueryHelpers;
+}
+
+user.query.allOrdersOfUser = function(userId: Types.ObjectId): Query<any,Document<IUser>> & UserQueryHelpers  {
+
+  return  this.findById(userId).where('orders.finalized').equals(true).select('orders');
+  // const result: IUser = await query.exec();
+};
+const User: Model<IUser> = model<IUser, Model<IUser, UserQueryHelpers>>('User', user);
+
+const allOrders = async () => {
+  return User.aggregate().unwind('orders').project({orders: 1}).group({_id: '$_id'});
+};
+
+const findUserById = async (userId: Types.ObjectId) => {
+  return User.findById(userId);
+};
+
+export {Order, IOrder, IUser, User, allOrdersOfUser, allOrders};

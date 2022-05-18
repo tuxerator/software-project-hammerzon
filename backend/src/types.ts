@@ -8,7 +8,7 @@ interface ListInfo<T> {
 type SessionRequest = Request & { session: Session };
 
 type PostOrder={
-    productId : string,
+    serviceId : string,
     appointmentIndex : Number
 }
 type OrderInfo={

@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { IOrder, Order } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
 import { Product } from '../Models/Product';
 import {Types} from 'mongoose';
+import {allOrders, allOrdersOfUser, IOrder, IUser, User} from '../models/user';
 
 class OrderController{
     /**
      * gets every Order from the schema in a list.
      */
     public async listAllOrders(request: Request, response: Response): Promise<void>{
-        const list : IOrder[] = await Order.find({});
+        const list = allOrders();
 
         response.status(200);
         response.send(list);
@@ -29,7 +29,7 @@ class OrderController{
             const id = request.session.user._id;
             if(id && Types.ObjectId.isValid(id))
             {
-                const orders : IOrder[] = await Order.find({orderingUser : id, finalized : true});
+                const orders : Promise<IOrder[]> = allOrdersOfUser(id);
                 console.log('orders found');
                 console.log(orders);
                 response.status(200);
@@ -53,10 +53,19 @@ class OrderController{
         }
         else{
             const postedOrder:PostOrder = request.body;
-            const updateProduct = await Product.findById(postedOrder.productId);
-            const index = parseInt(String(postedOrder.appointmentIndex));
+            const updateProduct = await Product.findById(postedOrder.serviceId);
+            const index = parseInt(String(postedOrder.appointmentIndex)); // wft
+
+            const user = await User.findById(request.session.user._id);
+            User.allOrdersByUser;
+            user.orders.push({
+              service_id: new Types.ObjectId(postedOrder.serviceId),
+              orderTime: new Date(),
+              finalized: false
+            });
+
             const newOrder = new Order({
-                product : new mongoose.Types.ObjectId(postedOrder.productId),
+                product : new mongoose.Types.ObjectId(postedOrder.serviceId),
                 orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
                 timeOfOrder : new Date(),
                 finalized : false,
@@ -75,7 +84,7 @@ class OrderController{
             (await updateProduct).save();
             response.status(201);
             response.send(orderInfo);
-        }  
+        }
     }
     public async deleteOrder(request: Request, response: Response) : Promise<void>
     {
@@ -96,7 +105,7 @@ class OrderController{
     }
     /**
      * finalizes your order. this method is called when you click the 'kostenpflichtig Bestellen'
-     * button on the order page 
+     * button on the order page
      */
     public async finalizeOrder(request: SessionRequest, response: Response) : Promise<void>
     {
@@ -112,9 +121,9 @@ class OrderController{
             (await finalize).save();
             response.status(201);
             response.send(finalize);
-        }  
+        }
     }
-    
+
 }
 
 export default OrderController;
