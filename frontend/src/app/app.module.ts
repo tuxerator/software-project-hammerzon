@@ -17,6 +17,7 @@ import { ProductdetailsComponent } from './components/productdetails/productdeta
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { OrderFinalizedComponent } from './components/order-finalized/order-fina
         AddProductComponent,
         OrderHistoryComponent,
         OrderFinalizedComponent,
+        HeaderComponent
     ],
     imports: [
         BrowserModule,

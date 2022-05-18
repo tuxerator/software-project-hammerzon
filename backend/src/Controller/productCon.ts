@@ -15,13 +15,15 @@ class ProductController
         //                                                      min,      max,   replace
         const start = Helper.parseQueryInt(request.query,'start',0,productCount,0);
         // Falls start sehr nah am Ende ist gilt this.list.length - start sonst einfach nur 10
-        const maxLimit = Math.min(productCount - start, 10);
+        const maxLimit = Math.max(productCount - start, 10);
 
         const limit = Helper.parseQueryInt(request.query,'limit',0,maxLimit,10);
 
         // Falls es einen Search Term gibt nutzt diesen Anstelle von
         const searchTerm = request.query.search;
         let list : IProduct[];
+
+        let requestable;
         if(searchTerm)
         {
             // Wenn es nur eine Zahl gibt dann ntze es für preis
@@ -38,13 +40,15 @@ class ProductController
                 {prize:{$lte:testPrize}}
               ]};
             list = await Product.find(query).skip(start).exec();
+            // Wie viele Elemente kommen danach noch
+            requestable =  Math.max(list.length - limit - start,0);
         }
         else{
             // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-            list = await Product.find({}).skip(start).limit(limit).exec();
+            list = await Product.find({}).skip(start).exec();
+            // Wieviele Elemente kommen danach noch
+            requestable = Math.max(productCount - limit - start,0);
         }
-
-        const requestable = Math.max(list.length - limit - start,0);
 
         const listInfo : ListInfo<IProduct> = {
             list:list.splice(0,limit),//this.list.slice(start,start + limit),
@@ -132,7 +136,7 @@ class ProductController
 
         const dbProduct = new Product(product);
 
-        dbProduct.user = request.session.user._id.toString();
+        dbProduct.user = request.session.user.firstName + ' ' + request.session.user.lastName;
 
         await dbProduct.save();
 

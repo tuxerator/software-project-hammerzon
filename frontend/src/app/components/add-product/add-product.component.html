@@ -70,7 +70,13 @@
 
         <!--Produkt hinzufügen-->
           <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-primary btn-block" (click)="onSubmit()"> Add Product  </button>
+            <button type="submit" class="btn btn-primary btn-block" (click)="onSubmit()"> Add Product
+              <div *ngIf="uploading" class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </button>
+
+
           </div>
         </form>
 

@@ -25,6 +25,7 @@ export class AddProductComponent implements OnInit {
   public imageId?:string = undefined;
 
   public isChecked = false;
+  public uploading = false;
 
   public errorMessage?: string;
   public addProductForm: FormGroup = this.formBuilder.group({
@@ -90,6 +91,9 @@ export class AddProductComponent implements OnInit {
 
   public onSubmit():void
     {
+      // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus
+      if(this.uploading) return;
+
       this.isChecked = true;
       console.log('Create Debug Log');
       this.addProductForm.markAllAsTouched();
@@ -126,15 +130,18 @@ export class AddProductComponent implements OnInit {
       // Neues Product erstellen
       const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
+      this.uploading = true;
       this.addProductService.addProduct(newProduct).subscribe({
         next: (_message:IdMessageResponse) => {
           this.errorMessage = undefined;
 
           this.router.navigate(['productdetails/',_message.id]);
+          this.uploading = false;
         },
         error: (err) => {
           this.errorMessage = err.error.message;
           console.error(err);
+          this.uploading = false;
         }
       });
     }

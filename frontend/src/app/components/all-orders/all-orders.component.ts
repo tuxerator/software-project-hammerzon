@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from 'src/app/models/Product';
+import { getAppointmentString, Product } from 'src/app/models/Product';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrderInfo, OrderService } from 'src/app/services/order.service';
@@ -65,6 +65,7 @@ export class AllOrdersComponent implements OnInit {
                   next: (val)=>{
                     if(this.productList)
                     {
+                      currentOrder.timeOfOrder = new Date(currentOrder.timeOfOrder);
                       this.combined?.push({order: currentOrder, product: this.productList[index], orderingUser: val});
                     }
                   },
@@ -83,5 +84,9 @@ export class AllOrdersComponent implements OnInit {
     }
   }
 
+  getDateString(date?:Date):string
+  {
+    return getAppointmentString(date);
+  }
 
 }
