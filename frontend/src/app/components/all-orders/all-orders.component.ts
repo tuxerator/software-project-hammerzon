@@ -28,7 +28,7 @@ export class AllOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.listAllOrders();
   }
-
+  // 'join' orders product and users in backend
   listAllOrders() : void{
     this.OrderService.listAllOrders().subscribe({
       // next: Value arrived successfully!

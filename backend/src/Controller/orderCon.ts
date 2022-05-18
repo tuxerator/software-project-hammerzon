@@ -4,16 +4,25 @@ import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
 import { Product } from '../Models/Product';
 import {Types} from 'mongoose';
+import session from 'express-session';
 
 class OrderController{
     /**
      * gets every finalized Order from the schema in a list.
      */
-    public async listAllOrders(request: Request, response: Response): Promise<void>{
-        const list : IOrder[] = await Order.find({finalized : true});
-
-        response.status(200);
-        response.send(list);
+    public async listAllOrders(request: SessionRequest, response: Response): Promise<void>{
+        if( !request.session.user || !(request.session.user.role === 'admin'))
+        {
+            response.status(409);
+            response.send('Not authorized');
+        }
+        else
+        {
+            const list : IOrder[] = await Order.find({finalized : true});
+            response.status(200);
+            response.send(list);
+        }
+        
     }
     /**
      * finds all orders a user has finalized

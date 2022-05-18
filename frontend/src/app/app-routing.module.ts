@@ -14,6 +14,7 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
+import { AdminAuthGuardService } from './services/admin-auth-guard.service';
 
 
 /**
@@ -32,7 +33,7 @@ const routes: Routes = [
     { path: 'login',component: LoginComponent},
     { path: 'personalprofile', component: PersonalProfileComponent},
     // Order
-    { path: 'all-orders', component: AllOrdersComponent},
+    { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
     { path: 'order-history', component: OrderHistoryComponent},
     // product
     { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
@@ -45,7 +46,8 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
     providers: [
-      AuthGuardService
+      AuthGuardService,
+      AdminAuthGuardService
     ]
 })
 export class AppRoutingModule { }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
 import { Appointment } from './productdetails.service';
+import { Product } from '../models/Product';
 
 
 
@@ -9,9 +10,10 @@ export type OrderList<T>={
   list: T[]
 }
 
+// this is a model now 
 export type OrderInfo={
   _id : string,
-  product : string,
+  product : Product,
   orderingUser: string,
   timeOfOrder: Date,
   finalized: boolean,
