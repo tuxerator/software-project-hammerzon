@@ -18,7 +18,11 @@ class OrderController{
         }
         else
         {
-            const list : IOrder[] = await Order.find({finalized : true});
+            const list : IOrder[] = await Order.
+                                                find({finalized : true}).
+                                                populate('product').
+                                                populate('orderingUser').
+                                                exec();
             response.status(200);
             response.send(list);
         }
@@ -38,7 +42,11 @@ class OrderController{
             const id = request.session.user._id;
             if(id && Types.ObjectId.isValid(id))
             {
-                const orders : IOrder[] = await Order.find({orderingUser : id, finalized : true});
+                const orders : IOrder[] = await Order.
+                                                    find({orderingUser : id, finalized : true}).
+                                                    populate('product').
+                                                    populate('orderingUser').
+                                                    exec();
                 console.log('orders found');
                 console.log(orders);
                 response.status(200);

@@ -1,25 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable } from 'rxjs';
-import { Appointment } from './productdetails.service';
-import { Product } from '../models/Product';
+import { Observable } from 'rxjs';
+import { Order } from '../models/Order';
 
-
-
-export type OrderList<T>={
-  list: T[]
-}
-
-// this is a model now 
-export type OrderInfo={
-  _id : string,
-  product : Product,
-  orderingUser: string,
-  timeOfOrder: Date,
-  finalized: boolean,
-  appointment : Appointment,
-  confirmed : boolean
-}
 export type PostOrder={
   productId : string,
   appointmentIndex : Number
@@ -30,28 +13,24 @@ export type PostOrder={
 })
 export class OrderService {
 
-  public currentOrder :OrderInfo|null = null;
-
   constructor(private http: HttpClient) { }
 
-  listAllOrders(): Observable<OrderInfo[]>
+  listAllOrders(): Observable<Order[]>
   {
-    return this.http.get<OrderInfo[]>('api/orderlist');
+    return this.http.get<Order[]>('api/orderlist');
   }
 
-  listAllOrdersByUser() : Observable<OrderInfo[]>
+  listAllOrdersByUser() : Observable<Order[]>
   {
-    return this.http.get<OrderInfo[]>('api/orderlistbyuser');
+    return this.http.get<Order[]>('api/orderlistbyuser');
   }
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId:string, appointmentIndex: Number): Observable<OrderInfo>
+  registerOrder(productId: string, appointmentIndex: Number) : Observable<Order>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
-
-    return this.http.post<OrderInfo>('api/registerOrder', postOrder);
-
+    return this.http.post<Order>('api/registerOrder', postOrder);
   }
   /**
    * deletes an order when it is cancelled
@@ -70,9 +49,9 @@ export class OrderService {
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }
 
-  finalizeOrder(orderId:string): Observable<OrderInfo>
+  finalizeOrder(orderId:string): Observable<Order>
   {
-    return this.http.post<OrderInfo>(`api/finalizeOrder/${orderId}`,orderId);
+    return this.http.post<Order>(`api/finalizeOrder/${orderId}`,orderId);
   }
 }
 

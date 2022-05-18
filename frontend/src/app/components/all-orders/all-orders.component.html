@@ -14,18 +14,18 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                <tr *ngFor="let elem of combined">
+                                <tr *ngFor="let elem of orderList">
                                     <td class="text-center"></td>
-                                    <td>{{elem.order._id}}</td>
-                                    <td>{{elem.product?.name}} </td>
-                                    <td>{{elem.product?.user}} </td>
-                                    <td>{{elem.product?.prize}}</td>
-                                    <td>{{elem.orderingUser?.firstName}}
-                                        {{elem.orderingUser?.lastName}}
-                                        {{elem.orderingUser?.address?.postCode}}
-                                        {{elem.orderingUser?.address?.city}}
+                                    <td>{{elem._id}}</td>
+                                    <td>{{elem.product.name}} </td>
+                                    <td>{{elem.product.user}} </td>
+                                    <td>{{elem.product.prize}}</td>
+                                    <td>{{elem.orderingUser.firstName}}
+                                        {{elem.orderingUser.lastName}}
+                                        {{elem.orderingUser.address?.postCode}}
+                                        {{elem.orderingUser.address?.city}}
                                     </td>
-                                    <td>{{getDateString(elem.order.timeOfOrder)}} </td>
+                                    <td>{{getDateString(elem.timeOfOrder)}} </td>
                                 </tr>
                             </tbody>
                     </table>
