@@ -32,7 +32,7 @@ export class PersonalProfileComponent implements OnInit{
         city: new FormControl('', [Validators.required]),
         postCode: new FormControl('', [Validators.required]),
         country: new FormControl('', [Validators.required])
-      }, {validators: this.passwordMatchingValidator});
+    }, {validators: this.passwordMatchingValidator});
 
 
 

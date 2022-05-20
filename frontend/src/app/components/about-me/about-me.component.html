@@ -1,8 +1,12 @@
 <div class="container">
-    <h4>
-        {{ myName?.firstName }} {{ myName?.lastName }}
-    </h4>
-    <div>
-        {{ myName?.optionalAttribut }}
+  <div class="card bg-dark border-secondary" style="height: 220px;">
+    <div class="card-body p-4">
+      <h4 class="card-title mb-4">
+          {{ myName?.firstName }} {{ myName?.lastName }}
+      </h4>
+      <div class="card-text">
+          {{ myName?.optionalAttribut }}
+      </div>
     </div>
+  </div>
 </div>
