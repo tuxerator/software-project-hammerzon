@@ -22,6 +22,19 @@ const routes: Routes = [
     { path: 'about/:name',component: HenriAboutpageComponent},
     { path: 'lukaserne' , component: LukaserneComponent },
 
+    { path: 'about/:name',component: AboutMeComponent},
+    // Auth
+    { path: 'register',component: RegistrationComponent},
+    { path: 'login',component: LoginComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent,canActivate: [AuthGuardService]},
+    // Order
+    { path: 'admin/all-orders', component: AllOrdersComponent},
+    { path: 'order-history', component: OrderHistoryComponent},
+    // product
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent,},  // should be: product/order-product
+    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'add-product', component: AddProductComponent, canActivate:[AuthGuardService]},
+    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent,canActivate: [AuthGuardService]}
 ];
 
 @NgModule({

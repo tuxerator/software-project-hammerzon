@@ -1,16 +1,8 @@
 
 <h2>Über uns</h2>
 
-<div class="link">
-  <a routerLink="/sophieunterfranz"> Sophie Unterfranz</a>
-</div>
-<div class="link">
-  <a routerLink="/cedricwiese"> Cedric Wiese</a>
-</div>
-
-
-<div class="links">
-    <a routerLink="/lukaserne">Lukas Erne</a>
+<div   class="row row-cols-3">
+  <app-about-me *ngFor="let nameID of list" [nameID]="nameID"></app-about-me>
 </div>
 
 <p>
