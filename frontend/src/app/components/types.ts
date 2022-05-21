@@ -5,3 +5,8 @@ export type MessageResponse = {
 }
 
 export type IdMessageResponse = MessageResponse&{id:string};
+
+export type ListInfoReponse<T>={
+  list: T[],
+  requestable:number
+}

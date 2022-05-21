@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { Product } from 'src/app/models/Product';
 import { LandingpageService,ListInfo } from 'src/app/services/landingpage.service';
 import { ActivatedRoute } from '@angular/router';
+import { ProductService } from 'src/app/services/product.service';
 
 
 
@@ -19,7 +20,7 @@ export class LandingpageComponent implements OnInit {
     public currentStart = 0;
     public currentLimit = 10;
 
-    constructor(private LandingpageService: LandingpageService,private route: ActivatedRoute) {
+    constructor(private productService: ProductService,private route: ActivatedRoute) {
     }
 
     //public list = [0,1,2,3,4,5,6,7,8,9];
@@ -89,7 +90,7 @@ export class LandingpageComponent implements OnInit {
     // Frägt nach Productliste bei dem Landingpageservice nach
     requestList(start:number= 0,limit:number=10,search:string='') : void
     {
-        this.LandingpageService.getProductList(start,limit,search).subscribe({
+        this.productService.getProductList(start,limit,search).subscribe({
             // next: Value arrived successfully!
             next: value => {
                 console.log(value);

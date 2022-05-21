@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AddProductService } from 'src/app/services/add-product.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Appointment, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
@@ -38,7 +39,7 @@ export class AddProductComponent implements OnInit {
   });
 
 
-  constructor(private formBuilder: FormBuilder,private addProductService:AddProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
+  constructor(private formBuilder: FormBuilder,private productService:ProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
 
   ngOnInit(): void {
     this.authService.getUser().subscribe({
@@ -131,7 +132,7 @@ export class AddProductComponent implements OnInit {
       const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
       this.uploading = true;
-      this.addProductService.addProduct(newProduct).subscribe({
+      this.productService.addProduct(newProduct).subscribe({
         next: (_message:IdMessageResponse) => {
           this.errorMessage = undefined;
 

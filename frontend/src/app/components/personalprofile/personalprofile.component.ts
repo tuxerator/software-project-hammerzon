@@ -70,6 +70,7 @@ export class PersonalProfileComponent implements OnInit{
         this.profileForm.markAllAsTouched();
         console.log(this.profileForm);
         if(this.profileForm.invalid)return;
+
         console.log('Through Validation Debug Log');
         const form = this.profileForm.value;
         const address : Address = new Address(form.street,form.houseNum,form.city,form.postCode,form.country);
