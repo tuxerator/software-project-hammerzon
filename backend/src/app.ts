@@ -27,6 +27,7 @@ import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
+import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -116,17 +117,17 @@ app.post('/api/name/:id', api.postNameInfo);
 // AuthController endpoints
 
 // register
-app.post('/api/auth/register', auth.register);
+app.post('/api/auth/register',  ValidatorGroups.UserRegister,auth.register);
 // login
-app.post('/api/auth/login', auth.login);
-app.get('/api/auth/logintest', auth.getUser);
+app.post('/api/auth/login',ValidatorGroups.UserLogin,auth.login);
+app.get('/api/auth/logintest',ValidatorGroups.UserAuthorized ,auth.getUser);
 
-app.get('/api/getUserById/:id', auth.getUserById);
+app.get('/api/getUserById/:id',auth.getUserById);
 // logout ...
 // logout
-app.get('/api/auth/logout', auth.logout);
+app.get('/api/auth/logout', ValidatorGroups.UserAuthorized,auth.logout);
 // update
-app.post('/api/auth/update', auth.update);
+app.post('/api/auth/update',ValidatorGroups.UserUpdate ,auth.update);
 
 // ProductController endpoints
 
