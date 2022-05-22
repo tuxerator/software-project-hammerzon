@@ -8,11 +8,33 @@
  */
 
 import errorHandler from 'errorhandler';
-import express from 'express';
+import express, { application } from 'express';
 import path from 'path';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+// created by us
+import ApiController  from './Controller/api';
+import AboutController from './Controller/about';
+import session from 'express-session';
 
-import { ApiController } from './api';
+import ProductController from './Controller/productCon';
+import OrderController from './Controller/orderCon';
+import { MongoDBController } from './Controller/mongoDB';
+
+import { Order } from './Models/Order';
+
+import { IUser } from './Models/User';
+import AuthController from './Controller/auth';
+import multer from 'multer';
+import { ImageController } from './Controller/imageCon';
+
+// Damit im request.session user exisitiert
+declare global {
+        interface Session {
+            user?: IUser,
+        }
+}
+
 
 // Express server instanziieren
 const app = express();
@@ -26,7 +48,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
 // erlauben wir alles um eventuelle Fehler zu vermeiden.
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: true,credentials: true}));
+app.use(cookieParser('6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB'));
+
+app.set('trust proxy', 1); // trust first proxy
+app.use(session({
+        secret:'6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
+        resave:true,
+        saveUninitialized:true,
+        name:'guid'
+    }
+));
+
+
 
 /**
  *  API Routen festlegen
@@ -52,18 +86,85 @@ app.use(cors({ origin: '*' }));
  *
  *  Bitte schaut euch das Tutorial zur Backend-Entwicklung an für mehr Infos bzgl. REST
  */
+
+// Wird für das Photouploaden verwendet
+const upload = multer({ dest: './uploads/'});
+
+
+// important information about this api
 const api = new ApiController();
+// const database = new DatabaseController();
+const mongodb = new MongoDBController();
+
+const auth = new AuthController();
+// information about the creator of this api
+// const about = new AboutController();
+
+const product = new ProductController();
+const order = new OrderController();
+
+const image = new ImageController();
+
 app.get('/api', api.getInfo);
-app.get('/api/name', api.getNameInfo);
-app.get('/api/profile-list', api.getProfileList);
-app.get('/api/henri-grotzeck', api.getHenriGrotzeckInfo);
+app.get('/api/about/profile-list', api.getProfileList);
+app.get('/api/about/:nameID', api.getNameInfo);
 app.post('/api/name/:id', api.postNameInfo);
 
-app.get('/api/sophie-unterfranz',api.getSophieName);
-app.get('/api/cedric-wiese',api.getCedricInfo); 
+// aboutController endpoints
+//app.get('/api/nameinfo-list',about.getNameInfoList);
 
-app.get('/api/lukas-erne', api.getLukasErne);
+// AuthController endpoints
 
+// register
+app.post('/api/auth/register', auth.register);
+// login
+app.post('/api/auth/login', auth.login);
+app.get('/api/auth/logintest', auth.getUser);
+
+app.get('/api/getUserById/:id', auth.getUserById);
+// logout ...
+// logout
+app.get('/api/auth/logout', auth.logout);
+// update
+app.post('/api/auth/update', auth.update);
+
+// ProductController endpoints
+
+// 10-products ...
+app.get('/api/productlist', product.getList.bind(product));
+
+
+// product details ...
+app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
+
+// reset appointment
+app.post('/api/resetAppointment', product.resetAppointment);
+// add product
+app.post('/api/addproduct',product.addProduct);
+
+// Imager Controller endpoints
+// Add Images
+app.post('/api/img/upload',upload.single('img'),image.postImage);
+
+// Removed Images
+app.get('/api/img/:id',image.getImage);
+
+// OrderController endpoints
+
+// register a new Order
+app.post('/api/registerOrder', order.registerOrder);
+
+// finalize an order
+app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+
+// delete an order
+app.delete('/api/deleteOrder/:id',order.deleteOrder);
+
+// list all orders for the admin page
+app.get('/api/orderlist', order.listAllOrders);
+
+// list all orders by user
+app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

@@ -1,37 +1,43 @@
-<h2>Startseite</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <ol class="list-group shadow bg-dark">
+                <!--Produkt 1-->
+                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item bg-dark border-secondary text-white" [routerLink]="['productdetails',productInfo._id]">
+                  <div class="row">
+                    <div class="col-3 p-2">
+                      <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
+                    </div>
+                    <div  class="col-9 p-2">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h4> {{productInfo?.name}}</h4>
+                        <h6>{{productInfo?.prize}} €/std.</h6>
+                      </div>
+                      <p>{{productInfo?.user}}</p>
+                      <!-- <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
 
-<p> Auf der Startseite kann das Produkt vorgestellt werden, sowie Links auf bspw. Login-Seiten dargestellt werden. </p>
-<p class="highlight"> Bitte macht euch mit der Angular Dokumentation vertraut! </p> 
+                      <img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
+                    </div>
+                  </div>
+                </li>
+                <!--Ende Produkt 1-->
+            </ol>
+        </div>
+    </div>
 
-<ul>
-    <li *ngFor="let link of links">
-        <a target="_blank" href="{{ link.url }}">
-            {{ link.name }}
-        </a>
-    </li>
-</ul>
+    <div *ngIf="productListInfo.list.length == 0" class="d-flex align-items-center">
+      <strong>Loading...</strong>
+      <div class="spinner-border spinner-light ms-auto" role="status" aria-hidden="true"></div>
+    </div>
 
-<br/>
-<hr/>
-<br/>
+    <!-- Knöpfe um mehr Elemente and zeigen zu können -->
 
-<p>
-    Mithilfe von <code>Components</code> können Bestandteile des Frontends ausgekapselt und in anderen <code>Components</code> wiederverwendet werden.
-    Die <code>Components</code> können dann mithilfe dem (in der jeweiligen <code>.component.ts</code> Datei) definierten <code>selector</code> ganz einfach als HTML Komponente eingebunden werden.
-    Bitte verwendet entweder den <code>ng generate</code> Befehl oder das Kontextmenü von Visual Studio Code zur Erstellung neuer Komponenten, da die Komponente auch in der <code>app.module.ts</code> Datei eingetragen werden muss!
-</p>
+    <div class="btn-toolbar justify-content-center mt-4">
+      <div class="btn-group" role="group">
+        <button type="button" class=" btn btn-primary"  [class.disabled]="!(currentStart > 0)" (click)="previous()">&laquo;</button>
+        <button type="button" class="btn btn-primary" (click)="next()"  [class.disabled]="!(productListInfo.requestable>0)">&raquo;</button>
+      </div>
+    </div>
 
-<p>
-    Hier ein Beispiel von zwei <code>Input</code> Elementen, die Daten mittels ihrem definiertem <code>@Input</code> teilen:
-</p>
+</div>
 
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<p> Der Text lautet: {{ sharedTextObject.text }} </p>
-
-
-<p>
-    Hier ein weiteres Beispiel von einem <code>Input</code> Element, das Daten mittels einem Service speichert (bis die Seite neu geladen wird):
-</p>
-
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>

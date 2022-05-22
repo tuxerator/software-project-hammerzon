@@ -1,42 +1,10 @@
-
 <h2>Über uns</h2>
 
-<div class="link">
-  <a routerLink="/sophieunterfranz"> Sophie Unterfranz</a>
+<div   class="row row-cols-3">
+  <app-about-me *ngFor="let nameID of list" [nameID]="nameID"></app-about-me>
 </div>
-<div class="link">
-  <a routerLink="/cedricwiese"> Cedric Wiese</a>
-</div>
-
-
-<div class="links">
-    <a routerLink="/lukaserne">Lukas Erne</a>
-</div>
-
-<p>
-    Dies ist eine Beispielseite, die demonstriert wie man Daten von dem Server laden und anzeigen kann.
-    Bitte schaut euch die dazugehörigen Komponenten <code>src/app/components/about/about.component.ts</code> und <code>src/app/services/about.service.ts</code> an!
-</p>
-
-<h2> Vom Server geladene Daten: </h2>
-<ul>
-  <li *ngFor="let name of list">
-    <a [routerLink]="['/about',name]"> {{name}} </a>
-  </li>
-</ul>
-
-
-
 
 
 <br/>
 <hr/>
 <br/>
-
-<p>
-    Hier nochmals das Beispiel der Startseite, bei dem der Text über einen Service gespeichert wird.
-    Falls der Text auf einer der beiden Seiten geändert wird, ändert er sich auch automatisch auf der jeweils anderen Seite!
-    Somit können Daten mithilfe von Services Komponenten-übergreifend geteilt werden.
-</p>
-
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>

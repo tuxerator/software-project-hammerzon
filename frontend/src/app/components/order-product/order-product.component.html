@@ -1,0 +1,76 @@
+<!-- find better colors -->
+<div class="container bg-dark" >
+    <div class="row">
+        <!-- left column of cards-->
+        <div class="col-lg-8 align-self-center">
+            <!-- product info-->
+            <p class="text-ligth">Ihre Bestellung:</p>
+            <div class="card mb-4 bg-dark border-secondary">
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+
+                            <tr>
+                                <td> <!-- column in the table -->
+                                    <div class="d-flex mb-2">
+                                        <div class="flex-shrink-0">
+                                            <!-- product thumbnail --> <img src="api/img/{{product?.image_id}}" alt="" width="100" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-lg-grow1 ms3">
+                                        <!-- product information -->
+                                        <h6 class="small mb-0 text-white">{{product?.name}}</h6>
+                                        <span class="small text-white">{{product?.user}}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- Zeitslot -->
+                                    <div class="text-white">{{ getAppointString() }}</div> <!-- should be only one appointment here-->
+                                </td>
+                                <td>
+                                    <!-- Preis -->
+                                    <div class="text-white">{{product?.prize}} €/std.</div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- customer info and order button -->
+            <p class="text-ligth ">Bestellung abschließen:</p>
+            <div class="card mb-4 bg-dark border-secondary text">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="text-white">{{user?.firstName}} {{user?.lastName}}</div>
+                            <div class="text-white">{{user?.address?.street}} {{user?.address?.houseNum}}, {{user?.address?.city}}</div>
+                            <div class="text-white">{{user?.email}}</div>
+                        </div>
+                        <div class="col-lg-6 align-self-center">
+                            <div class="d-flex justify-content-center">
+                                <a (click)="finalize()">
+                                    <button type="button" class="btn btn-primary btn-lg">Zahlungspflichtig Bestellen</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <p class="text-ligth">Bestellung ändern:</p>
+            <div class="card mb-4 bg-dark border-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <a routerLink="../../">
+                            <button type="button" class="btn btn-primary btn-lg" (click)="cancel()" >Zurück zum Produkt</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
