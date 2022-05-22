@@ -114,25 +114,15 @@ export default class ProductTestData{
   constructor()
   {
     //Product.deleteMany({});
-    //this.insertIfNotExistend();
+    this.insertIfNotExistend();
   }
 
   async insertIfNotExistend(): Promise<void>  {
     await Product.deleteMany({});
 
-
-    const product = new Product({
-        name:'Zimmerstreichen',
-        user:'Streich-ich GmbH',
-        prize:10,
-        description:'Beschreibung ...',
-        duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}]
-    });
-    product.save();
-
-
-
+    const users  = await User.find({});
+    console.log(users);
+/*
     const vals : IProduct[] = await Product.find({});
     if(!vals || vals.length <= 0)
     {
@@ -143,6 +133,7 @@ export default class ProductTestData{
     }else{
         console.log('Products already exist');
     }
+    */
   }
 
 

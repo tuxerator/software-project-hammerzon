@@ -75,7 +75,8 @@ export class PersonalProfileComponent implements OnInit{
         const form = this.profileForm.value;
         const address : Address = new Address(form.street,form.houseNum,form.city,form.postCode,form.country);
         const newUser:User = new User(form.email,form.newPassword,form.firstName,form.lastName,address);
-        this.authService.updateUser(form.oldPassword,newUser).subscribe({
+
+        this.authService.updateUser(form.oldPassword === '' ? undefined : form.oldPassword,newUser).subscribe({
           next: () => this.editMode = false,
           error: (err) => console.error(err)
         });

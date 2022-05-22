@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { Product } from 'src/app/models/Product';
-import { LandingpageService,ListInfo } from 'src/app/services/landingpage.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
+import { ListInfoReponse } from '../types';
 
 
 
@@ -13,7 +13,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class LandingpageComponent implements OnInit {
     //
-    public productListInfo : ListInfo<Product> = {
+    public productListInfo : ListInfoReponse<Product> = {
                                                     list:[],
                                                     requestable:0
                                                   };

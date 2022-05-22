@@ -124,7 +124,6 @@ class AuthController{
         const oldPassword:string = request.body.oldPassword;
         if(oldPassword)
         {
-
             if(!bcrypt.compareSync(oldPassword, userDBObj.password.toString() )){
                 response.status(401); // 401: Unauthorized
                 response.send({ code: 401, message: 'Wrong password' });

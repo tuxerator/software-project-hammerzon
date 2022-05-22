@@ -132,16 +132,17 @@ app.post('/api/auth/update',ValidatorGroups.UserUpdate ,auth.update);
 // ProductController endpoints
 
 // 10-products ...
-app.get('/api/productlist', product.getList.bind(product));
-
+app.get('/api/product/list', product.getList.bind(product));
 
 // product details ...
-app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
+app.get('/api/product/:id', product.getProductDetail.bind(product));
 
 // reset appointment
-app.post('/api/resetAppointment', product.resetAppointment);
+
 // add product
-app.post('/api/addproduct',product.addProduct);
+app.post('/api/product/add', ValidatorGroups.ProductAdd ,product.addProduct);
+
+app.post('/api/resetAppointment', product.resetAppointment);
 
 // Imager Controller endpoints
 // Add Images

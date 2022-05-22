@@ -137,9 +137,6 @@ export class Validators{
             return false;
         };
     }
-
-
-
 }
 
 export class ValidatorLists{
@@ -161,7 +158,7 @@ export class ValidatorLists{
 
 
     public static ProductValidatorList:Validator[] = [
-        Validators.isRequired('name'),
+        Validators.isMaxLength('name',4),
         //Validators.isRequired('user'),
         //Validators.isValidObjectId('user'),
         Validators.isRequired('prize'),
@@ -172,8 +169,10 @@ export class ValidatorLists{
             Validators.isRequired('date'),
             Validators.isRequired('isReserved')
         ]),
-        Validators.isRequired('image_id')
+        Validators.isRequired('image_id'),
+        Validators.isValidObjectId('image:id')
     ];
+
 
 }
 // Groupen von Validatoren die für eine Bestimmte Route vorgesehen sind
@@ -200,6 +199,8 @@ export class ValidatorGroups{
         Validators.isAuthorized('user')
     ]);
 
+
+
     // Product
-    public static ProductAdd = ValidatorGroup(ValidatorLists.ProductValidatorList);
+    public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'),...ValidatorLists.ProductValidatorList]);
 }
