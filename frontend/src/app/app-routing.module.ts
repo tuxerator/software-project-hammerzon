@@ -12,7 +12,6 @@ import { ProductdetailsComponent } from './components/productdetails/productdeta
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
-
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminAuthGuardService } from './services/admin-auth-guard.service';
 

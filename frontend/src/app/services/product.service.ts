@@ -34,7 +34,7 @@ export class ProductService {
 
   addProduct(product:Product):Observable<IdMessageResponse>
   {
-    return this.http.post<IdMessageResponse>('api/addproduct',product);
+    return this.http.post<IdMessageResponse>('api/product/add',product);
   }
 
 }

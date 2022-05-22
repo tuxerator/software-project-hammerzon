@@ -142,7 +142,7 @@ app.get('/api/product/:id', product.getProductDetail.bind(product));
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd ,product.addProduct);
 
-app.post('/api/resetAppointment', product.resetAppointment);
+app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // Imager Controller endpoints
 // Add Images
@@ -154,19 +154,19 @@ app.get('/api/img/:id',image.getImage);
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/registerOrder', order.registerOrder);
+app.post('/api/order/register', ValidatorGroups.OrderRegister ,order.registerOrder);
 
 // finalize an order
-app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+app.post('/api/order/finalize/:id',ValidatorGroups.UserAuthorized,order.finalizeOrder);
 
 // delete an order
-app.delete('/api/deleteOrder/:id',order.deleteOrder);
+app.delete('/api/order/delete/:id',ValidatorGroups.UserAuthorized,order.deleteOrder);
 
 // list all orders for the admin page
-app.get('/api/orderlist', order.listAllOrders);
+app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized,order.listAllOrders);
 
 // list all orders by user
-app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
+app.get('/api/order/list', ValidatorGroups.UserAuthorized,order.listAllOrdersByUser);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

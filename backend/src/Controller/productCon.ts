@@ -68,7 +68,7 @@ class ProductController
         console.log(id);
         if(id && Types.ObjectId.isValid(id))
         {
-            const product : IProduct = await Product.findById(id).exec();
+            const product : IProduct = await Product.findById(id).populate('user','-password -address').exec();
             response.status(200);
             response.send(product);
         }else {

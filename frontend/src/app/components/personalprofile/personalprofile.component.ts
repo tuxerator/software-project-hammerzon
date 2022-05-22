@@ -16,15 +16,21 @@ export class PersonalProfileComponent implements OnInit{
     public passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const password = control.get('newPassword');
         const confirmPassword = control.get('confirmPassword');
-        return password?.value === confirmPassword?.value ? null : { notMatch: true };
+        const oldPassword = control.get('oldPassword');
+               // (doe the new Password(Pw)'s' match) and
+        return password?.value === confirmPassword?.value
+               // (old Pw Exist => is new password length greater or equal to 8)
+               && ((oldPassword?.value && oldPassword.value !== '')? password?.value.length >= 8 : true)
+               // =>
+               ? null : { notMatch: true };
       };
 
 
 
     public profileForm: FormGroup = this.formBuilder.group({
-        oldPassword: new FormControl('', [Validators.required]),
-        newPassword: new FormControl('', [Validators.required]),
-        confirmPassword: new FormControl('', [Validators.required]),
+        oldPassword: new FormControl('', []),
+        newPassword: new FormControl('', []),
+        confirmPassword: new FormControl('', []),
         firstName:new FormControl('', [Validators.required]),
         lastName:new FormControl('',[Validators.required]),
         street: new FormControl('', [Validators.required]),

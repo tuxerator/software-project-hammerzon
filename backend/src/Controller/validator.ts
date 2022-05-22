@@ -10,6 +10,7 @@ export const ValidatorGroup = (validators:Validator[]) =>
 {
     return (request:Request,response:Response,next:NextFunction):void =>
     {
+        console.log(request.body);
         for(const validator of validators)
         {
             if(!validator(request,response))
@@ -26,7 +27,7 @@ export class Validators{
     {
         return (request:SubRequest,response:Response):boolean =>
         {
-            if(request.body[key])
+            if(request.body[key] !== undefined)
             {
                 return true;
             }
@@ -144,8 +145,8 @@ export class ValidatorLists{
     [
         Validators.isRequired('firstName'),
         Validators.isRequired('lastName'),
-        Validators.isRequired('email'),
-        Validators.isValidEmail('email'),
+        //Validators.isRequired('email'),
+        //Validators.isValidEmail('email'),
         Validators.subValidators('address',
             [
                 Validators.isRequired('street'),
@@ -170,16 +171,22 @@ export class ValidatorLists{
             Validators.isRequired('isReserved')
         ]),
         Validators.isRequired('image_id'),
-        Validators.isValidObjectId('image:id')
+        Validators.isValidObjectId('image_id')
     ];
 
+    public static PostOrderValidatorList:Validator[]= [
+        Validators.isAuthorized('user'),
+        Validators.isRequired('productId'),
+        Validators.isValidObjectId('productId'),
+        Validators.isRequired('appointmentIndex')
+    ];
 
 }
 // Groupen von Validatoren die für eine Bestimmte Route vorgesehen sind
 export class ValidatorGroups{
 
     // Auth
-    public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'),...ValidatorLists.UserValidatorList,Validators.isMaxLength('password',8)]);
+    public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'),...ValidatorLists.UserValidatorList,Validators.isMaxLength('password',8),Validators.isRequired('email'),Validators.isValidEmail('email')]);
 
     public static UserUpdate = ValidatorGroup(
         [
@@ -200,7 +207,20 @@ export class ValidatorGroups{
     ]);
 
 
+    public static AdminAuthorized = ValidatorGroup([
+        Validators.isAuthorized('admin')
+    ]);
+
+
+
+
 
     // Product
     public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'),...ValidatorLists.ProductValidatorList]);
+
+    // Order
+
+    public static OrderRegister = ValidatorGroup(ValidatorLists.PostOrderValidatorList);
+
+
 }

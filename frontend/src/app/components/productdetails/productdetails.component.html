@@ -7,7 +7,7 @@
             <h3 class="card-title col me-auto">{{product?.name}}</h3>
             <h3 class="card-title col text-end">{{product?.prize}} €/std.</h3>
           </div>
-           <h6 class="card-subtitle">{{product?.user}}</h6>
+           <h6 class="card-subtitle">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
            <p class="card-text mt-4">{{product?.description}}</p>
            <p class="card-text mt-4">Dauer <span>{{getDurString()}}</span></p>
            <div class="btn-group flex-wrap"role="group">

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Order } from 'src/app/models/Order';
 import { getAppointmentString } from 'src/app/models/Product';
-import { User } from 'src/app/models/User';
-import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
-import { ProductdetailsService } from 'src/app/services/productdetails.service';
+
 
 @Component({
   templateUrl: './order-history.component.html',
@@ -14,9 +12,7 @@ export class OrderHistoryComponent implements OnInit {
   orderList? : Order[];
 
 
-  constructor(private OrderService: OrderService,
-              private productService: ProductdetailsService,
-              private authService : AuthService
+  constructor(private OrderService: OrderService
     ) { }
 
     ngOnInit(): void {

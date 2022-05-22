@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductdetailsService, Appointment} from 'src/app/services/productdetails.service';
 import { OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { NavigationStart, Router } from '@angular/router';
-import { getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
+import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
 import { Order } from 'src/app/models/Order';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   templateUrl: './order-product.component.html',
@@ -20,7 +20,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
   order : Order|undefined;
   cancelled : Boolean = false;
   constructor(private route:ActivatedRoute,
-              private productService:ProductdetailsService,
+              private productService:ProductService,
               private authService: AuthService,
               private orderService: OrderService,
               private router: Router) { }

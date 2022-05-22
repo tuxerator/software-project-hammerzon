@@ -17,12 +17,12 @@ export class OrderService {
 
   listAllOrders(): Observable<Order[]>
   {
-    return this.http.get<Order[]>('api/orderlist');
+    return this.http.get<Order[]>('api/admin/order/list');
   }
 
   listAllOrdersByUser() : Observable<Order[]>
   {
-    return this.http.get<Order[]>('api/orderlistbyuser');
+    return this.http.get<Order[]>('api/order/list');
   }
   /**
    * register an order with productID and a single appointment.
@@ -30,14 +30,14 @@ export class OrderService {
   registerOrder(productId: string, appointmentIndex: Number) : Observable<Order>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
-    return this.http.post<Order>('api/registerOrder', postOrder);
+    return this.http.post<Order>('api/order/register', postOrder);
   }
   /**
    * deletes an order when it is cancelled
    */
   deleteOrder(orderId:string) : Observable<void>
   {
-    return this.http.delete<void>(`api/deleteOrder/${orderId}`);
+    return this.http.delete<void>(`api/order/delete/${orderId}`);
   }
   /**
    * resets the isReserved status of an appointment to false
@@ -51,7 +51,7 @@ export class OrderService {
 
   finalizeOrder(orderId:string): Observable<Order>
   {
-    return this.http.post<Order>(`api/finalizeOrder/${orderId}`,orderId);
+    return this.http.post<Order>(`api/order/finalize/${orderId}`,orderId);
   }
 }
 

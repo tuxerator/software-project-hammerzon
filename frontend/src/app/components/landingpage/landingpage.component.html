@@ -5,18 +5,17 @@
                 <!--Produkt 1-->
                 <li *ngFor="let productInfo of productListInfo.list" class="list-group-item bg-dark border-secondary text-white" [routerLink]="['productdetails',productInfo._id]">
                   <div class="row">
+                    <!--Image -->
                     <div class="col-3 p-2">
                       <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
                     </div>
+                    <!-- Infos -->
                     <div  class="col-9 p-2">
                       <div class="d-flex w-100 justify-content-between">
                         <h4> {{productInfo?.name}}</h4>
                         <h6>{{productInfo?.prize}} €/std.</h6>
                       </div>
-                      <p>{{productInfo?.user}}</p>
-                      <!-- <h6 class="font-weight-bold my-2">{{productInfo?.prize}}</h6>
-
-                      <img src="" width="200" class="ml-lg-5 order-1 order-lg-2">-->
+                      <p>{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
                     </div>
                   </div>
                 </li>
