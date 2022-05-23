@@ -6,7 +6,6 @@ export class Order{
     public product : Product;
     public orderingUser : User;
     public timeOfOrder : Date;
-    public finalized : boolean;
     public appointment : Appointment;
     public confirmed : boolean;
 
@@ -16,7 +15,6 @@ export class Order{
         this.product = product;
         this.orderingUser = orderingUser;
         this.timeOfOrder = timeOfOrder;
-        this.finalized = finalized;
         this.appointment = appointment;
         this.confirmed = confirmed;
     }

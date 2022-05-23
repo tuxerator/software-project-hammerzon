@@ -156,9 +156,6 @@ app.get('/api/img/:id',image.getImage);
 // register a new Order
 app.post('/api/order/register', ValidatorGroups.OrderRegister ,order.registerOrder);
 
-// finalize an order
-app.post('/api/order/finalize/:id',ValidatorGroups.UserAuthorized,order.finalizeOrder);
-
 // delete an order
 app.delete('/api/order/delete/:id',ValidatorGroups.UserAuthorized,order.deleteOrder);
 

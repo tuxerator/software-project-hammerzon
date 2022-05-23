@@ -27,10 +27,10 @@ export class OrderService {
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId: string, appointmentIndex: Number) : Observable<Order>
+  registerOrder(productId: string, appointmentIndex: Number) : Observable<Boolean>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
-    return this.http.post<Order>('api/order/register', postOrder);
+    return this.http.post<Boolean>('api/order/register', postOrder);
   }
   /**
    * deletes an order when it is cancelled
@@ -49,9 +49,5 @@ export class OrderService {
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }
 
-  finalizeOrder(orderId:string): Observable<Order>
-  {
-    return this.http.post<Order>(`api/order/finalize/${orderId}`,orderId);
-  }
 }
 

@@ -14,6 +14,7 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminAuthGuardService } from './services/admin-auth-guard.service';
+import { NotAvailableComponent } from './components/not-available/not-available.component';
 
 
 /**
@@ -34,8 +35,9 @@ const routes: Routes = [
     // Order
     { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
     { path: 'order-history', component: OrderHistoryComponent},
+    { path: 'not-available', component: NotAvailableComponent},
     // product
-    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},
     { path: 'productdetails/:id',component:ProductdetailsComponent},
     { path: 'add-product', component: AddProductComponent},
     { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent}

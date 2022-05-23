@@ -59,23 +59,31 @@ class OrderController{
 
         const postedOrder:PostOrder = request.body;
         const updateProduct = await Product.findById(postedOrder.productId);
-
         const index = parseInt(String(postedOrder.appointmentIndex));
-        const newOrder = new Order({
+
+        if(updateProduct.appointments[index].isReserved === true)
+        {
+            response.status(409);
+            response.send(false);
+        }
+        else
+        {
+            const newOrder = new Order({
                 product : new mongoose.Types.ObjectId(postedOrder.productId),
                 orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
                 timeOfOrder : new Date(),
-                finalized : false,
                 appointment : updateProduct.appointments[index],
                 confirmed : false
-        });
+            });
             await newOrder.save();
 
-        updateProduct.appointments[index].isReserved = true;
-        await updateProduct.save();
+            updateProduct.appointments[index].isReserved = true;
+            await updateProduct.save();
 
-        response.status(201);
-        response.send(newOrder);
+            response.status(201);
+            response.send(true);
+        }
+
     }
 
     public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>
@@ -99,22 +107,6 @@ class OrderController{
             response.status(500);
             response.send('there is no order with such an id');
         }
-    }
-    /**
-     * finalizes your order. this method is called when you click the 'kostenpflichtig Bestellen'
-     * button on the order page
-     */
-    public async finalizeOrder(request: SessionRequest, response: Response) : Promise<void>
-    {
-        //
-        const orderId : string = request.params.id;
-        //
-        const finalize = await Order.findById( new mongoose.Types.ObjectId(orderId) );
-        // set order Finalized
-        finalize.finalized = true;
-        await finalize.save();
-        response.status(201);
-        response.send(finalize);
     }
 
 }
