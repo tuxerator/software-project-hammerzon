@@ -71,16 +71,6 @@ class OrderController{
         });
             await newOrder.save();
 
-            // Redundant ?
-            /*const orderInfo : OrderInfo = {
-                _id : newOrder._id.toString(),
-                product : newOrder.product.toString(),
-                orderingUser : newOrder.orderingUser.toString(),
-                timeOfOrder : newOrder.timeOfOrder,
-                finalized : newOrder.finalized,
-                appointment : newOrder.appointment,
-                confirmed : newOrder.confirmed
-            };*/
         updateProduct.appointments[index].isReserved = true;
         await updateProduct.save();
 
