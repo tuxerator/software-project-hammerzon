@@ -9,6 +9,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent implements OnInit{
 
+  public errorMessage?:string;
+
   public loginForm: FormGroup = this.formBuilder.group({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
@@ -25,8 +27,43 @@ export class LoginComponent implements OnInit{
       },
       error: (err) => {
         console.error(err);
+
       }
     });
+  }
+
+
+  public isValid(key:string):boolean
+  {
+    if(key === 'email')
+    {
+      return this.errorMessage !== 'Mail address not found' && !this.loginForm.controls[key].invalid;
+    }else
+    {
+      return this.errorMessage !== 'Wrong password' &&  !this.loginForm.controls[key].invalid;
+    }
+  }
+
+  public getClasses(key:string):string[]
+  {
+    if(!this.loginForm.controls[key].touched){
+      return [];
+    }
+    if(this.isValid(key))
+    {
+      return ['is-valid'];
+    }
+    return ['is-invalid'];
+  }
+
+  public getTexts(key:string):string
+  {
+    if(key === 'email')
+    {
+        return this.errorMessage === 'Mail address not found' ? 'Email existiert nicht' : 'Bitte korrekte Email eingeben';
+    }else{
+       return this.errorMessage ===  'Wrong password' ? 'Falsches Passwort' : 'Passwort zu kur minestens 8 Zeichen';
+    }
   }
 
   public onSubmit():void
@@ -47,7 +84,10 @@ export class LoginComponent implements OnInit{
         this.router.navigate(['/']);
 
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorMessage = err.error.message;
+        console.log(this.errorMessage);
+      }
     });
   }
 

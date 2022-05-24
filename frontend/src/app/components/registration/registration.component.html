@@ -18,10 +18,9 @@
       <div *ngIf="!isValid('lastName')" class="invalid-feedback was-validated">Nachname wird erwarted.</div>
     </div>
     <!-- Email -->
-    <div class="mb-3 input-group" [class.was-validated]="registerForm.controls['email'].touched">
+    <div class="mb-3 input-group">
 		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
-        <input  class="form-control" placeholder="Email-Addresse" type="email" formControlName="email" required>
-        <div *ngIf="isValid('email')" class="valid-feedback was-validated">Gültige Emailadresse.</div>
+        <input  class="form-control" [ngClass]="getEmailClass()"  placeholder="Email-Addresse" type="email" formControlName="email" required>
         <div *ngIf="!isValid('email')" class="invalid-feedback was-validated">{{getEmailInvalidText()}}</div>
     </div>
 

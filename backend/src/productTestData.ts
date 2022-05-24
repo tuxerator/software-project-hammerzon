@@ -20,7 +20,8 @@ export default class ProductTestData{
                        {date:new Date(), isReserved:false},
                        {date:new Date(), isReserved:false},
                        {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false}],image_id:'6284f11cb72a93135fb79d1d'
+                       {date:new Date(), isReserved:false}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Dachleiter',
@@ -28,7 +29,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:true}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:true}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -36,7 +38,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:true}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:true}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -44,7 +47,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:true}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:true}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -52,7 +56,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:true}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:true}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -60,7 +65,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:false}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -68,7 +74,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:false}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -76,7 +83,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:false}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
@@ -84,7 +92,8 @@ export default class ProductTestData{
         prize:10,
         description:'Beschreibung ...',
         duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],image_id:'6284f11cb72a93135fb79d1d'
+        appointments:[{date:new Date(),isReserved:false}],
+        image_id:'6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',

@@ -30,8 +30,8 @@ export class RegistrationComponent implements OnInit{
       postCode: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required,Validators.minLength(8)]),
-      confirmPassword: new FormControl('', [Validators.required])
-    }, {validators: this.passwordMatchingValidator});
+      confirmPassword: new FormControl('', [Validators.required,this.passwordMatchingValidator])
+    });
 
     constructor(private formBuilder: FormBuilder,private authService:AuthService,private router:Router){}
 
@@ -81,9 +81,27 @@ export class RegistrationComponent implements OnInit{
       return !this.registerForm.controls[key].invalid;
     }
 
+
+
     public getEmailInvalidText():string
     {
-      return this.errorMessage !== 'Email already exists' ? 'Email existiert schon' : 'Keine gültige Email';
+      return this.errorMessage === 'Email already exists' ? 'Email existiert schon' : 'Keine gültige Email';
     }
+
+    public getEmailClass():string[]{
+
+        if(!this.registerForm.controls['email'].touched){
+          return [];
+        }
+
+        if(this.isValid('email'))
+        {
+          return ['is-valid'];
+        }
+
+        return ['is-invalid'];
+    }
+
+
 }
 

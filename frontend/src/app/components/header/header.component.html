@@ -45,8 +45,8 @@
                   <li class="nav-item active text-algin-left">
                     <a class="dropdown-item" routerLink="/add-product">Produkt hinzufügen</a>
                   </li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li class="nav-item active text-algin-left">
+                  <li *ngIf="authService.isAdmin()"><hr class="dropdown-divider"></li>
+                  <li *ngIf="authService.isAdmin()" class="nav-item active text-algin-left">
                     <a class="dropdown-item" routerLink="/all-orders">Alle Bestellungen</a>
                   </li>
                   <li><hr class="dropdown-divider"></li>
