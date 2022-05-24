@@ -5,7 +5,7 @@ import { Order } from '../models/Order';
 
 export type PostOrder={
   productId : string,
-  appointmentIndex : Number
+  appointmentIndex : number
 }
 
 @Injectable({
@@ -27,7 +27,7 @@ export class OrderService {
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId: string, appointmentIndex: Number) : Observable<Boolean>
+  registerOrder(productId: string, appointmentIndex: number) : Observable<Boolean>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
     return this.http.post<Boolean>('api/order/register', postOrder);
@@ -42,11 +42,17 @@ export class OrderService {
   /**
    * resets the isReserved status of an appointment to false
    */
-  resetProduct(productId:string, appointmentIndex:Number) : Observable<PostOrder>
+  resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
   {
     const postOrder:PostOrder = {productId, appointmentIndex};
     console.log('reset appointment service');
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
+  }
+
+  toggleConfirm(order:Order) : Observable<boolean>
+  {
+    console.log('toggle service');
+    return this.http.post<boolean>('api/toggleConfirm', order);
   }
 
 }

@@ -15,7 +15,7 @@ export class OrderProductComponent implements OnInit {
   product : Product|undefined;
   user: User|undefined;
   appointment:Appointment|undefined;
-  appointmentIndex:Number = 0; 
+  appointmentIndex = 0; 
   orderRegistered : Boolean|undefined;
   cancelled : Boolean = false;
   constructor(private route:ActivatedRoute,

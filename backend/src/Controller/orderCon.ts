@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IOrder, Order } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
-import { Product } from '../Models/Product';
+import { IProduct, Product } from '../Models/Product';
 import {Types} from 'mongoose';
 import session from 'express-session';
 
@@ -23,6 +23,8 @@ class OrderController{
                                                 populate('product').
                                                 populate('orderingUser','-password').
                                                 exec();
+
+            console.log('list of all orders:' + list);
             response.status(200);
             response.send(list);
         }
@@ -59,7 +61,7 @@ class OrderController{
 
         const postedOrder:PostOrder = request.body;
         const updateProduct = await Product.findById(postedOrder.productId);
-        const index = parseInt(String(postedOrder.appointmentIndex));
+        const index = postedOrder.appointmentIndex;
 
         if(updateProduct.appointments[index].isReserved === true)
         {
@@ -76,7 +78,7 @@ class OrderController{
                 confirmed : false
             });
             await newOrder.save();
-
+            console.log('saved order:' + newOrder);
             updateProduct.appointments[index].isReserved = true;
             await updateProduct.save();
 
@@ -106,6 +108,45 @@ class OrderController{
         {
             response.status(500);
             response.send('there is no order with such an id');
+        }
+    }
+
+    public async toggleConfirm(request: SessionRequest, response: Response ) : Promise<void>
+    {
+        const order : IOrder = request.body;
+        console.log('confirming...');
+        const id : string = order._id;
+        console.log(id);
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const order : IOrder = await Order.findById(id);
+            const product : IProduct = await Product.findById(order.product);
+            
+            if(product.user === request.session.user._id || request.session.user.role === 'admin')
+            {
+                if(order.confirmed === false)
+                {
+                    order.confirmed = true;
+                    await order.save();
+                    console.log('order confirmed');
+                    response.send(true);
+                    response.status(200);
+                }
+                else
+                {
+                    order.confirmed = false;
+                    await order.save();
+                    console.log('order unconfirmed');
+                    response.send(false);
+                    response.status(200);
+                }
+                
+            }
+        }
+        else
+        {
+            response.status(500);
+            response.send('confirmation failed');
         }
     }
 

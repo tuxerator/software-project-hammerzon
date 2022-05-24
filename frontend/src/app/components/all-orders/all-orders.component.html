@@ -11,21 +11,31 @@
                                     <th scope="col">Preis</th>
                                     <th scope="col">Kunde</th>
                                     <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                <tr *ngFor="let elem of orderList">
+                                <tr *ngFor="let elem of orderList; let indexOfOrder=index">
                                     <td class="text-center"></td>
                                     <td>{{elem._id}}</td>
-                                    <td>{{elem.product.name}} </td>
-                                    <td>{{elem.product.user}} </td>
-                                    <td>{{elem.product.prize}}</td>
-                                    <td>{{elem.orderingUser.firstName}}
-                                        {{elem.orderingUser.lastName}}
-                                        {{elem.orderingUser.address?.postCode}}
-                                        {{elem.orderingUser.address?.city}}
+                                    <td>{{elem.product?.name}} </td>
+                                    <td>{{elem.product?.user}} </td>
+                                    <td>{{elem.product?.prize}}</td>
+                                    <td>{{elem.orderingUser?.firstName}}
+                                        {{elem.orderingUser?.lastName}}
+                                        {{elem.orderingUser?.address?.postCode}}
+                                        {{elem.orderingUser?.address?.city}}
                                     </td>
-                                    <td>{{getDateString(elem.timeOfOrder)}} </td>
+                                   <!-- <td>{{getDateString(elem.timeOfOrder)}} </td> -->
+                                    <td> date placeholder </td>
+                                    <td>
+                                        <div *ngIf="elem.confirmed===true; else elseBlock">
+                                            <td> <button (click)="toggleConfirm(indexOfOrder)" class="btn bg-success">Bestätigt</button> </td>
+                                        </div>
+                                        <ng-template #elseBlock>
+                                            <td> <button (click)="toggleConfirm(indexOfOrder)" class="btn bg-warning">Nicht Bestätigt</button> </td>
+                                        </ng-template>
+                                    </td>
                                 </tr>
                             </tbody>
                     </table>

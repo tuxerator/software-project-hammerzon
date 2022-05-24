@@ -24,9 +24,10 @@ interface IOrder extends Document{
 
 const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
-    orderingUser:   { type: mongoose.Schema.Types.ObjectId, required: true },
+    orderingUser:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' , required: true },
     timeOfOrder:    { type: Date, required: true },
     appointment:    { type: Appointment, requiered: true },
+    confirmed:      { type: Boolean, requiered: true}
 });
 
 const Order : Model<IOrder> = model<IOrder>('Order', orderSchema);

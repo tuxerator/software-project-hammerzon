@@ -1,6 +1,7 @@
 import {NextFunction, Request,Response} from 'express';
 import { SessionRequest } from '../types';
 import {Types} from 'mongoose';
+import { IProduct, Product } from '../Models/Product';
 export type Validator = (request:Request,response:Response)=>boolean
 export type SubRequest = {body:any};
 export type SubValidator = (request:SubRequest,response:Response)=>boolean;
@@ -81,6 +82,21 @@ export class Validators{
            response.status(403);
            response.send({code:403,message:'Not Authorized'});
            return false;
+        };
+    }
+
+    public static canConfirm(key:string):Validator
+    {
+        return (request:SessionRequest, response:Response):boolean =>
+        {
+            // either admin or user and product.user match
+            if(request.session.user && (request.session.user.role === 'user' && request.session.user.id === request.body.product[key]) || request.session.user.role === 'admin')
+            {
+                return true;
+            }
+            response.status(403);
+            response.send({code:403,message:'Not Authorized'});
+            return false;
         };
     }
 
@@ -209,6 +225,10 @@ export class ValidatorGroups{
 
     public static AdminAuthorized = ValidatorGroup([
         Validators.isAuthorized('admin')
+    ]);
+
+    public static CanConfirm = ValidatorGroup([
+        Validators.canConfirm('user') 
     ]);
 
 

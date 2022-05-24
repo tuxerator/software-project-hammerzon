@@ -10,7 +10,7 @@ export type FileRequest = Request & { file:any };
 
 type PostOrder={
     productId : string,
-    appointmentIndex : Number
+    appointmentIndex : number
 }
 type OrderInfo={
     _id : string,
