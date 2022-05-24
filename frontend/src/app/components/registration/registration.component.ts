@@ -19,6 +19,7 @@ export class RegistrationComponent implements OnInit{
       return password?.value === confirmPassword?.value ? null : { notMatch: true };
     };
 
+
     public registerForm: FormGroup = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
@@ -28,23 +29,17 @@ export class RegistrationComponent implements OnInit{
       city: new FormControl('', [Validators.required]),
       postCode: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required,Validators.minLength(8)]),
       confirmPassword: new FormControl('', [Validators.required])
     }, {validators: this.passwordMatchingValidator});
 
     constructor(private formBuilder: FormBuilder,private authService:AuthService,private router:Router){}
 
     ngOnInit(): void {
-      this.authService.getUser().subscribe({
-        next: (user) => {
-          if (user) {
-            this.router.navigate(['']);
-          }
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
+      if(this.authService.isLogedIn())
+      {
+        this.router.navigate(['/']);
+      }
     }
 
 
@@ -76,4 +71,19 @@ export class RegistrationComponent implements OnInit{
         }
       });
     }
+
+    public isValid(key:string):boolean
+    {
+      if(key === 'email')
+      {
+        return this.errorMessage !== 'Email already exists' && !this.registerForm.controls[key].invalid;
+      }
+      return !this.registerForm.controls[key].invalid;
+    }
+
+    public getEmailInvalidText():string
+    {
+      return this.errorMessage !== 'Email already exists' ? 'Email existiert schon' : 'Keine gültige Email';
+    }
 }
+
