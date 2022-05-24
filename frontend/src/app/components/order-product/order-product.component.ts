@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
-import { Order } from 'src/app/models/Order';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
