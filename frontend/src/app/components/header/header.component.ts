@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public searchTerm:string = ''
+  public searchTerm:string = '';
 
   constructor(public authService:AuthService,public router:Router) { }
 

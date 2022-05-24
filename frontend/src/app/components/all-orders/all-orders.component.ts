@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Order } from 'src/app/models/Order';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Order, Status } from 'src/app/models/Order';
 import { getAppointmentString } from 'src/app/models/Product';
 import {  OrderService } from 'src/app/services/order.service';
 
@@ -10,10 +10,13 @@ import {  OrderService } from 'src/app/services/order.service';
 })
 export class AllOrdersComponent implements OnInit {
   public orderList : Order[] = [];
-
+  public status = Status;
+  
   constructor(private OrderService: OrderService,
               private changeDetector: ChangeDetectorRef
     ) { }
+  
+ 
 
   
 
@@ -34,16 +37,17 @@ export class AllOrdersComponent implements OnInit {
     });
   }
 
-  toggleConfirm(index:number): void
-  {
+  setStatus(index:number, status:Status): void
+  { 
+    console.log('status set:' + status);
     if(this.orderList)
     {
-      this.OrderService.toggleConfirm(this.orderList[index]).subscribe({
+      this.OrderService.setStatus(this.orderList[index]._id, status).subscribe({
         next: value => {
           console.log(value);
           if(this.orderList)
           {
-            this.setOrderStatus(index, value);
+            this.setLocalOrderStatus(index, value);
             this.changeDetector.detectChanges();
           }
         },
@@ -59,8 +63,8 @@ export class AllOrdersComponent implements OnInit {
     return getAppointmentString(date);
   }
 
-  setOrderStatus(index:number, status:boolean) : void
+  setLocalOrderStatus(index:number, status:Status) : void
   {
-    this.orderList[index].confirmed = status;
+    this.orderList[index].status = status;
   }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IOrder, Order } from '../Models/Order';
+import { IOrder, Order, Status } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
 import { IProduct, Product } from '../Models/Product';
@@ -75,7 +75,7 @@ class OrderController{
                 orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
                 timeOfOrder : new Date(),
                 appointment : updateProduct.appointments[index],
-                confirmed : false
+                status : Status.NNA
             });
             await newOrder.save();
             console.log('saved order:' + newOrder);
@@ -111,11 +111,11 @@ class OrderController{
         }
     }
 
-    public async toggleConfirm(request: SessionRequest, response: Response ) : Promise<void>
+    public async setStatus(request: SessionRequest, response: Response ) : Promise<void>
     {
-        const order : IOrder = request.body;
-        console.log('confirming...');
-        const id : string = order._id;
+        const id : string = request.params.id;
+        const status : Status = request.body;
+        console.log('status:' + status);
         console.log(id);
         if(id && Types.ObjectId.isValid(id))
         {
@@ -124,23 +124,10 @@ class OrderController{
             
             if(product.user === request.session.user._id || request.session.user.role === 'admin')
             {
-                if(order.confirmed === false)
-                {
-                    order.confirmed = true;
-                    await order.save();
-                    console.log('order confirmed');
-                    response.send(true);
-                    response.status(200);
-                }
-                else
-                {
-                    order.confirmed = false;
-                    await order.save();
-                    console.log('order unconfirmed');
-                    response.send(false);
-                    response.status(200);
-                }
-                
+                order.status = status;
+                order.save();
+                response.status(200);
+                response.send(status);
             }
         }
         else

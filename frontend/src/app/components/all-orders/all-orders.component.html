@@ -12,6 +12,7 @@
                                     <th scope="col">Kunde</th>
                                     <th scope="col">Bestelldatum</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Status ändern</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body">
@@ -28,19 +29,33 @@
                                     </td>
                                    <!-- <td>{{getDateString(elem.timeOfOrder)}} </td> -->
                                     <td> date placeholder </td>
-                                    <td>
-                                        <div *ngIf="elem.confirmed===true; else elseBlock">
-                                            <td> <button (click)="toggleConfirm(indexOfOrder)" class="btn bg-success">Bestätigt</button> </td>
+                                    <div [ngSwitch]="elem.status">
+                                        <div *ngSwitchcase="status.NNA">
+                                            <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
                                         </div>
-                                        <ng-template #elseBlock>
-                                            <td> <button (click)="toggleConfirm(indexOfOrder)" class="btn bg-warning">Nicht Bestätigt</button> </td>
-                                        </ng-template>
+                                        <div *ngSwitch="status.A">
+                                            <td> <span class="p-2 mb-2 bg-success text-nowrap">Anngenommen</span> </td>
+                                        </div>
+                                        <div *ngSwitch="status.D">
+                                            <td> <span class="p-2 mb-2 bg-primary text-nowrap">Durchgeführt</span> </td>
+                                        </div>
+                                    </div>
+                                    <td>  
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Set Status
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.NNA)">Noch nicht angenommen</a></li>
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.A)">Angenommen</a></li>
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.D)">Durchgeführt</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                     </table>
                 </div>
-
     </div>
 </div>
 

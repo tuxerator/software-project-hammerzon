@@ -168,7 +168,7 @@ app.get('/api/order/list', ValidatorGroups.UserAuthorized,order.listAllOrdersByU
 // toggle the confirmation status of an order 
 // frontend sends complete order
 // should be possible as admin, but also as the user who owns the product (seperate validator?)
-app.post('/api/toggleConfirm',ValidatorGroups.CanConfirm, order.toggleConfirm);
+app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());

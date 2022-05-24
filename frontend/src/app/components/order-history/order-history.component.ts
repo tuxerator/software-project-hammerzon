@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Order } from 'src/app/models/Order';
+import { Order, Status } from 'src/app/models/Order';
 import { getAppointmentString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 
@@ -10,7 +10,7 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class OrderHistoryComponent implements OnInit {
   orderList? : Order[];
-
+  public statusOptions = [Status.NNA, Status.A, Status.D];
 
   constructor(private OrderService: OrderService
     ) { }

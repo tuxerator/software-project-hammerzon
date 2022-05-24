@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order } from '../models/Order';
+import { Order, Status } from '../models/Order';
 
 export type PostOrder={
   productId : string,
@@ -49,10 +49,10 @@ export class OrderService {
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }
 
-  toggleConfirm(order:Order) : Observable<boolean>
+  setStatus(orderId:string, status: Status) : Observable<Status>
   {
-    console.log('toggle service');
-    return this.http.post<boolean>('api/toggleConfirm', order);
+    console.log('toggle service:' + status);
+    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, status);
   }
 
 }

@@ -7,16 +7,22 @@ export class Order{
     public orderingUser : User;
     public timeOfOrder : Date;
     public appointment : Appointment;
-    public confirmed : boolean;
+    public status : Status;
 
-    constructor(id: string, product: Product, orderingUser: User, timeOfOrder: Date, finalized: boolean, appointment: Appointment, confirmed: boolean)
+    constructor(id: string, product: Product, orderingUser: User, timeOfOrder: Date, finalized: boolean, appointment: Appointment, status: Status)
     {
         this._id = id;
         this.product = product;
         this.orderingUser = orderingUser;
         this.timeOfOrder = timeOfOrder;
         this.appointment = appointment;
-        this.confirmed = confirmed;
+        this.status = status;
     }
+}
+
+export enum Status {
+    NNA = 'Noch nicht angenommen',
+    A = 'Angenommen',
+    D = 'Durchgeführt'
 }
 

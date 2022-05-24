@@ -17,17 +17,21 @@ interface IOrder extends Document{
 
     appointment : IAppointment
 
-    confirmed : boolean
+    status : Status
 }
 
-
+export enum Status {
+    NNA = 'Noch nicht angenommen',
+    A = 'Angenommen',
+    D = 'Durchgeführt'
+}
 
 const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
     orderingUser:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' , required: true },
     timeOfOrder:    { type: Date, required: true },
     appointment:    { type: Appointment, requiered: true },
-    confirmed:      { type: Boolean, requiered: true}
+    status:         { type: String, enum: Status, default: Status.NNA, requiered: true}
 });
 
 const Order : Model<IOrder> = model<IOrder>('Order', orderSchema);
