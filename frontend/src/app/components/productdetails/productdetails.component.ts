@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import { ProductdetailsService} from 'src/app/services/productdetails.service';
+
 import { Product,getAppointmentString,getDurationString } from 'src/app/models/Product';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   templateUrl: './productdetails.component.html',
@@ -18,7 +19,7 @@ export class ProductdetailsComponent implements OnInit {
 
 
   constructor(private route:ActivatedRoute,
-              private productService:ProductdetailsService,
+              private productService:ProductService,
               private router:Router,
               private authService: AuthService) {
     console.log('kommt zu Params');

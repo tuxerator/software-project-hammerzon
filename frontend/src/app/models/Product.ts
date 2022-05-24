@@ -1,10 +1,11 @@
+import { User } from './User';
 
 export class Product{
   _id='';
 
   name:string;
   // Anbieter der Dienstleistung
-  user:string;
+  user?:User;
   // Genauere Beschreibung des Dienstleistung
   description:string;
   // Preis der Dienstleistung
@@ -18,7 +19,6 @@ export class Product{
 
   constructor(name:string,description:string,prize:number,duration:Date,appointments:Appointment[],image_id:string){
     this.name = name;
-    this.user = '';
     this.description = description;
     this.prize = prize;
     this.duration = duration;

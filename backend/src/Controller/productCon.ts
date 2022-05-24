@@ -39,19 +39,22 @@ class ProductController
                 {name:{$regex:searchTerm}},
                 {prize:{$lte:testPrize}}
               ]};
-            list = await Product.find(query).skip(start).exec();
+            list = await Product.find(query).skip(start).populate('user').exec();
             // Wie viele Elemente kommen danach noch
             requestable =  Math.max(list.length - limit - start,0);
         }
         else{
             // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-            list = await Product.find({}).skip(start).exec();
+            list = await Product.find({}).skip(start).populate('user').exec();
             // Wieviele Elemente kommen danach noch
             requestable = Math.max(productCount - limit - start,0);
         }
+        // Just take first 'limit' elements from list
+        list = list.splice(0,limit);
+
 
         const listInfo : ListInfo<IProduct> = {
-            list:list.splice(0,limit),//this.list.slice(start,start + limit),
+            list,//this.list.slice(start,start + limit),
             requestable
         };
 
@@ -65,7 +68,7 @@ class ProductController
         console.log(id);
         if(id && Types.ObjectId.isValid(id))
         {
-            const product : IProduct = await Product.findById(id).exec();
+            const product : IProduct = await Product.findById(id).populate('user','-password -address').exec();
             response.status(200);
             response.send(product);
         }else {
@@ -98,50 +101,20 @@ class ProductController
 
     public async addProduct(request:SessionRequest,response:Response):Promise<void>
     {
-        if(!request.session.user)
-        {
-            response.status(403);
-            response.send('Not Authorized');
-            return;
-        }
-
-        const product = request.body; //
+        const product = request.body;
         console.log(product);
-        // Wenn ein Wert nicht existiert dann Antworte mit eine Fehler meldung
-        if(!Helper.valueExists(product,'name',response)) return;
-        if(!Helper.valueExists(product,'description',response)) return;
-        if(!Helper.valueExists(product,'prize',response)) return;
-        if(!Helper.valueExists(product,'duration',response)) return;
-        if(!Helper.valueExists(product,'appointments',response)) return;
-        if(!Helper.valueExists(product,'image_id',response)) return;
 
-        if(!Types.ObjectId.isValid(product.image_id))
-        {
-            response.status(403);
-            response.send({code:403,message:'Invalid Image Id'});
-            return;
-        }
-
+        // Setze es auf den Angemeldeten User
         product.user = request.session.user._id;
-
-        if(product.name.length <= 3)
-        {
-            response.status(403);
-            response.send({code:403,message:'Name needs to be at least 4 Chars'});
-            return;
-        }
 
         delete product._id;
 
-
         const dbProduct = new Product(product);
-
-        dbProduct.user = request.session.user.firstName + ' ' + request.session.user.lastName;
 
         await dbProduct.save();
 
         response.status(200);
-        response.send({code:200,message:'Added Product',id:dbProduct._id});
+        response.send({code:200,message:'Add Successfull',id:dbProduct._id});
     }
 }
 

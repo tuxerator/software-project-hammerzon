@@ -14,7 +14,6 @@ interface IOrder extends Document{
     // Bestellzeitpunkt
     timeOfOrder : Date
 
-    finalized : boolean
 
     appointment : IAppointment
 
@@ -27,7 +26,6 @@ const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
     orderingUser:   { type: mongoose.Schema.Types.ObjectId, required: true },
     timeOfOrder:    { type: Date, required: true },
-    finalized:      { type: Boolean, required: true},
     appointment:    { type: Appointment, requiered: true },
 });
 

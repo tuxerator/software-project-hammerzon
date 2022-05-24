@@ -27,6 +27,7 @@ import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
+import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -116,31 +117,32 @@ app.post('/api/name/:id', api.postNameInfo);
 // AuthController endpoints
 
 // register
-app.post('/api/auth/register', auth.register);
+app.post('/api/auth/register',  ValidatorGroups.UserRegister,auth.register);
 // login
-app.post('/api/auth/login', auth.login);
-app.get('/api/auth/logintest', auth.getUser);
+app.post('/api/auth/login',ValidatorGroups.UserLogin,auth.login);
+app.get('/api/auth/logintest',ValidatorGroups.UserAuthorized ,auth.getUser);
 
-app.get('/api/getUserById/:id', auth.getUserById);
+app.get('/api/getUserById/:id',auth.getUserById);
 // logout ...
 // logout
-app.get('/api/auth/logout', auth.logout);
+app.get('/api/auth/logout', ValidatorGroups.UserAuthorized,auth.logout);
 // update
-app.post('/api/auth/update', auth.update);
+app.post('/api/auth/update',ValidatorGroups.UserUpdate ,auth.update);
 
 // ProductController endpoints
 
 // 10-products ...
-app.get('/api/productlist', product.getList.bind(product));
-
+app.get('/api/product/list', product.getList.bind(product));
 
 // product details ...
-app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
+app.get('/api/product/:id', product.getProductDetail.bind(product));
 
 // reset appointment
-app.post('/api/resetAppointment', product.resetAppointment);
+
 // add product
-app.post('/api/addproduct',product.addProduct);
+app.post('/api/product/add', ValidatorGroups.ProductAdd ,product.addProduct);
+
+app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // Imager Controller endpoints
 // Add Images
@@ -152,19 +154,16 @@ app.get('/api/img/:id',image.getImage);
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/registerOrder', order.registerOrder);
-
-// finalize an order
-app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+app.post('/api/order/register', ValidatorGroups.OrderRegister ,order.registerOrder);
 
 // delete an order
-app.delete('/api/deleteOrder/:id',order.deleteOrder);
+app.delete('/api/order/delete/:id',ValidatorGroups.UserAuthorized,order.deleteOrder);
 
 // list all orders for the admin page
-app.get('/api/orderlist', order.listAllOrders);
+app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized,order.listAllOrders);
 
 // list all orders by user
-app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
+app.get('/api/order/list', ValidatorGroups.UserAuthorized,order.listAllOrdersByUser);
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

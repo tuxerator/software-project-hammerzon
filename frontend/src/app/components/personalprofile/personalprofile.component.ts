@@ -16,15 +16,21 @@ export class PersonalProfileComponent implements OnInit{
     public passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const password = control.get('newPassword');
         const confirmPassword = control.get('confirmPassword');
-        return password?.value === confirmPassword?.value ? null : { notMatch: true };
+        const oldPassword = control.get('oldPassword');
+               // (doe the new Password(Pw)'s' match) and
+        return password?.value === confirmPassword?.value
+               // (old Pw Exist => is new password length greater or equal to 8)
+               && ((oldPassword?.value && oldPassword.value !== '')? password?.value.length >= 8 : true)
+               // =>
+               ? null : { notMatch: true };
       };
 
 
 
     public profileForm: FormGroup = this.formBuilder.group({
-        oldPassword: new FormControl('', [Validators.required]),
-        newPassword: new FormControl('', [Validators.required]),
-        confirmPassword: new FormControl('', [Validators.required]),
+        oldPassword: new FormControl('', []),
+        newPassword: new FormControl('', []),
+        confirmPassword: new FormControl('', []),
         firstName:new FormControl('', [Validators.required]),
         lastName:new FormControl('',[Validators.required]),
         street: new FormControl('', [Validators.required]),
@@ -70,11 +76,13 @@ export class PersonalProfileComponent implements OnInit{
         this.profileForm.markAllAsTouched();
         console.log(this.profileForm);
         if(this.profileForm.invalid)return;
+
         console.log('Through Validation Debug Log');
         const form = this.profileForm.value;
         const address : Address = new Address(form.street,form.houseNum,form.city,form.postCode,form.country);
         const newUser:User = new User(form.email,form.newPassword,form.firstName,form.lastName,address);
-        this.authService.updateUser(form.oldPassword,newUser).subscribe({
+
+        this.authService.updateUser(form.oldPassword === '' ? undefined : form.oldPassword,newUser).subscribe({
           next: () => this.editMode = false,
           error: (err) => console.error(err)
         });

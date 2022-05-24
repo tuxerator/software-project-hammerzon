@@ -22,7 +22,7 @@
                                     <div class="flex-lg-grow1 ms3">
                                         <!-- product information -->
                                         <h6 class="small mb-0 text-white">{{product?.name}}</h6>
-                                        <span class="small text-white">{{product?.user}}</span>
+                                        <span class="small text-white">{{product?.user?.firstName}} {{product?.user?.lastName}}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -42,16 +42,20 @@
             <!-- customer info and order button -->
             <p class="text-ligth ">Bestellung abschließen:</p>
             <div class="card mb-4 bg-dark border-secondary text">
-                <div class="card-body">
+                <div class="card-body text-white">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="text-white">{{user?.firstName}} {{user?.lastName}}</div>
-                            <div class="text-white">{{user?.address?.street}} {{user?.address?.houseNum}}, {{user?.address?.city}}</div>
+                            <span>
+                              {{user?.firstName}} {{user?.lastName}} <br>
+                              {{user?.address?.street}} {{user?.address?.houseNum}},<br>
+                              {{user?.address?.postCode}} {{user?.address?.city}},<br>
+                              {{user?.address?.country}}
+                            </span>
                             <div class="text-white">{{user?.email}}</div>
                         </div>
                         <div class="col-lg-6 align-self-center">
                             <div class="d-flex justify-content-center">
-                                <a (click)="finalize()">
+                                <a (click)="register()">
                                     <button type="button" class="btn btn-primary btn-lg">Zahlungspflichtig Bestellen</button>
                                 </a>
                             </div>
@@ -66,7 +70,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
                         <a routerLink="../../">
-                            <button type="button" class="btn btn-primary btn-lg" (click)="cancel()" >Zurück zum Produkt</button>
+                            <button type="button" class="btn btn-primary btn-lg" >Zurück zum Produkt</button>
                         </a>
                     </div>
                 </div>

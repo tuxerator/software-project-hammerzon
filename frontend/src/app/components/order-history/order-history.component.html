@@ -15,14 +15,14 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                <tr *ngFor="let elem of combined">
+                                <tr *ngFor="let elem of orderList">
                                     <td class="text-center"></td>
-                                    <td>{{elem.order._id}}</td>
+                                    <td>{{elem._id}}</td>
                                     <td>{{elem.product?.name}} </td> <!--{{elem.product?.name}}-->
                                     <td>{{elem.product?.user}} </td> <!--{{elem.product?.user}}-->
                                     <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->
-                                    <td>{{elem.order.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
-                                    <div *ngIf="elem.order.confirmed; else elseBlock">
+                                    <td>{{elem.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
+                                    <div *ngIf="elem.confirmed; else elseBlock">
                                         <td> <span class="p-2 mb-2 bg-success">Bestätigt</span> </td>
                                     </div>
                                     <ng-template #elseBlock>
