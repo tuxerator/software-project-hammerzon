@@ -9,9 +9,10 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public searchTerm:string = ''
+  public searchTerm: string = ''
 
-  constructor(public authService:AuthService,public router:Router) { }
+  constructor(public authService: AuthService, public router: Router) {
+  }
 
   ngOnInit(): void {
     this.authService.getUser().subscribe({
@@ -26,20 +27,17 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  public search():void
-  {
-    this.router.navigate(['/'],{ queryParams: { search:this.searchTerm } });
+  public search(): void {
+    this.router.navigate(['/'], { queryParams: { search: this.searchTerm } });
   }
 
-  public logout():void
-  {
+  public logout(): void {
     console.log('Log out');
     this.authService.logout().subscribe({
-      next: () =>
-      {
+      next: () => {
         this.router.navigate(['/']);
       },
-      error:(err) => console.log(err)
+      error: (err) => console.log(err)
     });
   }
 

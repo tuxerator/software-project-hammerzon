@@ -12,17 +12,19 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./order-product.component.css']
 })
 export class OrderProductComponent implements OnInit {
-  product : Product|undefined;
-  user: User|undefined;
-  appointment:Appointment|undefined;
-  appointmentIndex:Number = 0; 
-  orderRegistered : Boolean|undefined;
-  cancelled : Boolean = false;
-  constructor(private route:ActivatedRoute,
-              private productService:ProductService,
+  product: Product | undefined;
+  user: User | undefined;
+  appointment: Appointment | undefined;
+  appointmentIndex: Number = 0;
+  orderRegistered: Boolean | undefined;
+  cancelled: Boolean = false;
+
+  constructor(private route: ActivatedRoute,
+              private productService: ProductService,
               private authService: AuthService,
               private orderService: OrderService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     // get the productinfo again
@@ -35,13 +37,13 @@ export class OrderProductComponent implements OnInit {
      */
     this.productService.getProductDetails(productIDFromRoute).subscribe(
       {
-        next: (val)=>{
+        next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
           this.appointment = this.product.appointments[appointmentIndex];
-          this.appointment.date = new Date(this.appointment.date); 
+          this.appointment.date = new Date(this.appointment.date);
         },
-        error: (err)=> {
+        error: (err) => {
           console.log(err);
         }
       }
@@ -49,37 +51,32 @@ export class OrderProductComponent implements OnInit {
     // get the userinfo
     this.authService.getUser().subscribe(
       {
-        next: (val)=>{
+        next: (val) => {
           this.user = val;
         },
-        error: (err)=> {
+        error: (err) => {
           console.log(err);
         }
       }
     );
   }
 
-  register() : void
-  {
-    if(this.product)
-    {
+  register(): void {
+    if (this.product) {
       this.orderService.registerOrder(this.product._id, this.appointmentIndex).subscribe(
         {
-          next:(val) => {
+          next: (val) => {
             this.orderRegistered = val;
             console.log('orderRegistered:' + this.orderRegistered);
-            if(this.orderRegistered === true)
-            {
-              const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+            if (this.orderRegistered === true) {
+              const url = `productdetails/${ this.product?._id }/order-product/${ this.appointmentIndex }/order-finalized`;
               this.router.navigateByUrl(url);
-            }
-            else
-            {
+            } else {
               // appointment not available
               this.router.navigateByUrl('not-available');
             }
           },
-          error:(err) => {
+          error: (err) => {
             console.error(err);
           }
         }
@@ -87,15 +84,12 @@ export class OrderProductComponent implements OnInit {
     }
   }
 
-  
 
-  getDurString():string
-  {
+  getDurString(): string {
     return getDurationString(this.product?.duration);
   }
 
-  getAppointString():string
-  {
+  getAppointString(): string {
     return getAppointmentString(this.appointment?.date);
   }
 

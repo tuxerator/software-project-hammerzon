@@ -1,16 +1,16 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {AboutMeService} from './about-me.service';
+import { AboutMeService } from './about-me.service';
 
 describe('AboutMeService', () => {
-    let service: AboutMeService;
+  let service: AboutMeService;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(AboutMeService);
-    });
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(AboutMeService);
+  });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

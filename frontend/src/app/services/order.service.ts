@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order } from '../models/Order';
 
-export type PostOrder={
-  productId : string,
-  appointmentIndex : Number
+export type PostOrder = {
+  productId: string,
+  appointmentIndex: Number
 }
 
 @Injectable({
@@ -13,38 +13,37 @@ export type PostOrder={
 })
 export class OrderService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
-  listAllOrders(): Observable<Order[]>
-  {
+  listAllOrders(): Observable<Order[]> {
     return this.http.get<Order[]>('api/admin/order/list');
   }
 
-  listAllOrdersByUser() : Observable<Order[]>
-  {
+  listAllOrdersByUser(): Observable<Order[]> {
     return this.http.get<Order[]>('api/order/list');
   }
+
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId: string, appointmentIndex: Number) : Observable<Boolean>
-  {
-    const postOrder: PostOrder = {productId, appointmentIndex};
+  registerOrder(productId: string, appointmentIndex: Number): Observable<Boolean> {
+    const postOrder: PostOrder = { productId, appointmentIndex };
     return this.http.post<Boolean>('api/order/register', postOrder);
   }
+
   /**
    * deletes an order when it is cancelled
    */
-  deleteOrder(orderId:string) : Observable<void>
-  {
-    return this.http.delete<void>(`api/order/delete/${orderId}`);
+  deleteOrder(orderId: string): Observable<void> {
+    return this.http.delete<void>(`api/order/delete/${ orderId }`);
   }
+
   /**
    * resets the isReserved status of an appointment to false
    */
-  resetProduct(productId:string, appointmentIndex:Number) : Observable<PostOrder>
-  {
-    const postOrder:PostOrder = {productId, appointmentIndex};
+  resetProduct(productId: string, appointmentIndex: Number): Observable<PostOrder> {
+    const postOrder: PostOrder = { productId, appointmentIndex };
     console.log('reset appointment service');
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }

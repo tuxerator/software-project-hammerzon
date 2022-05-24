@@ -8,9 +8,9 @@ describe('NotAvailableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NotAvailableComponent ]
+      declarations: [NotAvailableComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
