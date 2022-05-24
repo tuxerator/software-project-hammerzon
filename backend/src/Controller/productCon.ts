@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import Helper from '../helpers';
-import {IProduct, Product} from '../Models/Product';
-import { ListInfo, SessionRequest, PostOrder} from '../types';
-import {Types} from 'mongoose';
-class ProductController
-{
+import { IAppointment, IProduct, Product } from '../Models/Product';
+import { ListInfo, SessionRequest, PostOrder } from '../types';
+import { Model, Types } from 'mongoose';
+
+class ProductController {
     // Gibt die ProductInfos die zwischen start und start+limit liegen
     // und eine zusätzliche Informationen requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, zurück
     // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
@@ -13,47 +13,46 @@ class ProductController
         const productCount = await Product.countDocuments().exec();
         // Parse Limit und Start von Query
         //                                                      min,      max,   replace
-        const start = Helper.parseQueryInt(request.query,'start',0,productCount,0);
+        const start = Helper.parseQueryInt(request.query, 'start', 0, productCount, 0);
         // Falls start sehr nah am Ende ist gilt this.list.length - start sonst einfach nur 10
         const maxLimit = Math.max(productCount - start, 10);
 
-        const limit = Helper.parseQueryInt(request.query,'limit',0,maxLimit,10);
+        const limit = Helper.parseQueryInt(request.query, 'limit', 0, maxLimit, 10);
 
         // Falls es einen Search Term gibt nutzt diesen Anstelle von
         const searchTerm = request.query.search;
-        let list : IProduct[];
+        let list: IProduct[];
 
         let requestable;
-        if(searchTerm)
-        {
+        if (searchTerm) {
             // Wenn es nur eine Zahl gibt dann ntze es für preis
             let testPrize = parseFloat(searchTerm as string);
-            if(!testPrize)
-            {
+            if (!testPrize) {
                 testPrize = 0;
             }
 
             console.log(searchTerm);
-            const query = {$or:[
-                // und sonst überprufen durch regex den namen des Products
-                {name:{$regex:searchTerm}},
-                {prize:{$lte:testPrize}}
-              ]};
+            const query = {
+                $or: [
+                    // und sonst überprufen durch regex den namen des Products
+                    { name: { $regex: searchTerm } },
+                    { prize: { $lte: testPrize } }
+                ]
+            };
             list = await Product.find(query).skip(start).populate('user').exec();
             // Wie viele Elemente kommen danach noch
-            requestable =  Math.max(list.length - limit - start,0);
-        }
-        else{
+            requestable = Math.max(list.length - limit - start, 0);
+        } else {
             // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
             list = await Product.find({}).skip(start).populate('user').exec();
             // Wieviele Elemente kommen danach noch
-            requestable = Math.max(productCount - limit - start,0);
+            requestable = Math.max(productCount - limit - start, 0);
         }
         // Just take first 'limit' elements from list
-        list = list.splice(0,limit);
+        list = list.splice(0, limit);
 
 
-        const listInfo : ListInfo<IProduct> = {
+        const listInfo: ListInfo<IProduct> = {
             list,//this.list.slice(start,start + limit),
             requestable
         };
@@ -61,46 +60,42 @@ class ProductController
         response.status(200);
         response.send(listInfo);
     }
+
     // Gibt die Produkt details zurück
-    public async getProductDetail(request: Request, response: Response): Promise<void>{
+    public async getProductDetail(request: Request, response: Response): Promise<void> {
 
         const id = request.params.id;
         console.log(id);
-        if(id && Types.ObjectId.isValid(id))
-        {
-            const product : IProduct = await Product.findById(id).populate('user','-password -address').exec();
+        if (id && Types.ObjectId.isValid(id)) {
+            const product: IProduct = await Product.findById(id).populate('user', '-password -address').exec();
             response.status(200);
             response.send(product);
-        }else {
+        } else {
             response.status(500);
             response.send('there is no product with such an id');
         }
     }
 
 
-    public async resetAppointment(request: Request, response: Response): Promise<void>{
+    public async resetAppointment(request: Request, response: Response): Promise<void> {
         console.log('resetting');
-        const product : PostOrder = request.body;
+        const product: PostOrder = request.body;
         const index = parseInt(String(product.appointmentIndex));
         const id = product.productId;
-        if(id && Types.ObjectId.isValid(id))
-        {
+        if (id && Types.ObjectId.isValid(id)) {
             const updateProduct = await Product.findById(id);
             (await updateProduct).appointments[index].isReserved = false;
             (await updateProduct).save();
             console.log('appointment reset');
             response.status(200);
-        }
-        else
-        {
+        } else {
             response.status(500);
             response.send('There is no product with such an id');
         }
     }
 
 
-    public async addProduct(request:SessionRequest,response:Response):Promise<void>
-    {
+    public async addProduct(request: SessionRequest, response: Response): Promise<void> {
         const product = request.body;
         console.log(product);
 
@@ -114,7 +109,18 @@ class ProductController
         await dbProduct.save();
 
         response.status(200);
-        response.send({code:200,message:'Add Successfull',id:dbProduct._id});
+        response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
+    }
+
+    public async addApointment(req: Request, res: Response): Promise<void> {
+        const appointment: IAppointment = req.body;
+        const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+
+        product.appointments.push(appointment);
+        await product.save();
+
+        res.status(200);
+        res.send({ code: 200, message: `Add Successfull`, id: product._id })
     }
 }
 
