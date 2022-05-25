@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import {Schema,Model,model,Document} from 'mongoose';
 import { Appointment, IAppointment } from './Product';
 
-
 // Model for Orders
 
 interface IOrder extends Document{
@@ -14,18 +13,17 @@ interface IOrder extends Document{
     // Bestellzeitpunkt
     timeOfOrder : Date
 
-
     appointment : IAppointment
 
     status : Status
 }
 
-export enum Status {
+enum Status {
     NNA = 'Noch nicht angenommen',
     A = 'Angenommen',
     D = 'Durchgeführt'
 }
-
+// make enum 0 ,1 ,2 translate in controller
 const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
     orderingUser:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' , required: true },
@@ -36,4 +34,4 @@ const orderSchema : Schema = new Schema<IOrder>({
 
 const Order : Model<IOrder> = model<IOrder>('Order', orderSchema);
 
-export {IOrder, Order};
+export {IOrder, Order, Status};

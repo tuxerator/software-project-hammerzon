@@ -228,7 +228,8 @@ export class ValidatorGroups{
     ]);
 
     public static CanConfirm = ValidatorGroup([
-        Validators.canConfirm('user') 
+        Validators.canConfirm('user'),
+        Validators.isRequired('status')
     ]);
 
 

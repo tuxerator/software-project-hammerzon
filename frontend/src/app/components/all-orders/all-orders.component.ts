@@ -16,9 +16,6 @@ export class AllOrdersComponent implements OnInit {
               private changeDetector: ChangeDetectorRef
     ) { }
   
- 
-
-  
 
   ngOnInit(): void {
     this.listAllOrders();

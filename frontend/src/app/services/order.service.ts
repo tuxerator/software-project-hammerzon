@@ -52,7 +52,7 @@ export class OrderService {
   setStatus(orderId:string, status: Status) : Observable<Status>
   {
     console.log('toggle service:' + status);
-    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, status);
+    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, {status});
   }
 
 }

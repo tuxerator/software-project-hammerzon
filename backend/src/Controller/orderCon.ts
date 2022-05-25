@@ -114,7 +114,7 @@ class OrderController{
     public async setStatus(request: SessionRequest, response: Response ) : Promise<void>
     {
         const id : string = request.params.id;
-        const status : Status = request.body;
+        const status : Status= request.body.status as Status;
         console.log('status:' + status);
         console.log(id);
         if(id && Types.ObjectId.isValid(id))
@@ -127,7 +127,7 @@ class OrderController{
                 order.status = status;
                 order.save();
                 response.status(200);
-                response.send(status);
+                response.send({status});
             }
         }
         else
