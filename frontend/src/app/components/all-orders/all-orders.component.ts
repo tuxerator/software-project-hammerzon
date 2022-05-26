@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
 import { getAppointmentString } from 'src/app/models/Product';
 import {  OrderService } from 'src/app/services/order.service';
@@ -13,7 +13,6 @@ export class AllOrdersComponent implements OnInit {
   public status = Status;
   
   constructor(private OrderService: OrderService,
-              private changeDetector: ChangeDetectorRef
     ) { }
   
 
@@ -41,11 +40,11 @@ export class AllOrdersComponent implements OnInit {
     {
       this.OrderService.setStatus(this.orderList[index]._id, status).subscribe({
         next: value => {
-          console.log(value);
+          const st = JSON.parse(JSON.stringify(value));
+          console.log(st.status);
           if(this.orderList)
           {
-            this.setLocalOrderStatus(index, value);
-            this.changeDetector.detectChanges();
+            this.setLocalOrderStatus(index, st.status);
           }
         },
         error: err => {
@@ -53,7 +52,6 @@ export class AllOrdersComponent implements OnInit {
         }
     });
     }
-    this.changeDetector.detectChanges();
   }
   getDateString(date?:Date):string
   {
