@@ -12,7 +12,7 @@ import { ProductdetailsComponent } from './components/productdetails/productdeta
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
-
+import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
 import { AuthGuardService } from './services/auth-guard.service';
 
 
@@ -34,6 +34,7 @@ const routes: Routes = [
     // Order
     { path: 'all-orders', component: AllOrdersComponent},
     { path: 'order-history', component: OrderHistoryComponent},
+    { path: 'ordered-services', component: OrderedServicesComponent},
     // product
     { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
     { path: 'productdetails/:id',component:ProductdetailsComponent},
