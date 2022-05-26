@@ -46,8 +46,9 @@
                 <span class="input-group-text">{{index+1}}.</span>
                 <input type="datetime-local" formControlName="{{name}}" class="form-control" placeholder="Suche eine Termin aus" aria-label="Username" required>
                 <button type="button" class="btn btn-danger" (click)="removeAppointment(name)" >-</button>
-                <div *ngIf="!addProductForm.controls[name]?.invalid" class="valid-feedback was-validated">Gültiger Termin</div>
+                <div *ngIf="!addProductForm.controls[name]?.invalid&&!addProductForm.invalid" class="valid-feedback was-validated">Gültiger Termin</div>
                 <div *ngIf="addProductForm.controls[name]?.invalid" class="invalid-feedback was-validated">Termin erwartet</div>
+                <div *ngIf="addProductForm.invalid" class="invalid-feedback was-validated">Termine dürfen sich nicht überschneiden</div>
               </div>
           </div>
           <p *ngIf="appointmentIndexs.length <= 0" class="text-danger fs-6">Es muss mindestens einen Termin geben</p>

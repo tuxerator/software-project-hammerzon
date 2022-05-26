@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
@@ -36,6 +36,9 @@ export class AddProductComponent implements OnInit {
     durationHour: new FormControl('', [Validators.required]),
     durationMinute: new FormControl('', [Validators.required]),
     appointment0: new FormControl('', [Validators.required]),
+  }, {
+    validators:[this.appointmentValidator()]
+
   });
 
 
@@ -144,5 +147,29 @@ export class AddProductComponent implements OnInit {
       }
     });
   }
+private appointmentValidator(): ValidatorFn{
+  return (form: AbstractControl): ValidationErrors | null => {
+    const formValues= form.value;
+    const startDate = Date.parse( formValues[this.appointmentIndexs[this.appointmentsCount -1]]);
+    const duration= Date.UTC(70,0,1,Number.parseInt(formValues[`durationHour`]),Number.parseInt(formValues[`durationMinute`]));
+    const endDate = startDate + duration;
+
+    for(const appointName of this.appointmentIndexs)
+    {
+      const startDateAppoint = Date.parse(formValues[appointName]);
+      const endDateAppoint = startDateAppoint+duration;
+
+      if(startDate&&endDate&&startDateAppoint&&endDateAppoint)
+      {
+        const isAppointValid=(endDate<=startDateAppoint ||startDate>=endDateAppoint);
+        if(isAppointValid){
+          return {dataRange:true};
+        }
+      }
+    }
+    return null;
+  }
+}
+  
 
 }
