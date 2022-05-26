@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
-import {Schema,Model,model,Document} from 'mongoose';
+import { Schema, Model, model, Document } from 'mongoose';
 import { Appointment, IAppointment } from './Product';
 
 // Model for Orders
 
-interface IOrder extends Document{
+interface IOrder extends Document {
 
-    // Bestelltes Produkt
-    product : mongoose.Types.ObjectId
-    // Bestellender User, soll Referenz zum UserObject sein?
-    orderingUser : mongoose.Types.ObjectId
-    // Bestellzeitpunkt
-    timeOfOrder : Date
+  // Bestelltes Produkt
+  product: mongoose.Types.ObjectId
+  // Bestellender User, soll Referenz zum UserObject sein?
+  orderingUser: mongoose.Types.ObjectId
+  // Bestellzeitpunkt
+  timeOfOrder: Date
 
-    appointment : IAppointment
+  appointment : IAppointment
 
-    status : Status
+  status : Status
 }
 
 enum Status {
@@ -32,6 +32,6 @@ const orderSchema : Schema = new Schema<IOrder>({
     status:         { type: String, enum: Status, default: Status.NNA, requiered: true}
 });
 
-const Order : Model<IOrder> = model<IOrder>('Order', orderSchema);
+const Order: Model<IOrder> = model<IOrder>('Order', orderSchema);
 
 export {IOrder, Order, Status};

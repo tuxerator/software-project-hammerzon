@@ -1,42 +1,47 @@
 <div class="container">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <ol class="list-group shadow bg-dark">
-                <!--Produkt 1-->
-                <li *ngFor="let productInfo of productListInfo.list" class="list-group-item bg-dark border-secondary text-white" [routerLink]="['productdetails',productInfo._id]">
-                  <div class="row">
-                    <!--Image -->
-                    <div class="col-3 p-2">
-                      <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
-                    </div>
-                    <!-- Infos -->
-                    <div  class="col-9 p-2">
-                      <div class="d-flex w-100 justify-content-between">
-                        <h4> {{productInfo?.name}}</h4>
-                        <h6>{{productInfo?.prize}} €/std.</h6>
-                      </div>
-                      <p>{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
-                    </div>
-                  </div>
-                </li>
-                <!--Ende Produkt 1-->
-            </ol>
-        </div>
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <ol class="list-group shadow bg-dark">
+        <!--Produkt 1-->
+        <li *ngFor="let productInfo of productListInfo.list" [routerLink]="['productdetails',productInfo._id]"
+            class="list-group-item bg-dark border-secondary text-white">
+          <div class="row">
+            <!--Image -->
+            <div class="col-3 p-2">
+              <img class="img-fluid col rounded" src="api/img/{{productInfo.image_id}}">
+            </div>
+            <!-- Infos -->
+            <div class="col-9 p-2">
+              <div class="d-flex w-100 justify-content-between">
+                <h4> {{productInfo?.name}}</h4>
+                <h6>{{productInfo?.prize}} €/std.</h6>
+              </div>
+              <p>{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
+            </div>
+          </div>
+        </li>
+        <!--Ende Produkt 1-->
+      </ol>
     </div>
+  </div>
 
-    <div *ngIf="productListInfo.list.length == 0" class="d-flex align-items-center">
-      <strong>Loading...</strong>
-      <div class="spinner-border spinner-light ms-auto" role="status" aria-hidden="true"></div>
+  <div *ngIf="productListInfo.list.length == 0" class="d-flex align-items-center">
+    <strong>Loading...</strong>
+    <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
+  </div>
+
+  <!-- Knöpfe um mehr Elemente and zeigen zu können -->
+
+  <div class="btn-toolbar justify-content-center mt-4">
+    <div class="btn-group" role="group">
+      <button (click)="previous()" [class.disabled]="!(currentStart > 0)" class=" btn btn-primary" type="button">
+        &laquo;
+      </button>
+      <button (click)="next()" [class.disabled]="!(productListInfo.requestable>0)" class="btn btn-primary"
+              type="button">&raquo;
+      </button>
     </div>
-
-    <!-- Knöpfe um mehr Elemente and zeigen zu können -->
-
-    <div class="btn-toolbar justify-content-center mt-4">
-      <div class="btn-group" role="group">
-        <button type="button" class=" btn btn-primary"  [class.disabled]="!(currentStart > 0)" (click)="previous()">&laquo;</button>
-        <button type="button" class="btn btn-primary" (click)="next()"  [class.disabled]="!(productListInfo.requestable>0)">&raquo;</button>
-      </div>
-    </div>
+  </div>
 
 </div>
 

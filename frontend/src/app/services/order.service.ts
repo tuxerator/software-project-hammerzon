@@ -13,17 +13,17 @@ export type PostOrder={
 })
 export class OrderService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
-  listAllOrders(): Observable<Order[]>
-  {
+  listAllOrders(): Observable<Order[]> {
     return this.http.get<Order[]>('api/admin/order/list');
   }
 
-  listAllOrdersByUser() : Observable<Order[]>
-  {
+  listAllOrdersByUser(): Observable<Order[]> {
     return this.http.get<Order[]>('api/order/list');
   }
+
   /**
    * register an order with productID and a single appointment.
    */
@@ -32,13 +32,14 @@ export class OrderService {
     const postOrder: PostOrder = {productId, appointmentIndex};
     return this.http.post<Boolean>('api/order/register', postOrder);
   }
+
   /**
    * deletes an order when it is cancelled
    */
-  deleteOrder(orderId:string) : Observable<void>
-  {
-    return this.http.delete<void>(`api/order/delete/${orderId}`);
+  deleteOrder(orderId: string): Observable<void> {
+    return this.http.delete<void>(`api/order/delete/${ orderId }`);
   }
+
   /**
    * resets the isReserved status of an appointment to false
    */

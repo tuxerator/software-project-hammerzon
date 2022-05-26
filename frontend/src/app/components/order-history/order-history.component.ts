@@ -10,34 +10,35 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class OrderHistoryComponent implements OnInit {
   orderList? : Order[];
-  public statusOptions = [Status.NNA, Status.A, Status.D];
+  public status = Status;
 
   constructor(private OrderService: OrderService
-    ) { }
+  ) {
+  }
 
-    ngOnInit(): void {
-      this.listAllOrdersByUser();
-    }
+  ngOnInit(): void {
+    this.listAllOrdersByUser();
+  }
 
-    listAllOrdersByUser() : void{
-      this.OrderService.listAllOrdersByUser().subscribe({
-        // next: Value arrived successfully!
-        next: value => {
-            console.log('List of all Orders from this user:');
-            this.orderList = value;
-            console.log(this.orderList);
-        },
+  listAllOrdersByUser(): void {
+    this.OrderService.listAllOrdersByUser().subscribe({
+      // next: Value arrived successfully!
+      next: value => {
+        console.log('List of all Orders from this user:');
+        this.orderList = value;
+        console.log(this.orderList);
+      },
 
-        // error: There was an error.
-        error: err => {
-            console.error(err);
-        }
-      });
-    }
+      // error: There was an error.
+      error: err => {
+        console.error(err);
+      }
+    });
+  }
 
 
-    getTimeOrderString(date?:Date):string{
-      return getAppointmentString(date);
-    }
+  getTimeOrderString(date?: Date): string {
+    return getAppointmentString(date);
+  }
 
 }
