@@ -5,7 +5,7 @@ export default class ProductTestData {
   public list: any[] = [
     {
       name: 'Holz Stuhl',
-      user: '6284efd5b72a93135fb79c87',
+      user: '627e212da0cc80c799cbefae',
       prize: 10,
       description: 'Beschreibung ...',
       duration: new Date(), // 1 Sekunde
@@ -28,7 +28,7 @@ export default class ProductTestData {
       prize: 10,
       description: 'Beschreibung ...',
       duration: new Date(), // 1 Sekunde
-      appointments: [{ date: new Date(), isReserved: true }], image_id: '6284f11cb72a93135fb79d1d'
+      appointments: [{ date: new Date(), isReserved: false }], image_id: '6284f11cb72a93135fb79d1d'
     },
     {
       name: 'Zimmerstreichen',

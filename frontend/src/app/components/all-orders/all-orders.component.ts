@@ -12,8 +12,7 @@ export class AllOrdersComponent implements OnInit {
   public orderList : Order[] = [];
   public status = Status;
   
-  constructor(private OrderService: OrderService,
-    ) { }
+  constructor(private orderService: OrderService) { }
   
 
   ngOnInit(): void {
@@ -21,7 +20,7 @@ export class AllOrdersComponent implements OnInit {
   }
 
   listAllOrders(): void {
-    this.OrderService.listAllOrders().subscribe({
+    this.orderService.listAllOrders().subscribe({
       next: value => {
         console.log(value);
         this.orderList = value;
@@ -37,7 +36,7 @@ export class AllOrdersComponent implements OnInit {
     console.log('status set:' + status);
     if(this.orderList)
     {
-      this.OrderService.setStatus(this.orderList[index]._id, status).subscribe({
+      this.orderService.setStatus(this.orderList[index]._id, status).subscribe({
         next: value => {
           const st = JSON.parse(JSON.stringify(value));
           console.log(st.status);

@@ -24,6 +24,10 @@ export class OrderService {
     return this.http.get<Order[]>('api/order/list');
   }
 
+  listOrdersByProductCreator() : Observable<Order[]> {
+    return this.http.get<Order[]>('api/order/listByCreator');
+  }
+
   /**
    * register an order with productID and a single appointment.
    */

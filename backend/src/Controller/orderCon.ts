@@ -6,6 +6,7 @@ import { IProduct, Product } from '../Models/Product';
 import {Types} from 'mongoose';
 import session from 'express-session';
 
+
 class OrderController{
     /**
      * gets every finalized Order from the schema in a list.
@@ -19,7 +20,7 @@ class OrderController{
         else
         {
             const list : IOrder[] = await Order.
-                                                find({finalized : true}).
+                                                find({}).
                                                 populate('product').
                                                 populate('orderingUser','-password').
                                                 exec();
@@ -40,15 +41,36 @@ class OrderController{
     if (id && Types.ObjectId.isValid(id)) {
       const orders: IOrder[] = await Order.find({
         orderingUser: id,
-        finalized: true
       }).populate('product').populate('orderingUser', '-password').exec();
-      console.log('orders found');
-      console.log(orders);
       response.status(200);
       response.send(orders);
     } else {
       response.status(500);
       response.send('there is no order with such an userid');
+    }
+  }
+
+  /**
+   * list all orders for the products a user added 
+   */
+  public async listOrdersByCreator(request: SessionRequest, response: Response): Promise<void> {
+    const id = request.session.user._id;
+    if(id && Types.ObjectId.isValid(id)){
+      
+      let orders = [];
+      const products : IProduct[] = await Product.find({ user : id });
+      for (const p of products)
+      {
+        orders.push(await Order.find({ product : p._id }).populate('product').populate('orderingUser', '-password').exec());
+      }
+      orders = orders.flat();
+      console.log('UserID:' + id);
+      console.log(orders);
+      response.status(200);
+      response.send(orders);
+    } else {
+      response.status(500);
+      response.send('no orders for this creator');
     }
   }
   
