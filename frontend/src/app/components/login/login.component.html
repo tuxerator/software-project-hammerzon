@@ -1,9 +1,9 @@
 
 
-<div class="container">
-<div class="card bg-light">
+<div class="container justify-content-center">
+<div class="card bg-dark border-secondary mx-auto col-lg-8">
 <article class="card-body mx-auto" style="max-width: 400px;">
-	<h4 class="card-title mt-3 text-center text-dark">Anmelden</h4>
+	<h4 class="card-title mt-3 text-center">Anmelden</h4>
 	<form [formGroup]="loginForm"  (ngSubmit)="onSubmit()" class="needs-validation">
     <div class="mb-3 input-group has-validation" >
 		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
@@ -20,7 +20,7 @@
     <div class="d-grid" >
         <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
     </div>
-   <p class="text-center text-dark">Noch kein Konto?<a routerLink="/register">Jetzt registrieren</a> </p>
+   <p class="text-center">Noch kein Konto?<a routerLink="/register">Jetzt registrieren</a> </p>
 </form>
 </article>
 </div> <!-- card.// -->

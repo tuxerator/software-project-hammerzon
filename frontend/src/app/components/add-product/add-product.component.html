@@ -39,7 +39,7 @@
             <!-- Add Appointment -->
           <div class="d-flex mb-2 has-validation">
               <label for="appointmentInputs" class="form-label">Termine</label>
-              <button class="ms-auto btn btn-success" (click)="addAppointment()">+</button>
+              <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
           </div>
           <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3" id="durationInput" [class.was-validated]="addProductForm.controls[name].touched">
               <div  id="date selector"class="input-group has-validation">
