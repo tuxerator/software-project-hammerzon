@@ -41,6 +41,12 @@ const names: NameInfo[] = [
       'In meiner Freizeit gehe ich am liebsten auf lange Wanderungen.'
   },
   {
+    firstName: 'Cedric',
+    lastName: 'Wiese',
+    optionalAttribut: 'Hallo, meine Name ist Cedric Wiese. Ich bin aktuelle in meinem dritten Semester im Bachelorstudiengang Informatik.' +
+      ' Außerdem mag ich Schildkröten und Züge.'
+  },
+  {
     firstName: 'Henri',
     lastName: 'Grotzeck',
     optionalAttribut: 'Ich bin ein weitere Person. Der teils am Frontend arbeitet'
@@ -81,7 +87,7 @@ export default class ApiController {
   public getProfileList(request: Request, response: Response): void {
     const list: number[] = names.map((value, index) => index);
     response.status(200);
-    response.send({ list });
+    response.send(list);
     console.log(list);
   }
 }
