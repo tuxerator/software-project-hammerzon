@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IdMessageResponse, ListInfoReponse } from '../components/types';
+import { IdMessageResponse, ListInfoReponse, MessageResponse } from '../components/types';
 import { Product } from '../models/Product';
 
 @Injectable({
@@ -35,6 +35,11 @@ export class ProductService {
   addProduct(product:Product):Observable<IdMessageResponse>
   {
     return this.http.post<IdMessageResponse>('api/product/add',product);
+  }
+
+  removeProduct(id:string):Observable<MessageResponse>
+  {
+    return this.http.post<MessageResponse>('api/product/delete',{id});
   }
 
 }

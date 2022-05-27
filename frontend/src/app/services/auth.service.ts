@@ -9,7 +9,7 @@ import { User } from '../models/User';
 })
 export class AuthService {
 
-  public user:User|null=null;
+  public user:User|undefined=undefined;
 
   constructor(private http:HttpClient) {
 
@@ -17,7 +17,7 @@ export class AuthService {
 
    public isLogedIn():boolean
    {
-    return this.user !== null;
+    return this.user !== undefined;
    }
 
    public isAdmin():boolean{
@@ -43,6 +43,7 @@ export class AuthService {
       },
       error: (err) => {
         console.error(err);
+        this.user = undefined;
       }
     });
     return userObservable;
@@ -54,7 +55,7 @@ export class AuthService {
      oberservable.subscribe({
        next: (val) => {
          console.log(val);
-         this.user = null;
+         this.user = undefined;
        },
        error: (err) => console.log(err)
      });
