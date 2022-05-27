@@ -49,6 +49,27 @@ export class AddProductComponent implements OnInit {
     });
   }
 
+  public editProduct(aProduct: Product)
+  { 
+    this.appointmentsCount=aProduct.appointments.length;
+    this.imageId=aProduct.image_id;
+    this.addProductForm = this.formBuilder.group({
+      productName: new FormControl(aProduct.name,[Validators.required]),
+      description: new FormControl(aProduct.description,Validators.required),
+      prize: new FormControl(aProduct.prize,[Validators.required]),
+      durationHour: new FormControl(aProduct.duration.getHours,[Validators.required]),
+      durationMinute: new FormControl(aProduct.duration.getMinutes,[Validators.required]),
+      appointment0: new FormControl('',[Validators.required])
+    })
+    for(const appointment of aProduct.appointments)
+    {
+      const name = `appointment${this.appointmentsCount}`
+      this.addProductForm.addControl(name, new FormControl(appointment.date,[Validators.required]));
+      this.appointmentIndexs.push(name);
+      this.appointmentsCount ++;
+    }
+  }
+
   public addAppointment()
   {
     const name = `appointment${this.appointmentsCount}`;
