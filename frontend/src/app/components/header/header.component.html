@@ -15,66 +15,54 @@
       aria-expanded="false"
       aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
-    <div
-      class="collapse navbar-collapse"
-      id="navbarNav">
-      <div class="d-flex me-auto ms-auto">
-        <input (change)="search()" [(ngModel)]="searchTerm" aria-label="Search" class="form-control me-2"
-               placeholder="Suchen ..." type="search">
-        <button (click)="search()" class="btn btn-outline-primary">Search</button>
-      </div>
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <!-- add to this List for more navbar links -->
-        <li class="nav-item active">
-          <a class="nav-link" routerLink="/about">About</a>
-        </li>
-
-        <li *ngIf="authService.isLogedIn()" class="nav-item ropdown ms-2">
-          <a aria-expanded="false" class="dropdown-toggle btn btn-outline-primary" data-bs-toggle="dropdown" href="#"
-             id="navbarDropdown" role="button">
-            <i class="bi bi-person-circle"></i>
-          </a>
-          <ul aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-lg-end dropdown-menu-dark">
-
-            <li class="nav-item active text-algin-left">
-              <a class="dropdown-item" routerLink="/personalprofile">Profile</a>
-            </li>
-            <li class="nav-item active text-algin-left">
-              <a class="dropdown-item" routerLink="/order-history">Bestellungen</a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="nav-item active text-algin-left">
-              <a class="dropdown-item" routerLink="/add-product">Produkt hinzufügen</a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <div *ngIf="authService.isAdmin()">
-              <li class="nav-item active text-algin-left">
-                <a class="dropdown-item" routerLink="/all-orders">Alle Bestellungen</a>
+      </button>
+      <div
+          class="collapse navbar-collapse"
+          id="navbarNav">
+          <div class="d-flex me-auto ms-auto">
+            <input class="form-control me-2" type="search" placeholder="Suchen ..." aria-label="Search" [(ngModel)]="searchTerm" (change)="search()">
+            <button class="btn btn-outline-primary" (click)="search()" >Search</button>
+          </div>
+          <ul class="navbar-nav mb-2 mb-lg-0">
+              <!-- add to this List for more navbar links -->
+              <li class="nav-item active">
+                  <a class="nav-link" routerLink="/about">About</a>
               </li>
-            </div>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="nav-item active text-algin-left">
-              <a (click)="logout()" class="dropdown-item">Logout</a>
-            </li>
 
+              <li *ngIf="authService.isLogedIn()" class="nav-item ropdown ms-2">
+                <a class="dropdown-toggle btn btn-outline-primary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-circle"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
 
+                  <li class="nav-item text-algin-left">
+                    <a class="dropdown-item" routerLink="/personalprofile">Profile</a>
+                  </li>
+                  <li class="nav-item text-algin-left">
+                    <a class="dropdown-item" routerLink="/order-history">Bestellungen</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li class="nav-item text-algin-left">
+                    <a class="dropdown-item" routerLink="/add-product">Produkt hinzufügen</a>
+                  </li>
+                  <li *ngIf="authService.isAdmin()"><hr class="dropdown-divider"></li>
+                  <li *ngIf="authService.isAdmin()" class="nav-item active text-algin-left">
+                    <a class="dropdown-item" routerLink="/all-orders">Alle Bestellungen</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li class="nav-item text-algin-left">
+                    <a class="dropdown-item" (click)="logout()">Logout</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li *ngIf="!authService.isLogedIn()" class="nav-item active">
+                <a class="nav-link" routerLink="/login">Login</a>
+              </li>
+              <li *ngIf="!authService.isLogedIn()" class="nav-item active">
+                <a class="btn btn-outline-primary " routerLink="/register">Register</a>
+              </li>
           </ul>
-        </li>
-
-        <li *ngIf="!authService.isLogedIn()" class="nav-item active">
-          <a class="nav-link" routerLink="/login">Login</a>
-        </li>
-        <li *ngIf="!authService.isLogedIn()" class="nav-item active">
-          <a class="btn btn-outline-primary " routerLink="/register">Register</a>
-        </li>
-      </ul>
 
     </div>
   </nav>

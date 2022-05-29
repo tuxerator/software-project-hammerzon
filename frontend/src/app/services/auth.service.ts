@@ -51,7 +51,11 @@ export class AuthService {
         console.log(val);
         this.user = null;
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        console.log(err);
+        this.user = null;
+        this.getUser();
+      }
     });
     return oberservable;
   }

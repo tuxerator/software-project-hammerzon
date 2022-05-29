@@ -25,26 +25,21 @@ import { NotAvailableComponent } from './components/not-available/not-available.
  *  Siehe z.B. https://angular.io/guide/router
  */
 const routes: Routes = [
-  { path: '', component: LandingpageComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'about/:name', component: AboutMeComponent },
-  // Auth
-  { path: 'register', component: RegistrationComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'personalprofile', component: PersonalProfileComponent, canActivate: [AuthGuardService] },
-  // Order
-  { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService] },
-  { path: 'order-history', component: OrderHistoryComponent },
-  { path: 'not-available', component: NotAvailableComponent },
-  // product
-  { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent },
-  { path: 'productdetails/:id', component: ProductdetailsComponent },
-  { path: 'add-product', component: AddProductComponent, canActivate: [AuthGuardService] },
-  {
-    path: 'productdetails/:id/order-product/:i/order-finalized',
-    component: OrderFinalizedComponent,
-    canActivate: [AuthGuardService]
-  }
+    { path: '', component: LandingpageComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'about/:name',component: AboutMeComponent},
+    // Auth
+    { path: 'register',component: RegistrationComponent},
+    { path: 'login',component: LoginComponent},
+    { path: 'personalprofile', component: PersonalProfileComponent,canActivate: [AuthGuardService]},
+    // Order
+    { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
+    { path: 'order-history', component: OrderHistoryComponent, canActivate:[AuthGuardService]},
+    // product
+    { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
+    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'add-product', component: AddProductComponent,canActivate:[AuthGuardService]},
+    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent,canActivate:[AuthGuardService]}
 ];
 
 @NgModule({
