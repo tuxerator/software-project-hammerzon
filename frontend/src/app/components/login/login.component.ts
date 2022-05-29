@@ -4,17 +4,18 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html'
+  selector: 'app-login',
+  templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
 
   public loginForm: FormGroup = this.formBuilder.group({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 
-  constructor(private formBuilder: FormBuilder,private authService:AuthService,private router:Router){}
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit(): void {
     this.authService.getUser().subscribe({
@@ -29,20 +30,18 @@ export class LoginComponent implements OnInit{
     });
   }
 
-  public onSubmit():void
-  {
+  public onSubmit(): void {
     this.loginForm.markAllAsTouched();
 
-    if(this.loginForm.invalid)return;
+    if (this.loginForm.invalid) return;
 
     const form = this.loginForm.value;
 
     const password = form.password;
     const email = form.email;
 
-    this.authService.login(email,password).subscribe({
-      next: () =>
-      {
+    this.authService.login(email, password).subscribe({
+      next: () => {
         this.authService.getUser();
         this.router.navigate(['/']);
 

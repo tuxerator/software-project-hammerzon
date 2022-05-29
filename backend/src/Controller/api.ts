@@ -41,9 +41,9 @@ const names: NameInfo[] = [
       'In meiner Freizeit gehe ich am liebsten auf lange Wanderungen.'
   },
   {
-      firstName: 'Cedric',
-      lastName: 'Wiese',
-      optionalAttribut: 'Hallo, meine Name ist Cedric Wiese. Ich bin aktuelle in meinem dritten Semester im Bachelorstudiengang Informatik.'+
+    firstName: 'Cedric',
+    lastName: 'Wiese',
+    optionalAttribut: 'Hallo, meine Name ist Cedric Wiese. Ich bin aktuelle in meinem dritten Semester im Bachelorstudiengang Informatik.' +
       ' Außerdem mag ich Schildkröten und Züge.'
   },
   {

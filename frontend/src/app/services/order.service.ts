@@ -1,28 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable } from 'rxjs';
-import { Appointment } from './productdetails.service';
-import { Product } from '../models/Product';
+import { Observable } from 'rxjs';
+import { Order, Status } from '../models/Order';
 
-
-
-export type OrderList<T>={
-  list: T[]
-}
-
-// this is a model now 
-export type OrderInfo={
-  _id : string,
-  product : Product,
-  orderingUser: string,
-  timeOfOrder: Date,
-  finalized: boolean,
-  appointment : Appointment,
-  confirmed : boolean
-}
 export type PostOrder={
   productId : string,
-  appointmentIndex : Number
+  appointmentIndex : number
 }
 
 @Injectable({
@@ -30,49 +13,48 @@ export type PostOrder={
 })
 export class OrderService {
 
-  public currentOrder :OrderInfo|null = null;
-
-  constructor(private http: HttpClient) { }
-
-  listAllOrders(): Observable<OrderInfo[]>
-  {
-    return this.http.get<OrderInfo[]>('api/orderlist');
+  constructor(private http: HttpClient) {
   }
 
-  listAllOrdersByUser() : Observable<OrderInfo[]>
-  {
-    return this.http.get<OrderInfo[]>('api/orderlistbyuser');
+  listAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>('api/admin/order/list');
   }
+
+  listAllOrdersByUser(): Observable<Order[]> {
+    return this.http.get<Order[]>('api/order/list');
+  }
+
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId:string, appointmentIndex: Number): Observable<OrderInfo>
+  registerOrder(productId: string, appointmentIndex: number) : Observable<Boolean>
   {
     const postOrder: PostOrder = {productId, appointmentIndex};
-
-    return this.http.post<OrderInfo>('api/registerOrder', postOrder);
-
+    return this.http.post<Boolean>('api/order/register', postOrder);
   }
+
   /**
    * deletes an order when it is cancelled
    */
-  deleteOrder(orderId:string) : Observable<void>
-  {
-    return this.http.delete<void>(`api/deleteOrder/${orderId}`);
+  deleteOrder(orderId: string): Observable<void> {
+    return this.http.delete<void>(`api/order/delete/${ orderId }`);
   }
+
   /**
    * resets the isReserved status of an appointment to false
    */
-  resetProduct(productId:string, appointmentIndex:Number) : Observable<PostOrder>
+  resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
   {
     const postOrder:PostOrder = {productId, appointmentIndex};
     console.log('reset appointment service');
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }
 
-  finalizeOrder(orderId:string): Observable<OrderInfo>
+  setStatus(orderId:string, status: Status) : Observable<Status>
   {
-    return this.http.post<OrderInfo>(`api/finalizeOrder/${orderId}`,orderId);
+    console.log('toggle service:' + status);
+    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, {status});
   }
+
 }
 

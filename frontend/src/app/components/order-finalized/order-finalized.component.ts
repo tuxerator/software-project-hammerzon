@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OrderFinalizedComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

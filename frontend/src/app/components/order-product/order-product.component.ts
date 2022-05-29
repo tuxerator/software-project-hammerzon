@@ -1,31 +1,31 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductdetailsService, Appointment} from 'src/app/services/productdetails.service';
-import { OrderInfo, OrderService } from 'src/app/services/order.service';
+import { OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
-import { NavigationStart, Router } from '@angular/router';
-import { getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
+import { Router } from '@angular/router';
+import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   templateUrl: './order-product.component.html',
   styleUrls: ['./order-product.component.css']
 })
-export class OrderProductComponent implements OnInit , OnDestroy{
+export class OrderProductComponent implements OnInit {
   product : Product|undefined;
   user: User|undefined;
   appointment:Appointment|undefined;
-  appointmentIndex:Number|undefined;
-  order : OrderInfo|undefined;
+  appointmentIndex = 0; 
+  orderRegistered : Boolean|undefined;
   cancelled : Boolean = false;
   constructor(private route:ActivatedRoute,
-              private productService:ProductdetailsService,
+              private productService:ProductService,
               private authService: AuthService,
               private orderService: OrderService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.detectRouterEvent();
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
@@ -36,25 +36,13 @@ export class OrderProductComponent implements OnInit , OnDestroy{
      */
     this.productService.getProductDetails(productIDFromRoute).subscribe(
       {
-        next: (val)=>{
+        next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
           this.appointment = this.product.appointments[appointmentIndex];
           this.appointment.date = new Date(this.appointment.date);
-          console.log('registering order');
-          this.orderService.registerOrder(this.product._id , appointmentIndex).subscribe(
-            {
-              next: (val) => {
-                this.order = val;
-                console.log(this.order);
-              },
-              error: (err) => {
-                console.error(err);
-              }
-              }
-          );
         },
-        error: (err)=> {
+        error: (err) => {
           console.log(err);
         }
       }
@@ -62,100 +50,45 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     // get the userinfo
     this.authService.getUser().subscribe(
       {
-        next: (val)=>{
+        next: (val) => {
           this.user = val;
         },
-        error: (err)=> {
+        error: (err) => {
           console.log(err);
         }
       }
     );
   }
-  ngOnDestroy() : void
-  {
-    console.log('left the component');
-    this.cancel();
-  }
 
-  /**
-   * cancel the order by leaving the page
-   * while the order is not finalized.
-   */
-  cancel() : void
-  {
-    if(this.order?.finalized === false && this.cancelled === false)
-    {
-      // delete order and set product appointment to not reserved
-      console.log('order cancelled');
-      if(this.order)
-      {
-        console.log('deleting order');
-        console.log(this.order._id);
-        this.orderService.deleteOrder(this.order._id).subscribe();
-      }
-      console.log(this.product);
-      console.log(this.appointmentIndex);
-      if(this.product && this.appointmentIndex)
-      {
-        console.log('resetting appointment');
-        this.orderService.resetProduct(this.product._id, this.appointmentIndex).subscribe();
-      }
-      this.cancelled = true;
-    }
-    else
-    {
-      console.log('order finalized or already cancelled.');
-    }
-
-
-  }
-
-  finalize() : void
-  {
-    if(this.order?.finalized === false)
-    {
-      this.orderService.finalizeOrder(this.order._id).subscribe(
+  register(): void {
+    if (this.product) {
+      this.orderService.registerOrder(this.product._id, this.appointmentIndex).subscribe(
         {
           next: (val) => {
-            this.order = val;
-            console.log(this.order);
-            const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
-            this.router.navigateByUrl(url);
+            this.orderRegistered = val;
+            console.log('orderRegistered:' + this.orderRegistered);
+            if (this.orderRegistered === true) {
+              const url = `productdetails/${ this.product?._id }/order-product/${ this.appointmentIndex }/order-finalized`;
+              this.router.navigateByUrl(url);
+            } else {
+              // appointment not available
+              this.router.navigateByUrl('not-available');
+            }
           },
           error: (err) => {
             console.error(err);
           }
         }
       );
-      // has to navigate here so the order isn't deleted
-      // const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
-      // this.router.navigateByUrl(url);
-    }
-    else
-    {
-      console.log('order already finalized');
     }
   }
 
-  detectRouterEvent() : void
-  {
-    this.router.events.forEach((event) =>{
-      if(event instanceof NavigationStart){
-        if (event.navigationTrigger === 'popstate'){
-          console.log('pressed back button');
-          this.cancel();
-        }
-      }
-   });
-  }
 
-  getDurString():string
-  {
+  getDurString(): string {
     return getDurationString(this.product?.duration);
   }
 
-  getAppointString():string
-  {
+  getAppointString(): string {
     return getAppointmentString(this.appointment?.date);
   }
 

@@ -13,7 +13,7 @@ import path from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 // created by us
-import ApiController  from './Controller/api';
+import ApiController from './Controller/api';
 import AboutController from './Controller/about';
 import session from 'express-session';
 
@@ -27,12 +27,13 @@ import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
+import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
 
 // Damit im request.session user exisitiert
 declare global {
-        interface Session {
-            user?: IUser,
-        }
+  interface Session {
+    user?: IUser,
+  }
 }
 
 
@@ -48,18 +49,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
 // erlauben wir alles um eventuelle Fehler zu vermeiden.
-app.use(cors({ origin: true,credentials: true}));
+app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser('6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB'));
 
 app.set('trust proxy', 1); // trust first proxy
 app.use(session({
-        secret:'6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
-        resave:true,
-        saveUninitialized:true,
-        name:'guid'
-    }
+    secret: '6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
+    resave: true,
+    saveUninitialized: true,
+    name: 'guid'
+  }
 ));
-
 
 
 /**
@@ -88,7 +88,7 @@ app.use(session({
  */
 
 // Wird für das Photouploaden verwendet
-const upload = multer({ dest: './uploads/'});
+const upload = multer({ dest: './uploads/' });
 
 
 // important information about this api
@@ -116,56 +116,56 @@ app.post('/api/name/:id', api.postNameInfo);
 // AuthController endpoints
 
 // register
-app.post('/api/auth/register', auth.register);
+app.post('/api/auth/register', ValidatorGroups.UserRegister, auth.register);
 // login
-app.post('/api/auth/login', auth.login);
-app.get('/api/auth/logintest', auth.getUser);
+app.post('/api/auth/login', ValidatorGroups.UserLogin, auth.login);
+app.get('/api/auth/logintest', ValidatorGroups.UserAuthorized, auth.getUser);
 
 app.get('/api/getUserById/:id', auth.getUserById);
 // logout ...
 // logout
-app.get('/api/auth/logout', auth.logout);
+app.get('/api/auth/logout', ValidatorGroups.UserAuthorized, auth.logout);
 // update
-app.post('/api/auth/update', auth.update);
+app.post('/api/auth/update', ValidatorGroups.UserUpdate, auth.update);
 
 // ProductController endpoints
 
 // 10-products ...
-app.get('/api/productlist', product.getList.bind(product));
-
+app.get('/api/product/list', product.getList.bind(product));
 
 // product details ...
-app.get('/api/productdetails/:id', product.getProductDetail.bind(product));
+app.get('/api/product/:id', product.getProductDetail.bind(product));
 
 // reset appointment
-app.post('/api/resetAppointment', product.resetAppointment);
+
 // add product
-app.post('/api/addproduct',product.addProduct);
+app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
+
+app.post('/api/resetAppointment', ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // Imager Controller endpoints
 // Add Images
-app.post('/api/img/upload',upload.single('img'),image.postImage);
+app.post('/api/img/upload', upload.single('img'), image.postImage);
 
 // Removed Images
-app.get('/api/img/:id',image.getImage);
+app.get('/api/img/:id', image.getImage);
 
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/registerOrder', order.registerOrder);
-
-// finalize an order
-app.post('/api/finalizeOrder/:id', order.finalizeOrder);
+app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
 
 // delete an order
-app.delete('/api/deleteOrder/:id',order.deleteOrder);
+app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
 
 // list all orders for the admin page
-app.get('/api/orderlist', order.listAllOrders);
+app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
 
 // list all orders by user
-app.get('/api/orderlistbyuser', order.listAllOrdersByUser);
+app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
 
+// toggle the confirmation status of an order 
+app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
