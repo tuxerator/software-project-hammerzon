@@ -165,7 +165,8 @@ app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllO
 
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
-
+// list all orders by the product creator
+app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus

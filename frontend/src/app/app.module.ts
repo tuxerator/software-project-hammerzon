@@ -19,6 +19,7 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 import { HeaderComponent } from './components/header/header.component';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
+import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NotAvailableComponent } from './components/not-available/not-available.
     OrderHistoryComponent,
     OrderFinalizedComponent,
     HeaderComponent,
-    NotAvailableComponent
+    NotAvailableComponent,
+    OrderedServicesComponent
   ],
   imports: [
     BrowserModule,

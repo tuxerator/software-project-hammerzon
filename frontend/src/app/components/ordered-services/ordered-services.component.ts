@@ -1,26 +1,24 @@
-import { Component,  OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
 import { getAppointmentString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 
-
 @Component({
-  templateUrl: './all-orders.component.html',
-  styleUrls: ['./all-orders.component.css'],
+  templateUrl: './ordered-services.component.html',
+  styleUrls: ['./ordered-services.component.css']
 })
-export class AllOrdersComponent implements OnInit {
+export class OrderedServicesComponent implements OnInit {
   public orderList : Order[] = [];
   public status = Status;
   
   constructor(private orderService: OrderService) { }
-  
 
   ngOnInit(): void {
-    this.listAllOrders();
+    this.listOrdersByProductCreator();
   }
 
-  listAllOrders(): void {
-    this.orderService.listAllOrders().subscribe({
+  listOrdersByProductCreator() : void {
+    this.orderService.listOrdersByProductCreator().subscribe({
       next: value => {
         console.log(value);
         this.orderList = value;
@@ -30,7 +28,6 @@ export class AllOrdersComponent implements OnInit {
       }
     });
   }
-
   setStatus(index:number, status:Status): void
   { 
     console.log('status set:' + status);
@@ -60,4 +57,5 @@ export class AllOrdersComponent implements OnInit {
   {
     this.orderList[index].status = status;
   }
+
 }

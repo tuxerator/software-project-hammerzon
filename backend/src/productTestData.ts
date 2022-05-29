@@ -4,33 +4,31 @@ import { Image } from './Models/Image';
 export default class ProductTestData {
   public list: any[] = [
     {
-        name:'Holz Stuhl',
-        user:'6284efd5b72a93135fb79c87',
-        prize:10,
-        description:'Beschreibung ...',
-        duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false},
-                       {date:new Date(2022, 6, 15, 13),isReserved:false},
-                       {date:new Date(), isReserved:true},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false},
-                       {date:new Date(), isReserved:false}],
-        image_id:'6284f11cb72a93135fb79d1d'
+      name: 'Holz Stuhl',
+      user: '627e212da0cc80c799cbefae',
+      prize: 10,
+      description: 'Beschreibung ...',
+      duration: new Date(), // 1 Sekunde
+      appointments: [{ date: new Date(), isReserved: false },
+        { date: new Date(2022, 6, 15, 13), isReserved: false },
+        { date: new Date(), isReserved: true },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false },
+        { date: new Date(), isReserved: false }], image_id: '6284f11cb72a93135fb79d1d'
     },
     {
-        name:'Dachleiter',
-        user:'6284efd5b72a93135fb79c87',
-        prize:10,
-        description:'Beschreibung ...',
-        duration:new Date(), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:true}],
-        image_id:'6284f11cb72a93135fb79d1d'
+      name: 'Dachleiter',
+      user: '6284efd5b72a93135fb79c87',
+      prize: 10,
+      description: 'Beschreibung ...',
+      duration: new Date(), // 1 Sekunde
+      appointments: [{ date: new Date(), isReserved: false }], image_id: '6284f11cb72a93135fb79d1d'
     },
     {
         name:'Zimmerstreichen',
