@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../models/User';
 
@@ -9,15 +10,16 @@ import { User } from '../models/User';
 })
 export class AuthService {
 
-  public user: User | null = null;
+  public user:User|undefined=undefined;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private router:Router) {
 
   }
 
-  public isLogedIn(): boolean {
-    return this.user !== null;
-  }
+   public isLogedIn():boolean
+   {
+    return this.user !== undefined;
+   }
 
   public isAdmin(): boolean {
     return this.user?.role === 'admin';
@@ -39,6 +41,7 @@ export class AuthService {
       },
       error: (err) => {
         console.error(err);
+        this.user = undefined;
       }
     });
     return userObservable;
@@ -49,11 +52,13 @@ export class AuthService {
     oberservable.subscribe({
       next: (val) => {
         console.log(val);
-        this.user = null;
+        this.user = undefined;
+        this.router.navigate(['/']);
       },
       error: (err) => {
         console.log(err);
-        this.user = null;
+        this.user = undefined;
+        this.router.navigate(['/']);
         this.getUser();
       }
     });

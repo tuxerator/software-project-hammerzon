@@ -23,6 +23,8 @@ export const ValidatorGroup = (validators:Validator[]) =>
     };
 };
 
+//export const ValidatorGroup = (validator:Validator) => ValidatorGroup([validator]);
+
 export class Validators{
     public static isRequired(key:string):SubValidator
     {

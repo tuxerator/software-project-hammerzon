@@ -18,10 +18,10 @@ export class ProductdetailsComponent implements OnInit {
   // Zum formatieren der Daten
 
 
-  constructor(private route: ActivatedRoute,
-              private productService: ProductService,
-              private router: Router,
-              private authService: AuthService) {
+  constructor(private route:ActivatedRoute,
+              private productService:ProductService,
+              private router:Router,
+              public authService: AuthService) {
     console.log('kommt zu Params');
   }
 
@@ -43,6 +43,9 @@ export class ProductdetailsComponent implements OnInit {
           for (let i = 0; i < this.product.appointments.length; i++) {
             this.product.appointments[i].date = new Date(this.product.appointments[i].date);
           }
+
+          console.log(this.product);
+          console.log(this.user);
         },
         error: (err) => {
           console.log(err);
@@ -51,9 +54,9 @@ export class ProductdetailsComponent implements OnInit {
         }
       }
     );
-
+    this.user = this.authService.user;
     // is there a user logged in? get the user.
-    this.authService.getUser().subscribe(
+    /*this.authService.getUser().subscribe(
       {
         next: (val) => {
           this.user = val;
@@ -62,7 +65,7 @@ export class ProductdetailsComponent implements OnInit {
           console.log(err);
         }
       }
-    );
+    );*/
   }
 
   getDurString(): string {

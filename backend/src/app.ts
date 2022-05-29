@@ -141,7 +141,9 @@ app.get('/api/product/:id', product.getProductDetail.bind(product));
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-app.post('/api/resetAppointment', ValidatorGroups.OrderRegister, product.resetAppointment);
+app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
+
+app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // Imager Controller endpoints
 // Add Images
@@ -164,7 +166,7 @@ app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllO
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
 
-// toggle the confirmation status of an order 
+// toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {

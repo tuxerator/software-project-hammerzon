@@ -24,30 +24,32 @@ class ProductController {
     let list: IProduct[];
 
         let requestable;
-    if (searchTerm) {
-      // Wenn es nur eine Zahl gibt dann ntze es für preis
-      let testPrize = parseFloat(searchTerm as string);
-      if (!testPrize) {
-        testPrize = 0;
-      }
+        // Wenn es einen Suchebegriff gibt
+        if(searchTerm)
+        {
+            // Wenn es nur eine Zahl gibt dann ntze es für preis
+            let testPrize = parseFloat(searchTerm as string);
+            if(!testPrize)
+            {
+                testPrize = 0;
+            }
 
-      console.log(searchTerm);
-      const query = {
-        $or: [
-          // und sonst überprufen durch regex den namen des Products
-          { name: { $regex: searchTerm } },
-          { prize: { $lte: testPrize } }
-        ]
-      };
-      list = await Product.find(query).skip(start).populate('user').exec();
-      // Wie viele Elemente kommen danach noch
-      requestable = Math.max(list.length - limit - start, 0);
-    } else {
-      // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-      list = await Product.find({}).skip(start).populate('user').exec();
-      // Wieviele Elemente kommen danach noch
-      requestable = Math.max(productCount - limit - start, 0);
-    }
+            console.log(searchTerm);
+            const query = {$or:[
+                // und sonst überprufen durch regex den namen des Products
+                {name:{$regex:searchTerm}},
+                {prize:{$lte:testPrize}}
+              ]};
+            list = await Product.find(query).skip(start).populate('user').exec();
+            // Wie viele Elemente kommen danach noch
+            requestable =  Math.max(list.length - limit - start,0);
+        }
+        else{
+            // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
+            list = await Product.find({}).skip(start).populate('user').exec();
+            // Wieviele Elemente kommen danach noch
+            requestable = Math.max(productCount - limit - start,0);
+        }
         // Just take first 'limit' elements from list
     list = list.splice(0, limit);
 
@@ -106,10 +108,37 @@ class ProductController {
 
     const dbProduct = new Product(product);
 
-        await dbProduct.save();
+    await dbProduct.save();
 
     response.status(200);
     response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
+    }
+
+    public async removeProduct(request:SessionRequest,response:Response):Promise<void>
+    {
+        const id = request.body.id;
+        //
+        const product = await Product.findById(id);
+
+        if(!product)
+        {
+            response.status(400);
+            response.send({code:400,message:'Product does not exist'});
+            return;
+        }
+        console.log(product);
+        console.log(request.session.user);
+        console.log(product.user === request.session.user._id);
+        if(!(product.user === request.session.user._id || request.session.user.role === 'admin'))
+        {
+            response.status(403);
+            response.send({code:403,message:'Not Authorized'});
+            return;
+        }
+
+        await product.delete();
+        response.status(200);
+        response.send({code:200,message:'Product deleted'});
     }
 }
 
