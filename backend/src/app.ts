@@ -31,9 +31,9 @@ import { asyncHandler, isValidAppointment, ValidatorGroup, ValidatorGroups, Vali
 
 // Damit im request.session user exisitiert
 declare global {
-    interface Session {
-        user?: IUser,
-    }
+  interface Session {
+    user?: IUser,
+  }
 }
 
 
@@ -54,11 +54,11 @@ app.use(cookieParser('6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB'));
 
 app.set('trust proxy', 1); // trust first proxy
 app.use(session({
-        secret: '6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
-        resave: true,
-        saveUninitialized: true,
-        name: 'guid'
-    }
+    secret: '6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
+    resave: true,
+    saveUninitialized: true,
+    name: 'guid'
+  }
 ));
 
 
@@ -141,8 +141,9 @@ app.get('/api/product/:id', product.getProductDetail.bind(product));
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-// add appointment to product
-app.post('/api/product/:id/appointment/add', asyncHandler(isValidAppointment), product.addApointment);
+app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
+
+app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 app.post('/api/resetAppointment', ValidatorGroups.OrderRegister, product.resetAppointment);
 
@@ -166,7 +167,10 @@ app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllO
 
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
-
+// list all orders by the product creator
+app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
+// toggle the confirmation status of an order
+app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
     app.use(errorHandler());

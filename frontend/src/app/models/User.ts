@@ -1,3 +1,4 @@
+
 export class User{
   public _id?:string;
   public firstName:string;
@@ -7,7 +8,7 @@ export class User{
   public role?:'user'|'admin' = 'user';
   public address:Address;
 
-  constructor(mail: string, password: string, firstName: string,lastName: string,address:Address) {
+  constructor(mail: string, password: string, firstName: string, lastName: string, address: Address) {
     this.email = mail;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -17,21 +18,20 @@ export class User{
 
 }
 
-export class Address{
+export class Address {
 
-    public street:string;
-    public houseNum:string;
-    public city:string;
-    public postCode:string;
-    public country:string;
+  public street: string;
+  public houseNum: string;
+  public city: string;
+  public postCode: string;
+  public country: string;
 
-    constructor(street:string,houseNum:string,city:string,postCode:string,country:string)
-    {
-      this.city = city;
-      this.country = country;
-      this.houseNum = houseNum;
-      this.postCode = postCode;
-      this.street = street;
-    }
+  constructor(street: string, houseNum: string, city: string, postCode: string, country: string) {
+    this.city = city;
+    this.country = country;
+    this.houseNum = houseNum;
+    this.postCode = postCode;
+    this.street = street;
+  }
 
 }

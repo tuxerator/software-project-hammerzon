@@ -22,12 +22,18 @@
                                     <td>{{elem.product?.user}} </td> <!--{{elem.product?.user}}-->
                                     <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->
                                     <td>{{elem.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
-                                    <div *ngIf="elem.confirmed; else elseBlock">
-                                        <td> <span class="p-2 mb-2 bg-success">Bestätigt</span> </td>
-                                    </div>
-                                    <ng-template #elseBlock>
-                                        <td> <span class="p-2 mb-2 bg-warning text-nowrap">Nicht bestätigt</span> </td>
-                                    </ng-template>
+                                    
+                                    <div [ngSwitch]="elem.status">
+                                      <div *ngSwitchCase="status.NNA">
+                                          <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
+                                      </div>
+                                      <div *ngSwitchCase="status.A">
+                                          <td> <span class="p-2 mb-2 bg-success text-nowrap">Anngenommen</span> </td>
+                                      </div>
+                                      <div *ngSwitchCase="status.D">
+                                          <td> <span class="p-2 mb-2 bg-primary text-nowrap">Durchgeführt</span> </td>
+                                      </div>
+                                  </div>
                                 </tr>
                             </tbody>
                     </table>

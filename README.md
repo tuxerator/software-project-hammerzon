@@ -9,12 +9,10 @@
 - Wiese, Cedric
 - Zalac, Tino
 
-
 ## Betreuer
 
 - Jonas Bachmann | [E-Mail](mailto:jonas.bachmann@uni-konstanz.de) | @jonas.bachmann | Product Owner
 - Sebastian Hubenschmid | [E-Mail](mailto:sebastian.hubenschmid@uni-konstanz.de) | @sebastian.hubenschmid | Kunde
-
 
 ## Kontakt
 

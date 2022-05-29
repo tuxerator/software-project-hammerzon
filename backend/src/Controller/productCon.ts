@@ -75,6 +75,7 @@ class ProductController {
             response.send('there is no product with such an id');
         }
     }
+  }
 
 
     public async resetAppointment(request: Request, response: Response): Promise<void> {
@@ -93,23 +94,51 @@ class ProductController {
             response.send('There is no product with such an id');
         }
     }
+    }
 
 
     public async addProduct(request: SessionRequest, response: Response): Promise<void> {
         const product = request.body;
         console.log(product);
 
-        // Setze es auf den Angemeldeten User
-        product.user = request.session.user._id;
+    // Setze es auf den Angemeldeten User
+    product.user = request.session.user._id;
 
-        delete product._id;
+    delete product._id;
 
-        const dbProduct = new Product(product);
+    const dbProduct = new Product(product);
 
-        await dbProduct.save();
+    await dbProduct.save();
 
+    response.status(200);
+    response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
+    }
+
+    public async removeProduct(request:SessionRequest,response:Response):Promise<void>
+    {
+        const id = request.body.id;
+        //
+        const product = await Product.findById(id);
+
+        if(!product)
+        {
+            response.status(400);
+            response.send({code:400,message:'Product does not exist'});
+            return;
+        }
+        console.log(product);
+        console.log(request.session.user);
+        console.log(product.user === request.session.user._id);
+        if(!(product.user === request.session.user._id || request.session.user.role === 'admin'))
+        {
+            response.status(403);
+            response.send({code:403,message:'Not Authorized'});
+            return;
+        }
+
+        await product.delete();
         response.status(200);
-        response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
+        response.send({code:200,message:'Product deleted'});
     }
 
     public async addApointment(req: Request, res: Response): Promise<void> {

@@ -6,7 +6,7 @@ interface IProduct extends Document {
     // Name der Dienstleistung
     name: string
     // Anbieter der Dienstleistung
-    user: string
+    user:mongoose.Types.ObjectId
     // Genauere Beschreibung des Dienstleistung
     description: string
     // Preis der Dienstleistung
@@ -14,9 +14,9 @@ interface IProduct extends Document {
     // Zeit dauer der Dienstleistung
     duration: Date
     // Möglichen daten wo man die Dienstleistung kaufen kann
-    appointments: IAppointment[]
+  appointments: IAppointment[]
 
-    image_id: mongoose.Types.ObjectId
+  image_id: mongoose.Types.ObjectId
 }
 
 interface IAppointment {

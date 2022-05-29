@@ -8,16 +8,15 @@ import { IdMessageResponse } from '../components/types';
 })
 export class ImageService {
 
-  constructor(private http:HttpClient) {
+  constructor(private http: HttpClient) {
 
   }
 
-  public uploadImage(image:File):Observable<IdMessageResponse>
-  {
+  public uploadImage(image: File): Observable<IdMessageResponse> {
     const formData = new FormData();
 
     formData.append('img', image);
 
-    return this.http.post<IdMessageResponse>('api/img/upload',formData);
+    return this.http.post<IdMessageResponse>('api/img/upload', formData);
   }
 }
