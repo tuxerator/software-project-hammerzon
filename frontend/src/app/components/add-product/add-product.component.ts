@@ -155,39 +155,39 @@ export class AddProductComponent implements OnInit {
       if(this.uploading) return;
 
 
-    console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]]}`);
+      console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]]}`);
 
-    this.isChecked = true;
-    console.log('Create Debug Log');
-    this.addProductForm.markAllAsTouched();
+      this.isChecked = true;
+      console.log('Create Debug Log');
+      this.addProductForm.markAllAsTouched();
       // Sind alle Eingaben valid
-    console.log(this.addProductForm);
-    if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
-    console.log('Through Validation Debug Log');
-    // Für besser lesbarkeit des Code
-    const form = this.addProductForm.value;
+      console.log(this.addProductForm);
+      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
+      console.log('Through Validation Debug Log');
+      // Für besser lesbarkeit des Code
+      const form = this.addProductForm.value;
 
-    const duratioHour = parseInt(form.durationHour);
-    const durationMinute = parseInt(form.durationMinute);
+      const duratioHour = parseInt(form.durationHour);
+      const durationMinute = parseInt(form.durationMinute);
 
-    // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
-    const duration = new Date(0);
-    // Stunden hinzufügen
+      // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
+      const duration = new Date(0);
+      // Stunden hinzufügen
 
-    duration.setHours(duratioHour);
-    // Minuten hinzufügen
-    duration.setMinutes(durationMinute);
+      duration.setHours(duratioHour);
+      // Minuten hinzufügen
+      duration.setMinutes(durationMinute);
 
-    const appointments: Appointment[] = [];
-    // Termine:
-    for (const appointName of this.appointmentIndexs) {
-      const value = form[appointName];
-      const date = new Date(value);
+      const appointments: Appointment[] = [];
+      // Termine:
+      for (const appointName of this.appointmentIndexs) {
+        const value = form[appointName];
+        const date = new Date(value);
 
-      appointments.push(new Appointment(date));
-    }
+        appointments.push(new Appointment(date));
+      }
 
-    const prize = parseFloat(form.prize);
+      const prize = parseFloat(form.prize);
 
       // Neues Product erstellen
       const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);

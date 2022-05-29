@@ -4,6 +4,7 @@ import { IUser, User } from './Models/User';
 export default class UserTestData{
     public list : any[] = [
         {
+            _id:'6284efd5b72a93135fb79c87',
             firstName : 'Armin',
             lastName : 'Admin',
             email : 'armin@admin.de',
@@ -26,6 +27,7 @@ export default class UserTestData{
     }
 
     async insertIfNotExistend(): Promise<void>  {
+      await User.deleteMany({});
       const vals : IUser[] = await User.find({});
       console.log(vals);
       //if(!vals || vals.length <= 0)

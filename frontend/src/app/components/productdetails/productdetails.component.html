@@ -14,7 +14,7 @@
           <p class="text-light">{{product?.description}}</p>
 
           <h5>Termine</h5>
-          <div class="btn-group flex-wrap justify-content-between" role="group">
+          <div class="btn-group flex-wrap" role="group">
             <div *ngFor="let a of product?.appointments; let i = index">
                   <button class=" btn btn-primary mb-2 ms-2" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
             </div>
