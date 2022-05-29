@@ -142,6 +142,8 @@ app.get('/api/product/:id', product.getProductDetail.bind(product));
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd ,product.addProduct);
 
+app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
+
 app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // Imager Controller endpoints

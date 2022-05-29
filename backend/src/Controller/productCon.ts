@@ -24,6 +24,7 @@ class ProductController
         let list : IProduct[];
 
         let requestable;
+        // Wenn es einen Suchebegriff gibt
         if(searchTerm)
         {
             // Wenn es nur eine Zahl gibt dann ntze es für preis
@@ -115,6 +116,31 @@ class ProductController
 
         response.status(200);
         response.send({code:200,message:'Add Successfull',id:dbProduct._id});
+    }
+
+    public async removeProduct(request:SessionRequest,response:Response):Promise<void>
+    {
+        const id = request.body.id;
+        //
+        const product = await Product.findById(id);
+
+        if(!product)
+        {
+            response.status(400);
+            response.send({code:400,message:'Product does not exist'});
+            return;
+        }
+
+        if(!(product.user === request.session.user._id || request.session.user.role === 'admin'))
+        {
+            response.status(403);
+            response.send({code:403,message:'Not Authorized'});
+            return;
+        }
+
+        await product.delete();
+        response.status(200);
+        response.send({code:200,message:'Product deleted'});
     }
 }
 

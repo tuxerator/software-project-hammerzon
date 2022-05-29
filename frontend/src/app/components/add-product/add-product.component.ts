@@ -102,7 +102,7 @@ export class AddProductComponent implements OnInit {
   private getDateTimeString(date:Date):string
   {
     //let dateString:string = date.toLocaleString();
-    let dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`
+    const dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`
     console.log(dateString);
 
     return dateString;
@@ -112,7 +112,7 @@ export class AddProductComponent implements OnInit {
   {
     if(number < 10)
     {
-      return `0${number}`
+      return `0${number}`;
     }
     return `${number}`;
   }
@@ -191,7 +191,7 @@ export class AddProductComponent implements OnInit {
       for(const appointName of this.appointmentIndexs)
       {
         const value = form[appointName];
-        console.log(`AppointmentDate: ${value}`)
+        console.log(`AppointmentDate: ${value}`);
         const date  = new Date(value);
 
         appointments.push(new Appointment(date));
@@ -216,16 +216,18 @@ export class AddProductComponent implements OnInit {
             this.uploading = false;
           }
         });
-      }
-
+      };
+      // Wenn es das Product schon gegeben hat lösche das alte
       if(this.productId)
       {
         this.productService.removeProduct(this.productId).subscribe({
             next: () => uploadProduct(),
             error: (err) => console.error(err.error)
 
-        })
+        });
+
       }else{
+        // Sonst upload das neue Product
         uploadProduct();
       }
 
