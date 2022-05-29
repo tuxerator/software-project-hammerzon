@@ -22,6 +22,10 @@ export class OrderedServicesComponent implements OnInit {
       next: value => {
         console.log(value);
         this.orderList = value;
+        for(let i = 0; i < this.orderList.length; i++)
+        {
+          this.orderList[i].appointment.date = new Date(this.orderList[i].appointment.date);
+        }
       },
       error: err => {
         console.error(err);

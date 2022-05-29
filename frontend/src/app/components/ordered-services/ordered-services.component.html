@@ -10,7 +10,7 @@
                                     <th scope="col">Company name</th>
                                     <th scope="col">Preis</th>
                                     <th scope="col">Kunde</th>
-                                    <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Termin</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Status ändern</th>
                                 </tr>
@@ -27,8 +27,7 @@
                                         {{elem.orderingUser?.address?.postCode}}
                                         {{elem.orderingUser?.address?.city}}
                                     </td>
-                                    <!--<td>{{getDateString(elem.timeOfOrder)}} </td>-->
-                                    <td> date placeholder </td>
+                                    <td>{{getDateString(elem.appointment.date)}} </td>
                                     
                                     <div [ngSwitch]="elem.status">
                                         <div *ngSwitchCase="status.NNA">
