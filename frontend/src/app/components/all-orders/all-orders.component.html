@@ -28,8 +28,7 @@
                                         {{elem.orderingUser?.address?.postCode}}
                                         {{elem.orderingUser?.address?.city}}
                                     </td>
-                                    <!--<td>{{getDateString(elem.timeOfOrder)}} </td>-->
-                                    <td> date placeholder </td>
+                                    <td>{{getDateString(elem.timeOfOrder)}} </td>
                                     
                                     <div [ngSwitch]="elem.status">
                                         <div *ngSwitchCase="status.NNA">
