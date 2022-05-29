@@ -1,7 +1,16 @@
 import { IAppointment, IProduct, Product } from './Models/Product';
-import { Image } from './Models/Image';
+import { Iimage, Image } from './Models/Image';
 
 export default class ProductTestData {
+
+  public images:Iimage[] = [
+    {
+      type:'image/png',
+      data: fs.readFileSync(path.join('./uploads/' + request.file.filename)),
+    },
+    {}
+  ];
+
   public list: any[] = [
     {
       name: 'Holz Stuhl',

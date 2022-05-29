@@ -12,9 +12,7 @@ interface IOrder extends Document {
   orderingUser: mongoose.Types.ObjectId
   // Bestellzeitpunkt
   timeOfOrder: Date
-
   appointment : IAppointment
-
   status : Status
 }
 
