@@ -23,6 +23,13 @@ class OrderController{
                                                 find({}).
                                                 populate('product').
                                                 populate('orderingUser','-password').
+                                                populate({
+                                                  path: 'product',
+                                                  populate: {
+                                                    path: 'user',
+                                                    model: 'User'
+                                                  }
+                                                }).select('-password').
                                                 exec();
 
             console.log('list of all orders:' + list);
@@ -41,7 +48,14 @@ class OrderController{
     if (id && Types.ObjectId.isValid(id)) {
       const orders: IOrder[] = await Order.find({
         orderingUser: id,
-      }).populate('product').populate('orderingUser', '-password').exec();
+      }).populate('product').populate('orderingUser', '-password').populate({
+        path: 'product',
+        populate: {
+          path: 'user',
+          model: 'User'
+        }
+      }).select('-password').exec();
+      console.log(orders);
       response.status(200);
       response.send(orders);
     } else {
@@ -64,8 +78,6 @@ class OrderController{
         orders.push(await Order.find({ product : p._id }).populate('product').populate('orderingUser', '-password').exec());
       }
       orders = orders.flat();
-      console.log('UserID:' + id);
-      console.log(orders);
       response.status(200);
       response.send(orders);
     } else {

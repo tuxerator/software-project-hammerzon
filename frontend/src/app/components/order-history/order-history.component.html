@@ -8,9 +8,10 @@
                                     <th class="text-center"></th>
                                     <th scope="col">Bestell #</th>
                                     <th scope="col">Produktname</th>
-                                    <th scope="col">Company name</th>
+                                    <th scope="col">Handwerker</th>
                                     <th scope="col">Preis</th>
                                     <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Termin</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
@@ -19,10 +20,10 @@
                                     <td class="text-center"></td>
                                     <td>{{elem._id}}</td>
                                     <td>{{elem.product?.name}} </td> <!--{{elem.product?.name}}-->
-                                    <td>{{elem.product?.user}} </td> <!--{{elem.product?.user}}-->
+                                    <td>{{elem.product?.user?.firstName}} {{elem.product?.user?.lastName}}</td> <!--{{elem.product?.user}}-->
                                     <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->
-                                    <td>{{elem.timeOfOrder}} </td> <!--{{elem.order.timeOfOrder}}-->
-                                    
+                                    <td>{{getDateString(elem.timeOfOrder)}} </td> <!--{{elem.order.timeOfOrder}}-->
+                                    <td>{{getDateString(elem.appointment.date)}} </td>
                                     <div [ngSwitch]="elem.status">
                                       <div *ngSwitchCase="status.NNA">
                                           <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
