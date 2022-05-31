@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Product,getAppointmentString,getDurationString } from 'src/app/models/Product';
 import { ProductService } from 'src/app/services/product.service';
 
+
 @Component({
   templateUrl: './productdetails.component.html',
   styleUrls: ['./productdetails.component.css']
@@ -16,6 +17,9 @@ export class ProductdetailsComponent implements OnInit {
   user : User|undefined;
   // Zum formatieren der Daten
 
+  delProduct: boolean = false;
+
+
 
 
   constructor(private route:ActivatedRoute,
@@ -23,6 +27,22 @@ export class ProductdetailsComponent implements OnInit {
               private router:Router,
               public authService: AuthService) {
     console.log('kommt zu Params');
+  }
+
+  switchDelProduct(){
+    this.delProduct = !this.delProduct
+  }
+
+  deleteProduct(){
+    if(this.product)
+      {
+        this.productService.removeProduct(this.product._id).subscribe({
+            next: () => this.router.navigate(['']),
+            error: (err) => console.error(err.error)
+
+        });
+
+      }
   }
 
   ngOnInit(): void {
@@ -68,6 +88,7 @@ export class ProductdetailsComponent implements OnInit {
       }
     );*/
   }
+
 
   getDurString():string
   {
