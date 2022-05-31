@@ -1,7 +1,7 @@
 <div class="container">
   <div class="bg-dark text-white">
     <article class="card-body mx-auto" style="max-width: 400px;">
-      <h4 class="card-title mt-3 text-center text-white">Produkt hinzufügen</h4>
+      <h4 class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' :'Produkt hinzufügen'}}</h4>
       <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="needs-validation" novalidate>
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
@@ -101,7 +101,7 @@
 
         <!--Produkt hinzufügen-->
         <div class="d-grid mt-4">
-          <button (click)="onSubmit()" class="btn btn-primary btn-block" type="submit"> Add Product
+          <button (click)="onSubmit()" class="btn btn-primary btn-block" type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
             <div *ngIf="uploading" class="spinner-border text-light" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
