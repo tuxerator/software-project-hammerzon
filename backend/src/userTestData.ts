@@ -17,7 +17,22 @@ export default class UserTestData{
                 city: 'Adminstadt',
                 country: 'Deutschland'
             }
-        }
+        },
+        {
+            _id:'6284efd5b72a93135fb79c88',
+            firstName : 'Max',
+            lastName : 'Mustermann',
+            email : 'max@muster.de',
+            password: '$2b$10$GfcJ0S9XRCbJp7q05EFwJOLSGa0Twy3V/W5cJ9raQFCWACDpS5E/6', 
+            role : 'user',
+            address:{
+                street: 'Userstraße',
+                houseNum: '42',
+                postCode: '42424',
+                city: 'Userstadt',
+                country: 'Deutschland'
+            }
+        },
     ];
 
     constructor()
