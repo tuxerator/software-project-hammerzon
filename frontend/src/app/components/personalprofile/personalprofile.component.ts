@@ -93,6 +93,11 @@ export class PersonalProfileComponent implements OnInit {
     });
   }
 
+  public isValid(key:string):boolean
+  {
+    return !this.profileForm.controls[key].invalid;
+  }
+
 
 }
 

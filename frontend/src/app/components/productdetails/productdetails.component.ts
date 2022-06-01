@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 
 import { Product, getAppointmentString, getDurationString } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
+import { delay, timeout } from 'rxjs';
 
 @Component({
   templateUrl: './productdetails.component.html',
@@ -90,6 +91,7 @@ export class ProductdetailsComponent implements OnInit {
       }
     }
     )
+    
   }
 
 }

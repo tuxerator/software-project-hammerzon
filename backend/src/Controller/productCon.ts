@@ -3,6 +3,7 @@ import Helper from '../helpers';
 import { IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Types } from 'mongoose';
+import { Order } from '../Models/Order';
 
 class ProductController {
   // Gibt die ProductInfos die zwischen start und start+limit liegen
@@ -129,13 +130,15 @@ class ProductController {
         console.log(product);
         console.log(request.session.user);
         console.log(product.user === request.session.user._id);
-        if(!(product.user === request.session.user._id || request.session.user.role === 'admin'))
+        if(!(product.user.equals(new Types.ObjectId(request.session.user._id)) || request.session.user.role === 'admin'))
         {
+            console.log(product.user);
+            console.log(new Types.ObjectId(request.session.user._id));
             response.status(403);
             response.send({code:403,message:'Not Authorized'});
             return;
         }
-
+        await Order.deleteMany({product: product._id});
         await product.delete();
         response.status(200);
         response.send({code:200,message:'Product deleted'});
