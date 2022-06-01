@@ -23,7 +23,7 @@ export default class UserTestData{
             firstName : 'Max',
             lastName : 'Mustermann',
             email : 'max@muster.de',
-            password: '$2b$10$GfcJ0S9XRCbJp7q05EFwJOLSGa0Twy3V/W5cJ9raQFCWACDpS5E/6', 
+            password: '$2b$10$GfcJ0S9XRCbJp7q05EFwJOLSGa0Twy3V/W5cJ9raQFCWACDpS5E/6', // LCPTNVq4Rz5Pf2F
             role : 'user',
             address:{
                 street: 'Userstraße',
