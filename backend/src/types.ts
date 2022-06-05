@@ -25,7 +25,7 @@ type OrderInfo = {
 
 export enum PaymentType {
   HCIPAL,
-  //SWPSAFE,
+  SWPSAFE,
   //BACHELORCARD,
 }
 

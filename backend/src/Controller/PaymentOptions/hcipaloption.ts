@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import { PaymentOption, Success } from './paymentoption';
 
+// Information of an HciPal Payment Option
 export class HciPalOption implements PaymentOption {
 
   URL='https://pass.hci.uni-konstanz.de/hcipal/';
