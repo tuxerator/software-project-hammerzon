@@ -23,5 +23,13 @@ type OrderInfo = {
   confirmed: boolean
 }
 
+export enum PaymentType {
+  HCIPAL,
+  //SWPSAFE,
+  //BACHELORCARD,
+}
+
+
+
 
 export { ListInfo, SessionRequest, PostOrder, OrderInfo };

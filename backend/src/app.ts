@@ -28,11 +28,17 @@ import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import { PaymentType } from './types';
+import { PaymentController } from './Controller/payment';
 
 // Damit im request.session user exisitiert
 declare global {
   interface Session {
     user?: IUser,
+    paymentAccount?:{
+      name:string,
+      paymentType:PaymentType
+    }
   }
 }
 
@@ -103,6 +109,8 @@ const auth = new AuthController();
 const product = new ProductController();
 const order = new OrderController();
 
+const payment = new PaymentController(order);
+
 const image = new ImageController();
 
 app.get('/api', api.getInfo);
@@ -155,13 +163,14 @@ app.get('/api/img/:id', image.getImage);
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
+// app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
 
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
 
 // list all orders for the admin page
 app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
+
 
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
@@ -170,6 +179,13 @@ app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOr
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 // Falls ein Fehler auftritt, gib den Stack trace aus
+
+// Payment
+
+app.get('/api/payment/hcipal/country',payment.IsFromGermany.bind(payment));
+
+app.post('/api/payment/hcipal/pay',payment.Payment.bind(payment));
+
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
 }

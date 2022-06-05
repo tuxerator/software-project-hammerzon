@@ -10,6 +10,7 @@
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"tsc -w\" \"nodemon --inspect dist/src/server.js\""
     },
     "dependencies": {
+        "axios": "^0.27.2",
         "bcrypt": "^5.0.1",
         "cookie-parser": "^1.4.6",
         "cors": "2.8.5",
