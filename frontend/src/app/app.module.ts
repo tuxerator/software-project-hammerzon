@@ -6,7 +6,7 @@ import { AboutComponent } from './components/about/about.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {AboutMeComponent} from './components/about-me/about-me.component';
+import { AboutMeComponent } from './components/about-me/about-me.component';
 import { AllOrdersComponent } from './components/all-orders/all-orders.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
@@ -18,35 +18,40 @@ import { AddProductComponent } from './components/add-product/add-product.compon
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
 import { HeaderComponent } from './components/header/header.component';
+import { NotAvailableComponent } from './components/not-available/not-available.component';
+import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
 
 @NgModule({
-    declarations: [
-        RootComponent,
-        AboutComponent,
-        LandingpageComponent,
-        AboutMeComponent,
-        FooterComponent,
-        AllOrdersComponent,
-        RegistrationComponent,
-        OrderProductComponent,
-        PersonalProfileComponent,
-        LoginComponent,
-        ProductdetailsComponent,
-        AddProductComponent,
-        OrderHistoryComponent,
-        OrderFinalizedComponent,
-        HeaderComponent
-    ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        AppRoutingModule,
-        FormsModule,
-        ReactiveFormsModule
-    ],
-    providers: [
-        HttpClientModule
-    ],
-    bootstrap: [RootComponent]
+  declarations: [
+    RootComponent,
+    AboutComponent,
+    LandingpageComponent,
+    AboutMeComponent,
+    FooterComponent,
+    AllOrdersComponent,
+    RegistrationComponent,
+    OrderProductComponent,
+    PersonalProfileComponent,
+    LoginComponent,
+    ProductdetailsComponent,
+    AddProductComponent,
+    OrderHistoryComponent,
+    OrderFinalizedComponent,
+    HeaderComponent,
+    NotAvailableComponent,
+    OrderedServicesComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    HttpClientModule
+  ],
+  bootstrap: [RootComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

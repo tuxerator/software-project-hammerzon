@@ -1,92 +1,67 @@
-import { Component, OnInit } from '@angular/core';
-import { getAppointmentString, Product } from 'src/app/models/Product';
-import { User } from 'src/app/models/User';
-import { AuthService } from 'src/app/services/auth.service';
-import { OrderInfo, OrderService } from 'src/app/services/order.service';
-import { ProductdetailsService } from 'src/app/services/productdetails.service';
+import { Component,  OnInit } from '@angular/core';
+import { Order, Status } from 'src/app/models/Order';
+import { getAppointmentString } from 'src/app/models/Product';
+import { OrderService } from 'src/app/services/order.service';
 
-/**
- * Es ist möglich, dass das component wegen den Testdaten nicht funktioniert,
- * weil die in der Arrays gespeicherten IDs andere sein können.
- * Wenn die IDs richtig generiert werden sollte alles funktionieren.
- */
 
 @Component({
   templateUrl: './all-orders.component.html',
-  styleUrls: ['./all-orders.component.css']
+  styleUrls: ['./all-orders.component.css'],
 })
 export class AllOrdersComponent implements OnInit {
-  public orderList? : OrderInfo[];
-  public productList? : Product[] = [];
-  public combined? : {order: OrderInfo, product: Product, orderingUser: User}[] = [];
-
-  constructor(private OrderService: OrderService,
-              private productService: ProductdetailsService,
-              private authService : AuthService
-    ) { }
+  public orderList : Order[] = [];
+  public status = Status;
+  
+  constructor(private orderService: OrderService) { }
+  
 
   ngOnInit(): void {
     this.listAllOrders();
   }
 
-  listAllOrders() : void{
-    this.OrderService.listAllOrders().subscribe({
-      // next: Value arrived successfully!
+  listAllOrders(): void {
+    this.orderService.listAllOrders().subscribe({
       next: value => {
-          console.log('List of all Orders:');
-          this.orderList = value;
-          console.log(this.orderList);
-          this.getProductInfo();
+        console.log(value);
+        this.orderList = value;
+        for (let i = 0; i < this.orderList.length; i++)
+        {
+          this.orderList[i].timeOfOrder = new Date(this.orderList[i].timeOfOrder);
+        }
       },
-
-      // error: There was an error.
       error: err => {
-          console.error(err);
+        console.error(err);
       }
     });
-
   }
-  /**
-   * get additional information about the orders from the user and product schemas
-   */
-  getProductInfo() : void {
+
+  setStatus(index:number, status:Status): void
+  { 
+    console.log('status set:' + status);
     if(this.orderList)
     {
-      this.orderList.forEach((currentOrder,index) => {
-          this.productService.getProductDetails(String(currentOrder.product)).subscribe(
+      this.orderService.setStatus(this.orderList[index]._id, status).subscribe({
+        next: value => {
+          const st = JSON.parse(JSON.stringify(value));
+          console.log(st.status);
+          if(this.orderList)
           {
-            next: (val)=>{
-              if(this.productList)
-              {
-                this.productList.push(val);
-              }
-              this.authService.getUserById(String(currentOrder.orderingUser)).subscribe(
-                {
-                  next: (val)=>{
-                    if(this.productList)
-                    {
-                      currentOrder.timeOfOrder = new Date(currentOrder.timeOfOrder);
-                      this.combined?.push({order: currentOrder, product: this.productList[index], orderingUser: val});
-                    }
-                  },
-                  error: (err)=> {
-                    console.log(err);
-                  }
-                }
-              );
-            },
-            error: (err)=> {
-              console.log(err);
-            }
+            this.setLocalOrderStatus(index, st.status);
           }
-        );
-      });
+        },
+        error: err => {
+            console.error(err);
+        }
+    });
     }
   }
-
   getDateString(date?:Date):string
   {
     return getAppointmentString(date);
   }
 
+  setLocalOrderStatus(index:number, status:Status) : void
+  {
+    this.orderList[index].status = status;
+  }
 }

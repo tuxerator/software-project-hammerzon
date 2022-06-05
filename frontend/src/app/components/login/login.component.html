@@ -1,26 +1,26 @@
 
 
-<div class="container">
-<div class="card bg-light">
+<div class="container justify-content-center">
+<div class="card bg-dark border-secondary mx-auto col-lg-8">
 <article class="card-body mx-auto" style="max-width: 400px;">
-	<h4 class="card-title mt-3 text-center text-dark">Anmelden</h4>
+	<h4 class="card-title mt-3 text-center">Anmelden</h4>
 	<form [formGroup]="loginForm"  (ngSubmit)="onSubmit()" class="needs-validation">
-    <div class="mb-3 input-group has-validation" [class.was-validated]="loginForm.controls['email'].touched">
+    <div class="mb-3 input-group has-validation" >
 		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
-        <input name="" class="form-control" placeholder="Email-Addresse" formControlName="email" type="email" required>
-        <div *ngIf="loginForm.controls['email']?.invalid" class="valid-feedback was-validated">Gültige Emailadresse.</div>
-      <div *ngIf="loginForm.controls['email']?.invalid" class="invalid-feedback was-validated">Bitte eine gültige Emailadresse angeben.</div>
+        <input name="" class="form-control" [ngClass]="getClasses('email')" placeholder="Email-Addresse" formControlName="email" type="email" required>
+        <div class="valid-feedback was-validated">Gültige Emailadresse.</div>
+      <div class="invalid-feedback was-validated">{{getTexts('email')}}</div>
     </div>
-    <div class="mb-3 input-group has-validation" [class.was-validated]="loginForm.controls['password'].touched">
+    <div class="mb-3 input-group has-validation">
 		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
-        <input class="form-control" placeholder="Passwort bestätigen" formControlName="password" type="password" required>
-        <div *ngIf="loginForm.controls['email']?.invalid" class="valid-feedback was-validated">Passwort eingegeben.</div>
-      <div *ngIf="loginForm.controls['email']?.invalid" class="invalid-feedback was-validated">Bitte Passwort eingeben.</div>
+        <input class="form-control" [ngClass]="getClasses('password')" placeholder="Passwort bestätigen" formControlName="password" type="password" required>
+        <div class="valid-feedback was-validated">Passwort eingegeben.</div>
+        <div class="invalid-feedback was-validated">{{getTexts('password')}}</div>
     </div>
     <div class="d-grid" >
         <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
     </div>
-   <p class="text-center text-dark">Noch kein Konto?<a routerLink="/register">Jetzt registrieren</a> </p>
+   <p class="text-center">Noch kein Konto?<a routerLink="/register">Jetzt registrieren</a> </p>
 </form>
 </article>
 </div> <!-- card.// -->
