@@ -55,9 +55,8 @@ export class PaymentController
     const countryConfig = paymentConfig.countryConfig(req);
    axios(countryConfig).then((axiosResponse)=>
    {
-      console.log(axiosResponse.data);
       const data = paymentConfig.countryParser(axiosResponse.data);
-
+      console.log(data);
       if(!data.success)
       {
         response.status(403);
