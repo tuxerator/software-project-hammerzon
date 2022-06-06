@@ -25,12 +25,14 @@ type OrderInfo = {
 
 export enum PaymentType {
   HCIPAL,
-  //SWPSAFE,
-  BACHELORCARD,
+  SWPSAFE,
+  BACHELORCARD
 }
 
-
-export type HciPalRequest = {
+/**
+ * type for both HCIPal and SWPsafe requests
+ */
+export type HciPalSWPRequest = {
   postOrder : PostOrder,
   accountPassword : string,
   accountName : string,

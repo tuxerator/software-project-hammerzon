@@ -1,14 +1,13 @@
 import { AxiosRequestConfig } from 'axios';
 import { PaymentOption, Success } from './paymentoption';
-import { xml2json } from 'xml-js';
 import { xml2js } from 'xml-js';
-import { HciPalRequest, BachelorCardRequest } from '../../types';
+import { BachelorCardRequest } from '../../types';
 
 export class BachelorOption implements PaymentOption {
   
   URL = 'https://pass.hci.uni-konstanz.de/bachelorcard';
   merchantName = '';
-  public countryConfig(req: any): AxiosRequestConfig {
+  public countryConfig(req: BachelorCardRequest): AxiosRequestConfig {
     const xmldata =
       `
         <?xml version="1.0" encoding="utf-8"?>
