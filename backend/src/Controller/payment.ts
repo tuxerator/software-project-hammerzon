@@ -4,7 +4,8 @@ import {Request, Response} from 'express';
 import OrderController from './orderCon';
 import { HciPalOption } from './PaymentOptions/hcipaloption';
 import { PaymentOption } from './PaymentOptions/paymentoption';
-
+import { BachelorOption } from './PaymentOptions/bacheloroption';
+import { xml2json } from 'xml-js';
 
 
 
@@ -16,7 +17,8 @@ export class PaymentController
 {
   order:OrderController;
   payOptions:{[key in PaymentType]:PaymentOption} = {
-    [PaymentType.HCIPAL]:new HciPalOption()
+    [PaymentType.HCIPAL]:new HciPalOption(),
+    [PaymentType.BACHELORCARD]:new BachelorOption()
   };
 
 
@@ -24,17 +26,31 @@ export class PaymentController
     this.order = order;
   }
 
+  /**
+   * 
+   * @param request   
+   * {
+   *   accountName: 'name'
+   *   paymentType: 'HCIPAL'            
+   * }
+   * {
+   *   accountName: 'full_name'
+   *   cardNumber: 'card_number'
+   *   merchantName: 'merchant_name'
+   *   paymentType: 'BACHELORCARD' | 1
+   * }
+   * @param response 
+   */
   public async IsFromGermany(request: SessionRequest,response: Response):Promise<void>
   {
 
-    const accountName = request.body.accountName;// {accountName:'armin@admin.com'}
-
+    const req = request.body;// {accountName:'armin@admin.com'}
     const paymentType: PaymentType = request.body.paymentType;
     const paymentConfig = this.payOptions[paymentType];
-    const countryConfig = paymentConfig.countryConfig(accountName);
-
+    const countryConfig = paymentConfig.countryConfig(req);
    axios(countryConfig).then((axiosResponse)=>
    {
+      console.log(axiosResponse.data);
       const data = paymentConfig.countryParser(axiosResponse.data);
       if(!data.success)
       {
@@ -43,14 +59,14 @@ export class PaymentController
         return;
       }
 
-      if(!(data.country === 'germany'))
+      if(!(data.country === 'germany' || data.country === 'de'))
       {
         response.status(403);
         response.send({message:'is not from germany'});
         return;
       }
 
-      request.session.paymentAccount = {name:accountName,paymentType};
+      request.session.paymentAccount = {name:req.accountName,paymentType};
       response.status(200);
       response.send({message:'is from germany',code: 200});
 
@@ -62,16 +78,27 @@ export class PaymentController
   }
   // MiddelWare => isRequired Password + (Session.paymentAccount Correct Account)
   /**
-   * request: postOrder
-   *          accountPassword
-   *          accountName
-   *          paymentType
+   * request: 
+   * - hcipal
+   * postOrder
+   * accountPassword
+   * accountName
+   * paymentType
+   * - bachelorcard
+   * postOrder
+   * merchantname
+   * cardNumber
+   * fullName
+   * securityCode
+   * expirationDate
+   * paymentType
+   * 
    */
   public async Payment(request: SessionRequest,response: Response): Promise<void>
   {
     const postOrder = request.body.postOrder;
-    const accountPassword = request.body.password;
-    const accountName = request.session.paymentAccount.name;
+    //const accountPassword = request.body.password;
+    //const accountName = request.session.paymentAccount.name;
     const paymentType: PaymentType = request.body.paymentType;
 
     if(request.session.paymentAccount.paymentType !== paymentType)
@@ -93,12 +120,12 @@ export class PaymentController
     const amount = pap.product.prize * (pap.product.duration.getTime() / (3600 * 1000));
 
     const paymentConfig = this.payOptions[paymentType];
-    const checkConfig = paymentConfig.checkConfig(accountName,accountPassword,amount);
+    // add a new RequestType in types.ts for more payment options
+    const checkConfig = paymentConfig.checkConfig(request.body,amount);
+    console.log(checkConfig);
     try
     {
-
       const axiosResponse = await axios(checkConfig);
-      console.log(axiosResponse);
       const data = paymentConfig.checkParser(axiosResponse.data);
       console.log(data);
       if(data.success){
@@ -124,6 +151,7 @@ export class PaymentController
       }
     }catch(error){
       response.status(403);
+      console.log(error);
       response.send({message:error.response.data.error});
     }
   }

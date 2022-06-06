@@ -1,16 +1,18 @@
 import { AxiosRequestConfig } from 'axios';
+import { HciPalRequest } from '../../types';
 import { PaymentOption, Success } from './paymentoption';
+
 
 export class HciPalOption implements PaymentOption {
 
   URL='https://pass.hci.uni-konstanz.de/hcipal/';
 
-  public countryConfig(accountName:string):AxiosRequestConfig
+  public countryConfig(req:any):AxiosRequestConfig
   {
     return {
       url: this.URL + 'country',
       method:'post',
-      data:{accountName}
+      data: {accountName : req.accountName}
     };
   }
 
@@ -19,12 +21,12 @@ export class HciPalOption implements PaymentOption {
     return {success:data.success,country:data.country};
   }
 
-  public checkConfig(accountName:string,password:string,amount:number):AxiosRequestConfig
+  public checkConfig(req: HciPalRequest,amount:number):AxiosRequestConfig
   {
     return {
       url: this.URL + 'check',
       method:'post',
-      data:{accountName,accountPassword:password,amount},
+      data:{accountName : req.accountName,accountPassword:req.accountPassword,amount},
     };
   }
 
