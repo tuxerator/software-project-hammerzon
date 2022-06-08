@@ -20,6 +20,10 @@ interface IUser extends Document{
         city: String,
         country:String,
     }
+    /*
+    appointments: [{
+
+     */
 }
 
 
