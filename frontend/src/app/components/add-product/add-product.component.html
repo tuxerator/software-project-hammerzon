@@ -72,7 +72,7 @@
             <div class="input-group has-validation" id="date selector">
               <span class="input-group-text">{{index + 1}}.</span>
               <input aria-label="Username" class="form-control" formControlName="{{name}}"
-                     placeholder="Suche eine Termin aus" required type="datetime-local">
+                     placeholder="Suche eine Termin aus" required type="date">
               <button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>
               <div *ngIf="!addProductForm.controls[name]?.invalid" class="valid-feedback was-validated">Gültiger
                 Termin
