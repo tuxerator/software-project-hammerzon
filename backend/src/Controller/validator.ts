@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { SessionRequest } from '../types';
 import { Types } from 'mongoose';
-import { IAppointment, IProduct, Product } from '../Models/Product';
+import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import { IAppointment, IOrder, Order } from '../Models/Order';
+import { User } from '../Models/User';
 
 export type Validator = (request: Request, response: Response) => boolean
 export type SubRequest = { body: any };
@@ -155,7 +157,7 @@ export class ValidatorLists {
         Validators.isAuthorized('user'),
         Validators.isRequired('productId'),
         Validators.isValidObjectId('productId'),
-        Validators.isRequired('appointmentIndex')
+        Validators.isRequired('appointment')
     ];
 
 }
@@ -200,25 +202,56 @@ export class ValidatorGroups {
 
 }
 
-export const isValidAppointment = async (req: Request, res: Response) => {
+/**
+ * Checks if the new appointment does not overlap with any existing appointment of the user offering the product
+ */
+export const isValidAppointment = async (req: Request, res: Response): Promise<void> => {
+    const product: IProduct = await Product.findById(new Types.ObjectId(req.body.productId)).exec();
+    const productAvailability: IAvailability[] = product.availability;
+    const appointment: IAppointment = req.body.appointment;
+    // Get all appointments of the user offering the product
+    const orders: IOrder[] = await Order.where('product').equals(product._id).exec();
+    const appointments: IAppointment[] = orders.map(order => order.appointment);
 
-    const appointmentToValidate: IAppointment = req.body;
-    const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
-    const appointments: IAppointment[] = product.appointments;
-    for (let appointment of appointments) {
-        // Check weather the new appointment starts within an exising one
-        if ((appointment.startTime.getTime() >= appointmentToValidate.startTime.getTime()) &&
-            (appointmentToValidate.startTime.getTime() <= appointment.endTime.getTime())) {
-            res.status(500);
-            res.send(`Appointment overlaps with ${ appointment }`); // If so send false and end validation
+    // Check if the new appointment overlaps with any existing appointment
+    for (const existingAppointment of appointments) {
+        if (existingAppointment.startTime < appointment.endTime && existingAppointment.endTime > appointment.startTime) {
+            res.status(400);
+            res.send({ code: 400, message: 'Appointment overlaps with existing appointment' });
             return;
         }
+    }
 
-        // Check weather the new appointment ends within an existing one.
-        if ((appointment.startTime.getTime() >= appointmentToValidate.endTime.getTime()) &&
-            (appointmentToValidate.endTime.getTime() <= appointment.endTime.getTime())) {
-            res.status(500);
-            res.send(`Appointment overlaps ${ appointment }`); // If so send false and end validation
+    // Check if the new appointment lies outside the availability of the product
+    for (const availability of productAvailability) {
+        if (availability.startDate < appointment.startTime && availability.endDate > appointment.endTime) {
+            res.status(400);
+            res.send({ code: 400, message: 'Appointment lies outside the availability of the product' });
+            return;
+        }
+        if (product.defaultTimeFrame.start.getTime() > getDayTime(appointment.startTime) && product.defaultTimeFrame.end.getTime() < getDayTime(appointment.endTime)) {
+            res.status(400);
+            res.send({ code: 400, message: 'Appointment lies outside the default time frame of the product' });
+            return;
+        }
+    }
+}
+
+
+
+/**
+ * Checks if the new availability does not overlap with an existing one
+ */
+export const isValidAvailability = async (req: Request, res: Response) => {
+
+    const availabilityToValidate: IAvailability = req.body;
+    const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+    const availabilities: IAvailability[] = product.availability;
+    for (let availability of availabilities) {
+        // Check weather the new availability overlaps with an exising one
+        if (availability.startDate <= availabilityToValidate.endDate && availability.endDate >= availabilityToValidate.startDate) {
+            res.status(400);
+            res.send({ code: 400, message: 'Availability overlaps with existing availability' });
             return;
         }
     }
@@ -228,4 +261,9 @@ export const asyncHandler = (callback: { (req: Request<ParamsDictionary, any, an
     return (req: Request, res: Response, next: NextFunction) => {
         callback(req, res, next).catch(next);
     }
+}
+
+// Get time without date in milliseconds
+const getDayTime = (date: Date): number => {
+    return date.getTime() - date.getTime() % (1000 * 60 * 60 * 24);
 }

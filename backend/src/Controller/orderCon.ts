@@ -52,38 +52,38 @@ class OrderController{
             response.send('there is no order with such an userid');
         }
     }
+
     /**
-     * registers your order. This method is called when you move from the product page to the order page
+     * Validates a order for correctness
      */
-    public async registerOrder(request: SessionRequest, response: Response): Promise<void>{
+    public async validateOrder(request: SessionRequest, response: Response): Promise<void>{
+        response.status(200);
+        response.send({ code: 200, message: 'Order is valid' });
+    }
 
-        const postedOrder:PostOrder = request.body;
-        const updateProduct = await Product.findById(postedOrder.productId);
-        const index = parseInt(String(postedOrder.appointmentIndex));
-
-        if(updateProduct.appointments[index].isReserved === true)
+    /**
+     * Add a new order to the database
+     */
+    public async addOrder(request: SessionRequest, response: Response): Promise<void>{
+        const order: PostOrder = request.body;
+        const orderingUserId = request.session.user._id;
+        if(orderingUserId && Types.ObjectId.isValid(orderingUserId))
         {
-            response.status(409);
-            response.send(false);
+            const dbOrder = new Order({
+                product : order.productId,
+                orderingUser : orderingUserId,
+                appointment : order.appointment,
+                confirmed: false
+            });
+            await dbOrder.save();
+            response.status(200);
+            response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id });
         }
         else
         {
-            const newOrder = new Order({
-                product : new mongoose.Types.ObjectId(postedOrder.productId),
-                orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
-                timeOfOrder : new Date(),
-                appointment : updateProduct.appointments[index],
-                confirmed : false
-            });
-            await newOrder.save();
-
-            updateProduct.appointments[index].isReserved = true;
-            await updateProduct.save();
-
-            response.status(201);
-            response.send(true);
+            response.status(500);
+            response.send({ code: 500, message: 'UserID does not exist' });
         }
-
     }
 
     public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>

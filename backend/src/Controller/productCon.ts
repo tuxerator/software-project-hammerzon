@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Helper from '../helpers';
-import { IAppointment, IProduct, Product } from '../Models/Product';
+import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Model, Types } from 'mongoose';
 
@@ -76,25 +76,6 @@ class ProductController {
         }
     }
 
-
-    public async resetAppointment(request: Request, response: Response): Promise<void> {
-        console.log('resetting');
-        const product: PostOrder = request.body;
-        const index = parseInt(String(product.appointmentIndex));
-        const id = product.productId;
-        if (id && Types.ObjectId.isValid(id)) {
-            const updateProduct = await Product.findById(id);
-            (await updateProduct).appointments[index].isReserved = false;
-            (await updateProduct).save();
-            console.log('appointment reset');
-            response.status(200);
-        } else {
-            response.status(500);
-            response.send('There is no product with such an id');
-        }
-    }
-
-
     public async addProduct(request: SessionRequest, response: Response): Promise<void> {
         const product = request.body;
         console.log(product);
@@ -112,11 +93,11 @@ class ProductController {
         response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
     }
 
-    public async addApointment(req: Request, res: Response): Promise<void> {
-        const appointment: IAppointment = req.body;
+    public async addAvailability(req: Request, res: Response): Promise<void> {
+        const availability: IAvailability = req.body;
         const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
 
-        product.appointments.push(appointment);
+        product.availability.push(availability);
         await product.save();
 
         res.status(200);
