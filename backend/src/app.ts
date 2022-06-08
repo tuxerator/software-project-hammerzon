@@ -182,9 +182,9 @@ app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus)
 
 // Payment
 
-app.get('/api/payment/hcipal/country',payment.IsFromGermany.bind(payment));
+app.get('/api/payment/country',payment.IsFromGermany.bind(payment));
 
-app.post('/api/payment/hcipal/pay',payment.Payment.bind(payment));
+app.post('/api/payment/pay',payment.Payment.bind(payment));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());

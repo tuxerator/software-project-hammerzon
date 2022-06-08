@@ -79,13 +79,14 @@ export class BachelorOption implements PaymentOption {
   {
     const obj : any = xml2js(data, {compact : true});
     const response = obj.transactionResponse.response; 
-    const code = response['transaction-data'].transactionCode._text;
-    console.log(code);
     if(response.status._text === '200: Success'){
+      const code = response['transaction-data'].transactionCode._text;
+      console.log(code);
       return {success : true, token : code};
     }
     else{
-      return {success : false, token : code};
+
+      return {success : false, token : ''};
     }
   }
 
