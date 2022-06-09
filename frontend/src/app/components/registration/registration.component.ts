@@ -31,6 +31,7 @@ export class RegistrationComponent implements OnInit {
     return password?.value === confirmPassword?.value ? null : { notMatch: true };
   };
 
+
   public registerForm: FormGroup = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
