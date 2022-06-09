@@ -25,6 +25,33 @@ export class OrderProductComponent implements OnInit {
               private router: Router) {
   }
 
+  paySWP: Boolean = false;
+  payBC: Boolean = false;
+  payHCI: Boolean = false;
+  bestätigt: Boolean = false;
+
+  switchBest(): void{
+    this.bestätigt = true;
+  }
+
+  switchSWP() : void {
+    this.paySWP = true;
+    this.payBC = false;
+    this.payHCI = false;
+  }
+
+  switchHCI(): void {
+    this.payHCI = true;
+    this.paySWP = false;
+    this.payBC = false;
+  }
+
+  switchBC(): void {
+    this.payBC = true;
+    this.payHCI = false;
+    this.paySWP = false;
+  }
+
   ngOnInit(): void {
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
