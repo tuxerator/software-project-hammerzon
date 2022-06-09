@@ -168,9 +168,9 @@ export class PaymentController
       // Errors from axois and co
       response.status(403);
       console.log(error);
-      const data = paymentConfig.errorParser(error.response.data);
+      //const data = paymentConfig.errorParser(error.response.data);
       // TO DO: parseError To Right json-format/js-object
-      response.send({message:data.error});
+      //response.send({message:data.error});
     }
   }
 
