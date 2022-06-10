@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { HciPalSWPRequest } from '../../types';
-import { PaymentOption, Success } from './paymentoption';
+import { CheckRequest, CountryRequest, PaymentOption, Success } from './paymentoption';
 
 export class SwpSafeOption implements PaymentOption {
 
@@ -26,10 +26,10 @@ export class SwpSafeOption implements PaymentOption {
     }
   }
 
-  public countryConfig(req:HciPalSWPRequest):AxiosRequestConfig
+  public countryConfig(req:CountryRequest):AxiosRequestConfig
   {
     return {
-      url: this.URL + `country/code/${encodeURIComponent(req.accountName)}`,
+      url: this.URL + `country/code/${encodeURIComponent(req.account)}`,
       method:'get'
     };
   }
@@ -40,10 +40,10 @@ export class SwpSafeOption implements PaymentOption {
     return {success:obj.success,country:obj.country};
   }
 
-  public checkConfig(req: HciPalSWPRequest,amount:number):AxiosRequestConfig
+  public checkConfig(req:CheckRequest,amount:number):AxiosRequestConfig
   {
     return {
-      url: this.URL + `check/code/${encodeURIComponent(req.accountName)}/amount/${encodeURIComponent(amount)}`,
+      url: this.URL + `check/code/${encodeURIComponent(req.account)}/amount/${encodeURIComponent(amount)}`,
       method:'get',
     };
   }

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrderService } from 'src/app/services/order.service';
+import { OrderService, PostOrder } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
 import { ProductService } from 'src/app/services/product.service';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { PaymentService, PaymentType } from 'src/app/services/payment.service';
 
 @Component({
   templateUrl: './order-product.component.html',
@@ -15,45 +17,89 @@ export class OrderProductComponent implements OnInit {
   product : Product|undefined;
   user: User|undefined;
   appointment:Appointment|undefined;
-  appointmentIndex = 0; 
+  appointmentIndex = 0;
   orderRegistered : Boolean|undefined;
   cancelled : Boolean = false;
+
+  public passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    console.log( control);
+    return  null //: { notMatch: true };
+  };
+
+  public accountForm: FormGroup = this.formBuilder.group({
+    account: new FormControl('', [Validators.email,Validators.required]),
+    password: new FormControl('', []),
+    fullName: new FormControl('', []),
+    expirationDate: new FormControl('', []),
+  })
+
+
+
+
+
   constructor(private route:ActivatedRoute,
               private productService:ProductService,
               private authService: AuthService,
               private orderService: OrderService,
-              private router: Router) {
+              private router: Router,
+              private formBuilder: FormBuilder,
+              private payment:PaymentService) {
   }
 
-  paySWP: Boolean = false;
-  payBC: Boolean = false;
-  payHCI: Boolean = false;
+
+
+
+
+  paymentType:PaymentType = PaymentType.HCIPAL;
+
   bestaetigt: Boolean = false;
 
   switchBest(): void{
-    this.bestaetigt = true;
+    if(!this.bestaetigt)
+    {
+      this.accountForm.markAllAsTouched()
+      console.log(this.accountForm.value);
+      if(this.accountForm.valid)
+      {
+        const account = this.accountForm.value.account;
+        this.payment.getRightCountry(this.paymentType,account,`${this.product?.user?.firstName} ${this.product?.user?.lastName} - Hammerzon (Handwerker Portal Gruppe 01)`)
+        .subscribe({
+          next: () => this.bestaetigt = true,
+          error: (err) => console.log(err)
+        })
+      }
+    }
+    else{
+      this.accountForm.markAllAsTouched();
+      console.log(this.accountForm);
+      if(this.accountForm.valid)
+      {
+        const password = this.accountForm.value.password;
+        const expirationDate= this.accountForm.value.expirationDate;
+        const fullName = this.accountForm.value.fullName
+        const postOrder: PostOrder = {productId:this.product!._id, appointmentIndex:this.appointmentIndex};
+        this.payment.getPaymentFinish(this.paymentType,postOrder,password,fullName,expirationDate)
+        .subscribe({
+          next: () => {
+            const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+            this.router.navigateByUrl(url);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        })
+      }
+    }
   }
 
-  switchSWP() : void {
-    this.paySWP = true;
-    this.payBC = false;
-    this.payHCI = false;
-    this.bestaetigt = false;
+  switchPaymentType(type:PaymentType):void {
+    this.paymentType = type;
   }
 
-  switchHCI(): void {
-    this.payHCI = true;
-    this.paySWP = false;
-    this.payBC = false;
-    this.bestaetigt = false;
+  public get PaymentType() {
+    return PaymentType;
   }
 
-  switchBC(): void {
-    this.payBC = true;
-    this.payHCI = false;
-    this.paySWP = false;
-    this.bestaetigt = false;
-  }
 
   ngOnInit(): void {
     // get the productinfo again
@@ -61,6 +107,8 @@ export class OrderProductComponent implements OnInit {
     const productIDFromRoute = String(routeParams.get('id'));
     const appointmentIndex = parseInt(String(routeParams.get('i')));
     this.appointmentIndex = appointmentIndex;
+
+
     /**
      * get information about the product , register the order (make functions?)
      */
@@ -74,6 +122,8 @@ export class OrderProductComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
+
+          //this.router.navigateByUrl('not-available');
         }
       }
     );
@@ -89,30 +139,6 @@ export class OrderProductComponent implements OnInit {
       }
     );
   }
-
-  register(): void {
-    if (this.product) {
-      this.orderService.registerOrder(this.product._id, this.appointmentIndex).subscribe(
-        {
-          next: (val) => {
-            this.orderRegistered = val;
-            console.log('orderRegistered:' + this.orderRegistered);
-            if (this.orderRegistered === true) {
-              const url = `productdetails/${ this.product?._id }/order-product/${ this.appointmentIndex }/order-finalized`;
-              this.router.navigateByUrl(url);
-            } else {
-              // appointment not available
-              this.router.navigateByUrl('not-available');
-            }
-          },
-          error: (err) => {
-            console.error(err);
-          }
-        }
-      );
-    }
-  }
-
 
   getDurString(): string {
     return getDurationString(this.product?.duration);

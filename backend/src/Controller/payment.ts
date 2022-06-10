@@ -3,7 +3,7 @@ import { PaymentType, SessionRequest } from '../types';
 import {Request, Response} from 'express';
 import OrderController from './orderCon';
 import { HciPalOption } from './PaymentOptions/hcipaloption';
-import { PaymentOption } from './PaymentOptions/paymentoption';
+import { CheckRequest, CountryRequest, PaymentOption } from './PaymentOptions/paymentoption';
 import { BachelorOption } from './PaymentOptions/bacheloroption';
 import { xml2json } from 'xml-js';
 
@@ -31,11 +31,11 @@ export class PaymentController
   }
 
   /**
-   * 
-   * @param request   
+   *
+   * @param request
    * {
    *   accountName: 'name'
-   *   paymentType: 'HCIPAL'            
+   *   paymentType: 'HCIPAL'
    * }
    * {
    *   accountName: 'full_name'
@@ -43,16 +43,26 @@ export class PaymentController
    *   merchantName: 'merchant_name'
    *   paymentType: 'BACHELORCARD' | 2
    * }
-   * @param response 
+   * @param response
    */
   public async IsFromGermany(request: SessionRequest,response: Response):Promise<void>
   {
 
-    const req = request.body;// {accountName:'armin@admin.com'}
+
+
+
+
     const paymentType: PaymentType = request.body.paymentType;
     // get the right payment config = (every information needed for a axios request)
     const paymentConfig = this.payOptions[paymentType];
+
+
+    const req = new CountryRequest;
+    req.account = request.body.account;
+    req.merchantInfo = request.body.merchantInfo;
+
     const countryConfig = paymentConfig.countryConfig(req);
+
    axios(countryConfig).then((axiosResponse)=>
    {
       const data = paymentConfig.countryParser(axiosResponse.data);
@@ -71,7 +81,7 @@ export class PaymentController
         return;
       }
 
-      request.session.paymentAccount = {name:req.accountName,paymentType};
+      request.session.paymentAccount = {account:req.account,paymentType};
       response.status(200);
       response.send({message:'Is from germany',code: 200});
 
@@ -83,7 +93,7 @@ export class PaymentController
   }
   // MiddelWare => isRequired Password + (Session.paymentAccount Correct Account)
   /**
-   * request: 
+   * request:
    * - hcipal, swpsafe
    * postOrder
    * accountPassword
@@ -97,7 +107,7 @@ export class PaymentController
    * securityCode
    * expirationDate
    * paymentType
-   * 
+   *
    */
   public async Payment(request: SessionRequest,response: Response): Promise<void>
   {
@@ -108,11 +118,13 @@ export class PaymentController
     // If it is not the same PaymentType than the given type from our country test
     if(request.session.paymentAccount.paymentType !== paymentType)
     {
+      request.session.paymentAccount = undefined;
       // send error
       response.status(403);
       response.send({message:'Wrong Payment Type'});
       return;
     }
+
     // Get the Product Appointment Pair form the db
     const pap = await this.order.getAppointProductPair(postOrder);
     // If it does not exist or the appointment is reserved
@@ -130,7 +142,17 @@ export class PaymentController
     // get the right payment config = (every information needed for a axios request)
     const paymentConfig = this.payOptions[paymentType];
     // add a new RequestType in types.ts for more payment options
-    const checkConfig = paymentConfig.checkConfig(request.body,amount);
+    const body = request.body;
+
+    const req = new CheckRequest();
+    req.account = request.session.paymentAccount.account;
+    req.expirationDate = request.body.expirationDate;
+    req.fullName = request.body.fullName;
+    req.merchantInfo = request.body.merchantInfo;
+    req.password = request.body.password;
+
+
+    const checkConfig = paymentConfig.checkConfig(req,amount);
     console.log(checkConfig);
     try
     {
@@ -172,6 +194,8 @@ export class PaymentController
       // TO DO: parseError To Right json-format/js-object
       //response.send({message:data.error});
     }
+
+    //request.session.paymentAccount = undefined;
   }
 
 
