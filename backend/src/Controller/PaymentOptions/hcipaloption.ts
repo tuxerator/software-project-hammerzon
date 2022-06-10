@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { HciPalSWPRequest } from '../../types';
-import { PaymentOption, Success } from './paymentoption';
+import { PaymentError, PaymentOption, Success } from './paymentoption';
 
 
 // Information of an HciPal Payment Option
@@ -48,5 +48,10 @@ export class HciPalOption implements PaymentOption {
   public payParser(data:any) : Success
   {
     return {success:data.success};
+  }
+
+  public errorParser(data: any) : PaymentError
+  {
+    return {error : data.error};
   }
 }

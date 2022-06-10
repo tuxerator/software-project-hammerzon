@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { PaymentOption, Success } from './paymentoption';
+import { PaymentError, PaymentOption, Success } from './paymentoption';
 import { xml2js } from 'xml-js';
 import { BachelorCardRequest } from '../../types';
 
@@ -123,6 +123,14 @@ export class BachelorOption implements PaymentOption {
     else{
       return {success : false};
     }
+  }
+
+  public errorParser(data: any) : PaymentError
+  {
+    const obj : any = xml2js(data, {compact : true});
+    const response = obj.transactionResponse.response;
+    const message = response.error._text;
+    return {error : message};
   }
 
 }

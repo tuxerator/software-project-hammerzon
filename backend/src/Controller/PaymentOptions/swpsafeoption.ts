@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { HciPalSWPRequest } from '../../types';
-import { PaymentOption, Success } from './paymentoption';
+import { PaymentError, PaymentOption, Success } from './paymentoption';
 
 export class SwpSafeOption implements PaymentOption {
 
@@ -67,4 +67,6 @@ export class SwpSafeOption implements PaymentOption {
     const obj = this.CsvToJson(data)[0];
     return {success:obj.success};
   }
+
+  public errorParser: (data: any) => PaymentError;
 }
