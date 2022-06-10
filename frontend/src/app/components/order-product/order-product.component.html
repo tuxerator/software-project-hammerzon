@@ -55,20 +55,21 @@
               <div class="text-white">{{user?.email}}</div>
             </div>
             <div class="col-lg-6 align-self-center">
-              <div class="d-flex justify-content-center">
-                <a (click)="register()">
+              <div class="row mt-2 justify-content-center">
+
                   <!-- <button class="btn btn-primary btn-lg" type="button">Zahlungspflichtig Bestellen</button>-->
-                  <button class="btn btn-default" data-bs-toggle="modal" (click)="this.switchHCI()" data-bs-target="#exampleModal">
-                    <img src="../../../assets/testHCIPal.png" width="150" /> 
-                  </button>
-                  <button class="btn btn-default" (click)="this.switchSWP()" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <img src="../../../assets/SWPsafe.png" width="150" /> 
-                  </button>
-                  <button type="button" class="btn btn-default"  (click)="this.switchBC()" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <img src="../../../assets/bachelorcard.png" width="150" /> 
+
+                  <button class="col ms-2 me-2 btn btn-primary" data-bs-toggle="modal" (click)="this.switchPaymentType(PaymentType.HCIPAL)" data-bs-target="#exampleModal">
+                    <img src="../../../assets/hciPal.png" class="img-fluid" />
                   </button>
 
-                </a>
+                  <button class="col me-2 btn btn-primary" (click)="this.switchPaymentType(PaymentType.SWPSAFE)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <img src="../../../assets/swpsafe.png" class="img-fluid" />
+                  </button>
+                  <button class="col me-2 btn btn-primary"  (click)="this.switchPaymentType(PaymentType.BACHELORCARD)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <img src="../../../assets/bachelorcard.png" class="img-fluid"/>
+                  </button>
+
               </div>
             </div>
           </div>
@@ -97,20 +98,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <!--<h5 class="modal-title" id="exampleModalLabel"></h5>-->
-        <img *ngIf="this.payBC" src="../../../assets/bachelorcard.png" width="100">
-        <img *ngIf="this.payHCI" src="../../../assets/testHCIPal.png" width="100">
-        <img *ngIf="this.paySWP" src="../../../assets/SWPsafe.png" width="100">
+        <img *ngIf="paymentType === PaymentType.BACHELORCARD" src="../../../assets/bachelorcard.png" width="100">
+        <img *ngIf="paymentType === PaymentType.HCIPAL" src="../../../assets/hciPal.png" width="100">
+        <img *ngIf="paymentType === PaymentType.SWPSAFE" src="../../../assets/swpsafe.png" width="100">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="form-group">
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
-      </div>
-      <div *ngIf="this.bestätigt" class="form-group">
-        <input type="password" class="form-control" id="passwordInput1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
-      </div>
+      <form [formGroup]="accountForm"  class="form-group">
+        <input type="email" class="form-control"  formControlName="account" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail angeben." [readonly]="bestaetigt">
+        <input *ngIf="bestaetigt" class="form-control" type="password" formControlName="password"  id="passwordInput1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
+      </form>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-        <button type="button" data-bs-dismiss="modal" (click)="this.switchBest()" class="btn btn-success">Bestätigen</button>
+        <button type="button" (click)="this.switchBest()" class="btn btn-success">Bestätigen</button>
       </div>
     </div>
   </div>

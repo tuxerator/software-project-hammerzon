@@ -1,22 +1,22 @@
 import { AxiosRequestConfig } from 'axios';
-import { PaymentError, PaymentOption, Success } from './paymentoption';
+import { CheckRequest, CountryRequest, PaymentError, PaymentOption, Success } from './paymentoption';
 import { xml2js } from 'xml-js';
 import { BachelorCardRequest } from '../../types';
 
 export class BachelorOption implements PaymentOption {
-  
+
   URL = 'https://pass.hci.uni-konstanz.de/bachelorcard';
   merchantName = '';
-  public countryConfig(req: BachelorCardRequest): AxiosRequestConfig {
+  public countryConfig(req: CountryRequest): AxiosRequestConfig {
     const xmldata =
       `
         <?xml version="1.0" encoding="utf-8"?>
         <transactionRequest type="country">
         <version>1.0.0</version>
         <merchantInfo>
-            <name>${req.merchantName}</name>
+            <name>${req.merchantInfo}</name>
         </merchantInfo>
-        <cardNumber>${req.cardNumber}</cardNumber>
+        <cardNumber>${req.account}</cardNumber>
         </transactionRequest>
       `;
 
@@ -31,7 +31,7 @@ export class BachelorOption implements PaymentOption {
   public countryParser(data:any) : Success & {country:string}
   {
     const obj : any = xml2js(data, {compact : true});
-    const response = obj.transactionResponse.response; 
+    const response = obj.transactionResponse.response;
     const country = response['transaction-data'].country._text;
     console.log(country);
     if(response.status._text === '200: Success'){
@@ -41,22 +41,22 @@ export class BachelorOption implements PaymentOption {
       return {success : false, country : country};
     }
   }
-  public checkConfig(req : BachelorCardRequest, amount:number) : AxiosRequestConfig
+  public checkConfig(req : CheckRequest, amount:number) : AxiosRequestConfig
   {
-    this.merchantName = req.merchantName;
-    const xmldata = 
+    this.merchantName = req.merchantInfo;
+    const xmldata =
       `
       <?xml version="1.0" encoding="utf-8"?>
       <transactionRequest type="validate">
       <version>1.0.0</version>
       <merchantInfo>
-          <name>${req.merchantName}</name>
+          <name>${req.merchantInfo}</name>
       </merchantInfo>
       <payment type="bachelorcard">
           <paymentDetails>
-              <cardNumber>${req.cardNumber}</cardNumber>
+              <cardNumber>${req.account}</cardNumber>
               <name>${req.fullName}</name>
-              <securityCode>${req.securityCode}</securityCode>
+              <securityCode>${req.password}</securityCode>
               <expirationDate>${req.expirationDate}</expirationDate>
           </paymentDetails>
           <dueDetails>
@@ -78,7 +78,7 @@ export class BachelorOption implements PaymentOption {
   public checkParser(data:any): Success & {token:string}
   {
     const obj : any = xml2js(data, {compact : true});
-    const response = obj.transactionResponse.response; 
+    const response = obj.transactionResponse.response;
     if(response.status._text === '200: Success'){
       const code = response['transaction-data'].transactionCode._text;
       console.log(code);
@@ -93,7 +93,7 @@ export class BachelorOption implements PaymentOption {
 
   public payConfig(token:string):AxiosRequestConfig
   {
-    const xmldata = 
+    const xmldata =
       `
       <?xml version="1.0" encoding="utf-8"?>
       <transactionRequest type="pay">
@@ -116,7 +116,7 @@ export class BachelorOption implements PaymentOption {
   public payParser(data:any) : Success
   {
     const obj : any = xml2js(data, {compact : true});
-    const response = obj.transactionResponse.response; 
+    const response = obj.transactionResponse.response;
     if(response.status._text === '200: Success'){
       return {success : true};
     }

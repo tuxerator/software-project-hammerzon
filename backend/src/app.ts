@@ -36,7 +36,7 @@ declare global {
   interface Session {
     user?: IUser,
     paymentAccount?:{
-      name:string,
+      account:string,
       paymentType:PaymentType
     }
   }
@@ -182,7 +182,7 @@ app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus)
 
 // Payment
 
-app.get('/api/payment/country',payment.IsFromGermany.bind(payment));
+app.post('/api/payment/country',payment.IsFromGermany.bind(payment));
 
 app.post('/api/payment/pay',payment.Payment.bind(payment));
 
