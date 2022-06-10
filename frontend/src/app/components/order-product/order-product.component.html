@@ -105,12 +105,12 @@
       <div class="form-group">
         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
       </div>
-      <div *ngIf="this.bestätigt" class="form-group">
+      <div *ngIf="this.bestaetigt" class="form-group">
         <input type="password" class="form-control" id="passwordInput1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-        <button type="button" data-bs-dismiss="modal" (click)="this.switchBest()" class="btn btn-success">Bestätigen</button>
+        <button type="button" (click)="this.switchBest()" class="btn btn-success">Bestätigen</button>
       </div>
     </div>
   </div>

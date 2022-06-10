@@ -28,28 +28,31 @@ export class OrderProductComponent implements OnInit {
   paySWP: Boolean = false;
   payBC: Boolean = false;
   payHCI: Boolean = false;
-  bestätigt: Boolean = false;
+  bestaetigt: Boolean = false;
 
   switchBest(): void{
-    this.bestätigt = true;
+    this.bestaetigt = true;
   }
 
   switchSWP() : void {
     this.paySWP = true;
     this.payBC = false;
     this.payHCI = false;
+    this.bestaetigt = false;
   }
 
   switchHCI(): void {
     this.payHCI = true;
     this.paySWP = false;
     this.payBC = false;
+    this.bestaetigt = false;
   }
 
   switchBC(): void {
     this.payBC = true;
     this.payHCI = false;
     this.paySWP = false;
+    this.bestaetigt = false;
   }
 
   ngOnInit(): void {
