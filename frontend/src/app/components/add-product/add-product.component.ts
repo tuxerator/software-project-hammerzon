@@ -79,6 +79,7 @@ export class AddProductComponent implements OnInit {
     appointment.date = new Date(appointment.date);
     this.addProductForm.setControl('appointment0',new FormControl(this.getDateTimeString(appointment.date),[Validators.required]));
 
+
     for( let i = 1; i < aProduct.appointments.length; i++)
     {
       const appointment = aProduct.appointments[i];
@@ -96,14 +97,18 @@ export class AddProductComponent implements OnInit {
 
   private getDateTimeString(date:Date):string
   {
-    //let dateString:string = date.toLocaleString();
-    const dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`
+    // Create a Input-readable string
+    const dateString:string = `${this.to2DigitString(date.getFullYear())}
+                                -${this.to2DigitString(date.getMonth()+1)}
+                                -${this.to2DigitString(date.getDate())}
+                                T${this.to2DigitString(date.getHours())}:${this.to2DigitString(date.getMinutes())}`
     console.log(dateString);
 
     return dateString;
   }
 
-  private s(number:number):string
+  // chech wether number has 2 or more digits
+  private to2DigitString(number:number):string
   {
     if(number < 10)
     {
@@ -133,7 +138,7 @@ export class AddProductComponent implements OnInit {
 
       const selectedFile = new ImageSnippet(event.target.result, file);
 
-      this.imageService.uploadImage(selectedFile.file).subscribe({
+      this.imageService.uploadImage(selectedFile.file,this.imageId).subscribe({
           next: (res) => {
             this.imageId = res.id;
           },

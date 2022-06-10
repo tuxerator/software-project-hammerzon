@@ -12,10 +12,14 @@ export class ImageService {
 
   }
 
-  public uploadImage(image: File): Observable<IdMessageResponse> {
+  public uploadImage(image: File,replace_id?:string): Observable<IdMessageResponse> {
     const formData = new FormData();
 
     formData.append('img', image);
+    if(replace_id)
+    {
+      formData.append('replace_id',replace_id)
+    }
 
     return this.http.post<IdMessageResponse>('api/img/upload', formData);
   }

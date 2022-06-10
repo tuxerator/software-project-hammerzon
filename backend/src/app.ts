@@ -150,7 +150,7 @@ app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetApp
 app.post('/api/img/upload', upload.single('img'), image.postImage);
 
 // Removed Images
-app.get('/api/img/:id', image.getImage);
+app.get('/api/img/:id',image.getImage);
 
 // OrderController endpoints
 
