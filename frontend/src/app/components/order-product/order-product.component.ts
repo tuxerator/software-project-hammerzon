@@ -28,9 +28,9 @@ export class OrderProductComponent implements OnInit {
 
   public accountForm: FormGroup = this.formBuilder.group({
     account: new FormControl('', [Validators.email,Validators.required]),
-    password: new FormControl('', []),
-    fullName: new FormControl('', []),
-    expirationDate: new FormControl('', []),
+    password: new FormControl('', [Validators.required]),
+    fullName: new FormControl('', [Validators.required]),
+    expirationDate: new FormControl('', [Validators.required]),
   })
 
 
@@ -146,6 +146,11 @@ export class OrderProductComponent implements OnInit {
 
   getAppointString(): string {
     return getAppointmentString(this.appointment?.date);
+  }
+
+  public isValid(key:string):boolean
+  {
+    return !this.accountForm.controls[key].invalid;
   }
 
 

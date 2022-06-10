@@ -64,7 +64,7 @@
                   </button>
 
                   <button class="col me-2 btn btn-primary" (click)="this.switchPaymentType(PaymentType.SWPSAFE)" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <img src="../../../assets/swpsafe.png" class="img-fluid" />
+                    <img src="../../../assets/SWPsafe.png" class="img-fluid" />
                   </button>
                   <button class="col me-2 btn btn-primary"  (click)="this.switchPaymentType(PaymentType.BACHELORCARD)" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <img src="../../../assets/bachelorcard.png" class="img-fluid"/>
@@ -100,12 +100,26 @@
         <!--<h5 class="modal-title" id="exampleModalLabel"></h5>-->
         <img *ngIf="paymentType === PaymentType.BACHELORCARD" src="../../../assets/bachelorcard.png" width="100">
         <img *ngIf="paymentType === PaymentType.HCIPAL" src="../../../assets/hciPal.png" width="100">
-        <img *ngIf="paymentType === PaymentType.SWPSAFE" src="../../../assets/swpsafe.png" width="100">
+        <img *ngIf="paymentType === PaymentType.SWPSAFE" src="../../../assets/SWPsafe.png" width="100">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form [formGroup]="accountForm"  class="form-group">
-        <input type="email" class="form-control"  formControlName="account" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail angeben." [readonly]="bestaetigt">
-        <input *ngIf="bestaetigt" class="form-control" type="password" formControlName="password"  id="passwordInput1" aria-describedby="emailHelp" placeholder="E-Mail angeben.">
+      <form [formGroup]="accountForm"  class="form-group mx-auto needs-validation" novalidate>
+        <input *ngIf="paymentType === PaymentType.HCIPAL || paymentType === PaymentType.SWPSAFE" type="email" class="form-control has-validation" [class.was-validated]="accountForm.controls['account'].touched" formControlName="account" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail angeben." [readonly]="bestaetigt">
+        <div *ngIf="isValid('account')" class="valid-feedback was-validated">Gültige Email</div>
+        <div *ngIf="!isValid('account')" class="invalid-feedback was-validated">Bitte gültige Email angeben</div>
+        <input *ngIf="paymentType === PaymentType.BACHELORCARD && !bestaetigt" type="text" class="form-control"  formControlName="merchantName" id="merchantNameInput" placeholder="Merchant Name eingeben, muss noch geändert werden!!" [readonly]="bestaetigt">
+        <input *ngIf="paymentType === PaymentType.BACHELORCARD && !bestaetigt" type="email" class="form-control"  formControlName="cardNumber" id="cardNumberInput" placeholder="Kartennummer" [readonly]="bestaetigt">
+        <input *ngIf="bestaetigt && paymentType !== PaymentType.BACHELORCARD" class="form-control" type="password" formControlName="password"  id="passwordInput1" aria-describedby="emailHelp" placeholder="Passwort">
+        <input *ngIf="bestaetigt && paymentType === PaymentType.BACHELORCARD" class="form-control" type="password" formControlName="fullname"  id="fullNameInput" placeholder="Vollständiger Name">
+        <div class="row">
+          <div class="col-sm-6">
+            <input *ngIf="bestaetigt && paymentType === PaymentType.BACHELORCARD" class="form-control" type="text" formControlName="expirationMonth"  id="expirationMonthInput" placeholder="Ablaufmonat z.B 09">
+          </div>
+          <div class="col-sm-6">
+            <input *ngIf="bestaetigt && paymentType === PaymentType.BACHELORCARD" class="form-control" type="text" formControlName="expirationYear"  id="expirationYearInput" placeholder="Ablaufjahr z.B 2024">
+          </div>
+      </div>
+      
       </form>
 
       <div class="modal-footer">
