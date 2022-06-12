@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from 'src/app/models/User';
-import { AuthService } from 'src/app/services/auth.service';
+import { User } from '../../models/User';
+import { AuthService } from '../../services/auth.service';
 
-import { Product, getAppointmentString, getDurationString } from 'src/app/models/Product';
-import { ProductService } from 'src/app/services/product.service';
+import { Product, getAppointmentString, getDurationString } from '../../models/Product';
+import { ProductService } from '../../services/product.service';
+import { delay, timeout } from 'rxjs';
 
 @Component({
   templateUrl: './productdetails.component.html',
@@ -14,6 +15,8 @@ export class ProductdetailsComponent implements OnInit {
   product: Product | undefined;
   //public productID: string;
   user: User | undefined;
+
+  id:string = '';
 
   // Zum formatieren der Daten
 
@@ -33,13 +36,13 @@ export class ProductdetailsComponent implements OnInit {
     //Get the Product name from the current route.
     console.log('kommt zu Params');
     const routeParams = this.route.snapshot.paramMap;
-    const productIDFromRoute = String(routeParams.get('id'));
+    this.id = String(routeParams.get('id'));
 
-    console.log(productIDFromRoute);
+    console.log(this.id);
     console.log(this.productService);
     //Find product that correspond with the name provided in route.
     //this.route= ProductInfo.find(product=>product._id===productIDFromRoute);
-    this.productService.getProductDetails(productIDFromRoute).subscribe(
+    this.productService.getProductDetails(this.id).subscribe(
       {
         next: (val) => {
           this.product = val;
@@ -78,6 +81,21 @@ export class ProductdetailsComponent implements OnInit {
 
   getAppointString(date?: Date): string {
     return getAppointmentString(date);
+  }
+
+  deleteProduct()
+  {
+    this.productService.removeProduct(this.id).subscribe({
+      next:() => {
+        this.router.navigate(['/']);
+      },
+      error:(err) =>
+      {
+        console.log(err.error);
+      }
+    }
+    )
+    
   }
 
 }

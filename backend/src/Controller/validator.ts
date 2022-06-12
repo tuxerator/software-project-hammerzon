@@ -12,11 +12,15 @@ export type SubRequest = { body: any };
 export type SubValidator = (request: SubRequest, response: Response) => boolean;
 
 
-export const ValidatorGroup = (validators: Validator[]) => {
-    return (request: Request, response: Response, next: NextFunction): void => {
+export const ValidatorGroup = (validators:Validator[]) =>
+{
+    return (request:Request,response:Response,next:NextFunction):void =>
+    {
         console.log(request.body);
-        for (const validator of validators) {
-            if (!validator(request, response)) {
+        for(const validator of validators)
+        {
+            if(!validator(request,response))
+            {
                 return;
             }
         }
@@ -24,23 +28,32 @@ export const ValidatorGroup = (validators: Validator[]) => {
     };
 };
 
-export class Validators {
-    public static isRequired(key: string): SubValidator {
-        return (request: SubRequest, response: Response): boolean => {
-            if (request.body[key] !== undefined) {
+//export const ValidatorGroup = (validator:Validator) => ValidatorGroup([validator]);
+
+export class Validators{
+    public static isRequired(key:string):SubValidator
+    {
+        return (request:SubRequest,response:Response):boolean =>
+        {
+            if(request.body[key] !== undefined)
+            {
                 return true;
             }
             response.status(400);
-            response.send({ message: `${ key } is required` });
+            response.send({message:`${key} is required`});
             return false;
         };
     }
 
     // key is the key from where the subobject starts
-    public static subValidators(key: string, validators: SubValidator[]): SubValidator {
-        return (request: SubRequest, response: Response): boolean => {
-            for (const validator of validators) {
-                if (!validator({ body: { parent: `${ request.body.parent } -> ${ key }`, ...request.body[key] } }, response)) {
+    public static subValidators(key:string,validators:SubValidator[]):SubValidator
+    {
+        return (request:SubRequest,response:Response):boolean =>
+        {
+            for(const validator of validators)
+            {
+                if(!validator({body:{parent:`${request.body.parent} -> ${key}`,...request.body[key]}},response))
+                {
                     return false;
                 }
             }
@@ -48,11 +61,16 @@ export class Validators {
         };
     }
 
-    public static subArrayValidators(key: string, validators: SubValidator[]): SubValidator {
-        return (request: SubRequest, response: Response): boolean => {
-            for (const obj of request.body[key]) {
-                for (const validator of validators) {
-                    if (!validator({ body: { parent: `${ request.body.parent } -> ${ key }`, ...obj } }, response)) {
+    public static subArrayValidators(key:string,validators:SubValidator[]):SubValidator
+    {
+        return (request:SubRequest,response:Response):boolean =>
+        {
+            for(const obj of request.body[key])
+            {
+                for(const validator of validators)
+                {
+                    if(!validator({body:{parent:`${request.body.parent} -> ${key}`,...obj}},response))
+                    {
                         return false;
                     }
                 }
@@ -71,7 +89,7 @@ export class Validators {
                 return true;
             }
             response.status(403);
-            response.send({ code: 403, message: 'Not Authorized' });
+            response.send({code:403,message:'Not Authorized'});
             return false;
         };
     }
@@ -80,10 +98,10 @@ export class Validators {
         return (request: SessionRequest, response: Response): boolean => {
             if (request.session.user && (request.session.user.role === role || request.session.user.role === 'admin')) {
                 response.status(403);
-                response.send({ code: 403, message: 'User is already logged in' });
+                response.send({code:403,message:'User is already logged in'});
                 return false;
-            }
-            return true;
+           }
+           return true;
         };
     }
 
@@ -111,45 +129,45 @@ export class Validators {
         };
     }
 
-    public static isValidObjectId(key: string): SubValidator {
-        return (request: SubRequest, response: Response): boolean => {
-            if (Types.ObjectId.isValid(request.body[key])) {
-                return true;
-            }
-            response.status(500);
-            response.send(`${ key } is not a valid ObjectId`);
-            return false;
-        };
-    }
+  public static isValidObjectId(key: string): SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      if (Types.ObjectId.isValid(request.body[key])) {
+        return true;
+      }
+      response.status(500);
+      response.send(`${ key } is not a valid ObjectId`);
+      return false;
+    };
+  }
 
-    public static isMaxLength(key: string, length: number): SubValidator {
-        return (request: SubRequest, response: Response): boolean => {
-            if (request.body[key] && request.body[key].length >= length) {
-                return true;
-            }
-            response.status(500);
-            response.send(`${ key } is smaller than ${ length }`);
-            return false;
-        };
-    }
+  public static isMaxLength(key: string, length: number): SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      if (request.body[key] && request.body[key].length >= length) {
+        return true;
+      }
+      response.status(500);
+      response.send(`${ key } is smaller than ${ length }`);
+      return false;
+    };
+  }
 }
 
 export class ValidatorLists {
-    public static UserValidatorList: Validator[] =
+  public static UserValidatorList: Validator[] =
+    [
+      Validators.isRequired('firstName'),
+      Validators.isRequired('lastName'),
+      //Validators.isRequired('email'),
+      //Validators.isValidEmail('email'),
+      Validators.subValidators('address',
         [
-            Validators.isRequired('firstName'),
-            Validators.isRequired('lastName'),
-            //Validators.isRequired('email'),
-            //Validators.isValidEmail('email'),
-            Validators.subValidators('address',
-                [
-                    Validators.isRequired('street'),
-                    Validators.isRequired('houseNum'),
-                    Validators.isRequired('postCode'),
-                    Validators.isRequired('city'),
-                    Validators.isRequired('country')
-                ])
-        ];
+          Validators.isRequired('street'),
+          Validators.isRequired('houseNum'),
+          Validators.isRequired('postCode'),
+          Validators.isRequired('city'),
+          Validators.isRequired('country')
+        ])
+    ];
 
 
     public static ProductValidatorList: Validator[] = [
@@ -185,22 +203,22 @@ export class ValidatorLists {
 // Groupen von Validatoren die für eine Bestimmte Route vorgesehen sind
 export class ValidatorGroups {
 
-    // Auth
-    public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'), ...ValidatorLists.UserValidatorList, Validators.isMaxLength('password', 8), Validators.isRequired('email'), Validators.isValidEmail('email')]);
+  // Auth
+  public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'), ...ValidatorLists.UserValidatorList, Validators.isMaxLength('password', 8), Validators.isRequired('email'), Validators.isValidEmail('email')]);
 
-    public static UserUpdate = ValidatorGroup(
-        [
-            Validators.isAuthorized('user'),
-            Validators.subValidators('updatedUser', ValidatorLists.UserValidatorList),
-        ]);
+  public static UserUpdate = ValidatorGroup(
+    [
+      Validators.isAuthorized('user'),
+      Validators.subValidators('updatedUser', ValidatorLists.UserValidatorList),
+    ]);
 
     public static UserLogin = ValidatorGroup(
-        [
-            Validators.isNotAuthorized('user'),
-            Validators.isRequired('email'),
-            Validators.isValidEmail('email'),
-            Validators.isMaxLength('password', 8),
-        ]);
+      [
+        Validators.isNotAuthorized('user'),
+        Validators.isRequired('email'),
+        Validators.isValidEmail('email'),
+        Validators.isMaxLength('password', 8),
+      ]);
 
     public static UserAuthorized = ValidatorGroup([
         Validators.isAuthorized('user')
@@ -218,7 +236,7 @@ export class ValidatorGroups {
 
 
     // Product
-    public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);
+  public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);
 
     // Order
 

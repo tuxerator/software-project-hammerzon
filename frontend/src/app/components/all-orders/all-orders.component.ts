@@ -24,6 +24,10 @@ export class AllOrdersComponent implements OnInit {
       next: value => {
         console.log(value);
         this.orderList = value;
+        for (let i = 0; i < this.orderList.length; i++)
+        {
+          this.orderList[i].timeOfOrder = new Date(this.orderList[i].timeOfOrder);
+        }
       },
       error: err => {
         console.error(err);

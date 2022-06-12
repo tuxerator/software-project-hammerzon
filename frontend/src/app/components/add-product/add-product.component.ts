@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -38,14 +38,10 @@ export class AddProductComponent implements OnInit {
     durationHour: new FormControl('', [Validators.required]),
     durationMinute: new FormControl('', [Validators.required]),
     appointment0: new FormControl('', [Validators.required]),
-  }, {
-    validators:[this.appointmentValidator()]
-
   });
 
 
-  constructor(private formBuilder: FormBuilder, private productService: ProductService, private authService: AuthService, private router: Router, private imageService: ImageService) {
-  }
+  constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,private productService:ProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
 
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
@@ -159,47 +155,44 @@ export class AddProductComponent implements OnInit {
       if(this.uploading) return;
 
 
-    console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]]}`);
+      console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]]}`);
 
-    this.isChecked = true;
-    console.log('Create Debug Log');
-    this.addProductForm.markAllAsTouched();
+      this.isChecked = true;
+      console.log('Create Debug Log');
+      this.addProductForm.markAllAsTouched();
       // Sind alle Eingaben valid
-    console.log(this.addProductForm);
-    if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
-    console.log('Through Validation Debug Log');
-    // Für besser lesbarkeit des Code
-    const form = this.addProductForm.value;
+      console.log(this.addProductForm);
+      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
+      console.log('Through Validation Debug Log');
+      // Für besser lesbarkeit des Code
+      const form = this.addProductForm.value;
 
-    const duratioHour = parseInt(form.durationHour);
-    const durationMinute = parseInt(form.durationMinute);
+      const duratioHour = parseInt(form.durationHour);
+      const durationMinute = parseInt(form.durationMinute);
 
-    // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
-    const duration = new Date(0);
-    // Stunden hinzufügen
+      // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
+      const duration = new Date(0);
+      // Stunden hinzufügen
 
-    duration.setHours(duratioHour);
-    // Minuten hinzufügen
-    duration.setMinutes(durationMinute);
+      duration.setHours(duratioHour);
+      // Minuten hinzufügen
+      duration.setMinutes(durationMinute);
 
-    const appointments: Appointment[] = [];
-    // Termine:
-    for (const appointName of this.appointmentIndexs) {
-      const value = form[appointName];
-      const date = new Date(value);
+      const appointments: Appointment[] = [];
+      // Termine:
+      for (const appointName of this.appointmentIndexs) {
+        const value = form[appointName];
+        const date = new Date(value);
 
-      appointments.push(new Appointment(date, duration));
-    }
+        appointments.push(new Appointment(date));
+      }
 
-    const prize = parseFloat(form.prize);
-
-
+      const prize = parseFloat(form.prize);
 
       // Neues Product erstellen
       const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
       this.uploading = true;
-
 
       const uploadProduct = () => {
         this.productService.addProduct(newProduct).subscribe({
@@ -229,29 +222,6 @@ export class AddProductComponent implements OnInit {
         uploadProduct();
       }
 
-private appointmentValidator(): ValidatorFn{
-  return (form: AbstractControl): ValidationErrors | null => {
-    const formValues= form.value;
-    const startDate = Date.parse( formValues[this.appointmentIndexs[this.appointmentsCount -1]]);
-    const duration= Date.UTC(70,0,1,Number.parseInt(formValues[`durationHour`]),Number.parseInt(formValues[`durationMinute`]));
-    const endDate = startDate + duration;
-
-    for(const appointName of this.appointmentIndexs)
-    {
-      const startDateAppoint = Date.parse(formValues[appointName]);
-      const endDateAppoint = startDateAppoint+duration;
-
-  if(startDate&&endDate&&startDateAppoint&&endDateAppoint)
-      {
-        const isAppointValid=(endDate<=startDateAppoint ||startDate>=endDateAppoint);
-        if(isAppointValid){
-          return {dataRange:true};
-        }
-      }
     }
-    return null;
-  }
-}
-  
 
 }

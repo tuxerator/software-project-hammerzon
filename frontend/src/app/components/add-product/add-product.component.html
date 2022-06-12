@@ -1,7 +1,7 @@
 <div class="container">
   <div class="bg-dark text-white">
     <article class="card-body mx-auto" style="max-width: 400px;">
-      <h4 class="card-title mt-3 text-center text-white">Produkt hinzufügen</h4>
+      <h4 class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' :'Produkt hinzufügen'}}</h4>
       <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="needs-validation" novalidate>
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
@@ -66,14 +66,16 @@
               <label for="appointmentInputs" class="form-label">Termine</label>
               <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
           </div>
-          <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3" id="durationInput" [class.was-validated]="addProductForm.controls[name].touched">
-              <div  id="date selector"class="input-group has-validation">
-                <span class="input-group-text">{{index+1}}.</span>
-                <input type="datetime-local" formControlName="{{name}}" class="form-control" placeholder="Suche eine Termin aus" aria-label="Username" required>
-                <button type="button" class="btn btn-danger" (click)="removeAppointment(name)" >-</button>
-                <div *ngIf="!addProductForm.controls[name]?.invalid&&!addProductForm.invalid" class="valid-feedback was-validated">Gültiger Termin</div>
-                <div *ngIf="addProductForm.controls[name]?.invalid" class="invalid-feedback was-validated">Termin erwartet</div>
-                <div *ngIf="addProductForm.invalid" class="invalid-feedback was-validated">Termine dürfen sich nicht überschneiden</div>
+          <div *ngFor="let name of appointmentIndexs;let index = index"
+               [class.was-validated]="addProductForm.controls[name].touched" class="mb-3"
+               id="durationInput">
+            <div class="input-group has-validation" id="date selector">
+              <span class="input-group-text">{{index + 1}}.</span>
+              <input aria-label="Username" class="form-control" formControlName="{{name}}"
+                     placeholder="Suche eine Termin aus" required type="date">
+              <button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>
+              <div *ngIf="!addProductForm.controls[name]?.invalid" class="valid-feedback was-validated">Gültiger
+                Termin
               </div>
               <div *ngIf="addProductForm.controls[name]?.invalid" class="invalid-feedback was-validated">Termin
                 erwartet
@@ -99,7 +101,7 @@
 
         <!--Produkt hinzufügen-->
         <div class="d-grid mt-4">
-          <button (click)="onSubmit()" class="btn btn-primary btn-block" type="submit"> Add Product
+          <button (click)="onSubmit()" class="btn btn-primary btn-block" type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
             <div *ngIf="uploading" class="spinner-border text-light" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>

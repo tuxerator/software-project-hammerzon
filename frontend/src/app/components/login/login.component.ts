@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   public loginForm: FormGroup = this.formBuilder.group({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required,Validators.minLength(8)]),
   });
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     {
         return this.errorMessage === 'Mail address not found' ? 'Email existiert nicht' : 'Bitte korrekte Email eingeben';
     }else{
-       return this.errorMessage ===  'Wrong password' ? 'Falsches Passwort' : 'Passwort zu kur minestens 8 Zeichen';
+       return this.errorMessage ===  'Wrong password' ? 'Falsches Passwort' : 'Passwort zu kurz (mindestens 8 Zeichen)';
     }
   }
 
