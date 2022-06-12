@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Helper from '../helpers';
-import { IAppointment, IProduct, Product } from '../Models/Product';
+import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Model, Types } from 'mongoose';
 
@@ -75,43 +75,22 @@ class ProductController {
             response.send('there is no product with such an id');
         }
     }
-  }
-
-
-    public async resetAppointment(request: Request, response: Response): Promise<void> {
-        console.log('resetting');
-        const product: PostOrder = request.body;
-        const index = parseInt(String(product.appointmentIndex));
-        const id = product.productId;
-        if (id && Types.ObjectId.isValid(id)) {
-            const updateProduct = await Product.findById(id);
-            (await updateProduct).appointments[index].isReserved = false;
-            (await updateProduct).save();
-            console.log('appointment reset');
-            response.status(200);
-        } else {
-            response.status(500);
-            response.send('There is no product with such an id');
-        }
-    }
-    }
-
 
     public async addProduct(request: SessionRequest, response: Response): Promise<void> {
         const product = request.body;
         console.log(product);
 
-    // Setze es auf den Angemeldeten User
-    product.user = request.session.user._id;
+        // Setze es auf den Angemeldeten User
+        product.user = request.session.user._id;
 
-    delete product._id;
+        delete product._id;
 
-    const dbProduct = new Product(product);
+        const dbProduct = new Product(product);
 
-    await dbProduct.save();
+        await dbProduct.save();
 
-    response.status(200);
-    response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
+        response.status(200);
+        response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
     }
 
     public async removeProduct(request:SessionRequest,response:Response):Promise<void>
@@ -141,11 +120,23 @@ class ProductController {
         response.send({code:200,message:'Product deleted'});
     }
 
-    public async addApointment(req: Request, res: Response): Promise<void> {
-        const appointment: IAppointment = req.body;
+    public async addAvailability(req: Request, res: Response): Promise<void> {
+        const availability: IAvailability = req.body;
         const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
 
-        product.appointments.push(appointment);
+        product.availability.push(availability);
+        await product.save();
+
+        res.status(200);
+        res.send({ code: 200, message: `Add Successfull`, id: product._id })
+    }
+
+    public async addHindrance(req: Request, res: Response): Promise<void> {
+        const hindrance: IAvailability = req.body;
+        const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+
+        // Get Availabi
+
         await product.save();
 
         res.status(200);

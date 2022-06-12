@@ -13,26 +13,26 @@ interface IProduct extends Document {
     prize: number
     // Zeit dauer der Dienstleistung
     duration: Date
+    // Default timeframe for availability
+    defaultTimeFrame: {
+        start: Date,
+        end: Date
+    },
     // Möglichen daten wo man die Dienstleistung kaufen kann
-  appointments: IAppointment[]
+    availability: IAvailability[]
 
-  image_id: mongoose.Types.ObjectId
+    image_id: mongoose.Types.ObjectId
 }
 
-interface IAppointment {
-    startTime: Date,
-    endTime: Date,
-    // gibt an ob es noch zu lesen der Termin noch angegeben wird
-    isReserved: boolean
+interface IAvailability {
+    startDate: Date,
+    endDate: Date,
 }
 
-const Appointment: Schema = new Schema<IAppointment>(
-    {
-        startTime: { type: Date, required: true },
-        endTime: { type: Date, required: true },
-        // gibt an ob es noch zu lesen der Termin noch angegeben wird
-        isReserved: { type: Boolean, required: true }
-    });
+const Availability: Schema = new Schema<IAvailability>({
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+});
 
 
 // create the Schema of IProduct
@@ -42,7 +42,11 @@ const productSchema: Schema = new Schema<IProduct>({
     description: { type: String },
     prize: { type: Number, required: true },
     duration: { type: Date, required: true },
-    appointments: { type: [Appointment], required: true },
+    defaultTimeFrame: {
+        start: { type: Date, required: true, max: Date.UTC(0, 0, 0, 23, 59, 59) },
+        end: { type: Date, required: true, max: Date.UTC(0,0,0,23,59,59) }
+    },
+    availability: { type: [Availability], required: true },
     image_id: { type: mongoose.Schema.Types.ObjectId, required: true }
 });
 
@@ -51,4 +55,4 @@ const productSchema: Schema = new Schema<IProduct>({
 const Product: Model<IProduct> = model<IProduct>('Product', productSchema);
 
 
-export { IProduct, Product, IAppointment, Appointment };
+export { IProduct, Product, IAvailability };

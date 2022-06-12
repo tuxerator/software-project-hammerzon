@@ -6,7 +6,6 @@ import { IProduct, Product } from '../Models/Product';
 import {Types} from 'mongoose';
 import session from 'express-session';
 
-
 class OrderController{
     /**
      * gets every finalized Order from the schema in a list.
@@ -51,12 +50,12 @@ class OrderController{
   }
 
   /**
-   * list all orders for the products a user added 
+   * list all orders for the products a user added
    */
   public async listOrdersByCreator(request: SessionRequest, response: Response): Promise<void> {
     const id = request.session.user._id;
     if(id && Types.ObjectId.isValid(id)){
-      
+
       let orders = [];
       const products : IProduct[] = await Product.find({ user : id });
       for (const p of products)
@@ -73,56 +72,61 @@ class OrderController{
       response.send('no orders for this creator');
     }
   }
-  
-  public async registerOrder(request: SessionRequest, response: Response) : Promise<void>{
-        const postedOrder:PostOrder = request.body;
-        const updateProduct = await Product.findById(postedOrder.productId);
-        const index = postedOrder.appointmentIndex;
 
-        if(updateProduct.appointments[index].isReserved === true)
+    /**
+     * Validates a order for correctness
+     */
+    public async validateOrder(request: SessionRequest, response: Response): Promise<void>{
+        response.status(200);
+        response.send({ code: 200, message: 'Order is valid' });
+    }
+
+    /**
+     * Add a new order to the database
+     */
+    public async addOrder(request: SessionRequest, response: Response): Promise<void>{
+        const order: PostOrder = request.body;
+        const orderingUserId = request.session.user._id;
+        if(orderingUserId && Types.ObjectId.isValid(orderingUserId))
         {
-            response.status(409);
-            response.send(false);
+            const dbOrder = new Order({
+                product : order.productId,
+                orderingUser : orderingUserId,
+                appointment : order.appointment,
+                confirmed: false
+            });
+            await dbOrder.save();
+            response.status(200);
+            response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id });
         }
         else
         {
-            const newOrder = new Order({
-                product : new mongoose.Types.ObjectId(postedOrder.productId),
-                orderingUser : new mongoose.Types.ObjectId(request.session.user._id),
-                timeOfOrder : new Date(),
-                appointment : updateProduct.appointments[index],
-                status : Status.NNA
-            });
-            await newOrder.save();
-            console.log('saved order:' + newOrder);
-            updateProduct.appointments[index].isReserved = true;
-            await updateProduct.save();
-
-      updateProduct.appointments[index].isReserved = true;
-      await updateProduct.save();
-
-      response.status(201);
-      response.send(true);
+            response.status(500);
+            response.send({ code: 500, message: 'UserID does not exist' });
+        }
     }
 
-  }
+    public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>
+    {
+        const id:string = request.params.id;
+        console.log('deleting Order');
+        console.log('order id' + id);
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const order = await Order.findById(id);
+            if(order.orderingUser === request.session.user._id || request.session.user.role === 'admin')
+            {
+                await order.delete();
+            }
 
-  public async deleteOrder(request: SessionRequest, response: Response): Promise<void> {
-    const id: string = request.params.id;
-    console.log('deleting Order');
-    console.log('order id' + id);
-    if (id && Types.ObjectId.isValid(id)) {
-      const order = await Order.findById(id);
-      if (order.orderingUser === request.session.user._id || request.session.user.role === 'admin') {
-        await order.delete();
-      }
-
-      console.log('order deleted');
-      response.status(200);
-    } else {
-      response.status(500);
-      response.send('there is no order with such an id');
-    }
+            console.log('order deleted');
+            response.status(200);
+        }
+        else
+        {
+            response.status(500);
+            response.send('there is no order with such an id');
+        }
     }
 
     public async setStatus(request: SessionRequest, response: Response ) : Promise<void>
@@ -135,7 +139,7 @@ class OrderController{
         {
             const order : IOrder = await Order.findById(id);
             const product : IProduct = await Product.findById(order.product);
-            
+
             if(product.user === request.session.user._id || request.session.user.role === 'admin')
             {
                 order.status = status;

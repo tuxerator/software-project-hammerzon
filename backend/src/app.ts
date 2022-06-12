@@ -27,7 +27,14 @@ import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
-import { asyncHandler, isValidAppointment, ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import {
+    asyncHandler,
+    isValidAppointment,
+    isValidAvailability,
+    ValidatorGroup,
+    ValidatorGroups,
+    Validators
+} from './Controller/validator';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -136,17 +143,11 @@ app.get('/api/product/list', product.getList.bind(product));
 // product details ...
 app.get('/api/product/:id', product.getProductDetail.bind(product));
 
-// reset appointment
-
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
-
-app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
-
-app.post('/api/resetAppointment', ValidatorGroups.OrderRegister, product.resetAppointment);
-
+// add availability to product
+app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);
@@ -156,8 +157,11 @@ app.get('/api/img/:id', image.getImage);
 
 // OrderController endpoints
 
-// register a new Order
-app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
+// validate order
+app.get('/api/order/validate', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.validateOrder);
+
+// add a new Order
+app.post('/api/order/add', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.addOrder);
 
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
