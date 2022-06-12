@@ -20,6 +20,8 @@ import { OrderFinalizedComponent } from './components/order-finalized/order-fina
 import { HeaderComponent } from './components/header/header.component';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
 import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
+import { CategoryComponent } from './components/category/category.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { OrderedServicesComponent } from './components/ordered-services/ordered-
     OrderFinalizedComponent,
     HeaderComponent,
     NotAvailableComponent,
-    OrderedServicesComponent
+    OrderedServicesComponent,
+    CategoryComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

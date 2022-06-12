@@ -15,6 +15,8 @@ export class ImageController {
     const filePath = path.join('./uploads/' + request.file.filename);
     // get a possible replace id
     const image_id = request.body.replace_id;
+    const is_replaceable = !(request.body.is_replaceable === 'false');
+
     // get the data-blob/file-content from the Uploaded-file
     const data = fs.readFileSync(filePath);
 
@@ -26,7 +28,7 @@ export class ImageController {
       dbImage =await Image.findById(image_id).exec();
     }
     // if image already exist in the db
-    if(dbImage)
+    if(dbImage && dbImage.is_replaceable)
     {
       // replace the data content
       dbImage.data = data;
@@ -35,7 +37,8 @@ export class ImageController {
       // otherwise create a new one
       const img = {
         data: data,
-        type: 'image/png'
+        type: 'image/png',
+        is_replaceable
       };
       dbImage = new Image(img);
     }

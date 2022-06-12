@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Category } from 'src/app/models/Category';
 import { AuthService } from 'src/app/services/auth.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Appointment, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
 
-class ImageSnippet {
-  constructor(public src: string, public file: File) {
-  }
-}
+
 
 
 @Component({
@@ -19,11 +18,18 @@ class ImageSnippet {
   styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+
+  public categories?:Category[];
+
   public appointmentsCount = 1;
 
   public appointmentIndexs: string[] = ['appointment0'];
 
-  public imageId?: string = undefined;
+  public imageId?: string;
+
+  private selectedCategory?:Category;
+
+
 
   public isChecked = false;
   public uploading = false;
@@ -38,10 +44,17 @@ export class AddProductComponent implements OnInit {
     durationHour: new FormControl('', [Validators.required]),
     durationMinute: new FormControl('', [Validators.required]),
     appointment0: new FormControl('', [Validators.required]),
+    categoryName: new FormControl('',[Validators.required]),
   });
 
 
-  constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,private productService:ProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
+  constructor(private formBuilder: FormBuilder,
+              private route:ActivatedRoute,
+              private productService:ProductService,
+              private authService:AuthService,
+              private router:Router,
+              private imageService:ImageService,
+              private categoryService:CategoryService) { }
 
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
@@ -59,9 +72,35 @@ export class AddProductComponent implements OnInit {
           }
         });
     }
+    this.searchForCategory();
   }
+
+  public searchForCategory():void
+  {
+    this.categoryService.getCategoriesList().subscribe({
+      next: (val) => this.categories = val.categories,
+      error: (err) => console.log(err)
+    });
+  }
+
+  public categoryChanged():void
+  {
+    if(this.imageId === this.selectedCategory?.image_id)
+    {
+      this.imageId = undefined;
+    }
+
+    const categoryName = this.addProductForm.value['categoryName'];
+    this.selectedCategory = this.categories?.find(c =>c.name === categoryName);
+
+    if(!this.imageId)
+    {
+      this.imageId = this.selectedCategory?.image_id;
+    }
+  }
+
   //
-  public editProduct(aProduct: Product)
+  public editProduct(aProduct: Product):void
   {
     this.appointmentsCount=1;
     this.imageId=aProduct.image_id;
@@ -98,10 +137,7 @@ export class AddProductComponent implements OnInit {
   private getDateTimeString(date:Date):string
   {
     // Create a Input-readable string
-    const dateString:string = `${this.to2DigitString(date.getFullYear())}
-                                -${this.to2DigitString(date.getMonth()+1)}
-                                -${this.to2DigitString(date.getDate())}
-                                T${this.to2DigitString(date.getHours())}:${this.to2DigitString(date.getMinutes())}`
+    const dateString = `${this.to2DigitString(date.getFullYear())}-${this.to2DigitString(date.getMonth()+1)}-${this.to2DigitString(date.getDate())}T${this.to2DigitString(date.getHours())}:${this.to2DigitString(date.getMinutes())}`;
     console.log(dateString);
 
     return dateString;
@@ -117,39 +153,30 @@ export class AddProductComponent implements OnInit {
     return `${number}`;
   }
 
-  public addAppointment() {
+  public addAppointment():void {
     const name = `appointment${ this.appointmentsCount }`;
     this.addProductForm.addControl(name, new FormControl('', [Validators.required]));
     this.appointmentIndexs.push(name);
     this.appointmentsCount++;
   }
 
-  public removeAppointment(name: string) {
+  public removeAppointment(name: string):void {
     this.appointmentIndexs = this.appointmentIndexs.filter(x => x !== name);
     this.addProductForm.removeControl(name);
     //this.addProductForm.addControl(`appointment${this.appointmentsCount}`,new FormControl('',[Validators.required]));
   }
 
-  uploadImage(inputElement: any) {
+  uploadImage(inputElement: any):void {
     const file: File = inputElement.files[0];
-    const reader = new FileReader();
-
-    reader.addEventListener('load', (event: any) => {
-
-      const selectedFile = new ImageSnippet(event.target.result, file);
-
-      this.imageService.uploadImage(selectedFile.file,this.imageId).subscribe({
-          next: (res) => {
-            this.imageId = res.id;
-          },
-          error: (err) => {
-            console.log(err);
-          }
-        }
-      );
-    });
-
-    reader.readAsDataURL(file);
+    this.imageService.uploadFileImage(file,this.imageId).subscribe({
+      next: (res) => {
+        this.imageId = res.id;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    }
+  );
 
 
   }

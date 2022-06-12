@@ -23,7 +23,7 @@ interface IUser extends Document {
 }
 
 
-// create the Schema of IProduct
+// create the Schema of IUser
 const userSchema: Schema = new Schema<IUser>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -44,15 +44,5 @@ const userSchema: Schema = new Schema<IUser>({
 // 3. Create a Model.
 const User: Model<IUser> = model<IUser>('User', userSchema);
 
-const getUserWithOutPassword = (user: IUser): IUser => {
-  return new User({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    password: '',
-    role: user.role,
-    address: user.address
-  });
-};
 
-export { IUser, User, getUserWithOutPassword };
+export { IUser, User };

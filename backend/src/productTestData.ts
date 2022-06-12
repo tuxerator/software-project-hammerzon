@@ -2,6 +2,7 @@ import { IAppointment, IProduct, Product } from './Models/Product';
 import { Iimage, Image } from './Models/Image';
 import fs from 'fs';
 import path from 'path';
+import { Category } from './Models/Category';
 
 export default class ProductTestData {
 
@@ -129,6 +130,10 @@ export default class ProductTestData {
     }
     console.log(imgs);
 
+    await Category.deleteMany({});
+
+    const category = await Category.insertMany([{name:'Schreiner',image_id:imgs[2],is_replaceable:false}]);
+
     await Product.deleteMany({});
 
     const users = await Image.find({});
@@ -142,6 +147,7 @@ export default class ProductTestData {
         console.log(i);
         console.log(imgs[i]);
         d.image_id = imgs[i];
+        d.category_id = category[0]._id;
         return d;
       });
       console.log(newList);
