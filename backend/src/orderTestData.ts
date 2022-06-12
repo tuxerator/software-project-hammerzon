@@ -1,4 +1,4 @@
-import { IOrder, Order } from './Models/Order';
+import { IOrder, Order, Status } from './Models/Order';
 import { IProduct, Product } from './Models/Product';
 
 export default class OrderTestData {
@@ -6,24 +6,25 @@ export default class OrderTestData {
   // productCon = new ProductController();
   public list: any[] = [
     {
-      product: '627e5c84abdf91cb14e80306',
-      orderingUser: '627e212da0cc80c799cbefae',
+      product: '6284efd5b72a93135f555555',
+      orderingUser: '6284efd5b72a93135fb79c88',
       timeOfOrder: new Date(),
-      finalized: false,
-      appointment: { date: new Date(), isReserved: false }
+      appointment: { date: new Date(), isReserved: true },
+      status : Status.NNA
     },
     {
-      product: '627e5c84abdf91cb14e80308',
-      orderingUser: '627e212da0cc80c799cbefae',
+      product: '6284efd5b72a93135f555555',
+      orderingUser: '6284efd5b72a93135fb79c88',
       timeOfOrder: new Date(),
-      finalized: false,
-      appointment: { date: new Date, isReserved: true }
+      appointment: { date: new Date, isReserved: true },
+      status : Status.NNA
     }
   ];
 
   constructor() {
-    //this.insertIfNotExistend();
-    Order.deleteMany({}).exec();
+    this.insertIfNotExistend();
+    //Order.deleteMany({}).exec();
+    
   }
 
   async insertIfNotExistend(): Promise<void> {
@@ -35,6 +36,8 @@ export default class OrderTestData {
       console.log(current);
     } else {
       console.log('Orders already exist');
+      const current: IOrder[] = await Order.find({});
+      console.log(current);
     }
   }
 }

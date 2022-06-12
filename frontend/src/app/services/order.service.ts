@@ -60,5 +60,10 @@ export class OrderService {
     return this.http.post<Status>(`/api/order/${orderId}/setStatus`, {status});
   }
 
+  getInvoice(orderId:string) : Observable<any>
+  {
+    return this.http.get(`api/invoice/${orderId}`);
+  }
+
 }
 

@@ -28,6 +28,7 @@ import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import { InvoiceController } from './Controller/invoice';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -102,7 +103,7 @@ const auth = new AuthController();
 
 const product = new ProductController();
 const order = new OrderController();
-
+const invoice = new InvoiceController();
 const image = new ImageController();
 
 app.get('/api', api.getInfo);
@@ -169,6 +170,9 @@ app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersBy
 app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
+
+// invoice controller  
+app.get('/api/invoice/:id', invoice.createInvoice);
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());

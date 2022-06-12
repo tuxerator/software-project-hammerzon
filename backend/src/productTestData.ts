@@ -17,6 +17,7 @@ export default class ProductTestData {
 
   public list: any[] = [
     {
+      _id : '6284efd5b72a93135f555555',
       name: 'Fliesenlegen',
       user: '6284efd5b72a93135fb79c88',
       prize: 45,
@@ -147,7 +148,7 @@ export default class ProductTestData {
       console.log(newList);
       await Product.insertMany(newList);
       const current: IProduct[] = await Product.find({}).populate('user', '-password').exec();
-      console.log(current);
+      //console.log(current);
     } else {
       console.log('Products already exist');
     }

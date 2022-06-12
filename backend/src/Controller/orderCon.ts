@@ -1,10 +1,9 @@
-import { Request, response, Response } from 'express';
+import { Response } from 'express';
 import { IOrder, Order, Status } from '../Models/Order';
-import { PostOrder, SessionRequest, OrderInfo } from '../types';
+import { PostOrder, SessionRequest } from '../types';
 import mongoose from 'mongoose';
 import { IProduct, Product } from '../Models/Product';
 import { Types } from 'mongoose';
-import session from 'express-session';
 
 
 class OrderController {
@@ -35,6 +34,23 @@ class OrderController {
       response.send(list);
     }
 
+  }
+
+  public async getOrder(id:string) : Promise<IOrder>
+  {
+    const order : IOrder = await Order.findById({id}).
+    populate('product').
+        populate('orderingUser', '-password').
+        populate({
+          path: 'product',
+          populate: {
+            path: 'user',
+            model: 'User'
+          }
+        }).select('-password').
+        exec();
+    
+    return order;
   }
 
   /**

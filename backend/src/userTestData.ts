@@ -50,7 +50,7 @@ export default class UserTestData{
           console.log('Inserting Users');
           await User.insertMany(this.list);
           const current: IUser[] = await User.find({}).exec();
-          console.log(current);
+          //console.log(current);
       }/*else{
           console.log('User already exist');
       }*/

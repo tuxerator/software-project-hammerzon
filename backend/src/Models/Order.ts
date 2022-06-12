@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Schema, Model, model, Document } from 'mongoose';
-import { Appointment, IAppointment } from './Product';
+import { Appointment, IAppointment, IProduct } from './Product';
+import { IUser } from './User';
 
 // Model for Orders
 
@@ -9,19 +10,20 @@ interface IOrder extends Document {
   // Bestelltes Produkt
   product: mongoose.Types.ObjectId
   // Bestellender User, soll Referenz zum UserObject sein?
-  orderingUser: mongoose.Types.ObjectId
+  orderingUser: mongoose.Types.ObjectId 
   // Bestellzeitpunkt
   timeOfOrder: Date
   appointment : IAppointment
   status : Status
 }
 
+
 enum Status {
     NNA = 'Noch nicht angenommen',
     A = 'Angenommen',
     D = 'Durchgeführt'
 }
-// make enum 0 ,1 ,2 translate in controller
+
 const orderSchema : Schema = new Schema<IOrder>({
     product:        { type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true },
     orderingUser:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' , required: true },
