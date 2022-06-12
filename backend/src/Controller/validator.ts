@@ -143,11 +143,15 @@ export class ValidatorLists {
         Validators.isRequired('prize'),
         Validators.isRequired('description'),
         Validators.isRequired('duration'),
-        Validators.isRequired('appointments'),
-        Validators.subArrayValidators('appointments', [
-            Validators.isRequired('startTime'),
-            Validators.isRequired('endTime'),
-            Validators.isRequired('isReserved')
+        Validators.isRequired('defaultTimeFrame'),
+        Validators.subArrayValidators('defaultTimeFrame',[
+            Validators.isRequired('start'),
+            Validators.isRequired('end')
+        ]),
+        Validators.isRequired('availability'),
+        Validators.subArrayValidators('availability', [
+            Validators.isRequired('startDate'),
+            Validators.isRequired('endDate'),
         ]),
         Validators.isRequired('image_id'),
         Validators.isValidObjectId('image_id')

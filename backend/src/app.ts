@@ -143,13 +143,11 @@ app.get('/api/product/list', product.getList.bind(product));
 // product details ...
 app.get('/api/product/:id', product.getProductDetail.bind(product));
 
-// reset appointment
-
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-// add appointment to product
-app.post('/api/product/:id/appointment/add', asyncHandler(isValidAvailability), product.addAvailability);
+// add availability to product
+app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);

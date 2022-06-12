@@ -103,6 +103,18 @@ class ProductController {
         res.status(200);
         res.send({ code: 200, message: `Add Successfull`, id: product._id })
     }
+
+    public async addHindrance(req: Request, res: Response): Promise<void> {
+        const hindrance: IAvailability = req.body;
+        const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+
+        // Get Availabi
+
+        await product.save();
+
+        res.status(200);
+        res.send({ code: 200, message: `Add Successfull`, id: product._id })
+    }
 }
 
 
