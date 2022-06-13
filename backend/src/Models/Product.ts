@@ -38,7 +38,7 @@ const Availability: Schema = new Schema<IAvailability>({
 // create the Schema of IProduct
 const productSchema: Schema = new Schema<IProduct>({
     name: { type: String, required: true },
-    user: { type: String, ref: 'User', required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String },
     prize: { type: Number, required: true },
     duration: { type: Date, required: true },

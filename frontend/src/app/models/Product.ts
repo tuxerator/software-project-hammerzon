@@ -12,32 +12,38 @@ export class Product {
   prize: number;
   // Zeit dauer der Dienstleistung
   duration: Date;
+  // Default timeframe for availability
+  defaultTimeFrame: {
+    start: Date;
+    end: Date;
+  };
   // Möglichen daten wo man die Dienstleistung kaufen kann
-  appointments: Appointment[];
-
+  availability: Availability[]
   image_id: string;
 
-  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string) {
+  constructor(name: string, description: string, prize: number, duration: Date, defaultTimeFrame: { start: Date, end: Date }, availability: Availability[], image_id: string) {
     this.name = name;
     this.description = description;
     this.prize = prize;
     this.duration = duration;
-    this.appointments = appointments;
+    this.defaultTimeFrame = {
+      start: defaultTimeFrame.start,
+      end: defaultTimeFrame.end
+    }
+    this.availability = availability;
     this.image_id = image_id;
   }
 }
 
 
-export class Appointment {
-  startTime: Date;
-  endTime: Date;
+export class Availability {
+  startDate: Date;
+  endDate: Date;
   // gibt an ob es noch zu lesen der Termin noch angegeben wird
-  isReserved: boolean;
 
-  constructor(date: Date, duration: Date) {
-    this.startTime = date;
-    this.endTime = new Date(this.startTime.getTime() + duration.getTime())
-    this.isReserved = false;
+  constructor(startDate: Date, endDate: Date) {
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 }
 

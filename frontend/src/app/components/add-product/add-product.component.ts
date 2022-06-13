@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
-import { Appointment, Product } from '../../models/Product';
+import { Availability, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
 
@@ -74,7 +74,7 @@ export class AddProductComponent implements OnInit {
       durationMinute: new FormControl(aProduct.duration.getMinutes(),[Validators.required]),
     });
 
-    console.log(aProduct.appointments);
+    console.log(aProduct.availability);
     const appointment = aProduct.appointments[0];
     appointment.date = new Date(appointment.date);
     this.addProductForm.setControl('appointment0',new FormControl(this.getDateTimeString(appointment.date),[Validators.required]));
@@ -178,19 +178,19 @@ export class AddProductComponent implements OnInit {
       // Minuten hinzufügen
       duration.setMinutes(durationMinute);
 
-      const appointments: Appointment[] = [];
+      const availability: Availability[] = [];
       // Termine:
-      for (const appointName of this.appointmentIndexs) {
-        const value = form[appointName];
+      for (const availName of this.appointmentIndexs) {
+        const value = form[availName];
         const date = new Date(value);
 
-        appointments.push(new Appointment(date));
+        availability.push(new Appointment(date));
       }
 
       const prize = parseFloat(form.prize);
 
       // Neues Product erstellen
-      const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
+      const newProduct:Product = new Product(form.productName,form.description,prize,duration,availability,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
       this.uploading = true;
 

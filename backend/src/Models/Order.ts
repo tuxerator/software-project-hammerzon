@@ -8,6 +8,7 @@ interface IOrder extends Document{
     product : mongoose.Types.ObjectId;
     // Bestellender User, soll Referenz zum UserObject sein?
     orderingUser : mongoose.Types.ObjectId;
+    status: Status;
     // Bestellzeitpunkt
     appointment : IAppointment;
     confirmed : boolean;
