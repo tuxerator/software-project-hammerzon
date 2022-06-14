@@ -23,7 +23,7 @@ export class PaymentService {
     return this.http.post<MessageResponse>('api/payment/country',{paymentType,account,merchantInfo});
   }
 
-  public getPaymentFinish(paymentType:PaymentType,postOrder:PostOrder,password:string,fullName?:string,merchantInfo?:string,expirationDate?:Date):Observable<MessageResponse>
+  public getPaymentFinish(paymentType:PaymentType,postOrder:PostOrder,password:string,fullName?:string,merchantInfo?:string,expirationDate?:string):Observable<MessageResponse>
   {
     return this.http.post<MessageResponse>('api/payment/pay',{paymentType,postOrder,password,fullName,merchantInfo,expirationDate});
   }

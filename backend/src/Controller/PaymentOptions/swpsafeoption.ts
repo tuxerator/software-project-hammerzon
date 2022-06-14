@@ -8,22 +8,32 @@ export class SwpSafeOption implements PaymentOption {
 
   public CsvToJson(text:string):any
   {
+    console.log(text);
     const lines = text.split('\n');
     //const grid = lines.map(line => line.split(','));
-    const keys = lines[0].split(',');
+    console.log(lines);
+    console.log(lines[0]);
+    const keys = lines[0].split(',').filter(x => x !== 'tracker_id');
+    console.log(keys);
+
     const objs = [];
     for(let i = 1; i < lines.length; i++)
     {
       const line = lines[i].split(',');
+      console.log(line);
       const obj:{[key:string]:string}={};
-
-      for(let j = 0; j < keys.length; j++)
+      if(line.length >= keys.length)
       {
-        obj[keys[j]] = line[j];
+        for(let j = 0; j < keys.length; j++)
+        {
+          console.log(line[j]);
+          obj[keys[j]] = line[j].replace('"','').replace('"','');
+        }
+        console.log(obj);
+        objs.push(obj);
       }
-
-      objs.push(obj);
     }
+    return objs;
   }
 
   public countryConfig(req:CountryRequest):AxiosRequestConfig
@@ -37,7 +47,12 @@ export class SwpSafeOption implements PaymentOption {
   public countryParser(data:any) : Success & {country:string}
   {
     const obj = this.CsvToJson(data)[0];
-    return {success:obj.success,country:obj.country};
+    console.log(obj);
+    if(obj.responseCode === '200')
+    {
+      return {success:true,country:obj.country};
+    }
+    return {success:false,country:obj.country};
   }
 
   public checkConfig(req:CheckRequest,amount:number):AxiosRequestConfig
@@ -51,13 +66,17 @@ export class SwpSafeOption implements PaymentOption {
   public checkParser(data:any):Success & {token:string}
   {
     const obj = this.CsvToJson(data)[0];
-    return {success:obj.success,token:obj.token};
+    if(obj.status === '200')
+    {
+      return {success:true,token:obj.token};
+    }
+    return {success:false,token:obj.token};
   }
 
   public payConfig(token:string):AxiosRequestConfig
   {
     return {
-      url: this.URL + `/use/${encodeURIComponent(token)}`,
+      url: this.URL + `use/${encodeURIComponent(token)}`,
       method:'get',
     };
   }
@@ -65,8 +84,16 @@ export class SwpSafeOption implements PaymentOption {
   public payParser(data:any) : Success
   {
     const obj = this.CsvToJson(data)[0];
-    return {success:obj.success};
+    if(obj.status === '200')
+    {
+      return {success:true};
+    }
+    return {success:false};
   }
 
-  public errorParser: (data: any) => PaymentError;
+  public errorParser(data: any) : PaymentError
+  {
+    const obj:any = this.CsvToJson(data)[0];
+    return {error:obj.errorMessage};
+  }
 }

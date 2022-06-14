@@ -34,11 +34,11 @@ export class PaymentController
    *
    * @param request
    * {
-   *   accountName: 'name'
+   *   account: 'name'
    *   paymentType: 'HCIPAL'
    * }
    * {
-   *   accountName: 'full_name'
+   *   account: 'full_name'
    *   cardNumber: 'card_number'
    *   merchantName: 'merchant_name'
    *   paymentType: 'BACHELORCARD' | 2
@@ -47,10 +47,6 @@ export class PaymentController
    */
   public async IsFromGermany(request: SessionRequest,response: Response):Promise<void>
   {
-
-
-
-
 
     const paymentType: PaymentType = request.body.paymentType;
     // get the right payment config = (every information needed for a axios request)
@@ -74,7 +70,7 @@ export class PaymentController
         return;
       }
 
-      if(!(data.country === 'germany' || data.country === 'de'))
+      if(!(data.country === 'germany' || data.country === 'Deutschland' || data.country === 'de'))
       {
         response.status(403);
         response.send({message:'Is not from germany'});
@@ -87,8 +83,11 @@ export class PaymentController
 
    }).catch((error) =>
    {
+      console.log(error);
+
+      const data = paymentConfig.errorParser(error.response);
       response.status(403);
-      response.send({message:error.response.data.error});
+      response.send({message:data.error});
    });
   }
   // MiddelWare => isRequired Password + (Session.paymentAccount Correct Account)
@@ -190,9 +189,9 @@ export class PaymentController
       // Errors from axois and co
       response.status(403);
       console.log(error);
-      //const data = paymentConfig.errorParser(error.response.data);
+      const data = paymentConfig.errorParser(error.response.data);
       // TO DO: parseError To Right json-format/js-object
-      //response.send({message:data.error});
+      response.send({message:data.error});
     }
 
     //request.session.paymentAccount = undefined;
