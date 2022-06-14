@@ -1,6 +1,6 @@
-import { Component, Inject, InjectionToken, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
-import { getAppointmentString, Product } from 'src/app/models/Product';
+import { getAppointmentString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
