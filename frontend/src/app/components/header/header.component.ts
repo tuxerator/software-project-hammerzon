@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
     this.authService.getUser().subscribe({
       next: (user) => {
         if (user) {
-          this.router.navigate(['']);
+          //this.router.navigate(['']);
         }
       },
       error: (err) => {
@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
     console.log('Log out');
     this.authService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        //this.router.navigate(['/']);
       },
       error: (err) => console.log(err)
     });

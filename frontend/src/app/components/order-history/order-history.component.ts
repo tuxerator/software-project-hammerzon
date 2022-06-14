@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
 import { getAppointmentString, Product } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
@@ -8,6 +8,7 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/User';
 import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 
 
@@ -19,10 +20,12 @@ export class OrderHistoryComponent implements OnInit {
   orderList? : Order[];
   user? : User;
   public status = Status;
+  url = '';
 
   constructor(private orderService: OrderService,
               private authService: AuthService,
-              private router: Router
+              private router: Router,
+              @Inject(DOCUMENT) private document: any
   ) 
   {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -40,6 +43,9 @@ export class OrderHistoryComponent implements OnInit {
         }
       }
     );
+
+    this.url = this.document.URL;
+    console.log(this.url);
   }
 
   listAllOrdersByUser(): void {
@@ -73,7 +79,7 @@ export class OrderHistoryComponent implements OnInit {
       const product = order.product;
       const duration = new Date(product.duration);
       const cost = product.prize * (duration.getTime() / (3600 * 1000));
-      const url = this.router.url;
+      const url = this.url;
       console.log(url);
       const document : TDocumentDefinitions = {
         content: [
@@ -106,6 +112,9 @@ export class OrderHistoryComponent implements OnInit {
               [product.name, `${product.user?.firstName} ${product.user?.lastName}`, this.getDateString(order.appointment.date), `${cost} €`]
             ]
           }
+        },
+        {
+          text : '\n\n'
         },
         {
           qr : url

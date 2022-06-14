@@ -16,7 +16,6 @@ import { OrderedServicesComponent } from './components/ordered-services/ordered-
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminAuthGuardService } from './services/admin-auth-guard.service';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
-import { Order } from './models/Order';
 
 
 /**
@@ -36,7 +35,7 @@ const routes: Routes = [
     { path: 'personalprofile', component: PersonalProfileComponent,canActivate: [AuthGuardService]},
     // Order
     { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
-    { path: 'order-history', component: OrderHistoryComponent, canActivate:[AuthGuardService]},
+    { path: 'order-history', component: OrderHistoryComponent},
 
     { path: 'not-available', component: NotAvailableComponent },
     { path: 'ordered-services', component : OrderedServicesComponent},
