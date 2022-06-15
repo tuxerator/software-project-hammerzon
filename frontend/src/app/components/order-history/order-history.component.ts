@@ -26,7 +26,7 @@ export class OrderHistoryComponent implements OnInit {
               private authService: AuthService,
               private router: Router,
               @Inject(DOCUMENT) private document: any
-  ) 
+  )
   {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
@@ -78,7 +78,8 @@ export class OrderHistoryComponent implements OnInit {
       const user = this.user;
       const product = order.product;
       const duration = new Date(product.duration);
-      const cost = product.prize * (duration.getTime() / (3600 * 1000));
+      const hours =  (duration.getTime() / (3600 * 1000));
+      const cost = product.prize * hours;
       const url = this.url;
       let logo  = '';
       await fetch('/assets/hammerzon1.b64')
@@ -107,7 +108,7 @@ export class OrderHistoryComponent implements OnInit {
         },
         {
           text: `${user.firstName} ${user.lastName}
-                 ${user.address.street} 
+                 ${user.address.street}
                  ${user.address.postCode} ${user.address.city}\n\n`
         },
         {
@@ -115,8 +116,8 @@ export class OrderHistoryComponent implements OnInit {
           table : {
             headerRows : 1,
             body : [
-              ['Dienstleistung', 'Handwerker', 'Termin', 'Preis'],
-              [product.name, `${product.user?.firstName} ${product.user?.lastName}`, this.getDateString(order.appointment.date), `${cost} €`]
+              ['Dienstleistung', 'Handwerker', 'Termin','Preis pro Std.','Stunden' ,'Preis'],
+              [product.name, `${product.user?.firstName} ${product.user?.lastName}`, this.getDateString(order.appointment.date), `${product.prize} €`,`${hours} Std.`,`${cost} €`]
             ]
           }
         },
