@@ -29,7 +29,10 @@ export default class ProductTestData {
         { date: new Date(2022, 8, 17, 13), isReserved: false },
         { date: new Date(2022, 8, 18, 13), isReserved: false },
       ],
-      image_id: ''
+      image_id: '',
+      numberOfRatings : 0,
+      rating : 1,
+      comments : []
     },
     {
       name: 'Gartenarbeit',
@@ -51,6 +54,9 @@ export default class ProductTestData {
         { date: new Date(2022, 8, 18, 13), isReserved: false },
         { date: new Date(2022, 8, 19, 13), isReserved: false },
       ],
+      numberOfRatings : 0,
+      rating : 1,
+      comments : []
 
     },
     {
@@ -67,6 +73,9 @@ export default class ProductTestData {
           { date: new Date(2022, 8, 18, 13), isReserved: false },
           { date: new Date(2022, 8, 19, 13), isReserved: false },
         ],
+        numberOfRatings : 0,
+        rating : 1,
+        comments : []
     },
     {
         name:'Rohbauarbeiten',
@@ -82,6 +91,9 @@ export default class ProductTestData {
           { date: new Date(2022, 8, 18, 13), isReserved: false },
           { date: new Date(2022, 8, 19, 13), isReserved: false },
         ],
+        numberOfRatings : 0,
+        rating : 1,
+        comments : []
     },
     {
         name:'Innnenarchitketur',
@@ -90,6 +102,9 @@ export default class ProductTestData {
         description:'Wir machen ihren drinnen zu einer wohlfühl Oase das sie ihr Heim nennen können',
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(2022, 8, 19, 13),isReserved:true}],
+        numberOfRatings : 0,
+        rating : 1,
+        comments : []
     },
     {
         name:'Terrassenbau',
@@ -98,6 +113,9 @@ export default class ProductTestData {
         description:'Eine Terrasse von der ihr Nachbar nur Träumen kann.',
         duration:new Date('1970-01-01T05:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
+        numberOfRatings : 0,
+        rating : 1,
+        comments : []
 
     },
     {
@@ -107,12 +125,15 @@ export default class ProductTestData {
         description:'Der Umzug passiert hier ohne Problem und ohne Stress.',
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
+        numberOfRatings : 0,
+        rating : 1,
+        comments : []
 
     }
   ];
 
   constructor() {
-    //Product.deleteMany({});
+    Product.deleteMany({});
     this.insertIfNotExistend();
   }
 

@@ -99,7 +99,11 @@ class ProductController {
 
 
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
-    const product = request.body;
+    const product = request.body + {
+      numberOfRatings : 0,
+      rating : 1,
+      comments : []
+    };
     console.log(product);
 
     // Setze es auf den Angemeldeten User
