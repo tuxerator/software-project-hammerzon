@@ -28,6 +28,8 @@ import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import { Category } from './Models/Category';
+import { CategoryController } from './Controller/category';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -105,6 +107,8 @@ const order = new OrderController();
 
 const image = new ImageController();
 
+const category = new CategoryController();
+
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
 app.get('/api/about/:nameID', api.getNameInfo);
@@ -150,7 +154,7 @@ app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetApp
 app.post('/api/img/upload', upload.single('img'), image.postImage);
 
 // Removed Images
-app.get('/api/img/:id', image.getImage);
+app.get('/api/img/:id',image.getImage);
 
 // OrderController endpoints
 
@@ -160,15 +164,27 @@ app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrd
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
 
-// list all orders for the admin page
-app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
-
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
 // list all orders by the product creator
 app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
+
+// Admin
+app.use('/api/admin',ValidatorGroups.AdminAuthorized);
+
+// all orders for the admin page
+app.get('/api/admin/order/list', order.listAllOrders);
+//
+app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isValidObjectId('image_id')]),category.addCategory);
+//
+app.get('/api/admin/category/list', category.listCategory);
+
+
+
+
+
 // Falls ein Fehler auftritt, gib den Stack trace aus
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());

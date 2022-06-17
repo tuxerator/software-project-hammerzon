@@ -7,19 +7,19 @@
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
              class="mb-3 input-group has-validation">
           <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i></span>
-          <input class="form-control" formControlName="productName" placeholder="Produktname" required type="text">
+          <input class="form-control" formControlName="productName" placeholder="Dienstleistung" required type="text">
           <div *ngIf="!addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger
-            Produktname.
+            Dienstleistung.
           </div>
           <div *ngIf="addProductForm.controls['productName']?.invalid" class="invalid-feedback was-validated">
-            Produktname wird erwartet.
+            Dienstleistung wird erwartet.
           </div>
         </div>
         <!--Preis-->
         <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['prize'].touched">
-          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-briefcase-fill"></i></span>
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-wallet-fill"></i></span>
           <input class="form-control" formControlName="prize" placeholder="Preis" required type="text">
-          <span class="input-group-text"> <i class="bi bi-currency-euro"></i>/std</span>
+          <span class="input-group-text"> <i class="bi bi-currency-euro"></i>/std.</span>
           <div *ngIf="!addProductForm.controls['prize']?.invalid" class="valid-feedback was-validated">Gültiger Preis.
           </div>
           <div *ngIf="addProductForm.controls['prize']?.invalid" class="invalid-feedback was-validated">Preis wird
@@ -39,6 +39,19 @@
             Beschreibung wird erwartet.
           </div>
         </div>
+
+        <!-- Kategorie -->
+        <label for="categoryInput" class="form-label">Kategorie</label>
+        <div [class.was-validated]="addProductForm.controls['productName'].touched"
+        class="mb-3 input-group has-validation">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-bookmark-fill"></i></span>
+          <input class="form-control" formControlName="categoryName" list="datalistOptions" id="exampleDataList" placeholder="Kategorie ..." (change)="categoryChanged()">
+          <datalist id="datalistOptions">
+            <option *ngFor="let category of categories" value="{{category.name}}">
+          </datalist>
+        </div>
+
+        <!--Dauer -->
         <label for="durationInput" class="form-label">Dauer</label>
         <div
           [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"

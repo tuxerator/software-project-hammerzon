@@ -14,9 +14,11 @@ interface IProduct extends Document{
     // Zeit dauer der Dienstleistung
     duration:Date
     // Möglichen daten wo man die Dienstleistung kaufen kann
-  appointments: IAppointment[]
+    appointments: IAppointment[]
 
-  image_id: mongoose.Types.ObjectId
+    image_id: mongoose.Types.ObjectId
+
+    category: mongoose.Types.ObjectId
 }
 
 interface IAppointment {
@@ -36,12 +38,13 @@ const Appointment: Schema = new Schema<IAppointment>(
 // create the Schema of IProduct
 const productSchema : Schema = new Schema<IProduct>({
   name:          { type: String, required: true },
-  user:          { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user:          { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   description:   { type: String},
   prize:         { type: Number, required: true },
   duration:      { type: Date,   required: true },
   appointments:  { type: [Appointment], required: true },
-  image_id:      { type: mongoose.Schema.Types.ObjectId, required: true }
+  image_id:      { type: mongoose.Schema.Types.ObjectId, ref: 'Image', required: true},
+  category:   { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
 });
 
 

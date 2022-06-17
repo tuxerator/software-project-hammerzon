@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import Helper from '../helpers';
-import { getUserWithOutPassword, IUser, User } from '../Models/User';
+import { IUser, User } from '../Models/User';
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
 
@@ -65,7 +65,8 @@ class AuthController {
   getUser(request: SessionRequest, response: Response): void {
     console.log(request.session.user);
 
-    const userWithoutPass = getUserWithOutPassword(request.session.user);
+    const userWithoutPass = request.session.user;
+    delete userWithoutPass.password;
     response.status(200);
     response.send(userWithoutPass);
 

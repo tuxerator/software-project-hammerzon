@@ -152,19 +152,22 @@ export class ValidatorLists {
 
 
   public static ProductValidatorList: Validator[] = [
-    Validators.isMaxLength('name', 4),
-    //Validators.isRequired('user'),
-    //Validators.isValidObjectId('user'),
-    Validators.isRequired('prize'),
-    Validators.isRequired('description'),
-    Validators.isRequired('duration'),
-    Validators.isRequired('appointments'),
-    Validators.subArrayValidators('appointments', [
-      Validators.isRequired('date'),
-      Validators.isRequired('isReserved')
-    ]),
+        Validators.isMaxLength('name', 4),
+        //Validators.isRequired('user'),
+        //Validators.isValidObjectId('user'),
+        Validators.isRequired('prize'),
+        Validators.isRequired('description'),
+        Validators.isRequired('duration'),
+
+        Validators.isRequired('appointments'),
+        Validators.subArrayValidators('appointments', [
+          Validators.isRequired('date'),
+          Validators.isRequired('isReserved')
+        ]),
         Validators.isRequired('image_id'),
-        Validators.isValidObjectId('image_id')
+        Validators.isValidObjectId('image_id'),
+        Validators.isRequired('category_id'),
+        Validators.isValidObjectId('category_id')
     ];
 
   public static PostOrderValidatorList: Validator[] = [

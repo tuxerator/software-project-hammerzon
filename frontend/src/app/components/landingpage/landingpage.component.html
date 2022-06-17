@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-2 p-4">
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <ol class="list-group shadow bg-dark">
@@ -16,6 +16,8 @@
                         <h4> {{productInfo?.name}}</h4>
                       </div>
                       <p class="text-secondary">{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
+
+                      <app-category-badge [category]="productInfo?.category"></app-category-badge>
                     </div>
                   </div>
                 </li>

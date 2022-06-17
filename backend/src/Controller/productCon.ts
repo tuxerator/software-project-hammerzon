@@ -41,13 +41,13 @@ class ProductController {
                 {name:{$regex:searchTerm}},
                 {prize:{$lte:testPrize}}
               ]};
-            list = await Product.find(query).skip(start).populate('user').exec();
+            list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
             // Wie viele Elemente kommen danach noch
             requestable =  Math.max(list.length - limit - start,0);
         }
         else{
             // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-            list = await Product.find({}).skip(start).populate('user').exec();
+            list = await Product.find({}).skip(start).populate('user', '-password -address').populate('category').exec();
             // Wieviele Elemente kommen danach noch
             requestable = Math.max(productCount - limit - start,0);
         }
@@ -70,7 +70,7 @@ class ProductController {
     const id = request.params.id;
     console.log(id);
     if (id && Types.ObjectId.isValid(id)) {
-      const product: IProduct = await Product.findById(id).populate('user', '-password -address').exec();
+      const product: IProduct = await Product.findById(id).populate('user', '-password -address').populate('category').exec();
       response.status(200);
       response.send(product);
     } else {

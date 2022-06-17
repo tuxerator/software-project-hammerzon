@@ -1,3 +1,4 @@
+import { Category } from './Category';
 import { User } from './User';
 
 export class Product {
@@ -16,6 +17,8 @@ export class Product {
   appointments: Appointment[];
 
   image_id: string;
+
+  category?:Category;
 
   constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string) {
     this.name = name;

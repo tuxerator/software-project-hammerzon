@@ -5,15 +5,16 @@ import { OrderService } from 'src/app/services/order.service';
 
 
 @Component({
+  selector:'app-all-orders',
   templateUrl: './all-orders.component.html',
   styleUrls: ['./all-orders.component.css'],
 })
 export class AllOrdersComponent implements OnInit {
   public orderList : Order[] = [];
   public status = Status;
-  
+
   constructor(private orderService: OrderService) { }
-  
+
 
   ngOnInit(): void {
     this.listAllOrders();
@@ -36,7 +37,7 @@ export class AllOrdersComponent implements OnInit {
   }
 
   setStatus(index:number, status:Status): void
-  { 
+  {
     console.log('status set:' + status);
     if(this.orderList)
     {

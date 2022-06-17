@@ -1,11 +1,13 @@
-<div class="container">
+<div class="container mt-2 p-4">
     <div class="card border-secondary bg-dark mx-auto col-lg-8">
         <img src="api/img/{{product?.image_id}}" class="card-img-top" alt="...">
         <div class="card-body bg-dark text-white p-4">
           <div class="card-title row justify-content-between">
             <h3 class="col me-auto">{{product?.name}}</h3>
+
             <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
           </div>
+          <h6 class="col"> <app-category-badge [category]="product?.category"></app-category-badge></h6>
           <h6 class="card-subtitle mb-4 text-secondary">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
 
           <h5>Dauer</h5>
@@ -37,7 +39,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">Möchten Sie das Produkt wirklich löschen?
-      
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
