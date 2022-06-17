@@ -1,4 +1,4 @@
-<li role="button" tabindex="0" class="list-group-item bg-dark border-secondary text-white" (click)="onClick()" routerLink="/productdetails/{{productInfo._id}}">
+<div role="button" tabindex="0" (click)="onClick()" routerLink="/productdetails/{{productInfo._id}}">
   <div class="row">
     <!--Image -->
     <div class="col-3 p-2 m-auto">
@@ -15,4 +15,4 @@
       <app-category-badge [category]="productInfo?.category"></app-category-badge>
     </div>
   </div>
-</li>
+</div>
