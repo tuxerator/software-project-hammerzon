@@ -17,7 +17,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { AdminAuthGuardService } from './services/admin-auth-guard.service';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
 import { Order } from './models/Order';
-import { CategoryComponent } from './components/category/category.component';
+import { CategoryComponent } from './components/admin/category/category.component';
 import { AdminComponent } from './components/admin/admin.component';
 
 

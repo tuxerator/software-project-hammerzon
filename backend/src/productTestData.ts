@@ -132,7 +132,7 @@ export default class ProductTestData {
 
     await Category.deleteMany({});
 
-    const category = await Category.insertMany([{name:'Schreiner',image_id:imgs[2],is_replaceable:false}]);
+    const category = await Category.insertMany([{name:'Schreiner',image_id:imgs[2],is_replaceable:false,color:'#fd7e14'}]);
 
     await Product.deleteMany({});
 
@@ -147,7 +147,7 @@ export default class ProductTestData {
         console.log(i);
         console.log(imgs[i]);
         d.image_id = imgs[i];
-        d.category_id = category[0]._id;
+        d.category = category[0]._id;
         return d;
       });
       console.log(newList);

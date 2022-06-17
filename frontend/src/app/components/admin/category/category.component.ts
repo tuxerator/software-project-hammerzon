@@ -14,6 +14,7 @@ export class CategoryComponent implements OnInit {
 
   public new_image_id?:string;
   public new_name?:string;
+  public new_color?:string;
 
   constructor(private catergoryService:CategoryService,private imageService:ImageService) { }
 
@@ -41,14 +42,29 @@ export class CategoryComponent implements OnInit {
     });
   }
 
+  colorChanged(colorElement:any)
+  {
+    this.new_color = colorElement.value;
+  }
+
   addCategory()
   {
-    if(this.new_name && this.new_image_id)
+    console.log(this.new_color);
+    if(this.new_name && this.new_image_id && this.new_color)
     {
-      this.catergoryService.addCategory(new Category(this.new_name,this.new_image_id)).subscribe({
-        next: () => this.getCategories(),
+      this.catergoryService.addCategory(new Category(this.new_name,this.new_image_id,this.new_color)).subscribe({
+        next: () => {
+          this.getCategories();
+          this.new_name = undefined;
+          this.new_image_id = undefined;
+          this.new_color = undefined;
+        },
         error: (err) => console.log(err)
       });
+    }
+    else
+    {
+      console.log('one element could not be found');
     }
   }
 }

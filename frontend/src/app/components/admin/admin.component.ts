@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { CategoryComponent } from '../category/category.component';
+import { CategoryComponent } from './category/category.component';
 
 export type Tab = {
   name:string,

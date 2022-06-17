@@ -15,7 +15,7 @@ export class CategoryService {
 
   public addCategory(category:Category):Observable<IdMessageResponse>
   {
-    return this.http.post<IdMessageResponse>(`api/admin/category/add`,category);
+    return this.http.post<IdMessageResponse>('api/admin/category/add',category);
   }
 
   public getCategoriesList(search?:string):Observable<CategoryList>
@@ -24,7 +24,7 @@ export class CategoryService {
     {
       return this.http.get<CategoryList>(`api/admin/category/list?search=${search}`);
     }
-    return this.http.get<CategoryList>(`api/admin/category/list`);
+    return this.http.get<CategoryList>('api/admin/category/list');
   }
 
 

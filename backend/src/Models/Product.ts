@@ -18,7 +18,7 @@ interface IProduct extends Document{
 
     image_id: mongoose.Types.ObjectId
 
-    category_id: mongoose.Types.ObjectId
+    category: mongoose.Types.ObjectId
 }
 
 interface IAppointment {
@@ -44,7 +44,7 @@ const productSchema : Schema = new Schema<IProduct>({
   duration:      { type: Date,   required: true },
   appointments:  { type: [Appointment], required: true },
   image_id:      { type: mongoose.Schema.Types.ObjectId, ref: 'Image', required: true},
-  category_id:   { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
+  category:   { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
 });
 
 

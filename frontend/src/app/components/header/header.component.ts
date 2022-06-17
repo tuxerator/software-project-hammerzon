@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Category } from 'src/app/models/Category';
 import { AuthService } from 'src/app/services/auth.service';
+import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +12,9 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HeaderComponent implements OnInit {
 
   public searchTerm:string = '';
+  public categories?:Category[];
 
-  constructor(public authService: AuthService, public router: Router) {
+  constructor(public authService: AuthService, public router: Router,public categoryService:CategoryService) {
   }
 
   ngOnInit(): void {
@@ -25,6 +28,9 @@ export class HeaderComponent implements OnInit {
         console.error(err);
       }
     });
+    this.categoryService.getCategoriesList().subscribe({
+      next:(resp) => this.categories = resp.categories,
+    })
   }
 
   public search(): void {

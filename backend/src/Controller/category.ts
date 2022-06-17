@@ -8,8 +8,16 @@ export class CategoryController{
   {
     const name = request.body.name;
     const image_id = request.body.image_id;
+    const color = request.body.color;
 
     const image = Image.findById(image_id);
+
+    if(color[0] !== '#')
+    {
+      response.status(400);
+      response.send({code:400,message:'Color needs to be in a hex-format'});
+      return;
+    }
 
     if(!image)
     {
@@ -18,7 +26,7 @@ export class CategoryController{
       return;
     }
 
-    const category = {name,image_id};
+    const category = {name,image_id,color};
 
     let db_obj =  new Category(category);
 

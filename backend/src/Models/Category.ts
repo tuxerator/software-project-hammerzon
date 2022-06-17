@@ -6,12 +6,15 @@ export interface ICategory extends Document {
   name:string,
   //
   image_id:Types.ObjectId
+
+  color:string
 }
 
 // create the Schema of IProduct
 const categorySchema: Schema = new Schema<ICategory>({
   name: { type: String, required: true },
   image_id: { type: Schema.Types.ObjectId, ref:'Image', required: true },
+  color:{type:String, required:true}
 });
 
 // 3. Create a Model.

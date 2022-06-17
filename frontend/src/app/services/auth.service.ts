@@ -18,7 +18,7 @@ export class AuthService {
 
    public isLogedIn():boolean
    {
-    console.log(this.user);
+    //console.log(this.user);
     return this.user !== undefined;
    }
 

@@ -4,8 +4,10 @@
         <div class="card-body bg-dark text-white p-4">
           <div class="card-title row justify-content-between">
             <h3 class="col me-auto">{{product?.name}}</h3>
+
             <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
           </div>
+          <h6 class="col"> <app-category-badge [category]="product?.category"></app-category-badge></h6>
           <h6 class="card-subtitle mb-4 text-secondary">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
 
           <h5>Dauer</h5>

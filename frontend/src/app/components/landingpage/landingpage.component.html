@@ -16,6 +16,8 @@
                         <h4> {{productInfo?.name}}</h4>
                       </div>
                       <p class="text-secondary">{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
+
+                      <app-category-badge [category]="productInfo?.category"></app-category-badge>
                     </div>
                   </div>
                 </li>
