@@ -140,6 +140,9 @@ app.get('/api/product/list', product.getList.bind(product));
 // product details ...
 app.get('/api/product/:id', product.getProductDetail.bind(product));
 
+// similar product
+app.get('/api/product/similar/:id', product.getSimilarProduct);
+
 // reset appointment
 
 // add product
