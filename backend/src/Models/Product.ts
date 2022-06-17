@@ -47,9 +47,9 @@ const productSchema : Schema = new Schema<IProduct>({
   duration:        { type: Date,   required: true },
   appointments:    { type: [Appointment], required: true },
   image_id:        { type: mongoose.Schema.Types.ObjectId, required: true },
-  numberOfRatings: { type: Number , min : 0},
-  rating:          { type: Number , min : 1, max : 5},
-  comments:        { type: [String]}
+  numberOfRatings: { type: Number , min : 0, required : true},
+  rating:          { type: Number , min : 1, max : 5, required : true},
+  comments:        { type: [String], required : true}
 });
 
 

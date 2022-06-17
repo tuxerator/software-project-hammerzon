@@ -131,6 +131,34 @@ export class Validators{
       return false;
     };
   }
+
+  public static isValidRatingRange() : SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      const rating = request.body.rating;
+      if(rating >= 1 && rating <= 5) {
+        return true;
+      }
+      else {
+        response.status(500);
+        response.send('rating is out of the valid range');
+        return false;
+      }
+    };
+  }
+  public static isValidCommentLength(minLength: number, maxLength : number) : SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      const length = request.body.comment.length;
+      if(length >= minLength && length <= maxLength)
+      {
+        return true;
+      }
+      else {
+        response.status(500);
+        response.send('comment length is out of the valid range');
+        return false;
+      }
+    };
+  }
 }
 
 export class ValidatorLists {
@@ -209,6 +237,17 @@ export class ValidatorGroups {
         Validators.isRequired('status')
     ]);
 
+    public static ValidRating = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.isRequired('rating'),
+      Validators.isValidRatingRange()
+    ]);
+
+    public static ValidComment = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.isRequired('comment'),
+      Validators.isValidCommentLength(10, 300)
+    ]);
 
     // Product
   public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);
