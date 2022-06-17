@@ -20,15 +20,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getUser().subscribe({
       next: (user) => {
-<<<<<<< HEAD
-        if (user) {
-          //this.router.navigate(['']);
-        }
-=======
         /*if (!user) {
           this.router.navigate(['']);
         }*/
->>>>>>> category
       },
       error: (err) => {
         console.error(err);
@@ -36,7 +30,7 @@ export class HeaderComponent implements OnInit {
     });
     this.categoryService.getCategoriesList().subscribe({
       next:(resp) => this.categories = resp.categories,
-    })
+    });
   }
 
   public search(): void {

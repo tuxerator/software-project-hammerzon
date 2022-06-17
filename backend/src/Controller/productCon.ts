@@ -21,7 +21,7 @@ class ProductController {
     const limit = Helper.parseQueryInt(request.query, 'limit', 0, maxLimit, 10);
 
         // Falls es einen Search Term gibt nutzt diesen Anstelle von
-    const searchTerm = request.query.search;
+    const searchTerm:string = request.query.search as string;
     let list: IProduct[];
 
         let requestable;
@@ -36,12 +36,8 @@ class ProductController {
             }
 
             console.log(searchTerm);
-            const query = {$or:[
-                // und sonst überprufen durch regex den namen des Products
-                {name:{$regex:searchTerm}},
-                {prize:{$lte:testPrize}}
-              ]};
-            list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
+
+            list = await Product.find({$text: {$search: searchTerm}}).skip(start).populate('user', '-password -address').populate('category').exec();
             // Wie viele Elemente kommen danach noch
             requestable =  Math.max(list.length - limit - start,0);
         }
@@ -95,7 +91,37 @@ class ProductController {
       response.status(500);
       response.send('There is no product with such an id');
     }
+  }
+  // test for Product id
+  public async getSimilarProduct(request:Request, response: Response):Promise<void>{
+    console.log('finding similar object');
+
+    const id = request.params.id;
+
+    if (!id || !Types.ObjectId.isValid(id)) {
+
+      response.status(500);
+      response.send('There is no product with such an id');
+      return;
+
     }
+    // Get Product to search from
+    const product = await Product.findById(id);
+
+    //
+
+    const products = await Product.find({$text: {$search: `${product.name} ${product.description}`}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}});
+
+    const listInfo: ListInfo<IProduct> = {
+      list:products,//this.list.slice(start,start + limit),
+      requestable:0
+    };
+
+
+    response.status(200);
+    response.send(listInfo);
+
+  }
 
 
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {

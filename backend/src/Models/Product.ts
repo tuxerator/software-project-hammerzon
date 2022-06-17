@@ -46,10 +46,14 @@ const productSchema : Schema = new Schema<IProduct>({
   image_id:      { type: mongoose.Schema.Types.ObjectId, ref: 'Image', required: true},
   category:   { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
 });
-
+// Index für alle Strings im element
+productSchema.index({'$**': 'text'});
 
 // 3. Create a Model.
 const Product: Model<IProduct> = model<IProduct>('Product', productSchema);
+
+
+
 
 
 export { IProduct, Product, IAppointment, Appointment };
