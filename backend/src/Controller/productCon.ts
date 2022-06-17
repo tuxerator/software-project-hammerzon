@@ -110,7 +110,16 @@ class ProductController {
 
     //
 
-    const products = await Product.find({$text: {$search: `${product.name} ${product.description}`}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}});
+    const products = await Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
+
+    if(products.length < 3)
+    {
+      const additionalProducts = await Product.find({_id:{$ne:product._id}}).limit(3 - products.length).populate('user', '-password -address').populate('category').exec();
+      for(const addProduct of additionalProducts)
+      {
+        products.push(addProduct);
+      }
+    }
 
     const listInfo: ListInfo<IProduct> = {
       list:products,//this.list.slice(start,start + limit),

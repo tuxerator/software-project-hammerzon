@@ -5,7 +5,10 @@ import { AuthService } from '../../services/auth.service';
 
 import { Product, getAppointmentString, getDurationString } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
-import { delay, timeout } from 'rxjs';
+import { createHistogram } from 'perf_hooks';
+
+
+
 
 @Component({
   templateUrl: './productdetails.component.html',
@@ -18,6 +21,7 @@ export class ProductdetailsComponent implements OnInit {
 
   id:string = '';
 
+  similarProducts?:Product[];
   // Zum formatieren der Daten
 
 
@@ -33,6 +37,25 @@ export class ProductdetailsComponent implements OnInit {
     console.log('kommt zu Params');
     const routeParams = this.route.snapshot.paramMap;
     this.id = String(routeParams.get('id'));
+    this.changeId(this.id);
+
+    this.user = this.authService.user;
+    // is there a user logged in? get the user.
+    /*this.authService.getUser().subscribe(
+      {
+        next: (val) => {
+          this.user = val;
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      }
+    );*/
+  }
+
+  public changeId(id:string):void
+  {
+    this.id = id;
 
     console.log(this.id);
     console.log(this.productService);
@@ -57,18 +80,18 @@ export class ProductdetailsComponent implements OnInit {
         }
       }
     );
-    this.user = this.authService.user;
-    // is there a user logged in? get the user.
-    /*this.authService.getUser().subscribe(
+
+    this.productService.getSimilarProducts(this.id).subscribe(
       {
-        next: (val) => {
-          this.user = val;
-        },
-        error: (err) => {
-          console.log(err);
-        }
+        next: (res) => this.similarProducts = res.list,
       }
-    );*/
+    );
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+
   }
 
   getDurString(): string {
@@ -89,9 +112,9 @@ export class ProductdetailsComponent implements OnInit {
       {
         console.log(err.error);
       }
-    }
-    )
-    
+      }
+    );
+
   }
 
 }

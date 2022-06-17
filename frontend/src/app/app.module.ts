@@ -23,6 +23,8 @@ import { OrderedServicesComponent } from './components/ordered-services/ordered-
 import { CategoryComponent } from './components/admin/category/category.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { CategoryBadgeComponent } from './components/admin/category/category-badge/category-badge.component';
+import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
+import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { CategoryBadgeComponent } from './components/admin/category/category-bad
     OrderedServicesComponent,
     CategoryComponent,
     AdminComponent,
-    CategoryBadgeComponent
+    CategoryBadgeComponent,
+    ProductListComponent,
+    ProductListItemComponent
   ],
   imports: [
     BrowserModule,

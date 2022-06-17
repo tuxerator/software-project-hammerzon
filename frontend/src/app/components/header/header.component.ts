@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.authService.getUser().subscribe({
       next: (user) => {
         /*if (!user) {
@@ -45,6 +46,12 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => console.log(err)
     });
+  }
+
+  public isOnLandingPage():boolean
+  {
+    console.log(this.router.url);
+    return this.router.url === '/';
   }
 
 

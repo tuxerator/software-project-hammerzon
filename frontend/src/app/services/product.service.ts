@@ -40,4 +40,10 @@ export class ProductService {
     return this.http.post<MessageResponse>('api/product/delete',{id});
   }
 
+  getSimilarProducts(id:string):Observable<ListInfoReponse<Product>>
+  {
+    return this.http.get<ListInfoReponse<Product>>(`api/product/similar/${id}`);
+  }
+
 }
+

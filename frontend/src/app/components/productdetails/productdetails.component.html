@@ -1,36 +1,72 @@
 <div class="container mt-2 p-4">
-    <div class="card border-secondary bg-dark mx-auto col-lg-8">
-        <img src="api/img/{{product?.image_id}}" class="card-img-top" alt="...">
-        <div class="card-body bg-dark text-white p-4">
-          <div class="card-title row justify-content-between">
-            <h3 class="col me-auto">{{product?.name}}</h3>
 
-            <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
-          </div>
-          <h6 class="col"> <app-category-badge [category]="product?.category"></app-category-badge></h6>
-          <h6 class="card-subtitle mb-4 text-secondary">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
+    <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']" >Dienstleistungen</a></li>
+        <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/?category']">{{product?.category?.name}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{product?.name}}</li>
+      </ol>
+    </nav>
 
-          <h5>Dauer</h5>
-          <p class="text-success"> {{getDurString()}}</p>
-          <h5>Beschreibung</h5>
+    <!-- Erste Card Item-->
+    <div class="card border-secondary bg-dark mx-auto col-lg-8 mb-4">
+      <img src="api/img/{{product?.image_id}}" class="card-img-top ratio-16x9" alt="...">
+      <div class="card-body bg-dark text-white">
+        <div class="card-title row justify-content-between">
+          <h3 class="col me-auto">{{product?.name}}</h3>
+
+          <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
+        </div>
+        <h6 class="col"> <app-category-badge [category]="product?.category"></app-category-badge></h6>
+        <h6 class="card-subtitle text-secondary">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
+      </div>
+    </div>
+
+    <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
+      <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
+    </div>
+
+    <div class="card border-secondary bg-dark mx-auto col-lg-8 mb-4">
+      <div class="card-body bg-dark text-white tw-bold fs-5">
+        Dauer <span class="text-success"> {{getDurString()}}</span>
+      </div>
+    </div>
+
+    <div class="card border-secondary bg-dark mx-auto col-lg-8 mb-4">
+      <div class="card-body bg-dark text-white">
+          <div class="tw-bold fs-5">Beschreibung</div>
+          <hr>
           <p class="text-light">{{product?.description}}</p>
-
-          <h5>Termine</h5>
+      </div>
+    </div>
+    <div class="card border-secondary bg-dark mx-auto col-lg-8 mb-4">
+      <div class="card-body bg-dark text-white">
+          <div class="tw-bold fs-5">Termine</div>
+          <hr>
           <div class="row row-cols-3" role="group">
             <div class="col mb-2 d-grid"  *ngFor="let a of product?.appointments; let i = index" >
                   <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
             </div>
               <!-- <ng-template #elseBlock> Please log in to place an Order </ng-template> -->
           </div>
-          <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
-                <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
+      </div>
+     </div>
+
+     <div class="card border-secondary bg-dark mx-auto col-lg-8 mb-4">
+        <div class="card-body bg-dark text-white">
+          <h5>Ähnliche Dienstleistungen</h5>
+          <div class="col-lg-8 mx-auto">
+            <app-product-list  [list]="similarProducts" [click]="changeId.bind(this)"></app-product-list>
+          </div>
         </div>
-        </div>
-    </div>
+     </div>
+
 </div>
 
-<!-- Modal -->
+
+
+<!--Delete Modal -->
 <div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

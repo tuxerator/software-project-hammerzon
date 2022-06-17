@@ -22,9 +22,9 @@ export class CategoryService {
   {
     if(search)
     {
-      return this.http.get<CategoryList>(`api/admin/category/list?search=${search}`);
+      return this.http.get<CategoryList>(`api/category/list?search=${search}`);
     }
-    return this.http.get<CategoryList>('api/admin/category/list');
+    return this.http.get<CategoryList>('api/category/list');
   }
 
 

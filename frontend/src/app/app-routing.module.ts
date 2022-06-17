@@ -42,7 +42,7 @@ const routes: Routes = [
     { path: 'ordered-services', component : OrderedServicesComponent},
     // product
     { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
-    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'productdetails/:id',component:ProductdetailsComponent,runGuardsAndResolvers:'always'},
     { path: 'add-product/:id', component: AddProductComponent,canActivate:[AuthGuardService]},
     { path: 'add-product', component: AddProductComponent,canActivate:[AuthGuardService]},
     { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent,canActivate:[AuthGuardService]},
@@ -54,7 +54,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule],
   providers: [
     AuthGuardService,

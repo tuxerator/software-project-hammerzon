@@ -174,15 +174,19 @@ app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOr
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
 
+// Category
+
+app.get('/api/category/list', category.listCategory);
+
 // Admin
-app.use('/api/admin',ValidatorGroups.AdminAuthorized);
+app.use('/api/admin/*',ValidatorGroups.AdminAuthorized);
 
 // all orders for the admin page
 app.get('/api/admin/order/list', order.listAllOrders);
 //
 app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isValidObjectId('image_id')]),category.addCategory);
 //
-app.get('/api/admin/category/list', category.listCategory);
+
 
 
 
