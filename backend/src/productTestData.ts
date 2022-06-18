@@ -132,7 +132,16 @@ export default class ProductTestData {
 
     await Category.deleteMany({});
 
-    const category = await Category.insertMany([{name:'Schreiner',image_id:imgs[2],is_replaceable:false,color:'#fd7e14'}]);
+    const categoryLists = [
+      {name:'Schreinern',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-hammer'},
+      {name:'Elektronik',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-lightning-fill'},
+      {name:'Umzug',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-box-seam'},
+      {name:'Malern',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-brush-fill'},
+      {name:'Maurer',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-bricks'},
+      {name:'Glaser',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-shop-window'},
+    ];
+
+    const categoryIds = await Category.insertMany(categoryLists);
 
     await Product.deleteMany({});
 
@@ -147,7 +156,7 @@ export default class ProductTestData {
         console.log(i);
         console.log(imgs[i]);
         d.image_id = imgs[i];
-        d.category = category[0]._id;
+        d.category = categoryIds[i%categoryLists.length]._id;
         return d;
       });
       console.log(newList);

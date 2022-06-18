@@ -15,6 +15,7 @@ export class CategoryComponent implements OnInit {
   public new_image_id?:string;
   public new_name?:string;
   public new_color?:string;
+  public new_icon?:string;
 
   constructor(private catergoryService:CategoryService,private imageService:ImageService) { }
 
@@ -50,9 +51,9 @@ export class CategoryComponent implements OnInit {
   addCategory()
   {
     console.log(this.new_color);
-    if(this.new_name && this.new_image_id && this.new_color)
+    if(this.new_name && this.new_image_id && this.new_color && this.new_icon)
     {
-      this.catergoryService.addCategory(new Category(this.new_name,this.new_image_id,this.new_color)).subscribe({
+      this.catergoryService.addCategory(new Category(this.new_name,this.new_image_id,this.new_color,this.new_icon)).subscribe({
         next: () => {
           this.getCategories();
           this.new_name = undefined;

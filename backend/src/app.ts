@@ -148,7 +148,7 @@ app.get('/api/product/similar/:id', product.getSimilarProduct);
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
+app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]),product.removeProduct);
 
 app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
@@ -179,12 +179,12 @@ app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus)
 app.get('/api/category/list', category.listCategory);
 
 // Admin
-app.use('/api/admin/*',ValidatorGroups.AdminAuthorized);
+app.use('/api/admin',ValidatorGroups.AdminAuthorized);
 
 // all orders for the admin page
 app.get('/api/admin/order/list', order.listAllOrders);
 //
-app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isValidObjectId('image_id')]),category.addCategory);
+app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon')]),category.addCategory);
 //
 
 

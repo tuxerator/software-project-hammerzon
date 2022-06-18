@@ -13,13 +13,12 @@
 
       <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9" alt="...">
       <div class="py-3 bg-dark text-white">
-        <div class="card-title row justify-content-between">
-          <h3 class="col me-auto">{{product?.name}}</h3>
-
+        <div class="row justify-content-between">
+          <div class="col fs-3 fw-bold me-auto">{{product?.name}}</div>
           <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
         </div>
-        <h6 class="col"> <app-category-badge [category]="product?.category"></app-category-badge></h6>
-        <h6 class="text-secondary">{{product?.user?.firstName}} {{product?.user?.lastName}}</h6>
+        <app-category-badge [category]="product?.category" class="text-muted" direction="hor"></app-category-badge>
+        <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
       </div>
 
     <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="position-relative  d-grid gap-2 d-md-flex justify-content-md-end">

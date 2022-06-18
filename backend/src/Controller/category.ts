@@ -9,6 +9,7 @@ export class CategoryController{
     const name = request.body.name;
     const image_id = request.body.image_id;
     const color = request.body.color;
+    const icon = request.body.icon;
 
     const image = Image.findById(image_id);
 
@@ -26,7 +27,7 @@ export class CategoryController{
       return;
     }
 
-    const category = {name,image_id,color};
+    const category = {name,image_id,color,icon};
 
     let db_obj =  new Category(category);
 

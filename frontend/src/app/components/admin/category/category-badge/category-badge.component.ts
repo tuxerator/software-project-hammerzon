@@ -13,9 +13,14 @@ export class CategoryBadgeComponent implements OnInit {
   name?:string;
   @Input()
   color?:string;
+  @Input()
+  icon?:string;
+  @Input()
+  direction:'ver'|'hor'='ver';
+
   constructor() {
 
-   }
+  }
 
   ngOnInit(): void {
     //if(!this.category && this.name && this.image && this.color)

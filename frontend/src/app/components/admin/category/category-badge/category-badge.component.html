@@ -1,3 +1,4 @@
-<span *ngIf="category" class="badge" [style.background-color]="category?.color">{{category?.name}}</span>
-<span *ngIf="!category" class="badge" [style.background-color]="color">{{name}}</span>
+<div *ngIf="category" type="button" [class]="direction=='ver' ? ['text-center']:[]"><i class="bi" [class]="category.icon"></i><br *ngIf="direction==='ver'">{{category.name}}</div>
+<div *ngIf="!category" type="button" [class]="direction=='ver' ? ['text-center']:[]"><i class="bi" [class]="icon"></i><br *ngIf="direction==='ver'">{{name}}</div>
+
 

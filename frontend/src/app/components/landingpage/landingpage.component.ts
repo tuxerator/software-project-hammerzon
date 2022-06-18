@@ -54,14 +54,21 @@ export class LandingpageComponent implements OnInit {
     // Gib die Query Params as der Rout und gebe sie weiter an das Backend
     this.route.queryParams.subscribe(params => {
         console.log(params);
-        let search = params['search'];
-        search = search ? search : '';
+
+        const search = this.parseToString(params['search']);
+        const category = this.parseToString(params['category']);
         const start = this.parseToInt(params['start'], 0);
         const limit = this.parseToInt(params['limit'], 10);
-        console.log(`${ start } ${ limit } ${ search }`);
-        this.requestList(start, limit, search);
+
+        console.log(`${ start } ${ limit } ${ search } ${category}`);
+        this.requestList(start, limit, search,category);
       }
     );
+  }
+
+  parseToString(value:string,alternative:string=''):string
+  {
+    return  value ? value : '';
   }
 
   parseToInt(value: string, alternative: number): number {
@@ -88,8 +95,8 @@ export class LandingpageComponent implements OnInit {
   }
 
   // Frägt nach Productliste bei dem Landingpageservice nach
-  requestList(start: number = 0, limit: number = 10, search: string = ''): void {
-    this.productService.getProductList(start, limit, search).subscribe({
+  requestList(start: number = 0, limit: number = 10, search: string = '',category:string =''): void {
+    this.productService.getProductList(start, limit, search,category).subscribe({
       // next: Value arrived successfully!
       next: value => {
         console.log(value);

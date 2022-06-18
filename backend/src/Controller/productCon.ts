@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { query, Request, Response } from 'express';
 import Helper from '../helpers';
 import { IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Types } from 'mongoose';
 import { Order } from '../Models/Order';
+import { Category } from '../Models/Category';
 
 class ProductController {
   // Gibt die ProductInfos die zwischen start und start+limit liegen
@@ -12,6 +13,8 @@ class ProductController {
   //     die Liste [1,2] geben und requestable wäre 1 also {list:[1,2] requestable:1} (vom Type ListInfo<number>)
   public async getList(request: Request, response: Response): Promise<void> {
     const productCount = await Product.countDocuments().exec();
+
+
     // Parse Limit und Start von Query
     //                                                      min,      max,   replace
     const start = Helper.parseQueryInt(request.query, 'start', 0, productCount, 0);
@@ -22,32 +25,42 @@ class ProductController {
 
         // Falls es einen Search Term gibt nutzt diesen Anstelle von
     const searchTerm:string = request.query.search as string;
-    let list: IProduct[];
 
-        let requestable;
-        // Wenn es einen Suchebegriff gibt
-        if(searchTerm)
-        {
+      const categoryName:string = request.query.category as string;
+
+      let categoryId: undefined|Types.ObjectId = undefined;
+      if(categoryName)
+      {
+         categoryId = (await Category.find({name:categoryName}).exec())[0]?._id;
+      }
+      const query:any = {};
+      // wenn es eine passende Category gibt
+      if(categoryId)
+      {
+        // dann suche nur in dieser
+        query.category = {_id:categoryId};
+      }
+
+      // Wenn es einen Suchebegriff gibt
+      if(searchTerm)
+      {
             // Wenn es nur eine Zahl gibt dann ntze es für preis
-            let testPrize = parseFloat(searchTerm as string);
-            if(!testPrize)
-            {
-                testPrize = 0;
-            }
+        /*let testPrize = parseFloat(searchTerm);
+        if(!testPrize)
+        {
+            testPrize = 0;
+        }*/
+        console.log(searchTerm);
+        // dann suche mithilfe diesem in Description und Name nach passenden elementen
+        query.$text = {$search: searchTerm};
+      }
 
-            console.log(searchTerm);
+    // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
+    let list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
+    // Wieviele Elemente kommen danach noch
+    const requestable =  Math.max(list.length - limit - start,0);
 
-            list = await Product.find({$text: {$search: searchTerm}}).skip(start).populate('user', '-password -address').populate('category').exec();
-            // Wie viele Elemente kommen danach noch
-            requestable =  Math.max(list.length - limit - start,0);
-        }
-        else{
-            // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-            list = await Product.find({}).skip(start).populate('user', '-password -address').populate('category').exec();
-            // Wieviele Elemente kommen danach noch
-            requestable = Math.max(productCount - limit - start,0);
-        }
-        // Just take first 'limit' elements from list
+      // Just take first 'limit' elements from list
     list = list.splice(0, limit);
 
 

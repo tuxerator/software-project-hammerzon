@@ -1,17 +1,15 @@
-<div class="container p-4 bg-dark" [class]="isOnLandingPage()? ['m-4'] : ['m-2']">
+<div class="container p-4 bg-dark" [class]="isOnLandingPage()? ['m-5'] : ['m-2']">
 
    <!-- Second Category Navbar -->
-   <nav *ngIf="isOnLandingPage()" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg border-bottom border-secondary " style="margin-top: 74px;">
-    <div class="container-fluid">
-      <div class="row justify-content-evenly w-100">
-        <div *ngFor="let category of categories" class="col text-center">
-          <app-category-badge [category]="category"></app-category-badge>
+   <nav *ngIf="isOnLandingPage()" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg border-bottom border-secondary p-0" style="margin-top: 74px;">
+      <div class="navbar-nav justify-content-evenly w-100">
+        <div *ngFor="let category of categories" class="nav-item">
+          <app-category-badge class="nav-link" [class]="current_category===category.name ? ['active']: []" [category]="category" (click)="selectCategory(category.name)"></app-category-badge>
         </div>
       </div>
-    </div>
   </nav>
   <!---... Header ... -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark p-2 shadow-lg border-bottom border-secondary">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark p-2 border-bottom border-secondary">
     <a class="navbar-brand h1" routerLink="/">
       <img alt="hammerzon" height="39" src="/assets/Hammerzon.svg" width="150">
     </a>

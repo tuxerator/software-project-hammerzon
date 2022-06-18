@@ -13,6 +13,8 @@ export class HeaderComponent implements OnInit {
 
   public searchTerm:string = '';
   public categories?:Category[];
+  public current_category:string = '';
+
 
   constructor(public authService: AuthService, public router: Router,public categoryService:CategoryService) {
   }
@@ -35,7 +37,34 @@ export class HeaderComponent implements OnInit {
   }
 
   public search(): void {
-    this.router.navigate(['/'], { queryParams: { search: this.searchTerm } });
+    const queryParams:any = {search:this.searchTerm};
+    if(this.current_category !== '')
+    {
+      queryParams.category = this.current_category;
+    }
+
+    this.router.navigate(['/'], { queryParams});
+  }
+
+  public selectCategory(category:string):void{
+
+    const queryParams:any = {category};
+    if(this.searchTerm !== '')
+    {
+      queryParams.search = this.searchTerm;
+    }
+
+    if(this.current_category === category)
+    {
+      this.current_category = '';
+
+      this.router.navigate(['/']);
+    }
+    else{
+      this.current_category = category;
+
+      this.router.navigate(['/'], { queryParams});
+    }
   }
 
   public logout(): void {
@@ -51,7 +80,15 @@ export class HeaderComponent implements OnInit {
   public isOnLandingPage():boolean
   {
     console.log(this.router.url);
-    return this.router.url === '/';
+    let url = this.router.url;
+    const queryStart = url.indexOf('?');
+
+    if(queryStart >= 0)
+    {
+      url =  this.router.url.substring(0,queryStart);
+    }
+
+    return url === '/';
   }
 
 

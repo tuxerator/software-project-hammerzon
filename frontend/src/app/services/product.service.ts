@@ -22,13 +22,26 @@ export class ProductService {
   // und e ine zusätzliche Informationen ist requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, geben
   // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
   //     die Liste [1,2] geben und requestable wäre 1 also {list:[1,2] requestable:1} (vom Type ListInfo<number>)
-  getProductList(start: number = 0, limit: number = 10, search: string = ''): Observable<ListInfoReponse<Product>> {
+  getProductList(start: number = 0, limit: number = 10, search: string = '',categoryName:string = ''): Observable<ListInfoReponse<Product>> {
     console.log('Hallo ich komm dahin');
-    if (search === '') {
-      return this.http.get<ListInfoReponse<Product>>(`api/product/list?start=${ start }&limit=${ limit }`);
-    } else {
-      return this.http.get<ListInfoReponse<Product>>(`api/product/list?start=${ start }&limit=${ limit }&search=${ search }`);
+    let url = 'api/product/list';
+
+    url += `?start=${ start }&limit=${ limit }}`;
+
+    if(search !== '')
+    {
+      search = encodeURIComponent(search);
+      url += `&search=${search}`;
     }
+
+    if(categoryName !== '')
+    {
+      categoryName = encodeURIComponent(categoryName);
+      url += `&category=${categoryName}`;
+    }
+
+    return this.http.get<ListInfoReponse<Product>>(url);
+
   }
 
   addProduct(product: Product): Observable<IdMessageResponse> {
