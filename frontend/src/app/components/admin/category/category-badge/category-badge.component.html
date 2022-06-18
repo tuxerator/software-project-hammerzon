@@ -1,4 +1,4 @@
-<div *ngIf="category" type="button" [class]="direction=='ver' ? ['text-center']:[]"><i class="bi" [class]="category.icon"></i><br *ngIf="direction==='ver'">{{category.name}}</div>
-<div *ngIf="!category" type="button" [class]="direction=='ver' ? ['text-center']:[]"><i class="bi" [class]="icon"></i><br *ngIf="direction==='ver'">{{name}}</div>
+<div *ngIf="category" type="button" [class]="isVer() ? ['text-center']:['me-2']"><i class="bi" [class]="!isVer()? [category.icon,'me-1']:[category.icon]"> </i><br *ngIf="isVer()"> {{category.name}}</div>
+<div *ngIf="!category" type="button" [class]="isVer() ? ['text-center']:['me-2']"><i class="bi" [class]="!isVer()? [icon,'me-1']:[icon]" ></i><br *ngIf="isVer()"> {{name}}</div>
 
 

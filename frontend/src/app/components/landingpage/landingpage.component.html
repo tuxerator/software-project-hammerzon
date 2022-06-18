@@ -1,15 +1,21 @@
 <div class="container mt-2 p-4">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-          <app-product-list [list]="productListInfo?.list"></app-product-list>
+          <app-product-list *ngIf="!loading" [list]="productListInfo?.list"></app-product-list>
+
+          <div *ngIf="loading" class="d-flex align-items-center">
+            <strong>Lädt...</strong>
+            <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
+          </div>
+
+          <div *ngIf="!loading && productListInfo?.list?.length === 0" class="d-flex align-items-center">
+            <strong>Es konnten hierzu keine Dienstleistungen gefunden werden</strong>
+          </div>
         </div>
     </div>
 
 
-  <div *ngIf="productListInfo.list.length == 0" class="d-flex align-items-center">
-    <strong>Loading...</strong>
-    <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
-  </div>
+
 
   <!-- Knöpfe um mehr Elemente and zeigen zu können -->
 

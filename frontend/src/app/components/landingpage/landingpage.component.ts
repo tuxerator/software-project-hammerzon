@@ -19,6 +19,8 @@ export class LandingpageComponent implements OnInit {
   public currentStart = 0;
   public currentLimit = 10;
 
+  public loading:boolean = true;
+
   constructor(private productService: ProductService, private route: ActivatedRoute) {
   }
 
@@ -52,6 +54,7 @@ export class LandingpageComponent implements OnInit {
   ngOnInit(): void {
     console.log('LandingPage initialized!');
     // Gib die Query Params as der Rout und gebe sie weiter an das Backend
+
     this.route.queryParams.subscribe(params => {
         console.log(params);
 
@@ -96,16 +99,19 @@ export class LandingpageComponent implements OnInit {
 
   // Frägt nach Productliste bei dem Landingpageservice nach
   requestList(start: number = 0, limit: number = 10, search: string = '',category:string =''): void {
+    this.loading = true;
     this.productService.getProductList(start, limit, search,category).subscribe({
       // next: Value arrived successfully!
       next: value => {
         console.log(value);
         this.productListInfo = value;
+        this.loading = false;
       },
 
       // error: There was an error.
       error: err => {
         console.error(err);
+        this.loading = false;
       }
     });
   }

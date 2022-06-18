@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/Category';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -16,10 +16,16 @@ export class HeaderComponent implements OnInit {
   public current_category:string = '';
 
 
-  constructor(public authService: AuthService, public router: Router,public categoryService:CategoryService) {
+  constructor(public authService: AuthService, private router: Router,private categoryService:CategoryService,private route : ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.route.queryParams
+      .subscribe((params:any) => {
+        this.current_category = params.category;
+      }
+    );
+
 
     this.authService.getUser().subscribe({
       next: (user) => {

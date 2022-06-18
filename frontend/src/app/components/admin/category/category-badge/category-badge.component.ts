@@ -29,4 +29,8 @@ export class CategoryBadgeComponent implements OnInit {
     //}
   }
 
+  isVer():boolean{
+    return this.direction ==='ver';
+  }
+
 }
