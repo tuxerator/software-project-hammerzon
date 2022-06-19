@@ -25,8 +25,62 @@
                 <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
         </div>
         </div>
-    </div>
+      </div>
 </div>
+
+
+<!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
+Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
+<div class="container border-secondary bg-dark mx-auto mt-4 col-lg-8">
+    <form>
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Wie viele Sterne möchtest du vergeben?</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <div class="form-group mt-2">
+        <label for="exampleFormControlTextarea1">Teile deine Bewertung...</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+      <input type="submit"  class="btn btn-primary mt-2" value="Bewertung abschicken">
+    </form>
+</div>
+
+<!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
+
+<section class="p-4 p-md-5 text-center text-lg-start shadow-1-strong rounded">
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body m-3">
+          <div class="row">
+            <div class="col-lg-4 d-flex justify-content-center align-items-center mb-4 mb-lg-0">
+              <img src="../../../assets/profile.svg"
+                class="rounded-circle img-fluid shadow-1" alt="woman avatar" width="200" height="200" />
+            </div>
+            <div class="col-lg-8">
+              <p class="text-muted fw-light mb-4">
+                Der Handwerker war ja mal mega schlecht. Er hat den ganzen Tag Krach gemacht, und mich die ganze Zeit um Wasser gebeten.
+                Bei dem Preis kann man ja wohl erwarten, dass man sein eigenes Wasser mitbringt! Gerade aktuell so hohen Lebenshaltungskosten!
+                Dazu kam dann noch, dass er ständig gefroren hat, und verlangt hat, dass ich die Heizung anmache. Null Solidarität im Ukrainekrieg hat er gezeigt! Frechheit!!!! Nie wieder!!!!! Ich würde 0 Sterne vergeben wenn ich könnte!!!!!!!!!!!!!!!!!!
+              </p>
+              <p class="fw-bold text-muted mb-0">Karen Smith</p>
+              <!--Hier werden wir abhängig von der Bewertung, die Sterne hinterlegen, am besten auch mit NG-FOR-->
+                <span class='bi bi-star-fill' style='color:#fcaf3e'></span>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- Modal -->
 <div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -46,6 +100,11 @@
     </div>
   </div>
 </div>
+
+
+
+
+
 
 
 
