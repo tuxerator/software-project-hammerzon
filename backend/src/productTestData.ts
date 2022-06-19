@@ -92,8 +92,8 @@ export default class ProductTestData {
           { date: new Date(2022, 8, 19, 13), isReserved: false },
         ],
         numberOfRatings : 0,
-        rating : 1,
-        comments : []
+        averageRating : 1,
+        ratings : []
     },
     {
         name:'Innnenarchitketur',
@@ -103,8 +103,8 @@ export default class ProductTestData {
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(2022, 8, 19, 13),isReserved:true}],
         numberOfRatings : 0,
-        rating : 1,
-        comments : []
+        averageRating : 1,
+        ratings : []
     },
     {
         name:'Terrassenbau',
@@ -114,8 +114,8 @@ export default class ProductTestData {
         duration:new Date('1970-01-01T05:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
-        rating : 1,
-        comments : []
+        averageRating : 1,
+        ratings : []
 
     },
     {
@@ -126,8 +126,8 @@ export default class ProductTestData {
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
-        rating : 1,
-        comments : []
+        averageRating : 1,
+        ratings : []
 
     }
   ];

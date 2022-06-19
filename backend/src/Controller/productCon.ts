@@ -101,8 +101,8 @@ class ProductController {
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
     const product = request.body + {
       numberOfRatings : 0,
-      rating : 1,
-      comments : []
+      averageRating : 1,
+      ratings : []
     };
     console.log(product);
 

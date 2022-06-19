@@ -148,10 +148,9 @@ app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),
 app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
 // rating controller endpoints
-// add a rating between 1 and 5
+// add a rating between 1 and 5 with a comment
 app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating);
-// add a comment
-app.post('/api/product/:id/comment', ValidatorGroups.ValidComment, rating.addComment);
+
 
 // Imager Controller endpoints
 // Add Images

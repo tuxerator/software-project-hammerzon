@@ -19,9 +19,10 @@ interface IProduct extends Document{
   image_id: mongoose.Types.ObjectId
 
   numberOfRatings : number
-  rating : number
 
-  comments : string[]
+  averageRating : number
+  ratings : IRating[]
+
 }
 
 interface IAppointment {
@@ -29,6 +30,17 @@ interface IAppointment {
   // gibt an ob es noch zu lesen der Termin noch angegeben wird
   isReserved: boolean
 }
+
+interface IRating {
+  rating : number,
+  comment : string
+}
+const Rating : Schema = new Schema<IRating>(
+  {
+    rating: {type: Number , required : true},
+    comment : {type : String, required :true}
+  });
+
 
 const Appointment: Schema = new Schema<IAppointment>(
   {
@@ -48,8 +60,8 @@ const productSchema : Schema = new Schema<IProduct>({
   appointments:    { type: [Appointment], required: true },
   image_id:        { type: mongoose.Schema.Types.ObjectId, required: true },
   numberOfRatings: { type: Number , min : 0, required : true},
-  rating:          { type: Number , min : 1, max : 5, required : true},
-  comments:        { type: [String], required : true}
+  averageRating:   { type: Number, required :true},
+  ratings:          { type: [Rating] , required : true},
 });
 
 

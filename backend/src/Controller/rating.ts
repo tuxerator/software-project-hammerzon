@@ -13,9 +13,12 @@ class RatingController {
    *           - user has ordered the product
    * @param request - productid as route parameter
    * {
-   *   rating : number
+   *   rating: Rating 
    * }
-   * 
+   * Rating {
+   *  rating:number,
+   *  comment:string
+   * }
    * @param response  -> updated rating and number of Ratings
    */
   public async addRating(request: SessionRequest, response: Response): Promise<void> {
@@ -24,18 +27,23 @@ class RatingController {
     this.hasOrdered(user, id).then(async (result) => {
       if(result)
       {
-        const newRating = request.body.rating;
+        const newRating = request.body.rating.rating;
         if (id && Types.ObjectId.isValid(id)) {
           const product : IProduct = await Product.findById(id);
-          console.log(product);
+          // update the average rating
           const numberOfRatings = product.numberOfRatings;
-          const rating = product.rating;
-          product.rating = ((rating * numberOfRatings)+newRating)/(numberOfRatings+1);
+          const rating = product.averageRating;
+          product.averageRating = ((rating * numberOfRatings)+newRating)/(numberOfRatings+1);
           product.numberOfRatings++;
+          // add the rating to the array in the product
+          const add = request.body.rating;
+          product.ratings.push(add);
+
           product.save();
-          console.log(product.rating);
+          console.log(product.averageRating);
+          console.log(product.ratings);
           response.status(200);
-          response.send({rating : product.rating, numberOfRatings : product.numberOfRatings});
+          response.send({rating : product.averageRating, numberOfRatings : product.numberOfRatings});
         }
         else {
           response.status(500);
@@ -51,67 +59,13 @@ class RatingController {
   }
 
   /**
-   * add a comment to a product
-   * validate: - length of the comment string
-   *           - user has ordered the product
-   * @param request - productid as route parameter
-   * {
-   *    comment : string
-   * }
-   * @param response -> success message
-   */
-  public async addComment(request: SessionRequest, response : Response) : Promise<void>
-  {
-    const id = request.params.id;
-    const user = request.session.user._id;
-    this.hasOrdered(user, id).then(async (result) => {
-      if(result)
-      {
-        const comment = request.body.rating;
-        if (id && Types.ObjectId.isValid(id)) {
-          const product : IProduct = await Product.findById(id);
-          console.log(product);
-          product.comments.push(comment);
-          product.save();
-          console.log(product.comments);
-          response.status(200);
-          response.send({ code : 200 , message : 'Comment added successfully'});
-        }
-        else
-        {
-          response.status(500);
-          response.send('There is no product with such an id');
-        }
-      }
-      else {
-        response.status(500);
-        response.send('this user did not order the product');
-      }
-    });
-    const comment = request.body.rating;
-    if (id && Types.ObjectId.isValid(id)) {
-      const product : IProduct = await Product.findById(id);
-      console.log(product);
-      product.comments.push(comment);
-      product.save();
-      console.log(product.comments);
-      response.status(200);
-      response.send({ code : 200 , message : 'Comment added successfully'});
-    }
-    else
-    {
-      response.status(500);
-      response.send('There is no product with such an id');
-    }
-  }
-
-  /**
    * checks if the user has ordered the product
+   * intended usage in the other methods in this class
    * @param user        - current user from the session request
    * @param productID   - id of the product
    * @returns           
    */
-  public async hasOrdered(user : IUser, productID : string) : Promise<boolean> {
+  private async hasOrdered(user : IUser, productID : string) : Promise<boolean> {
     const id = user._id;
     if(id && Types.ObjectId.isValid(id))
     {
@@ -126,6 +80,31 @@ class RatingController {
     return Promise.resolve(false);
   }
 
+  /**
+   * checks if the user has ordered the product
+   * intended usage in the frontend
+   * gets the productID as a route parameter
+   * @param request 
+   * @param response 
+   */
+  public async canRate(request: SessionRequest, response: Response) : Promise<void> {
+    const id = request.session.user._id;
+    const productID = request.params.id;
+    if(id && Types.ObjectId.isValid(id))
+    {
+      const orders : IOrder[] = await Order.find({oderingUser : id});
+      orders.forEach(element => {
+        if(element._id === productID)
+        {
+          response.status(200);
+          response.send(true);
+          return;
+        }
+      });
+    }
+    response.status(200);
+    response.send(false);
+  } 
 }
 
 export default RatingController;
