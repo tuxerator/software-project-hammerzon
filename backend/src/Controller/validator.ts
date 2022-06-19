@@ -178,9 +178,9 @@ export class ValidatorLists {
         Validators.isRequired('description'),
         Validators.isRequired('duration'),
         Validators.isRequired('defaultTimeFrame'),
-        Validators.subArrayValidators('defaultTimeFrame',[
-            Validators.isRequired('start'),
-            Validators.isRequired('end')
+        Validators.subValidators('defaultTimeFrame', [
+          Validators.isRequired('start'),
+          Validators.isRequired('end')
         ]),
         Validators.isRequired('availability'),
         Validators.subArrayValidators('availability', [

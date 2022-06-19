@@ -48,7 +48,7 @@ class AuthController {
       return;
     }
 
-        const password = loginRequest.password;
+    const password = loginRequest.password;
 
     if (!bcrypt.compareSync(password, user?.password.toString())) {
       response.status(401); // 401: Unauthorized
