@@ -70,7 +70,16 @@ class ProductController {
     const id = request.params.id;
     console.log(id);
     if (id && Types.ObjectId.isValid(id)) {
-      const product: IProduct = await Product.findById(id).populate('user', '-password -address').exec();
+      const product: IProduct = await Product.findById(id)
+      .populate('user', '-password -address')
+      .populate({
+        path: 'ratings',
+        populate: {
+          path: 'user',
+          model: 'User'
+        }
+      })
+      .exec();
       response.status(200);
       response.send(product);
     } else {

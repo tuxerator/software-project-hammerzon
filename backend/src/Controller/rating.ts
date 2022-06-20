@@ -6,6 +6,7 @@ import { IUser } from '../Models/User';
 import { IOrder } from '../Models/Order';
 import { Order } from '../Models/Order';
 import mongoose from 'mongoose';
+import { Session } from 'express-session';
 
 class RatingController {
   /**
@@ -98,18 +99,41 @@ class RatingController {
     if(id && Types.ObjectId.isValid(id))
     {
       const orders : IOrder[] = await Order.find({oderingUser : id});
-      orders.forEach(element => {
-        if(element._id === productID)
-        {
+      for(const order of  orders) {
+        if(order.product.toString() === productID) {
           response.status(200);
           response.send(true);
           return;
-        }
-      });
+        } 
+      }
     }
     response.status(200);
     response.send(false);
   } 
+
+  /**
+   * checks if the user has already rated the product
+   * @param request 
+   * @param response 
+   */
+  public async hasRated(request: SessionRequest , response : Response) : Promise<void> {
+    const id = request.session.user._id;
+    const productId = request.params.id;
+    if(id && Types.ObjectId.isValid(id))
+    {
+      const product : IProduct = await Product.findById(productId);
+      for(const rating of product.ratings) {
+        if(rating.user.toString() === id){
+          response.status(200);
+          response.send(true);
+          return;
+        }
+      }
+    }
+    response.status(200);
+    response.send(false);
+  }
 }
+
 
 export default RatingController;

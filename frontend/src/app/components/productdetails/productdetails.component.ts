@@ -16,6 +16,9 @@ export class ProductdetailsComponent implements OnInit {
   product: Product | undefined;
   //public productID: string;
   user: User | undefined;
+  showRatingForm : boolean = false;
+  hasOrdered :boolean = false;
+  hasRated : boolean = false;
 
   id:string = '';
 
@@ -76,6 +79,26 @@ export class ProductdetailsComponent implements OnInit {
         }
       }
     );*/
+    this.productService.hasOrdered(this.id).subscribe({
+      next:(val) => {
+        this.hasOrdered = val;
+        console.log('has the user ordered? ' + val);
+      },
+      error:(err) =>
+      {
+        console.log(err);
+      }
+    });
+    this.productService.hasRated(this.id).subscribe({
+      next:(val) => {
+        this.hasRated = val;
+        console.log('has the user rated? ' + val);
+      },
+      error:(err) =>
+      {
+        console.log(err);
+      }
+    });
   }
 
   getDurString(): string {
@@ -110,6 +133,16 @@ export class ProductdetailsComponent implements OnInit {
         next: (product) =>
         {
           console.log(product);
+          this.productService.hasRated(this.id).subscribe({
+            next:(val) => {
+              this.hasRated = val;
+              console.log('has the user rated? ' + val);
+            },
+            error:(err) =>
+            {
+              console.log(err);
+            }
+          });
         },
         error:(error) => {
           console.log(error);

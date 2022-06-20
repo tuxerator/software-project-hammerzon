@@ -44,4 +44,12 @@ export class ProductService {
   {
     return this.http.post<Product>(`api/product/${id}/rate`, {rating});
   }
+  hasOrdered(id:string) : Observable<boolean> 
+  {
+    return this.http.get<boolean>(`api/product/${id}/canRate`);
+  }
+  hasRated(id:string) : Observable<boolean>
+  {
+    return this.http.get<boolean>(`api/product/${id}/hasRated`);
+  }
 }
