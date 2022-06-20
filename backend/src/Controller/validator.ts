@@ -134,7 +134,7 @@ export class Validators{
 
   public static isValidRatingRange() : SubValidator {
     return (request: SubRequest, response: Response): boolean => {
-      const rating = request.body.rating;
+      const rating = request.body.rating.rating;
       if(rating >= 1 && rating <= 5) {
         return true;
       }
@@ -147,7 +147,7 @@ export class Validators{
   }
   public static isValidCommentLength(minLength: number, maxLength : number) : SubValidator {
     return (request: SubRequest, response: Response): boolean => {
-      const length = request.body.comment.length;
+      const length = request.body.rating.comment.length;
       if(length >= minLength && length <= maxLength)
       {
         return true;

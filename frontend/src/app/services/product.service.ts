@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IdMessageResponse, ListInfoReponse, MessageResponse } from '../components/types';
-import { Product } from '../models/Product';
+import { Product, Rating } from '../models/Product';
 
 @Injectable({
   providedIn: 'root'
@@ -40,4 +40,8 @@ export class ProductService {
     return this.http.post<MessageResponse>('api/product/delete',{id});
   }
 
+  submitRating(id:string, rating:Rating) : Observable<Product>
+  {
+    return this.http.post<Product>(`api/product/${id}/rate`, {rating});
+  }
 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
-import { Appointment, Product } from '../../models/Product';
+import { Appointment, Product, Rating } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
 
@@ -97,7 +97,7 @@ export class AddProductComponent implements OnInit {
   private getDateTimeString(date:Date):string
   {
     //let dateString:string = date.toLocaleString();
-    const dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`
+    const dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`;
     console.log(dateString);
 
     return dateString;

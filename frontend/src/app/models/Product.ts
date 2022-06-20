@@ -17,13 +17,37 @@ export class Product {
 
   image_id: string;
 
-  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string) {
+  numberOfRatings? : number;
+
+  averageRating? : number;
+
+  ratings? : Rating[];
+
+
+  constructor(name: string, 
+              description: string, 
+              prize: number, 
+              duration: Date, 
+              appointments: Appointment[], 
+              image_id: string,
+              ) {
     this.name = name;
     this.description = description;
     this.prize = prize;
     this.duration = duration;
     this.appointments = appointments;
     this.image_id = image_id;
+  }
+}
+
+export class Rating {
+  rating : number;
+  comment : string;
+  user? : User;
+
+  constructor(rating: number, comment: string) {
+    this.rating = rating;
+    this.comment = comment;
   }
 }
 

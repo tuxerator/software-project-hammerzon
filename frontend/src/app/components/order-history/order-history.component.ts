@@ -81,7 +81,7 @@ export class OrderHistoryComponent implements OnInit {
       const cost = product.prize * (duration.getTime() / (3600 * 1000));
       const url = this.url;
       let logo  = '';
-      await fetch('/assets/hammerzon1.b64')
+      await fetch('/assets/hammerzon1.base64')
         .then(response => response.text())
         .then(data => {
           console.log(data);

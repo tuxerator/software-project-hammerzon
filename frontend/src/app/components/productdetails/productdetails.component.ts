@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
 
-import { Product, getAppointmentString, getDurationString } from '../../models/Product';
+import { Product, getAppointmentString, getDurationString, Rating } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
 import { delay, timeout } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   templateUrl: './productdetails.component.html',
@@ -18,13 +19,19 @@ export class ProductdetailsComponent implements OnInit {
 
   id:string = '';
 
+  public addRatingForm : FormGroup = this.formBuilder.group({
+    rating : new FormControl('1', [Validators.required]),
+    comment : new FormControl('', [Validators.required])
+  });
+
   // Zum formatieren der Daten
 
 
   constructor(private route:ActivatedRoute,
               private productService:ProductService,
               private router:Router,
-              public authService: AuthService) {
+              public authService: AuthService,
+              private formBuilder : FormBuilder) {
     console.log('kommt zu Params');
   }
 
@@ -90,8 +97,26 @@ export class ProductdetailsComponent implements OnInit {
         console.log(err.error);
       }
     }
-    )
+    );
     
+  }
+  onSubmit()
+  {
+    const form = this.addRatingForm.value;
+    if(this.user)
+    {
+      const rating : Rating = new Rating(parseInt(form.rating), form.comment);
+      this.productService.submitRating(this.id, rating).subscribe({
+        next: (product) =>
+        {
+          console.log(product);
+        },
+        error:(error) => {
+          console.log(error);
+        }
+       });
+    }
+
   }
 
 }

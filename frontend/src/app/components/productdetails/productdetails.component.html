@@ -32,10 +32,10 @@
 <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
 <div class="container border-secondary bg-dark mx-auto mt-4 col-lg-8">
-    <form>
+    <form (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
       <div class="form-group">
         <label for="exampleFormControlSelect1">Wie viele Sterne möchtest du vergeben?</label>
-        <select class="form-control" id="exampleFormControlSelect1">
+        <select class="form-control" id="exampleFormControlSelect1" formControlName="rating">
           <option>1</option>
           <option>2</option>
           <option>3</option>
@@ -45,7 +45,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
       </div>
       <div class="form-group mt-2">
         <label for="exampleFormControlTextarea1">Teile deine Bewertung...</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="comment"></textarea>
       </div>
       <input type="submit"  class="btn btn-primary mt-2" value="Bewertung abschicken">
     </form>

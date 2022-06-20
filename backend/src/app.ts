@@ -149,7 +149,7 @@ app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetApp
 
 // rating controller endpoints
 // add a rating between 1 and 5 with a comment
-app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating);
+app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.bind(rating));
 
 
 // Imager Controller endpoints

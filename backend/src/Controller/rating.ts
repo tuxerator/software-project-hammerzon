@@ -1,10 +1,11 @@
-import { IProduct, Product } from '../Models/Product';
+import { IProduct, IRating, Product } from '../Models/Product';
 import { SessionRequest } from '../types';
 import { Types } from 'mongoose';
 import { Response } from 'express';
 import { IUser } from '../Models/User';
 import { IOrder } from '../Models/Order';
 import { Order } from '../Models/Order';
+import mongoose from 'mongoose';
 
 class RatingController {
   /**
@@ -17,9 +18,9 @@ class RatingController {
    * }
    * Rating {
    *  rating:number,
-   *  comment:string
+   *  comment:string,
    * }
-   * @param response  -> updated rating and number of Ratings
+   * @param response  -> updated product
    */
   public async addRating(request: SessionRequest, response: Response): Promise<void> {
     const id = request.params.id;
@@ -29,21 +30,26 @@ class RatingController {
       {
         const newRating = request.body.rating.rating;
         if (id && Types.ObjectId.isValid(id)) {
-          const product : IProduct = await Product.findById(id);
+          const product : IProduct = await (await Product.findById(id)).populate('ratings.user', '-password');
           // update the average rating
           const numberOfRatings = product.numberOfRatings;
           const rating = product.averageRating;
           product.averageRating = ((rating * numberOfRatings)+newRating)/(numberOfRatings+1);
           product.numberOfRatings++;
           // add the rating to the array in the product
-          const add = request.body.rating;
-          product.ratings.push(add);
+          const add  : IRating = {_id : new mongoose.Types.ObjectId(),
+            ...request.body.rating,
+             user };
 
-          product.save();
-          console.log(product.averageRating);
+          product.ratings = [add, ... product.ratings];
           console.log(product.ratings);
+          product.save();
+          const returnProduct : any = product;
+          console.log(numberOfRatings);
+          console.log(returnProduct.ratings);
+          returnProduct.ratings[numberOfRatings].user = request.session.user;
           response.status(200);
-          response.send({rating : product.averageRating, numberOfRatings : product.numberOfRatings});
+          response.send({returnProduct});
         }
         else {
           response.status(500);
@@ -65,19 +71,18 @@ class RatingController {
    * @param productID   - id of the product
    * @returns           
    */
-  private async hasOrdered(user : IUser, productID : string) : Promise<boolean> {
-    const id = user._id;
-    if(id && Types.ObjectId.isValid(id))
-    {
-      const orders : IOrder[] = await Order.find({oderingUser : id});
-      orders.forEach(element => {
-        if(element._id === productID)
-        {
-          return Promise.resolve(true);
-        }
-      });
+  private async hasOrdered(user : mongoose.Types.ObjectId, productID : string) : Promise<boolean> {
+    const id = user;
+    console.log(productID);
+    const orders : IOrder[] = await Order.find({oderingUser : id});
+    for(const order of  orders) {
+      console.log(order.product);
+      if(order.product.toString() === productID) {
+        return true;
+      } 
     }
-    return Promise.resolve(false);
+
+    return false;
   }
 
   /**

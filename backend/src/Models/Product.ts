@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Number, Schema, Model, model, Document } from 'mongoose';
+import { IUser, User } from './User';
 
 // Model for Products
 interface IProduct extends Document{
@@ -31,14 +32,16 @@ interface IAppointment {
   isReserved: boolean
 }
 
-interface IRating {
+interface IRating extends Document {
   rating : number,
-  comment : string
+  comment : string,
+  user : mongoose.Types.ObjectId
 }
 const Rating : Schema = new Schema<IRating>(
   {
     rating: {type: Number , required : true},
-    comment : {type : String, required :true}
+    comment : {type : String, required :true},
+    user : {type : mongoose.Schema.Types.ObjectId, ref : User , required : true}
   });
 
 
@@ -59,9 +62,9 @@ const productSchema : Schema = new Schema<IProduct>({
   duration:        { type: Date,   required: true },
   appointments:    { type: [Appointment], required: true },
   image_id:        { type: mongoose.Schema.Types.ObjectId, required: true },
-  numberOfRatings: { type: Number , min : 0, required : true},
-  averageRating:   { type: Number, required :true},
-  ratings:          { type: [Rating] , required : true},
+  numberOfRatings: { type: Number , min : 0, required : true, default : 0},
+  averageRating:   { type: Number, required : true, default : 1 },
+  ratings:          { type: [Rating] , required : true, default : []},
 });
 
 
@@ -69,4 +72,4 @@ const productSchema : Schema = new Schema<IProduct>({
 const Product: Model<IProduct> = model<IProduct>('Product', productSchema);
 
 
-export { IProduct, Product, IAppointment, Appointment };
+export { IProduct, Product, IAppointment, Appointment, IRating };
