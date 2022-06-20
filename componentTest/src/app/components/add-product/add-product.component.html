@@ -1,4 +1,4 @@
-<form class="row row-cols-sm-auto">
+<form class="row row-cols-sm-auto" [formGroup]="productForm" novalidate>
   <div class="col-12">
     <div class="dp-hidden position-absolute">
       <div class="input-group">
@@ -41,22 +41,26 @@
         </ng-template>
       </div>
     </div>
-    <div class="input-group">
+    <div class="input-group form-group has-validation"
+         [class.was-validated]="productForm.touched">
       <input #dpFromDate
              (input)="fromDate = validateInput(fromDate, dpFromDate.value)" [value]="formatter.format(fromDate)"
              class="form-control"
              name="dpFromDate"
-             placeholder="yyyy-mm-dd">
+             placeholder="yyyy-mm-dd"
+             formControlName="fromDateControl">
       <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
     </div>
   </div>
   <div class="col-12">
-    <div class="input-group">
+    <div class="input-group form-group has-validation"
+         [class.was-validated]="productForm.touched">
       <input #dpToDate
              (input)="toDate = validateInput(toDate, dpToDate.value)" [value]="formatter.format(toDate)"
              class="form-control"
              name="dpToDate"
-             placeholder="yyyy-mm-dd">
+             placeholder="yyyy-mm-dd"
+             formControlName="toDateControl">
       <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
     </div>
   </div>

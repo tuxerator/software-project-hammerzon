@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-add-product',
@@ -8,6 +17,7 @@ import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-b
   providers: []
 })
 export class AddProductComponent implements OnInit {
+
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate | null;
@@ -16,13 +26,26 @@ export class AddProductComponent implements OnInit {
   disabledWeekdays: number[] = [];
 
   readonly weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  productForm: FormGroup = new FormGroup({});
+  fromDateControl: FormControl = new FormControl();
+  toDateControl: FormControl = new FormControl();
 
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
+    this.createFormControls()
+    this.productForm = this.fb.group({
+      fromDateControl: this.fromDateControl,
+      toDateControl: this.toDateControl
+    });
+  }
+
+  createFormControls() {
+    this.fromDateControl= new FormControl( '', isSelectedWeekday(this.isDisabled, this.formatter));
+    this.toDateControl= new FormControl('', isSelectedWeekday(this.isDisabled, this.formatter));
   }
 
   onDateSelection(date: NgbDate) {
@@ -57,6 +80,14 @@ export class AddProductComponent implements OnInit {
 
   isFromDate = (date: NgbDate) => date.equals(this.fromDate);
   isToDate = (date: NgbDate) => date.equals(this.toDate);
-  isDisabled = (date: NgbDate, current?: { year: number, month: number }) => this.disabledWeekdays.includes(this.calendar.getWeekday(date));
+  isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
   toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
 }
+
+// Checks weather the date is disabled or not
+export const isSelectedWeekday = (isDisabled: (date: NgbDate | null) => boolean, formatter: NgbDateParserFormatter): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    console.log(control.value);
+    return isDisabled(NgbDate.from(formatter.parse(control.value))) ? { disabledDate: { value: control.value } } : null;
+  }
+};
