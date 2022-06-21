@@ -99,23 +99,16 @@ class OrderController {
     public async addOrder(request: SessionRequest, response: Response): Promise<void>{
         const order: PostOrder = request.body;
         const orderingUserId = request.session.user._id;
-        if(orderingUserId && Types.ObjectId.isValid(orderingUserId))
-        {
-            const dbOrder = new Order({
-                product : order.productId,
-                orderingUser : orderingUserId,
-                appointment : order.appointment,
-                confirmed: false
-            });
-            await dbOrder.save();
-            response.status(200);
-            response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id });
-        }
-        else
-        {
-            response.status(500);
-            response.send({ code: 500, message: 'UserID does not exist' });
-        }
+
+        const dbOrder = new Order({
+          product : order.productId,
+          orderingUser : orderingUserId,
+          appointment : order.appointment,
+          confirmed: false
+        });
+        await dbOrder.save();
+        response.status(200);
+        response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id, orderRegistered:true});
     }
 
     public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>

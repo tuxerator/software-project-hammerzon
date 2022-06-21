@@ -1,6 +1,6 @@
 import { Component,  OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
-import { getAppointmentString } from 'src/app/models/Product';
+import { getAppointmentString, getDateString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 
 
@@ -11,9 +11,9 @@ import { OrderService } from 'src/app/services/order.service';
 export class AllOrdersComponent implements OnInit {
   public orderList : Order[] = [];
   public status = Status;
-  
+
   constructor(private orderService: OrderService) { }
-  
+
 
   ngOnInit(): void {
     this.listAllOrders();
@@ -36,7 +36,7 @@ export class AllOrdersComponent implements OnInit {
   }
 
   setStatus(index:number, status:Status): void
-  { 
+  {
     console.log('status set:' + status);
     if(this.orderList)
     {
@@ -57,7 +57,11 @@ export class AllOrdersComponent implements OnInit {
   }
   getDateString(date?:Date):string
   {
-    return getAppointmentString(date);
+    if(date)
+    {
+    return getDateString(date);
+    }
+    return 'Fehler';
   }
 
   setLocalOrderStatus(index:number, status:Status) : void

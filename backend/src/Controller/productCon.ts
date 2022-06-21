@@ -133,7 +133,7 @@ class ProductController {
         await product.save();
 
         res.status(200);
-        res.send({ code: 200, message: `Add Successfull`, id: product._id })
+        res.send({ code: 200, message: 'Add Successfull', id: product._id });
     }
 
     public async addHindrance(req: Request, res: Response): Promise<void> {
@@ -145,7 +145,7 @@ class ProductController {
         await product.save();
 
         res.status(200);
-        res.send({ code: 200, message: `Add Successfull`, id: product._id })
+        res.send({ code: 200, message: 'Add Successfull', id: product._id });
     }
 }
 

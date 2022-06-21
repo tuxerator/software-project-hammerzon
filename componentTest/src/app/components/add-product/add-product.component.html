@@ -64,8 +64,8 @@
       <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
     </div>
   </div>
-  <pre class="col-12">From date: {{fromDate | json}}</pre>
-  <pre class="col-12">To date: {{toDate | json}}</pre>
+  <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
+  <pre class="col-12">To date: {{toDate | json}}</pre> -->
 </form>
 
 <!--Nicht verfügbare Termine angeben-->
@@ -77,13 +77,13 @@
    id="durationInput">
 <div class="input-group has-validation" id="date selector">
   <span class="input-group-text">{{index + 1}}.</span>
-  <input aria-label="Username" class="form-control" 
+  <input aria-label="Username" class="form-control"
          placeholder="Suche eine Termin aus" required type="date">
   <label>Von</label>
   <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
   <label>Bis</label>
   <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
- <!--<button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>--> 
- 
+ <!--<button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>-->
+
 </div>
 </div>

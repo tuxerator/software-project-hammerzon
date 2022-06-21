@@ -24,8 +24,8 @@ enum Status {
 // make enum 0 ,1 ,2 translate in controller
 
 interface IAppointment {
-    startTime: Date,
-    endTime: Date,
+    startDate: Date,
+    endDate: Date,
 }
 
 const orderSchema : Schema = new Schema<IOrder>({
@@ -33,8 +33,8 @@ const orderSchema : Schema = new Schema<IOrder>({
     orderingUser:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' , required: true },
     status:         { type: String, enum: Status, default: Status.NNA, requiered: true},
     appointment:    { type: {
-        startTime: { type: Date, required: true },
-        endTime: { type: Date, required: true },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date, required: true },
     }, required: true, _id: false },
     confirmed:      { type: Boolean, default: false },
 }, { timestamps: true });

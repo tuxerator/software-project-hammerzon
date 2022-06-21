@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
-import { getAppointmentString } from 'src/app/models/Product';
+import { Availability, getAppointmentString, getDateString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 
 
@@ -33,7 +33,8 @@ export class OrderHistoryComponent implements OnInit {
         }
         for(let i = 0; i < this.orderList.length; i++)
         {
-          this.orderList[i].appointment.date = new Date(this.orderList[i].appointment.date);
+          this.orderList[i].appointment.startDate = new Date(this.orderList[i].appointment.startDate);
+          this.orderList[i].appointment.endDate = new Date(this.orderList[i].appointment.endDate);
         }
       },
 
@@ -43,14 +44,24 @@ export class OrderHistoryComponent implements OnInit {
       }
     });
   }
-  getDateString(date?:Date):string
+  getDateString(date?:Availability):string
   {
-    return getAppointmentString(date);
+    if(date)
+    {
+        return getAppointmentString(date);
+    }
+    return 'Fehler';
   }
 
 
+
+
   getTimeOrderString(date?: Date): string {
-    return getAppointmentString(date);
+    if(date)
+    {
+        return getDateString(date);
+    }
+    return 'Fehler';
   }
 
 }

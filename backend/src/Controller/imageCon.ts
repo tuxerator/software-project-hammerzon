@@ -17,7 +17,7 @@ export class ImageController {
     };
     const dbImage = new Image(img);
     await dbImage.save();
-    console.log(dbImage);
+    //console.log(dbImage);
     response.status(200);
     response.send({ code: 200, message: 'Image Uploaded', id: dbImage._id });
   }

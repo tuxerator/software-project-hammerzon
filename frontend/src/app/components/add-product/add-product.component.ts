@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Availability, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 
 class ImageSnippet {
@@ -21,7 +22,7 @@ class ImageSnippet {
 export class AddProductComponent implements OnInit {
   public appointmentsCount = 1;
 
-  public appointmentIndexs: string[] = ['appointment0'];
+  public appointmentIndexs: string[] = [];
 
   public imageId?: string = undefined;
 
@@ -37,11 +38,27 @@ export class AddProductComponent implements OnInit {
     prize: new FormControl('', [Validators.required]),
     durationHour: new FormControl('', [Validators.required]),
     durationMinute: new FormControl('', [Validators.required]),
-    appointment0: new FormControl('', [Validators.required]),
   });
 
+  hoveredDate: NgbDate | null = null;
 
-  constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,private productService:ProductService,private authService:AuthService,private router:Router,private imageService:ImageService) { }
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+
+  disabledWeekdays: number[] = [];
+
+  readonly weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  productForm: FormGroup = new FormGroup({});
+  fromDateControl: FormControl = new FormControl();
+  toDateControl: FormControl = new FormControl();
+
+
+  constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,private productService:ProductService,private authService:AuthService,private router:Router,private imageService:ImageService,
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder)
+  {
+              this.fromDate = calendar.getToday();
+              this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+  }
 
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
@@ -59,11 +76,64 @@ export class AddProductComponent implements OnInit {
           }
         });
     }
+
+    this.createFormControls();
+    this.productForm = this.fb.group({
+      fromDateControl: this.fromDateControl,
+      toDateControl: this.toDateControl
+    });
   }
+
+  createFormControls() {
+    this.fromDateControl= new FormControl( '', isSelectedWeekday(this.isDisabled, this.formatter));
+    this.toDateControl= new FormControl('', isSelectedWeekday(this.isDisabled, this.formatter));
+  }
+
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) &&
+      date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    console.log('isRange');
+    console.log(date);
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) ||
+      this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  setFromDate = (currentValue: NgbDate | null, input: string): void => {
+    this.fromDate = this.validateInput(currentValue, input);
+    this.fromDateControl.updateValueAndValidity();
+  }
+
+  setToDate = (currentValue: NgbDate | null, input: string): void => {
+    this.toDate = this.validateInput(currentValue, input);
+    this.toDateControl.updateValueAndValidity();
+  }
+
+
+  isFromDate = (date: NgbDate) => date.equals(this.fromDate);
+  isToDate = (date: NgbDate) => date.equals(this.toDate);
+  isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
+  toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
+
+
+  time= {hour:8,minute:0};
+
   //
   public editProduct(aProduct: Product)
   {
-    this.appointmentsCount=1;
+    this.appointmentsCount=0;
     this.imageId=aProduct.image_id;
     aProduct.duration = new Date(aProduct.duration);
     this.addProductForm = this.formBuilder.group({
@@ -75,11 +145,11 @@ export class AddProductComponent implements OnInit {
     });
 
     console.log(aProduct.availability);
-    const appointment = aProduct.appointments[0];
-    appointment.date = new Date(appointment.date);
-    this.addProductForm.setControl('appointment0',new FormControl(this.getDateTimeString(appointment.date),[Validators.required]));
+    //const appointment = aProduct.appointments[0];
+    // appointment.date = new Date(appointment.date);
+    //this.addProductForm.setControl('appointment0',new FormControl(this.getDateTimeString(appointment.date),[Validators.required]));
 
-    for( let i = 1; i < aProduct.appointments.length; i++)
+    /*for( let i = 1; i < aProduct.appointments.length; i++)
     {
       const appointment = aProduct.appointments[i];
       const name = `appointment${this.appointmentsCount}`;
@@ -91,7 +161,7 @@ export class AddProductComponent implements OnInit {
       this.addProductForm.addControl(name, new FormControl(this.getDateTimeString(appointment.date),[Validators.required]));
       this.appointmentIndexs.push(name);
       this.appointmentsCount ++;
-    }
+    }*/
   }
 
   private getDateTimeString(date:Date):string
@@ -114,7 +184,9 @@ export class AddProductComponent implements OnInit {
 
   public addAppointment() {
     const name = `appointment${ this.appointmentsCount }`;
-    this.addProductForm.addControl(name, new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name+'start', new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name+'end', new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name+'date', new FormControl('', [Validators.required]));
     this.appointmentIndexs.push(name);
     this.appointmentsCount++;
   }
@@ -149,20 +221,31 @@ export class AddProductComponent implements OnInit {
 
   }
 
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
   public onSubmit():void
     {
       // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus
       if(this.uploading) return;
 
 
-      console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]]}`);
+      //console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]+'start']}`);
 
       this.isChecked = true;
       console.log('Create Debug Log');
       this.addProductForm.markAllAsTouched();
       // Sind alle Eingaben valid
       console.log(this.addProductForm);
-      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
+      if(this.addProductForm.invalid || !this.imageId || this.fromDate == null || this.toDate == null) return;
       console.log('Through Validation Debug Log');
       // Für besser lesbarkeit des Code
       const form = this.addProductForm.value;
@@ -178,23 +261,58 @@ export class AddProductComponent implements OnInit {
       // Minuten hinzufügen
       duration.setMinutes(durationMinute);
 
-      const availability: Availability[] = [];
+
+      console.log(this.productForm.value);
+      const startDate :Date = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day);      ;//new Date(this.productForm.value['fromDateControl']);
+      const endDate :Date = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);  ;//new Date(this.productForm.value['toDateControl']);
+
+      let availabilities: Availability[] = [{startDate,endDate}];
+      console.log(availabilities);
       // Termine:
       for (const availName of this.appointmentIndexs) {
-        const value = form[availName];
-        const date = new Date(value);
+        const start = form[availName+'start'];
+        const end = form[availName+'end'];
+        const date = new Date(form[availName+'date']);
+        const startDate = new Date(date.getTime());
 
-        availability.push(new Appointment(date));
+        startDate.setHours(start.hour);
+        startDate.setMinutes(start.minute);
+        startDate.setSeconds(start.second);
+
+        const endDate = new Date(date.getTime());
+
+        endDate.setHours(end.hour);
+        endDate.setMinutes(end.minute);
+        endDate.setSeconds(end.second);
+
+        //console.log(startDate,endDate,date,end,start);
+       // availability.push(new Availability(date));
+
+        let isInOneSlot =false;
+        for(const availbility of availabilities)
+        {
+          console.log(availbility);
+          if(startDate.getTime() >= availbility.startDate.getTime() && endDate.getTime() <= availbility.endDate.getTime())
+          {
+
+            availabilities = availabilities.filter(el =>  availbility !== el);
+            const firstAv : Availability = {startDate:availbility.startDate, endDate:startDate};
+            const secondAv : Availability = {startDate:endDate, endDate:availbility.endDate};
+            availabilities.push(firstAv);
+            availabilities.push(secondAv);
+            break;
+          }
+        }
       }
 
       const prize = parseFloat(form.prize);
 
       // Neues Product erstellen
-      const newProduct:Product = new Product(form.productName,form.description,prize,duration,availability,this.imageId);
+      const newProduct:Product = new Product(form.productName,form.description,prize,duration,{start:new Date(Date.UTC(0,0,0,0,0,0)),end:new Date( Date.UTC(0,0,0,23,59,59)) },availabilities,this.imageId);
       //Product hinzufügen anfrage an das backend schicken
       this.uploading = true;
 
-      const uploadProduct = () => {
+     const uploadProduct = () => {
         this.productService.addProduct(newProduct).subscribe({
           next: (_message:IdMessageResponse) => {
             this.errorMessage = undefined;
@@ -209,7 +327,8 @@ export class AddProductComponent implements OnInit {
           }
         });
       };
-      // Wenn es das Product schon gegeben hat lösche das alte
+
+     // Wenn es das Product schon gegeben hat lösche das alte
       if(this.productId)
       {
         this.productService.removeProduct(this.productId).subscribe({
@@ -224,4 +343,13 @@ export class AddProductComponent implements OnInit {
 
     }
 
+
+}
+
+
+export const isSelectedWeekday = (isDisabled: (date: NgbDate | null) => boolean, formatter: NgbDateParserFormatter): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    console.log(control.value);
+    return isDisabled(NgbDate.from(formatter.parse(control.value))) ? { disabledDate: { value: control.value } } : null;
+  };
 }

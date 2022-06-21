@@ -148,6 +148,7 @@ app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
 // add availability to product
 app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
+
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);
@@ -158,7 +159,7 @@ app.get('/api/img/:id', image.getImage);
 // OrderController endpoints
 
 // validate order
-app.get('/api/order/validate', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.validateOrder);
+app.post('/api/order/validate', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.validateOrder);
 
 // add a new Order
 app.post('/api/order/add', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.addOrder);

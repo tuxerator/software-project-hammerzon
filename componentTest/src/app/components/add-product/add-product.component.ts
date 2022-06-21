@@ -78,6 +78,14 @@ export class AddProductComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
+  setFromDate = (currentValue: NgbDate | null, input: string): void => {
+    this.fromDate = this.validateInput(currentValue, input);
+    this.fromDateControl.updateValueAndValidity();
+  }
+  setToDate = (currentValue: NgbDate | null, input: string): void => {
+    this.toDate = this.validateInput(currentValue, input);
+    this.toDateControl.updateValueAndValidity();
+  }
   isFromDate = (date: NgbDate) => date.equals(this.fromDate);
   isToDate = (date: NgbDate) => date.equals(this.toDate);
   isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
@@ -93,8 +101,8 @@ export class AddProductComponent implements OnInit {
     this.appointmentIndexs.push(name);
     this.appointmentsCount++;
   }
-  
-  time= {hour:8,minute:0};
+
+  time = {hour:8,minute:0};
 }
 
 // Checks weather the date is disabled or not

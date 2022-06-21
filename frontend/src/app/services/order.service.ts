@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order, Status } from '../models/Order';
+import { Appointment } from './productdetails.service';
+import { Availability } from '../models/Product';
+import { MessageResponse } from '../components/types';
 
 export type PostOrder={
   productId : string,
-  appointmentIndex : number
+  appointment : Availability
 }
 
 @Injectable({
@@ -28,13 +31,18 @@ export class OrderService {
     return this.http.get<Order[]>('api/order/listByCreator');
   }
 
+  valdiateOrder(productId: string, appointment:Availability): Observable<MessageResponse>
+  {
+    const postOrder: PostOrder = {productId, appointment};
+    return this.http.post<MessageResponse>('api/order/validate',postOrder);
+  }
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId: string, appointmentIndex: number) : Observable<Boolean>
+  addOrder(productId: string, appointment:Availability) : Observable<MessageResponse & {orderRegistered:Boolean}>
   {
-    const postOrder: PostOrder = {productId, appointmentIndex};
-    return this.http.post<Boolean>('api/order/register', postOrder);
+    const postOrder: PostOrder = {productId, appointment};
+    return this.http.post<MessageResponse & {orderRegistered:Boolean}>('api/order/add', postOrder);
   }
 
   /**
@@ -47,12 +55,12 @@ export class OrderService {
   /**
    * resets the isReserved status of an appointment to false
    */
-  resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
+  /*resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
   {
-    const postOrder:PostOrder = {productId, appointmentIndex};
+    //const postOrder:PostOrder = {productId, appointmentIndex};
     console.log('reset appointment service');
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
-  }
+  }*/
 
   setStatus(orderId:string, status: Status) : Observable<Status>
   {

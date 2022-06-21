@@ -4,7 +4,7 @@ import { OrderService } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
+import { Availability, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -14,10 +14,11 @@ import { ProductService } from 'src/app/services/product.service';
 export class OrderProductComponent implements OnInit {
   product: Product | undefined;
   user: User | undefined;
-  appointment: Appointment | undefined;
+  appointment: Availability | undefined;
   appointmentIndex: Number = 0;
   orderRegistered: Boolean | undefined;
   cancelled: Boolean = false;
+  startDate?:Date;
 
   constructor(private route: ActivatedRoute,
               private productService: ProductService,
@@ -30,8 +31,17 @@ export class OrderProductComponent implements OnInit {
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
-    const appointmentIndex = parseInt(String(routeParams.get('i')));
-    this.appointmentIndex = appointmentIndex;
+    const date = routeParams.get('i');
+    if(date)
+    {
+      this.startDate  = new Date(date);
+    }
+    /*this.route.queryParams.subscribe(params => {
+      console.log(params);
+        this.startDate = new Date(params['dateTime']);
+      }
+    );*/
+
     /**
      * get information about the product , register the order (make functions?)
      */
@@ -40,8 +50,14 @@ export class OrderProductComponent implements OnInit {
         next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
-          this.appointment = this.product.appointments[appointmentIndex];
-          this.appointment.startTime = new Date(this.appointment.startTime);
+          if(this.startDate)
+          {
+            this.appointment = {
+              startDate:this.startDate,
+              endDate:new Date(this.startDate?.getTime() + this.product.duration.getTime())
+            };
+          }
+
         },
         error: (err) => {
           console.log(err);
@@ -62,14 +78,15 @@ export class OrderProductComponent implements OnInit {
   }
 
   register(): void {
-    if (this.product) {
-      this.orderService.registerOrder(this.product._id, this.appointmentIndex).subscribe(
+    console.log(this.appointment);
+    if (this.product && this.appointment) {
+     this.orderService.addOrder(this.product._id, this.appointment).subscribe(
         {
           next: (val) => {
-            this.orderRegistered = val;
+            this.orderRegistered = val.orderRegistered;
             console.log('orderRegistered:' + this.orderRegistered);
             if (this.orderRegistered === true) {
-              const url = `productdetails/${ this.product?._id }/order-product/${ this.appointmentIndex }/order-finalized`;
+              const url = `productdetails/${ this.product?._id }/order-product/${this.appointment?.startDate}/order-finalized`;
               this.router.navigateByUrl(url);
             } else {
               // appointment not available
@@ -90,7 +107,10 @@ export class OrderProductComponent implements OnInit {
   }
 
   getAppointString(): string {
-    return getAppointmentString(this.appointment?.startTime);
+    if(this.appointment)
+    {
+    return getAppointmentString(this.appointment);
+    }return 'Fehler';
   }
 
 

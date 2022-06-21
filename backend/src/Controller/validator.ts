@@ -248,65 +248,77 @@ export class ValidatorGroups {
 /**
  * Checks if the new appointment does not overlap with any existing appointment of the user offering the product
  */
-export const isValidAppointment = async (req: Request, res: Response): Promise<void> => {
+export const isValidAppointment = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
     const product: IProduct = await Product.findById(new Types.ObjectId(req.body.productId)).exec();
     const productAvailability: IAvailability[] = product.availability;
     const appointment: IAppointment = req.body.appointment;
+
+    appointment.startDate = new Date(appointment.startDate);
+    appointment.endDate = new Date(appointment.endDate);
+
     // Get all appointments of the user offering the product
     const orders: IOrder[] = await Order.where('product').equals(product._id).exec();
     const appointments: IAppointment[] = orders.map(order => order.appointment);
 
     // Check if the new appointment overlaps with any existing appointment
     for (const existingAppointment of appointments) {
-        if (existingAppointment.startTime < appointment.endTime && existingAppointment.endTime > appointment.startTime) {
+        if (existingAppointment.startDate < appointment.endDate && existingAppointment.endDate > appointment.startDate) {
             res.status(400);
             res.send({ code: 400, message: 'Appointment overlaps with existing appointment' });
             return;
         }
     }
 
+
+
     // Check if the new appointment lies outside the availability of the product
     for (const availability of productAvailability) {
-        if (availability.startDate < appointment.startTime && availability.endDate > appointment.endTime) {
+        //console.log();
+        if (!(availability.startDate <= appointment.startDate && availability.endDate >= appointment.endDate)) {
+            console.log(availability);
             res.status(400);
             res.send({ code: 400, message: 'Appointment lies outside the availability of the product' });
             return;
         }
-        if (product.defaultTimeFrame.start.getTime() > getDayTime(appointment.startTime) && product.defaultTimeFrame.end.getTime() < getDayTime(appointment.endTime)) {
+        if (getDayTime(product.defaultTimeFrame.start) > getDayTime(appointment.startDate) && getDayTime(product.defaultTimeFrame.end) < getDayTime(appointment.endDate)) {
             res.status(400);
             res.send({ code: 400, message: 'Appointment lies outside the default time frame of the product' });
             return;
         }
     }
-}
+
+    next();
+};
 
 
 
 /**
  * Checks if the new availability does not overlap with an existing one
  */
-export const isValidAvailability = async (req: Request, res: Response) => {
+export const isValidAvailability = async (req: Request, res: Response,next:NextFunction) => {
 
     const availabilityToValidate: IAvailability = req.body;
     const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
     const availabilities: IAvailability[] = product.availability;
-    for (let availability of availabilities) {
+    for (const availability of availabilities) {
         // Check weather the new availability overlaps with an exising one
         if (availability.startDate <= availabilityToValidate.endDate && availability.endDate >= availabilityToValidate.startDate) {
             res.status(400);
-            res.send({ code: 400, message: 'Availability overlaps with existing availability' });
+            res.send({ code: 400, message: 'Availability overlaps with existing availability'});
             return;
+
         }
     }
-}
+    next();
+};
 
 export const asyncHandler = (callback: { (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void>; (arg0: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, arg1: Response<any, Record<string, any>>, arg2: NextFunction): Promise<any>; }) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        callback(req, res, next).catch(next);
-    }
-}
+       callback(req, res, next).catch(next);
+    };
+};
 
 // Get time without date in milliseconds
 const getDayTime = (date: Date): number => {
     return date.getTime() - date.getTime() % (1000 * 60 * 60 * 24);
-}
+};

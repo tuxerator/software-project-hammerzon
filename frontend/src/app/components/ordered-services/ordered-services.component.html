@@ -26,8 +26,8 @@
                                         {{elem.orderingUser?.address?.postCode}}
                                         {{elem.orderingUser?.address?.city}}
                                     </td>
-                                    <td>{{getDateString(elem.appointment.date)}} </td>
-                                    
+                                   <td>{{getDateString(elem.appointment)}} </td>
+
                                     <div [ngSwitch]="elem.status">
                                         <div *ngSwitchCase="status.NNA">
                                             <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
@@ -39,7 +39,7 @@
                                             <td> <span class="p-2 mb-2 bg-primary text-nowrap">Durchgeführt</span> </td>
                                         </div>
                                     </div>
-                                    <td>  
+                                    <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                               Set Status

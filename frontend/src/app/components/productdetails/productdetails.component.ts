@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
 
-import { Product, getAppointmentString, getDurationString } from '../../models/Product';
+import { Product, getAppointmentString, getDurationString, Availability } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
 import { delay, timeout } from 'rxjs';
 
@@ -15,16 +15,14 @@ export class ProductdetailsComponent implements OnInit {
   product: Product | undefined;
   //public productID: string;
   user: User | undefined;
+  appointmentDate?:Date;
 
   id:string = '';
 
   // Zum formatieren der Daten
 
 
-  constructor(private route: ActivatedRoute,
-              private productService: ProductService,
-              private router: Router,
-              private authService: AuthService) {
+
   constructor(private route:ActivatedRoute,
               private productService:ProductService,
               private router:Router,
@@ -47,9 +45,9 @@ export class ProductdetailsComponent implements OnInit {
         next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
-          for (let i = 0; i < this.product.appointments.length; i++) {
+          /*for (let i = 0; i < this.product.appointments.length; i++) {
             this.product.appointments[i].date = new Date(this.product.appointments[i].date);
-          }
+          }*/
 
           console.log(this.product);
           console.log(this.user);
@@ -75,12 +73,25 @@ export class ProductdetailsComponent implements OnInit {
     );*/
   }
 
+  tryOrder()
+  {
+
+  if(this.product && this.appointmentDate){
+      const appointment = {startDate:this.appointmentDate,endDate:this.appointmentDate?.getTime() + this.product?.duration.getTime()
+
+      }
+    }
+  }
+
   getDurString(): string {
     return getDurationString(this.product?.duration);
   }
 
-  getAppointString(date?: Date): string {
-    return getAppointmentString(date);
+  getAppointString(app?: Availability): string {
+    if(app)
+    {
+    return getAppointmentString(app);
+    }return 'Fehler';
   }
 
   deleteProduct()
@@ -94,8 +105,8 @@ export class ProductdetailsComponent implements OnInit {
         console.log(err.error);
       }
     }
-    )
-    
+    );
+
   }
 
 }

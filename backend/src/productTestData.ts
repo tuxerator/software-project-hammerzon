@@ -1,4 +1,4 @@
-import { IAppointment, IProduct, Product } from './Models/Product';
+import { IProduct, Product } from './Models/Product';
 import { Iimage, Image } from './Models/Image';
 import fs from 'fs';
 import path from 'path';

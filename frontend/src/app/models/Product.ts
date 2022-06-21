@@ -18,7 +18,7 @@ export class Product {
     end: Date;
   };
   // Möglichen daten wo man die Dienstleistung kaufen kann
-  availability: Availability[]
+  availability: Availability[];
   image_id: string;
 
   constructor(name: string, description: string, prize: number, duration: Date, defaultTimeFrame: { start: Date, end: Date }, availability: Availability[], image_id: string) {
@@ -29,11 +29,12 @@ export class Product {
     this.defaultTimeFrame = {
       start: defaultTimeFrame.start,
       end: defaultTimeFrame.end
-    }
+    };
     this.availability = availability;
     this.image_id = image_id;
   }
 }
+
 
 
 export class Availability {
@@ -64,7 +65,11 @@ export const getDurationString = (duration?: Date): string => {
 };
 
 
-export const getAppointmentString = (date?: Date): string => {
+export const getAppointmentString = (appointment: Availability): string => {
+  return dateFormater.format(appointment.startDate);
+};
+
+export const getDateString = (date:Date): string => {
   return dateFormater.format(date);
 };
 
