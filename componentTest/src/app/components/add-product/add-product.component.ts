@@ -59,4 +59,21 @@ export class AddProductComponent implements OnInit {
   isToDate = (date: NgbDate) => date.equals(this.toDate);
   isDisabled = (date: NgbDate, current?: { year: number, month: number }) => this.disabledWeekdays.includes(this.calendar.getWeekday(date));
   toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
+
+
+
+  public appointmentsCount = 1;
+
+  public appointmentIndexs: string[] = ['appointment0'];
+  public addAppointment() {
+    const name = `appointment${ this.appointmentsCount }`;
+    this.appointmentIndexs.push(name);
+    this.appointmentsCount++;
+  }
+  
+  time= {hour:8,minute:0};
 }
+
+
+
+  

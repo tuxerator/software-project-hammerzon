@@ -63,3 +63,23 @@
   <pre class="col-12">From date: {{fromDate | json}}</pre>
   <pre class="col-12">To date: {{toDate | json}}</pre>
 </form>
+
+<!--Nicht verfügbare Termine angeben-->
+<div class="d-flex mb-2 has-validation">
+  <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
+  <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
+</div>
+<div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3"
+   id="durationInput">
+<div class="input-group has-validation" id="date selector">
+  <span class="input-group-text">{{index + 1}}.</span>
+  <input aria-label="Username" class="form-control" 
+         placeholder="Suche eine Termin aus" required type="date">
+  <label>Von</label>
+  <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
+  <label>Bis</label>
+  <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
+ <!--<button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>--> 
+ 
+</div>
+</div>
