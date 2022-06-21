@@ -50,7 +50,7 @@ class RatingController {
           console.log(returnProduct.ratings);
           returnProduct.ratings[numberOfRatings].user = request.session.user;
           response.status(200);
-          response.send({returnProduct});
+          response.send(returnProduct);
         }
         else {
           response.status(500);

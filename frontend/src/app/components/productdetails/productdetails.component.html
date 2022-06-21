@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="card border-secondary bg-dark mx-auto col-lg-8">
+    <div class="card border-secondary bg-dark mx-auto col-lg-8 align-self-left">
         <img src="api/img/{{product?.image_id}}" class="card-img-top" alt="...">
         <div class="card-body bg-dark text-white p-4">
           <div class="card-title row justify-content-between">
@@ -27,8 +27,6 @@
         </div>
       </div>
 </div>
-
-
 <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
 <div *ngIf="hasOrdered && !hasRated">
@@ -36,13 +34,10 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
       <form (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
         <div class="form-group">
           <label for="exampleFormControlSelect1">Wie viele Sterne möchtest du vergeben?</label>
-          <select class="form-control" id="exampleFormControlSelect1" formControlName="rating">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
+          <hr>
+          <ngb-rating [max]="5" [(rate)]="currentRating"></ngb-rating>
+          <hr>
+          <pre>Rate: <b>{{currentRating}}</b></pre>
         </div>
         <div class="form-group mt-2">
           <label for="exampleFormControlTextarea1">Teile deine Bewertung...</label>
@@ -61,22 +56,18 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
 <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
 <div *ngFor="let elem of product?.ratings">
-  <section class="p-4 p-md-5 text-left text-lg-start shadow-1-strong rounded">
-    <div class="row d-flex justify-content-left">
+  <section class="p-4 p-md-5 text-center text-lg-start shadow-1-strong rounded">
+    <div class="row d-flex justify-content-center">
       <div class="col-md-8">
-        <div class="card">
-          <div class="card-body m-3">
+        <div class="card bg-dark border-secondary">
+          <div class="card-body m-3 bg-dark">
             <div class="row">
-              <div class="col-lg-4 d-flex justify-content-left align-items-left mb-4 mb-lg-0">
-              </div>
               <div class="col-lg-8">
-                <p class="text-muted fw-light mb-4">
+                <p class="fw-bold text-white mb-0">{{elem.user?.firstName}}  {{elem.user?.lastName}}</p>
+                <ngb-rating [(rate)]="elem.rating" [readonly]="true" [max]="5"></ngb-rating>
+                <p class="text-white align-center fw-light mb-4">
                   {{elem.comment}}
                 </p>
-                <p class="fw-bold text-muted mb-0">Karen Smith</p>
-                <!--Hier werden wir abhängig von der Bewertung, die Sterne hinterlegen, am besten auch mit NG-FOR-->
-                  <span class='bi bi-star-fill' style='color:#fcaf3e'></span>
-
               </div>
             </div>
           </div>
@@ -85,6 +76,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
     </div>
   </section>
 </div>
+
 
 <!-- Modal -->
 <div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

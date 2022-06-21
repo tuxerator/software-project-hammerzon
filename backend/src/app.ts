@@ -151,9 +151,9 @@ app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetApp
 // add a rating between 1 and 5 with a comment
 app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.bind(rating));
 
-app.get('/api/product/:id/canRate', rating.canRate);
+app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, rating.canRate);
 
-app.get('/api/product/:id/hasRated', rating.hasRated);
+app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, rating.hasRated);
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);

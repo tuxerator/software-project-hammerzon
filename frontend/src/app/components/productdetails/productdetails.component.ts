@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
-
 import { Product, getAppointmentString, getDurationString, Rating } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
-import { delay, timeout } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+
+
 
 @Component({
   templateUrl: './productdetails.component.html',
   styleUrls: ['./productdetails.component.css']
 })
+
 export class ProductdetailsComponent implements OnInit {
   product: Product | undefined;
   //public productID: string;
@@ -19,11 +21,10 @@ export class ProductdetailsComponent implements OnInit {
   showRatingForm : boolean = false;
   hasOrdered :boolean = false;
   hasRated : boolean = false;
-
+  currentRating : number = 1;
   id:string = '';
 
   public addRatingForm : FormGroup = this.formBuilder.group({
-    rating : new FormControl('1', [Validators.required]),
     comment : new FormControl('', [Validators.required])
   });
 
@@ -128,11 +129,16 @@ export class ProductdetailsComponent implements OnInit {
     const form = this.addRatingForm.value;
     if(this.user)
     {
-      const rating : Rating = new Rating(parseInt(form.rating), form.comment);
+      const rating : Rating = new Rating(this.currentRating, form.comment);
       this.productService.submitRating(this.id, rating).subscribe({
         next: (product) =>
         {
           console.log(product);
+          this.product = product;
+          this.product.duration = new Date(this.product.duration);
+          for (let i = 0; i < this.product.appointments.length; i++) {
+            this.product.appointments[i].date = new Date(this.product.appointments[i].date);
+          }
           this.productService.hasRated(this.id).subscribe({
             next:(val) => {
               this.hasRated = val;
@@ -149,7 +155,10 @@ export class ProductdetailsComponent implements OnInit {
         }
        });
     }
-
   }
+  setProduct(product:Product) : void {
+    this.product = product;
+  }
+
 
 }
