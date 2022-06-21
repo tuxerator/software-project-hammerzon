@@ -9,7 +9,7 @@
     <div  class="col-9 px-2 pb-2">
       <h6 class="text-primary text-end">{{productInfo?.prize}} €/std.</h6>
       <div class="fs-4 fw-bold"> {{productInfo?.name}}</div>
-      <app-category-badge class="text-muted" [category]="productInfo?.category" direction="hor"></app-category-badge>
+      <app-category-badge class="text-muted" [category]="getCategory()" direction="hor"></app-category-badge>
       <div class="mt-2 text-end text-secondary">
         {{productInfo.user?.firstName}} {{productInfo.user?.lastName}}
       </div>

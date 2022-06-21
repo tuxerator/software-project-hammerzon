@@ -42,7 +42,11 @@
           <img class="img-fluid col rounded"  src="api/img/{{new_image_id}}">
         </div>
         <input #colorInput type="color" class="form-control form-control-color mb-3" id="colorInput" (change)="colorChanged(colorInput)" [value]="new_color" title="Wähle eine Farbe">
-        <div class="mb-3">
+        <label>Icon ([+] Custom / [-] No Custom)</label>
+        <div class="mb-3 input-group">
+          <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" [(ngModel)]="is_custom" aria-label="Checkbox for following text input">
+          </div>
           <input type="text" class="form-control" placeholder="Icon" [(ngModel)]="new_icon" id="icon">
         </div>
         <div>

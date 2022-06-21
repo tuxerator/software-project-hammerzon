@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
-import { Appointment, Product } from '../../models/Product';
+import { Appointment, getCategory, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
 
@@ -71,14 +71,19 @@ export class AddProductComponent implements OnInit {
             console.log('Product existiert nicht');
           }
         });
+    }else
+    {
+        this.searchForCategory();
     }
-    this.searchForCategory();
   }
 
   public searchForCategory():void
   {
     this.categoryService.getCategoriesList().subscribe({
-      next: (val) => this.categories = val.categories,
+      next: (val) =>{
+        this.categories = val.categories;
+        this.categoryChanged();
+      },
       error: (err) => console.log(err)
     });
   }
@@ -91,7 +96,7 @@ export class AddProductComponent implements OnInit {
     }
 
     const categoryName = this.addProductForm.value['categoryName'];
-    this.selectedCategory = this.categories?.find(c =>c.name === categoryName);
+    this.selectedCategory = this.categories?.find(c => c.name === categoryName);
 
     if(!this.imageId)
     {
@@ -111,6 +116,7 @@ export class AddProductComponent implements OnInit {
       prize: new FormControl(aProduct.prize,[Validators.required]),
       durationHour: new FormControl(aProduct.duration.getHours(),[Validators.required]),
       durationMinute: new FormControl(aProduct.duration.getMinutes(),[Validators.required]),
+      categoryName: new FormControl(getCategory(aProduct)?.name,[Validators.required]),
     });
 
     console.log(aProduct.appointments);
@@ -132,6 +138,8 @@ export class AddProductComponent implements OnInit {
       this.appointmentIndexs.push(name);
       this.appointmentsCount ++;
     }
+
+    this.searchForCategory();
   }
 
   private getDateTimeString(date:Date):string
@@ -194,7 +202,7 @@ export class AddProductComponent implements OnInit {
       this.addProductForm.markAllAsTouched();
       // Sind alle Eingaben valid
       console.log(this.addProductForm);
-      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId) return;
+      if(this.addProductForm.invalid|| this.appointmentIndexs.length <= 0 || !this.imageId || !this.selectedCategory) return;
       console.log('Through Validation Debug Log');
       // Für besser lesbarkeit des Code
       const form = this.addProductForm.value;
@@ -222,7 +230,7 @@ export class AddProductComponent implements OnInit {
       const prize = parseFloat(form.prize);
 
       // Neues Product erstellen
-      const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId);
+      const newProduct:Product = new Product(form.productName,form.description,prize,duration,appointments,this.imageId,this.selectedCategory._id);
       //Product hinzufügen anfrage an das backend schicken
       this.uploading = true;
 

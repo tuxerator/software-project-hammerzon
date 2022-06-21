@@ -18,15 +18,16 @@ export class Product {
 
   image_id: string;
 
-  category?:Category;
+  category?:Category | string;
 
-  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string) {
+  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string,category:string) {
     this.name = name;
     this.description = description;
     this.prize = prize;
     this.duration = duration;
     this.appointments = appointments;
     this.image_id = image_id;
+    this.category = category;
   }
 }
 
@@ -55,7 +56,12 @@ const dateFormater = Intl.DateTimeFormat(
 );
 
 export const getDurationString = (duration?: Date): string => {
-  return duration?.getHours() + ' std. ' + duration?.getMinutes() + ' min';
+  return duration?.getHours() + ' Std. ' + duration?.getMinutes() + ' Min.';
+};
+
+export const getCategory = (product:Product): Category|undefined =>
+{
+  return product.category as Category;
 };
 
 

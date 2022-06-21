@@ -166,8 +166,9 @@ export class ValidatorLists {
         ]),
         Validators.isRequired('image_id'),
         Validators.isValidObjectId('image_id'),
-        Validators.isRequired('category_id'),
-        Validators.isValidObjectId('category_id')
+
+        Validators.isRequired('category'),
+        Validators.isValidObjectId('category')
     ];
 
   public static PostOrderValidatorList: Validator[] = [

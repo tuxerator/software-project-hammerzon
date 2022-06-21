@@ -10,6 +10,8 @@ export interface ICategory extends Document {
   color:string
 
   icon:string
+
+  custom:boolean
 }
 
 // create the Schema of IProduct
@@ -17,7 +19,8 @@ const categorySchema: Schema = new Schema<ICategory>({
   name: { type: String, required: true },
   image_id: { type: Schema.Types.ObjectId, ref:'Image', required: true },
   color:{type:String, required:true},
-  icon:{type:String, required:true}
+  icon:{type:String, required:true},
+  custom:{type:Boolean, required:true}
 });
 
 // 3. Create a Model.

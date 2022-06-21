@@ -107,7 +107,7 @@ class ProductController {
   }
   // test for Product id
   public async getSimilarProduct(request:Request, response: Response):Promise<void>{
-    console.log('finding similar object');
+
 
     const id = request.params.id;
 
@@ -121,17 +121,22 @@ class ProductController {
     // Get Product to search from
     const product = await Product.findById(id);
 
-    //
-
-    const products = await Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
-
-    if(products.length < 3)
+    // Find Products some what similar to this product
+    let products = await Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
+    const productIDs = [product._id,...products.map(p => p._id)];
+                    // 1                            0
+    const querys = [{_id:{$ne:productIDs}},{_id:{$ne:productIDs},category:{_id:product.category._id}}];
+    let query;
+    // If there are less then 3 products similar to this product
+    // at first find product in the same category
+    // and after that just find any product
+    while(products.length < 3 && (query = querys.pop()))
     {
-      const additionalProducts = await Product.find({_id:{$ne:product._id}}).limit(3 - products.length).populate('user', '-password -address').populate('category').exec();
-      for(const addProduct of additionalProducts)
-      {
-        products.push(addProduct);
-      }
+      const additionalProducts = await Product.find(query).limit(3 - products.length).populate('user', '-password -address').populate('category').exec();
+      console.log(products);
+      console.log(query);
+      products = products.concat(additionalProducts);
+
     }
 
     const listInfo: ListInfo<IProduct> = {

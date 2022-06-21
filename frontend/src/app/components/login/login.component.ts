@@ -48,13 +48,13 @@ export class LoginComponent implements OnInit {
   public getClasses(key:string):string[]
   {
     if(!this.loginForm.controls[key].touched){
-      return [];
+      return ['form-control'];
     }
     if(this.isValid(key))
     {
-      return ['is-valid'];
+      return ['form-control','is-valid'];
     }
-    return ['is-invalid'];
+    return ['form-control','is-invalid'];
   }
 
   public getTexts(key:string):string

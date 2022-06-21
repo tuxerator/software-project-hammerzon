@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
 
-import { Product, getAppointmentString, getDurationString } from '../../models/Product';
+import { Product, getAppointmentString, getDurationString, getCategory } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
 import { createHistogram } from 'perf_hooks';
+import { Category } from 'src/app/models/Category';
 
 
 
@@ -94,6 +95,11 @@ export class ProductdetailsComponent implements OnInit {
 
   }
 
+  getCategory():Category|undefined{
+
+    return this.product ? getCategory(this.product): undefined;
+  }
+
   getDurString(): string {
     return getDurationString(this.product?.duration);
   }
@@ -102,7 +108,7 @@ export class ProductdetailsComponent implements OnInit {
     return getAppointmentString(date);
   }
 
-  deleteProduct()
+  deleteProduct():void
   {
     this.productService.removeProduct(this.id).subscribe({
       next:() => {
@@ -114,7 +120,6 @@ export class ProductdetailsComponent implements OnInit {
       }
       }
     );
-
   }
 
 }

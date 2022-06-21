@@ -1,4 +1,6 @@
-<div *ngIf="category" type="button" [class]="isVer() ? ['text-center']:['me-2']"><i class="bi" [class]="!isVer()? [category.icon,'me-1']:[category.icon]"> </i><br *ngIf="isVer()"> {{category.name}}</div>
-<div *ngIf="!category" type="button" [class]="isVer() ? ['text-center']:['me-2']"><i class="bi" [class]="!isVer()? [icon,'me-1']:[icon]" ></i><br *ngIf="isVer()"> {{name}}</div>
-
+<div *ngIf="category" type="button" [class]="isVer() ? ['text-center']:['me-2']">
+  <i [class]="getIconClass()" [style]="getIconStyle()"></i>
+  <br *ngIf="isVer()">
+  {{category.name}}
+</div>
 

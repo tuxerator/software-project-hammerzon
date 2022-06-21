@@ -1,17 +1,23 @@
-<div class="container mt-2 p-4 col-lg-8 mx-auto">
-  <div class="bg-dark mx-auto col-lg-8">
-    <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']" >Dienstleistungen</a></li>
-        <li class="breadcrumb-item">
-          <a class="text-white" [routerLink]="['/']" [queryParams]="{ category: product?.category?.name}">
-            {{product?.category?.name}}
-          </a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">{{product?.name}}</li>
-      </ol>
-    </nav>
+<div class="container mt-2 p-4 col-lg-9 mx-auto">
+  <div class="bg-dark mx-auto col-lg-9">
+    <div class="row justify-content-between">
+      <nav class="col-md-8" aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']" >Dienstleistungen</a></li>
+          <li class="breadcrumb-item">
+            <a class="text-white" [routerLink]="['/']" [queryParams]="{ category: getCategory()?.name}">
+              {{getCategory()?.name}}
+            </a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">{{product?.name}}</li>
+        </ol>
+      </nav>
 
+      <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="col-md-2 mb-2 d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
+        <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
+      </div>
+    </div>
 
     <!-- Image and Product name + User Name + Price-->
 
@@ -21,14 +27,9 @@
           <div class="col fs-3 fw-bold me-auto">{{product?.name}}</div>
           <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
         </div>
-        <app-category-badge [category]="product?.category" class="text-muted" direction="hor"></app-category-badge>
+        <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
         <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
       </div>
-
-    <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="position-relative  d-grid gap-2 d-md-flex justify-content-md-end">
-      <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
-      <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
-    </div>
 
     <hr>
     <!-- Duration -->
@@ -36,7 +37,6 @@
     <div class="text-white fw-bold fs-5">
       Dauer <span class="text-success"> {{getDurString()}}</span>
     </div>
-
 
     <!-- Description -->
     <hr>

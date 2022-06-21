@@ -17,6 +17,8 @@ export class CategoryBadgeComponent implements OnInit {
   icon?:string;
   @Input()
   direction:'ver'|'hor'='ver';
+  @Input()
+  custom?:boolean;
 
   constructor() {
 
@@ -27,6 +29,36 @@ export class CategoryBadgeComponent implements OnInit {
     //{
     //  this.category = new Category(this.name,this.image,this.color);
     //}
+  }
+
+  getIconClass():(string|undefined)[]
+  {
+    if(this.custom||this.category?.custom)
+    {
+      return [];
+    }
+    if(this.category)
+    {
+      return (!this.isVer() ? ['bi',this.category.icon,'me-1']:['bi',this.category?.icon]);
+    }
+    return (!this.isVer() ? ['bi',this.icon,'me-1']:['bi',this.icon]);
+  }
+
+  getIconStyle():string{
+    let url:string|undefined = undefined;
+    if(this.category  && this.category.custom)
+    {
+      url = this.category.icon;
+    }else if(this.custom){
+      url = this.icon;
+    }
+    console.log(url);
+    if(url)
+    {
+      return `background: url("${url}")`;
+    }
+
+    return '';
   }
 
   isVer():boolean{

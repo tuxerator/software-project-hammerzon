@@ -2,7 +2,17 @@
 
    <!-- Second Category Navbar -->
    <nav *ngIf="isOnLandingPage()" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg border-bottom border-secondary p-0" style="margin-top: 74px;">
-      <div class="navbar-nav justify-content-evenly w-100">
+    <button
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSecond"
+      class="navbar-toggler m-2"
+      aria-controls="navbarSecond"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class=""><i class="bi bi-bookmark-fill"></i></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-nav justify-content-evenly w-100" id="navbarSecond">
         <div *ngFor="let category of categories" class="nav-item">
           <app-category-badge class="nav-link" [class]="current_category===category.name ? ['active']: []" [category]="category" (click)="selectCategory(category.name)"></app-category-badge>
         </div>

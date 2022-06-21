@@ -184,7 +184,7 @@ app.use('/api/admin',ValidatorGroups.AdminAuthorized);
 // all orders for the admin page
 app.get('/api/admin/order/list', order.listAllOrders);
 //
-app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon')]),category.addCategory);
+app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon'),Validators.isRequired('custom')]),category.addCategory);
 //
 
 
