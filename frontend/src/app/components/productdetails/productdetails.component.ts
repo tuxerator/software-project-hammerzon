@@ -5,11 +5,7 @@ import { AuthService } from '../../services/auth.service';
 
 import { Product, getAppointmentString, getDurationString, getCategory } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
-import { createHistogram } from 'perf_hooks';
 import { Category } from 'src/app/models/Category';
-
-
-
 
 @Component({
   templateUrl: './productdetails.component.html',
