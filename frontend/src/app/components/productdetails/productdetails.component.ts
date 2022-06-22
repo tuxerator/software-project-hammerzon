@@ -7,9 +7,6 @@ import { Product, getAppointmentString, getDurationString, Rating,getCategory } 
 import { ProductService } from '../../services/product.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-
-
-
 @Component({
   templateUrl: './productdetails.component.html',
   styleUrls: ['./productdetails.component.css']

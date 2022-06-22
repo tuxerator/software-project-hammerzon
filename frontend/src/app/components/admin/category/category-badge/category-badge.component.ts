@@ -44,7 +44,12 @@ export class CategoryBadgeComponent implements OnInit {
     return (!this.isVer() ? ['bi',this.icon,'me-1']:['bi',this.icon]);
   }
 
-  getIconStyle():string{
+  isCustom():boolean
+  {
+    return (this.custom || this.category?.custom)? true : false;
+  }
+
+  getIconStyle():{background?:string,width?:string,height?:string}{
     let url:string|undefined = undefined;
     if(this.category  && this.category.custom)
     {
@@ -55,11 +60,17 @@ export class CategoryBadgeComponent implements OnInit {
     console.log(url);
     if(url)
     {
-      return `background: url("${url}")`;
+      return {
+        background:`url("${url}")`,
+        width:'20px',
+        height:'20px'
+      };
     }
 
-    return '';
+    return {};
   }
+
+
 
   isVer():boolean{
     return this.direction ==='ver';
