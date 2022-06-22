@@ -2,8 +2,9 @@ import { Request, response, Response } from 'express';
 import { IOrder, Order, Status } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
-import { IProduct, Product } from '../Models/Product';
+import { IAppointment, IProduct, Product } from '../Models/Product';
 import { Types } from 'mongoose';
+import { IUser } from '../Models/User';
 import session from 'express-session';
 
 
@@ -63,7 +64,7 @@ class OrderController {
   }
 
   /**
-   * list all orders for the products a user added 
+   * list all orders for the products a user added
    */
   public async listOrdersByCreator(request: SessionRequest, response: Response): Promise<void> {
     const id = request.session.user._id;
@@ -82,40 +83,46 @@ class OrderController {
       response.send('no orders for this creator');
     }
   }
+
+  public async getAppointProductPair(postOrder:PostOrder):Promise<{product:IProduct,appointment:IAppointment}|undefined>
+  {
+    const postedOrder: PostOrder = postOrder;
+    const updateProduct = await Product.findById(postedOrder.productId);
+    const index = postedOrder.appointmentIndex;
+    console.log(updateProduct);
+    if (!updateProduct||updateProduct.appointments[index].isReserved === true) {
+      return undefined;
+    }
+
+    return {product:updateProduct,appointment:updateProduct.appointments[index]};
+  }
+
   /**
    * register an order
    */
-  public async registerOrder(request: SessionRequest, response: Response): Promise<void> {
-    const postedOrder: PostOrder = request.body;
-    const updateProduct = await Product.findById(postedOrder.productId);
-    const index = postedOrder.appointmentIndex;
+  public async registerOrder(pap:{product:IProduct,appointment:IAppointment},user:IUser): Promise<void> {
 
-    if (updateProduct.appointments[index].isReserved === true) {
-      response.status(409);
-      response.send(false);
-    }
-    else {
+      console.log(pap);
       const newOrder = new Order({
-        product: new mongoose.Types.ObjectId(postedOrder.productId),
-        orderingUser: new mongoose.Types.ObjectId(request.session.user._id),
+        product: new mongoose.Types.ObjectId(pap.product._id),
+        orderingUser: new mongoose.Types.ObjectId(user._id),
         timeOfOrder: new Date(),
-        appointment: updateProduct.appointments[index],
+        appointment: pap.appointment,
         status: Status.NNA
       });
       await newOrder.save();
       console.log('saved order:' + newOrder);
-      updateProduct.appointments[index].isReserved = true;
-      await updateProduct.save();
+      pap.appointment.isReserved = true;
+      pap.product.markModified('appointments');
+      await pap.product.save();
+      console.log(pap.product.appointments);
 
-      updateProduct.appointments[index].isReserved = true;
-      await updateProduct.save();
-
-      response.status(201);
-      response.send(true);
-    }
-
+      //response.status(201);
+      //response.send(true);
   }
-  
+
+
+
   /**
    * delete an order
    */
@@ -151,7 +158,7 @@ class OrderController {
         order.save();
         response.status(200);
         response.send({ status });
-      
+
     }
     else {
       response.status(500);

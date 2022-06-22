@@ -31,11 +31,17 @@ import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/valida
 import { Category } from './Models/Category';
 import { CategoryController } from './Controller/category';
 import RatingController from './Controller/rating';
+import { PaymentType } from './types';
+import { PaymentController } from './Controller/payment';
 
 // Damit im request.session user exisitiert
 declare global {
   interface Session {
     user?: IUser,
+    paymentAccount?:{
+      account:string,
+      paymentType:PaymentType
+    }
   }
 }
 
@@ -107,6 +113,8 @@ const product = new ProductController();
 const rating = new RatingController();
 const order = new OrderController();
 
+const payment = new PaymentController(order);
+
 const image = new ImageController();
 
 const category = new CategoryController();
@@ -171,10 +179,14 @@ app.get('/api/img/:id',image.getImage);
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
+// app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
 
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
+
+// list all orders for the admin page
+app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
+
 
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
@@ -200,6 +212,13 @@ app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'
 
 
 // Falls ein Fehler auftritt, gib den Stack trace aus
+
+// Payment
+
+app.post('/api/payment/country',payment.IsFromGermany.bind(payment));
+
+app.post('/api/payment/pay',payment.Payment.bind(payment));
+
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
 }

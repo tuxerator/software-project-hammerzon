@@ -14,7 +14,7 @@ export class CategoryComponent implements OnInit {
 
   public new_image_id?:string;
   public new_name?:string;
-  public new_color?:string;
+  public new_color?:string = '#fff';
   public new_icon?:string;
   public is_custom = false;
 
