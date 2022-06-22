@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IdMessageResponse, ListInfoReponse, MessageResponse } from '../components/types';
-import { Product } from '../models/Product';
+import { Product, Rating } from '../models/Product';
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +58,19 @@ export class ProductService {
     return this.http.get<ListInfoReponse<Product>>(`api/product/similar/${id}`);
   }
 
+  submitRating(id:string, rating:Rating) : Observable<Product>
+  {
+    return this.http.post<Product>(`api/product/${id}/rate`, {rating});
+  }
+
+  hasOrdered(id:string) : Observable<boolean>
+  {
+    return this.http.get<boolean>(`api/product/${id}/canRate`);
+  }
+
+  hasRated(id:string) : Observable<boolean>
+  {
+    return this.http.get<boolean>(`api/product/${id}/hasRated`);
+  }
 }
 

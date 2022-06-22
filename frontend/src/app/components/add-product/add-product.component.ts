@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
-import { Appointment, getCategory, Product } from '../../models/Product';
+import { Appointment, Product, Rating, getCategory } from '../../models/Product';
 import { IdMessageResponse } from '../types';
 
 

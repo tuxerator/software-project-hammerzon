@@ -25,6 +25,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { CategoryBadgeComponent } from './components/admin/category/category-badge/category-badge.component';
 import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
 import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ProductListItemComponent } from './components/landingpage/product-list-
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [
     HttpClientModule

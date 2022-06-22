@@ -1,9 +1,10 @@
 <div class="container mt-2 p-4 col-lg-9 mx-auto">
   <div class="bg-dark mx-auto col-lg-9">
     <div class="row justify-content-between">
-      <nav class="col-md-8" aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+      <nav class="col-md-8" aria-label="breadcrumb"
+        style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']" >Dienstleistungen</a></li>
+          <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']">Dienstleistungen</a></li>
           <li class="breadcrumb-item">
             <a class="text-white" [routerLink]="['/']" [queryParams]="{ category: getCategory()?.name}">
               {{getCategory()?.name}}
@@ -13,58 +14,117 @@
         </ol>
       </nav>
 
-      <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="col-md-2 mb-2 d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
-        <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
+      <div
+        *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
+        class="col-md-2 mb-2 d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
+            class="bi bi-pencil-square"></i></button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+            class="bi bi-trash-fill"></i></button>
       </div>
     </div>
 
     <!-- Image and Product name + User Name + Price-->
 
-      <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="...">
-      <div class="py-3 bg-dark text-white">
-        <div class="row justify-content-between">
-          <div class="col fs-3 fw-bold me-auto">{{product?.name}}</div>
-          <h5 class="col text-end text-primary">{{product?.prize}} €/std.</h5>
+    <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="...">
+    <div class="py-3 bg-dark text-white">
+      <div class="row justify-content-between">
+        <div class="col fs-3 fw-bold me-auto">{{product?.name}}</div>
+        <div id="spy" class="col text-end fs-5" >
+          <i class="bi bi-star-fill text-warning" href="#rating"></i>
+          <span class="text-warning" > {{product?.averageRating}}</span>
+          <span class="text-muted"> ({{product?.numberOfRatings}})</span>
         </div>
-        <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
-        <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
       </div>
-
+      <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
+      <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
+    </div>
     <hr>
     <!-- Duration -->
 
-    <div class="text-white fw-bold fs-5">
-      Dauer <span class="text-success"> {{getDurString()}}</span>
+    <div class="text-white fw-bold fs-5 row justify-content-between">
+      <div class="col">
+        Dauer <span class="text-success"> {{getDurString()}}</span>
+      </div>
+      <div class="col text-center">
+        Preis <span class="text-primary"> {{product?.prize}} €/Std.</span>
+      </div>
+      <div class="col text-end">
+        Total Preis <span class="text-muted"> {{getTotalPrice()}} €</span>
+      </div>
     </div>
 
     <!-- Description -->
     <hr>
-      <div class="fw-bold fs-5 mb-2">Beschreibung</div>
-      <div class="text-light">{{product?.description}}</div>
+    <div class="fw-bold fs-5 mb-2">Beschreibung</div>
+    <div class="text-light">{{product?.description}}</div>
     <hr>
 
     <!-- Appointment Selection -->
     <div class="fw-bold fs-5 mb-2">Termine</div>
     <div class="row row-cols-3" role="group">
-        <div class="col mb-2 d-grid"  *ngFor="let a of product?.appointments; let i = index" >
-                  <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
-        </div>
+      <div class="col mb-2 d-grid" *ngFor="let a of product?.appointments; let i = index">
+        <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}"
+          [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
+      </div>
+    </div>
+
+    <hr>
+    <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
+Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
+    <div id="rating" class="fw-bold fs-5 mb-2">Bewertung(en)<i class="bi bi-star-fill text-warning"></i><span class="text-warning" > {{product?.averageRating}}</span><span class="text-muted"> ({{product?.numberOfRatings}})</span></div>
+    <div *ngIf="hasOrdered && !hasRated" class="mb-4">
+      <div class="bg-dark">
+        <form (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
+          <label for="exampleFormControlSelect1">Wie viele Sterne möchtest du vergeben?</label>
+          <div class="form-group">
+            <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="currentRating"></ngb-rating>
+            <label class="text-warning">{{currentRating}}</label>
+          </div>
+          <div class="form-group mt-2">
+            <label for="exampleFormControlTextarea1">Teile deine Bewertung...</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+              formControlName="comment"></textarea>
+          </div>
+          <input class="ms-auto" type="submit" class="btn btn-primary mt-2" value="Bewertung abschicken">
+        </form>
+      </div>
+    </div>
+    <div *ngIf="hasOrdered && hasRated" class="mb-4">
+        <div>Bewertung abgegeben, Vielen Dank für die Bewertung!</div>
+    </div>
+
+    <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
+    <div class="list-group">
+      <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of product?.ratings">
+          <div class="row justify-content-start">
+            <div class="col-auto  fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
+            <div class="col-auto">
+              <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+              <label class="text-warning">{{elem.rating}}</label>
+            </div>
+          </div>
+          <p class="text-white align-center fw-light mb-4">
+              {{elem.comment}}
+          </p>
+          <div class="text-muted">{{getDate(elem.date)}}</div>
+      </div>
     </div>
 
     <hr>
     <!-- Similar Descriptions  -->
     <div class="fw-bold fs-5 mb-2">Ähnliche Dienstleistungen</div>
-    <app-product-list  [list]="similarProducts" [click]="changeId.bind(this)"></app-product-list>
+    <app-product-list [list]="similarProducts" [click]="changeId.bind(this)"></app-product-list>
 
-
+  </div>
 
 </div>
 
 
 
 <!--Delete Modal -->
-<div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -81,6 +141,3 @@
     </div>
   </div>
 </div>
-
-
-

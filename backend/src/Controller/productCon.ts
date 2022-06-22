@@ -79,7 +79,17 @@ class ProductController {
     const id = request.params.id;
     console.log(id);
     if (id && Types.ObjectId.isValid(id)) {
-      const product: IProduct = await Product.findById(id).populate('user', '-password -address').populate('category').exec();
+      const product: IProduct = await Product.findById(id)
+      .populate('user', '-password -address')
+      .populate('category')
+      .populate({
+        path: 'ratings',
+        populate: {
+          path: 'user',
+          model: 'User'
+        }
+      })
+      .exec();
       response.status(200);
       response.send(product);
     } else {
@@ -152,7 +162,11 @@ class ProductController {
 
 
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
-    const product = request.body;
+    const product =   {...request.body,
+        numberOfRatings : 0,
+        averageRating : 1,
+        ratings : []
+    };
     console.log(product);
 
     // Setze es auf den Angemeldeten User

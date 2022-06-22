@@ -30,6 +30,7 @@ import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
 import { Category } from './Models/Category';
 import { CategoryController } from './Controller/category';
+import RatingController from './Controller/rating';
 
 // Damit im request.session user exisitiert
 declare global {
@@ -103,6 +104,7 @@ const auth = new AuthController();
 // const about = new AboutController();
 
 const product = new ProductController();
+const rating = new RatingController();
 const order = new OrderController();
 
 const image = new ImageController();
@@ -152,6 +154,13 @@ app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),
 
 app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
+// rating controller endpoints
+// add a rating between 1 and 5 with a comment
+app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.bind(rating));
+
+app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, rating.canRate);
+
+app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, rating.hasRated);
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);
@@ -186,8 +195,6 @@ app.get('/api/admin/order/list', order.listAllOrders);
 //
 app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon'),Validators.isRequired('custom')]),category.addCategory);
 //
-
-
 
 
 

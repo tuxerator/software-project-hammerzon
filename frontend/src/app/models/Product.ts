@@ -20,6 +20,12 @@ export class Product {
 
   category?:Category | string;
 
+  numberOfRatings? : number;
+
+  averageRating? : number;
+
+  ratings? : Rating[];
+
   constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string,category:string) {
     this.name = name;
     this.description = description;
@@ -28,6 +34,18 @@ export class Product {
     this.appointments = appointments;
     this.image_id = image_id;
     this.category = category;
+  }
+}
+
+export class Rating {
+  rating : number;
+  comment : string;
+  user? : User;
+  date?:Date
+
+  constructor(rating: number, comment: string) {
+    this.rating = rating;
+    this.comment = comment;
   }
 }
 
