@@ -1,7 +1,8 @@
 <div class="container">
   <div class="bg-dark text-white">
-    <article class="card-body mx-auto col-lg-6" >
-      <h4 class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' :'Produkt hinzufügen'}}</h4>
+    <article class="card-body mx-auto col-lg-8">
+      <h4
+        class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
       <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="needs-validation" novalidate>
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
@@ -39,10 +40,11 @@
             Beschreibung wird erwartet.
           </div>
         </div>
+
         <label for="durationInput" class="form-label">Dauer</label>
         <div
           [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"
-          class="input-group mb-3 has-validation"
+          class="input-group mb-3 has-validation col-auto"
           id="durationInput">
           <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
           <input aria-label="Stunden" class="form-control" formControlName="durationHour" placeholder="Stunden"
@@ -60,20 +62,20 @@
             class="invalid-feedback was-validated">Für Stunden und Mintuen werden Zahlen erwartet
           </div>
         </div>
-        <div class="row">
-           <label for="durationInput" class="form-label">Zeit Auswählen</label>
-          <!-- Add Appointment -->
-          <form class="row row-cols-sm-auto" [formGroup]="productForm" novalidate>
-            <div class="col-12">
-              <div class="dp-hidden position-absolute">
-                <div class="input-group">
-                  <input #datepicker="ngbDatepicker"
-                         (dateSelect)="onDateSelection($event)"
-                         [autoClose]="'outside'"
-                         [dayTemplate]="t"
-                         [displayMonths]="2"
-                         [footerTemplate]="footerTemplate"
-                         [markDisabled]="isDisabled"
+
+        <label for="durationInput" class="form-label">Zeit Auswählen</label>
+        <!-- Add Appointment -->
+        <form class="col-12 row" [formGroup]="availabilityGroup" novalidate>
+          <div class="col-12">
+            <div class="dp-hidden position-absolute">
+              <div class="input-group">
+                <input #datepicker="ngbDatepicker"
+                       (dateSelect)="onDateSelection($event)"
+                       [autoClose]="'outside'"
+                       [dayTemplate]="t"
+                       [displayMonths]="2"
+                       [footerTemplate]="footerTemplate"
+                       [markDisabled]="isDisabled"
                          [startDate]="fromDate!"
                          class="form-control"
                          name="datepicker"
@@ -106,52 +108,66 @@
                   </ng-template>
                 </div>
               </div>
-              <div class="input-group form-group has-validation"
-                   [class.was-validated]="productForm.touched">
-                <input #dpFromDate
-                       (input)="setFromDate(fromDate, dpFromDate.value)" [value]="formatter.format(fromDate)"
-                       class="form-control"
-                       name="dpFromDate"
-                       placeholder="yyyy-mm-dd"
-                       formControlName="fromDateControl">
+            <div class="input-group form-group">
+              <input #dpFromDate
+                     (input)="setFromDate(fromDate, dpFromDate.value)"
+                     [value]="formatter.format(fromDate)"
+                     (change)="updateGroupValidity(availabilityGroup)"
+                     class="form-control"
+                     name="dpFromDate"
+                     placeholder="yyyy-mm-dd"
+                     formControlName="fromDateControl"
+                     [ngClass]="{
+                          'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
+                          'is-invalid': isInvalid(availabilityGroup)
+                       }"
+              >
+              <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
+                      type="button"></button>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="input-group form-group has-validation">
+              <input #dpToDate
+                     (input)="setToDate(toDate, dpToDate.value)"
+                     [value]="formatter.format(toDate)"
+                     class="form-control"
+                     name="dpToDate"
+                     placeholder="yyyy-mm-dd"
+                     formControlName="toDateControl"
+                     [ngClass]="{
+                          'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
+                          'is-invalid': isInvalid(availabilityGroup)
+                       }">
                 <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
               </div>
             </div>
-            <div class="col-12">
-              <div class="input-group form-group has-validation"
-                   [class.was-validated]="productForm.touched">
-                <input #dpToDate
-                       (input)="setToDate(toDate, dpToDate.value)" [value]="formatter.format(toDate)"
-                       class="form-control"
-                       name="dpToDate"
-                       placeholder="yyyy-mm-dd"
-                       formControlName="toDateControl">
-                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
-              </div>
-            </div>
+          <button class="btn btn-outline-primary col-auto ms-auto" type="button">Hinzufügen</button>
             <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
             <pre class="col-12">To date: {{toDate | json}}</pre> -->
           </form>
-          <div class="d-flex mb-2 has-validation">
-            <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
-            <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
-          </div>
-          <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3"
-             id="durationInput">
-          <div class="input-group has-validation" id="date selector">
-            <span class="input-group-text">{{index + 1}}.</span>
-            <input aria-label="Username" formControlName="{{name}}date" class="form-control"
-                   placeholder="Suche eine Termin aus" required type="date">
-            <label>Von</label>
-            <ngb-timepicker formControlName="{{name}}start"></ngb-timepicker>
-            <label>Bis</label>
-            <ngb-timepicker formControlName="{{name}}end"></ngb-timepicker>
-            <button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>
+        <!--
+                  <div class="d-flex mb-2 has-validation">
+                    <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
+                    <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
+                  </div>
+                  <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3"
+                     id="durationInput">
+                  <div class="input-group has-validation" id="date selector">
+                    <span class="input-group-text">{{index + 1}}.</span>
+                    <input aria-label="Username" formControlName="{{name}}date" class="form-control"
+                           placeholder="Suche eine Termin aus" required type="date">
+                    <label>Von</label>
+                    <ngb-timepicker formControlName="{{name}}start"></ngb-timepicker>
+                    <label>Bis</label>
+                    <ngb-timepicker formControlName="{{name}}end"></ngb-timepicker>
+                    <button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>
 
-          </div>
-          </div>
+                  </div>
+                  </div>
+        -->
 
-        </div>
+
         <!-- Bild hinzufügen -->
         <label for="appointmentInputs" class="form-label">Product Bild</label>
         <div class="form-group input-group mb-3">

@@ -1,4 +1,5 @@
-<form class="row row-cols-sm-auto" [formGroup]="productForm" novalidate>
+<form class="row row-cols-sm-auto needs-validation" [formGroup]="productForm"
+      (focusout)="updateGroupValidity(productForm); consoleLog('lost focus')" novalidate>
   <div class="col-12">
     <div class="dp-hidden position-absolute">
       <div class="input-group">
@@ -41,32 +42,40 @@
         </ng-template>
       </div>
     </div>
-    <div class="input-group form-group has-validation"
-         [class.was-validated]="productForm.touched">
+    <div class="input-group">
       <input #dpFromDate
              (input)="fromDate = validateInput(fromDate, dpFromDate.value)" [value]="formatter.format(fromDate)"
              class="form-control"
+             id="fromDateControl"
              name="dpFromDate"
              placeholder="yyyy-mm-dd"
-             formControlName="fromDateControl">
+             formControlName="fromDateControl"
+             [class.is-invalid]="productForm.invalid && productForm.touched"
+             required>
       <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
+      <div class="invalid-feedback">Invalid</div>
     </div>
   </div>
   <div class="col-12">
-    <div class="input-group form-group has-validation"
+    <div class="input-group"
          [class.was-validated]="productForm.touched">
       <input #dpToDate
              (input)="toDate = validateInput(toDate, dpToDate.value)" [value]="formatter.format(toDate)"
              class="form-control"
+             id="toDateControl"
              name="dpToDate"
              placeholder="yyyy-mm-dd"
-             formControlName="toDateControl">
+             formControlName="toDateControl"
+             [class.is-invalid]="productForm.invalid && productForm.touched"
+             required>
       <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
+      <div class="invalid-feedback">Invalid</div>
     </div>
   </div>
   <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
   <pre class="col-12">To date: {{toDate | json}}</pre> -->
 </form>
+<div>{{ productForm.invalid }}</div>
 
 <!--Nicht verfügbare Termine angeben-->
 <div class="d-flex mb-2 has-validation">

@@ -44,8 +44,8 @@ export class AddProductComponent implements OnInit {
   }
 
   createFormControls() {
-    this.fromDateControl= new FormControl( '', isSelectedWeekday(this.isDisabled, this.formatter));
-    this.toDateControl= new FormControl('', isSelectedWeekday(this.isDisabled, this.formatter));
+    this.fromDateControl = new FormControl(this.formatter.format(this.fromDate), isSelectedWeekday(this.isDisabled, this.formatter));
+    this.toDateControl = new FormControl(this.formatter.format(this.toDate), isSelectedWeekday(this.isDisabled, this.formatter));
   }
 
   onDateSelection(date: NgbDate) {
@@ -57,6 +57,10 @@ export class AddProductComponent implements OnInit {
       this.toDate = null;
       this.fromDate = date;
     }
+    console.log('date selected');
+    this.productForm.markAllAsTouched();
+    this.productForm.controls['fromDateControl'].updateValueAndValidity();
+    this.productForm.controls['toDateControl'].updateValueAndValidity();
   }
 
   isHovered(date: NgbDate) {
@@ -90,25 +94,33 @@ export class AddProductComponent implements OnInit {
   isToDate = (date: NgbDate) => date.equals(this.toDate);
   isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
   toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
-
+  updateGroupValidity = (formGroup: FormGroup): void => Object.keys(this.productForm.controls).forEach(key => this.productForm.controls[key].updateValueAndValidity());
 
 
   public appointmentsCount = 1;
 
   public appointmentIndexs: string[] = ['appointment0'];
+
   public addAppointment() {
     const name = `appointment${ this.appointmentsCount }`;
     this.appointmentIndexs.push(name);
     this.appointmentsCount++;
   }
 
-  time = {hour:8,minute:0};
+  time = { hour: 8, minute: 0 };
+
+  consoleLog(message: string) {
+    console.log(message);
+  }
 }
 
 // Checks weather the date is disabled or not
 export const isSelectedWeekday = (isDisabled: (date: NgbDate | null) => boolean, formatter: NgbDateParserFormatter): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
     console.log(control.value);
-    return isDisabled(NgbDate.from(formatter.parse(control.value))) ? { disabledDate: { value: control.value } } : null;
+    console.log(NgbDate.from(formatter.parse(control.value)));
+    const validationError = isDisabled(NgbDate.from(formatter.parse(control.value))) ? { disabledDate: { value: control.value } } : null;
+    console.log(validationError);
+    return validationError;
   }
 };
