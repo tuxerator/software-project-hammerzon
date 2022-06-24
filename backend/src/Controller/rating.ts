@@ -48,7 +48,7 @@ class RatingController {
           const returnProduct : any = product;
           console.log(numberOfRatings);
           console.log(returnProduct.ratings);
-          returnProduct.ratings[numberOfRatings].user = request.session.user;
+          returnProduct.ratings[0].user = request.session.user;
           response.status(200);
           response.send(returnProduct);
         }
