@@ -175,7 +175,7 @@ export default class ProductTestData {
       {name:'Umzug',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-box-seam',custom:false},
       {name:'Malern',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-brush-fill',custom:false},
       {name:'Maurer',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-bricks',custom:false},
-      {name:'Glaser',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-shop-window',custom:false},
+      {name:'Glaser',image_id:imgs[2],is_replaceable:false,color:'#fd7e14',icon:'bi-shop-window',custom:false}
     ];
 
     const categoryIds = await Category.insertMany(categoryLists);
