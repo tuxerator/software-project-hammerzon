@@ -16,7 +16,8 @@ import { OrderedServicesComponent } from './components/ordered-services/ordered-
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminAuthGuardService } from './services/admin-auth-guard.service';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
-import { Order } from './models/Order';
+import { CategoryComponent } from './components/admin/category/category.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 
 /**
@@ -35,21 +36,25 @@ const routes: Routes = [
     { path: 'login',component: LoginComponent},
     { path: 'personalprofile', component: PersonalProfileComponent,canActivate: [AuthGuardService]},
     // Order
-    { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
     { path: 'order-history', component: OrderHistoryComponent, canActivate:[AuthGuardService]},
 
     { path: 'not-available', component: NotAvailableComponent },
     { path: 'ordered-services', component : OrderedServicesComponent},
     // product
     { path: 'productdetails/:id/order-product/:i', component: OrderProductComponent},  // should be: product/order-product
-    { path: 'productdetails/:id',component:ProductdetailsComponent},
+    { path: 'productdetails/:id',component:ProductdetailsComponent,runGuardsAndResolvers:'always'},
     { path: 'add-product/:id', component: AddProductComponent,canActivate:[AuthGuardService]},
     { path: 'add-product', component: AddProductComponent,canActivate:[AuthGuardService]},
-    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent,canActivate:[AuthGuardService]}
+    { path: 'productdetails/:id/order-product/:i/order-finalized', component: OrderFinalizedComponent,canActivate:[AuthGuardService]},
+    // Admin
+    { path: 'admin',component: AdminComponent,canActivate:[AdminAuthGuardService]},
+    { path: 'admin/category',component: CategoryComponent,canActivate:[AdminAuthGuardService]},
+
+    { path: 'all-orders', component: AllOrdersComponent, canActivate: [AdminAuthGuardService]},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule],
   providers: [
     AuthGuardService,

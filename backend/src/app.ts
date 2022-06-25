@@ -28,11 +28,20 @@ import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import { Category } from './Models/Category';
+import { CategoryController } from './Controller/category';
+import RatingController from './Controller/rating';
+import { PaymentType } from './types';
+import { PaymentController } from './Controller/payment';
 
 // Damit im request.session user exisitiert
 declare global {
   interface Session {
     user?: IUser,
+    paymentAccount?:{
+      account:string,
+      paymentType:PaymentType
+    }
   }
 }
 
@@ -101,9 +110,14 @@ const auth = new AuthController();
 // const about = new AboutController();
 
 const product = new ProductController();
+const rating = new RatingController();
 const order = new OrderController();
 
+const payment = new PaymentController(order);
+
 const image = new ImageController();
+
+const category = new CategoryController();
 
 app.get('/api', api.getInfo);
 app.get('/api/about/profile-list', api.getProfileList);
@@ -136,26 +150,36 @@ app.get('/api/product/list', product.getList.bind(product));
 // product details ...
 app.get('/api/product/:id', product.getProductDetail.bind(product));
 
+// similar product
+app.get('/api/product/similar/:id', product.getSimilarProduct);
+
 // reset appointment
 
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]) ,product.removeProduct);
+app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]),product.removeProduct);
 
 app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
 
+// rating controller endpoints
+// add a rating between 1 and 5 with a comment
+app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.bind(rating));
+
+app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, rating.canRate);
+
+app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, rating.hasRated);
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);
 
 // Removed Images
-app.get('/api/img/:id', image.getImage);
+app.get('/api/img/:id',image.getImage);
 
 // OrderController endpoints
 
 // register a new Order
-app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
+// app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
 
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
@@ -163,13 +187,38 @@ app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.delete
 // list all orders for the admin page
 app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
 
+
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
 // list all orders by the product creator
 app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
 // toggle the confirmation status of an order
 app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
+
+// Category
+
+app.get('/api/category/list', category.listCategory);
+
+// Admin
+app.use('/api/admin',ValidatorGroups.AdminAuthorized);
+
+// all orders for the admin page
+app.get('/api/admin/order/list', order.listAllOrders);
+//
+app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon'),Validators.isRequired('custom')]),category.addCategory);
+//
+
+
+
+
 // Falls ein Fehler auftritt, gib den Stack trace aus
+
+// Payment
+
+app.post('/api/payment/country',payment.IsFromGermany.bind(payment));
+
+app.post('/api/payment/pay',payment.Payment.bind(payment));
+
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());
 }

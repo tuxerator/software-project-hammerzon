@@ -20,6 +20,12 @@ import { OrderFinalizedComponent } from './components/order-finalized/order-fina
 import { HeaderComponent } from './components/header/header.component';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
 import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
+import { CategoryComponent } from './components/admin/category/category.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { CategoryBadgeComponent } from './components/admin/category/category-badge/category-badge.component';
+import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
+import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -39,14 +45,20 @@ import { OrderedServicesComponent } from './components/ordered-services/ordered-
     OrderFinalizedComponent,
     HeaderComponent,
     NotAvailableComponent,
-    OrderedServicesComponent
+    OrderedServicesComponent,
+    CategoryComponent,
+    AdminComponent,
+    CategoryBadgeComponent,
+    ProductListComponent,
+    ProductListItemComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [
     HttpClientModule

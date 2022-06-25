@@ -131,6 +131,34 @@ export class Validators{
       return false;
     };
   }
+
+  public static isValidRatingRange() : SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      const rating = request.body.rating.rating;
+      if(rating >= 1 && rating <= 5) {
+        return true;
+      }
+      else {
+        response.status(500);
+        response.send('rating is out of the valid range');
+        return false;
+      }
+    };
+  }
+  public static isValidCommentLength(minLength: number, maxLength : number) : SubValidator {
+    return (request: SubRequest, response: Response): boolean => {
+      const length = request.body.rating.comment.length;
+      if(length >= minLength && length <= maxLength)
+      {
+        return true;
+      }
+      else {
+        response.status(500);
+        response.send('comment length is out of the valid range');
+        return false;
+      }
+    };
+  }
 }
 
 export class ValidatorLists {
@@ -152,19 +180,23 @@ export class ValidatorLists {
 
 
   public static ProductValidatorList: Validator[] = [
-    Validators.isMaxLength('name', 4),
-    //Validators.isRequired('user'),
-    //Validators.isValidObjectId('user'),
-    Validators.isRequired('prize'),
-    Validators.isRequired('description'),
-    Validators.isRequired('duration'),
-    Validators.isRequired('appointments'),
-    Validators.subArrayValidators('appointments', [
-      Validators.isRequired('date'),
-      Validators.isRequired('isReserved')
-    ]),
+        Validators.isMaxLength('name', 4),
+        //Validators.isRequired('user'),
+        //Validators.isValidObjectId('user'),
+        Validators.isRequired('prize'),
+        Validators.isRequired('description'),
+        Validators.isRequired('duration'),
+
+        Validators.isRequired('appointments'),
+        Validators.subArrayValidators('appointments', [
+          Validators.isRequired('date'),
+          Validators.isRequired('isReserved')
+        ]),
         Validators.isRequired('image_id'),
-        Validators.isValidObjectId('image_id')
+        Validators.isValidObjectId('image_id'),
+
+        Validators.isRequired('category'),
+        Validators.isValidObjectId('category')
     ];
 
   public static PostOrderValidatorList: Validator[] = [
@@ -209,6 +241,17 @@ export class ValidatorGroups {
         Validators.isRequired('status')
     ]);
 
+    public static ValidRating = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.isRequired('rating'),
+      Validators.isValidRatingRange()
+    ]);
+
+    public static ValidComment = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.isRequired('comment'),
+      Validators.isValidCommentLength(10, 300)
+    ]);
 
     // Product
   public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);

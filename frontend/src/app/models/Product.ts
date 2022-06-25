@@ -1,3 +1,4 @@
+import { Category } from './Category';
 import { User } from './User';
 
 export class Product {
@@ -17,13 +18,34 @@ export class Product {
 
   image_id: string;
 
-  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string) {
+  category?:Category | string;
+
+  numberOfRatings? : number;
+
+  averageRating? : number;
+
+  ratings? : Rating[];
+
+  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string,category:string) {
     this.name = name;
     this.description = description;
     this.prize = prize;
     this.duration = duration;
     this.appointments = appointments;
     this.image_id = image_id;
+    this.category = category;
+  }
+}
+
+export class Rating {
+  rating : number;
+  comment : string;
+  user? : User;
+  date?:Date
+
+  constructor(rating: number, comment: string) {
+    this.rating = rating;
+    this.comment = comment;
   }
 }
 
@@ -52,7 +74,12 @@ const dateFormater = Intl.DateTimeFormat(
 );
 
 export const getDurationString = (duration?: Date): string => {
-  return duration?.getHours() + ' std. ' + duration?.getMinutes() + ' min';
+  return duration?.getHours() + ' Std. ' + duration?.getMinutes() + ' Min.';
+};
+
+export const getCategory = (product:Product): Category|undefined =>
+{
+  return product.category as Category;
 };
 
 

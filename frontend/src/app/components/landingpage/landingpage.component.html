@@ -1,34 +1,21 @@
-<div class="container">
+<div class="container mt-2 p-4">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <ol class="list-group shadow bg-dark">
-                <!--Produkt 1-->
-                <li role="button" tabindex="0" *ngFor="let productInfo of productListInfo.list" class="list-group-item bg-dark border-secondary text-white" [routerLink]="['productdetails',productInfo._id]">
-                  <div class="row">
-                    <!--Image -->
-                    <div class="col-3 p-2 m-auto">
-                      <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
-                    </div>
-                    <!-- Infos -->
-                    <div  class="col-9 p-2">
-                      <h6 class="text-primary text-end">{{productInfo?.prize}} €/std.</h6>
-                      <div class="d-flex w-100 justify-content-between">
-                        <h4> {{productInfo?.name}}</h4>
-                      </div>
-                      <p class="text-secondary">{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>
-                    </div>
-                  </div>
-                </li>
-                <!--Ende Produkt 1-->
-            </ol>
+          <app-product-list *ngIf="!loading" [list]="productListInfo?.list"></app-product-list>
+
+          <div *ngIf="loading" class="d-flex align-items-center">
+            <strong>Lädt...</strong>
+            <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
+          </div>
+
+          <div *ngIf="!loading && productListInfo?.list?.length === 0" class="d-flex align-items-center">
+            <strong>Es konnten hierzu keine Dienstleistungen gefunden werden</strong>
+          </div>
         </div>
     </div>
 
 
-  <div *ngIf="productListInfo.list.length == 0" class="d-flex align-items-center">
-    <strong>Loading...</strong>
-    <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
-  </div>
+
 
   <!-- Knöpfe um mehr Elemente and zeigen zu können -->
 
