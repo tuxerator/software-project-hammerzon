@@ -41,6 +41,11 @@ export class AddProductComponent implements OnInit {
     durationMinute: new FormControl('', [Validators.required]),
   });
 
+  defaultTimeFrame: Availability = {
+    startDate: new Date(),
+    endDate: new Date()
+  }
+
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate | null;
@@ -53,7 +58,8 @@ export class AddProductComponent implements OnInit {
   fromDateControl: FormControl = new FormControl();
   toDateControl: FormControl = new FormControl();
 
-  avaliability: Date[] = [];
+  availabilities: Availability[] = [];
+  hindrances: Date[] = [];
 
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private productService: ProductService, private authService: AuthService, private router: Router, private imageService: ImageService,
@@ -182,64 +188,6 @@ export class AddProductComponent implements OnInit {
 
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-      this.toDate = date;
-      this.availabilityGroup.markAllAsTouched();
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-    this.updateGroupValidity(this.availabilityGroup);
-  }
-
-  createFormControls() {
-    this.fromDateControl = new FormControl('', isSelectedWeekday(this.fromDate, this.isDisabled));
-    this.toDateControl = new FormControl('', isSelectedWeekday(this.toDate, this.isDisabled));
-  }
-
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) &&
-      date.before(this.hoveredDate);
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) ||
-      this.isHovered(date);
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-  setFromDate = (currentValue: NgbDate | null, input: string): void => {
-    this.fromDate = this.validateInput(currentValue, input);
-    this.fromDateControl.updateValueAndValidity();
-  }
-
-  setToDate = (currentValue: NgbDate | null, input: string): void => {
-    this.toDate = this.validateInput(currentValue, input);
-    this.toDateControl.updateValueAndValidity();
-  }
-
-
-  isFromDate = (date: NgbDate) => date.equals(this.fromDate);
-  isToDate = (date: NgbDate) => date.equals(this.toDate);
-  isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
-  toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
-  updateGroupValidity = (formGroup: FormGroup): void => {
-    Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
-    console.log(`Updated Validity for `, formGroup.controls);
-  }
-
-
   public onSubmit(): void {
     // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus
     if (this.uploading) return;
@@ -350,19 +298,145 @@ export class AddProductComponent implements OnInit {
 
   }
 
+  // Availability picker ------------------------------------------------------
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+      this.availabilityGroup.markAllAsTouched();
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+    this.updateGroupValidity(this.availabilityGroup);
+  }
+
+  createFormControls() {
+    this.fromDateControl = new FormControl('', this.isSelectedWeekday(this.fromDate, this.isDisabled));
+    this.toDateControl = new FormControl('', this.isSelectedWeekday(this.toDate, this.isDisabled));
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) &&
+      date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) ||
+      this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  setFromDate = (currentValue: NgbDate | null, input: string): void => {
+    this.fromDate = this.validateInput(currentValue, input);
+    this.fromDateControl.updateValueAndValidity();
+  }
+
+  setToDate = (currentValue: NgbDate | null, input: string): void => {
+    this.toDate = this.validateInput(currentValue, input);
+    this.toDateControl.updateValueAndValidity();
+  }
+
+  isFromDate = (date: NgbDate) => date.equals(this.fromDate);
+
+  isToDate = (date: NgbDate) => date.equals(this.toDate);
+
+  isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
+
+  toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
+  // update the validity of the controls in the group
+  updateGroupValidity = (formGroup: FormGroup): void => {
+    Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
+    console.log(`Updated Validity for `, formGroup.controls);
+  }
+
   isInvalid = (form: AbstractControl): boolean => {
     const invalid = form.touched ? form.invalid : false;
     console.log(invalid);
     console.log(`form status: ${ form.status } `);
     return invalid;
   }
-}
 
+  addAvailability = (): void => {
+    if (!this.fromDate || !this.toDate) {
+      console.log('no date selected');
+      return;
+    }
+    const fromDate: Date = this.ngbDateToDate(this.fromDate);
+    const toDate: Date = this.ngbDateToDate(this.toDate);
+    const availability = new Availability(fromDate, toDate);
 
-export const isSelectedWeekday = (date: NgbDate | null, isDisabled: (date: NgbDate | null) => boolean): ValidatorFn => {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const validationError = isDisabled(date) ? { disabledDate: { value: control.value } } : null;
-    console.log(validationError);
-    return validationError;
-  };
+    this.availabilities.push(availability);
+    this.fromDate = null;
+    this.toDate = null;
+    this.availabilityGroup.markAsUntouched();
+  }
+
+  createAvailabilities = (fromDate: Date, toDate: Date): Availability[] => {
+    let availabilities: Availability[] = [];
+    const availability = new Availability(fromDate, toDate);
+
+    // check if there are hindrances between the dates
+    const hindrances = this.hindrances.filter(hindrance => {
+      return hindrance.getTime() >= fromDate.getTime() && hindrance.getTime() <= toDate.getTime();
+    });
+
+    availabilities = this.splitAvaliability(availability, hindrances);
+
+    return availabilities;
+  }
+
+  isSelectedWeekday = (date: NgbDate | null, isDisabled: (date: NgbDate | null) => boolean): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const validationError = isDisabled(date) ? { disabledDate: { value: control.value } } : null;
+      console.log(validationError);
+      return validationError;
+    };
+  }
+
+  ngbDateToDate = (ngbDate: NgbDate | null): Date => {
+    return ngbDate ? new Date(Date.UTC(ngbDate.year, ngbDate.month - 1, ngbDate.day)) : new Date('Invalid Date');
+  }
+
+// split Availability at the given dates
+  splitAvaliability = (availability: Availability, splitDates: Date[]): Availability[] => {
+    const availabilties: Availability[] = [];
+    const startDate: Date = availability.startDate;
+    const endDate: Date = availability.endDate;
+    let oldSplitDate: Date = startDate;
+
+    splitDates.sort((a, b) => a.getTime() - b.getTime());
+
+    for (const splitDate of splitDates) {
+      if (this.compareDates(splitDate, oldSplitDate) > 0) {
+        continue;
+      }
+      if (this.compareDates(oldSplitDate, splitDate) < 0) {
+        availabilties.push(new Availability(oldSplitDate, new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
+          splitDate.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
+      }
+      oldSplitDate.setUTCFullYear(splitDate.getUTCFullYear(), splitDate.getUTCMonth(), splitDate.getUTCDate());
+    }
+
+    return availabilties;
+  }
+
+  /**
+   * Compares two dates without taking the time into account.
+   */
+  compareDates = (date1: Date, date2: Date): number => {
+    const date1WithoutTime = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+    const date2WithoutTime = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+    return Math.sign(date1WithoutTime - date2WithoutTime);
+  }
 }

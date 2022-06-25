@@ -1,12 +1,13 @@
 <div class="container">
   <div class="bg-dark text-white">
-    <article class="card-body mx-auto col-lg-8">
+    <article class="card-body row gy-3">
       <h4
         class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
-      <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="needs-validation" novalidate>
+      <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="needs-validation col" novalidate>
+
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
-             class="mb-3 input-group has-validation">
+             class="input-group has-validation">
           <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i></span>
           <input class="form-control" formControlName="productName" placeholder="Produktname" required type="text">
           <div *ngIf="!addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger
@@ -16,8 +17,9 @@
             Produktname wird erwartet.
           </div>
         </div>
+
         <!--Preis-->
-        <div class="mb-3 input-group has-validation" [class.was-validated]="addProductForm.controls['prize'].touched">
+        <div [class.was-validated]="addProductForm.controls['prize'].touched" class="col input-group has-validation">
           <span class="input-group-text" id="basic-addon1"> <i class="bi bi-briefcase-fill"></i></span>
           <input class="form-control" formControlName="prize" placeholder="Preis" required type="text">
           <span class="input-group-text"> <i class="bi bi-currency-euro"></i>/std</span>
@@ -27,9 +29,10 @@
             erwartet.
           </div>
         </div>
+
         <!--Beschreibung-->
         <div [class.was-validated]="addProductForm.controls['description'].touched"
-             class="mb-3 input-group has-validation">
+             class="col input-group has-validation">
           <span class="input-group-text" id="basic-addon1"> <i class="bi bi-file-earmark-text-fill"></i> </span>
           <textarea class="form-control" formControlName="description" placeholder="Beschreibung" required rows="3"
                     type="text"></textarea>
@@ -41,41 +44,44 @@
           </div>
         </div>
 
-        <label for="durationInput" class="form-label">Dauer</label>
-        <div
-          [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"
-          class="input-group mb-3 has-validation col-auto"
-          id="durationInput">
-          <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
-          <input aria-label="Stunden" class="form-control" formControlName="durationHour" placeholder="Stunden"
-                 required type="text">
-          <span class="input-group-text">std.</span>
-          <input aria-label="Minuten" class="form-control" formControlName="durationMinute" placeholder="Minuten"
-                 required type="text">
-          <span class="input-group-text">min.</span>
+        <div class="col">
+          <label class="form-label" for="durationInput">Dauer</label>
           <div
-            *ngIf="!addProductForm.controls['durationHour']?.invalid && !addProductForm.controls['durationMinute']?.invalid"
-            class="valid-feedback was-validated">Gültige Dauer
-          </div>
-          <div
-            *ngIf="addProductForm.controls['durationHour']?.invalid || addProductForm.controls['durationMinute']?.invalid"
-            class="invalid-feedback was-validated">Für Stunden und Mintuen werden Zahlen erwartet
+            [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"
+            class="input-group mb-3 has-validation col-auto"
+            id="durationInput">
+            <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
+            <input aria-label="Stunden" class="form-control" formControlName="durationHour" placeholder="Stunden"
+                   required type="text">
+            <span class="input-group-text">std.</span>
+            <input aria-label="Minuten" class="form-control" formControlName="durationMinute" placeholder="Minuten"
+                   required type="text">
+            <span class="input-group-text">min.</span>
+            <div
+              *ngIf="!addProductForm.controls['durationHour']?.invalid && !addProductForm.controls['durationMinute']?.invalid"
+              class="valid-feedback was-validated">Gültige Dauer
+            </div>
+            <div
+              *ngIf="addProductForm.controls['durationHour']?.invalid || addProductForm.controls['durationMinute']?.invalid"
+              class="invalid-feedback was-validated">Für Stunden und Mintuen werden Zahlen erwartet
+            </div>
           </div>
         </div>
 
-        <label for="durationInput" class="form-label">Zeit Auswählen</label>
-        <!-- Add Appointment -->
-        <form class="col-12 row" [formGroup]="availabilityGroup" novalidate>
-          <div class="col-12">
-            <div class="dp-hidden position-absolute">
-              <div class="input-group">
-                <input #datepicker="ngbDatepicker"
-                       (dateSelect)="onDateSelection($event)"
-                       [autoClose]="'outside'"
-                       [dayTemplate]="t"
-                       [displayMonths]="2"
-                       [footerTemplate]="footerTemplate"
-                       [markDisabled]="isDisabled"
+        <div class="col">
+          <label class="form-label" for="durationInput">Zeit Auswählen</label>
+          <!-- Add Appointment -->
+          <form [formGroup]="availabilityGroup" class="row" novalidate>
+            <div class="col-4">
+              <div class="dp-hidden position-absolute">
+                <div class="input-group">
+                  <input #datepicker="ngbDatepicker"
+                         (dateSelect)="onDateSelection($event)"
+                         [autoClose]="'outside'"
+                         [dayTemplate]="t"
+                         [displayMonths]="2"
+                         [footerTemplate]="footerTemplate"
+                         [markDisabled]="isDisabled"
                          [startDate]="fromDate!"
                          class="form-control"
                          name="datepicker"
@@ -99,7 +105,8 @@
                       <div><small>Aktive Wochentage:</small></div>
                       <div class="btn-group">
                         <ng-template [ngForOf]="weekdays" let-day let-i="index" ngFor>
-                          <input (click)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)" autocomplete="off"
+                          <input (click)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)"
+                                 autocomplete="off"
                                  class="btn-check" id="btncheck{{i}}" type="checkbox">
                           <label class="btn btn-outline-primary custom-day" for="btncheck{{i}}">{{ day }}</label>
                         </ng-template>
@@ -108,45 +115,47 @@
                   </ng-template>
                 </div>
               </div>
-            <div class="input-group form-group">
-              <input #dpFromDate
-                     (input)="setFromDate(fromDate, dpFromDate.value)"
-                     [value]="formatter.format(fromDate)"
-                     (change)="updateGroupValidity(availabilityGroup)"
-                     class="form-control"
-                     name="dpFromDate"
-                     placeholder="yyyy-mm-dd"
-                     formControlName="fromDateControl"
-                     [ngClass]="{
+              <div class="input-group form-group">
+                <input #dpFromDate
+                       (change)="updateGroupValidity(availabilityGroup)"
+                       (input)="setFromDate(fromDate, dpFromDate.value)"
+                       [ngClass]="{
                           'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
                           'is-invalid': isInvalid(availabilityGroup)
                        }"
-              >
-              <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
-                      type="button"></button>
-            </div>
-          </div>
-          <div class="col-auto">
-            <div class="input-group form-group has-validation">
-              <input #dpToDate
-                     (input)="setToDate(toDate, dpToDate.value)"
-                     [value]="formatter.format(toDate)"
-                     class="form-control"
-                     name="dpToDate"
-                     placeholder="yyyy-mm-dd"
-                     formControlName="toDateControl"
-                     [ngClass]="{
-                          'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
-                          'is-invalid': isInvalid(availabilityGroup)
-                       }">
-                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
+                       [value]="formatter.format(fromDate)"
+                       class="form-control"
+                       formControlName="fromDateControl"
+                       name="dpFromDate"
+                       placeholder="yyyy-mm-dd">
+                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
+                        type="button"></button>
               </div>
             </div>
-          <button class="btn btn-outline-primary col-auto ms-auto" type="button">Hinzufügen</button>
+            <div class="col-4">
+              <div class="input-group form-group has-validation">
+                <input #dpToDate
+                       (input)="setToDate(toDate, dpToDate.value)"
+                       [ngClass]="{
+                          'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
+                          'is-invalid': isInvalid(availabilityGroup)
+                       }"
+                       [value]="formatter.format(toDate)"
+                       class="form-control"
+                       formControlName="toDateControl"
+                       name="dpToDate"
+                       placeholder="yyyy-mm-dd">
+                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
+                        type="button"></button>
+              </div>
+            </div>
+            <div class="col d-grid justify-content-md-end">
+              <button class="btn btn-outline-primary" type="button">Hinzufügen</button>
+            </div>
             <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
             <pre class="col-12">To date: {{toDate | json}}</pre> -->
           </form>
-        <!--
+        </div>        <!--
                   <div class="d-flex mb-2 has-validation">
                     <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
                     <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
@@ -185,7 +194,8 @@
 
         <!--Produkt hinzufügen-->
         <div class="d-grid mt-4">
-          <button (click)="onSubmit()" class="btn btn-primary btn-block" type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
+          <button (click)="onSubmit()" class="btn btn-primary btn-block"
+                  type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
             <div *ngIf="uploading" class="spinner-border text-light" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
