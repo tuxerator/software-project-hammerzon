@@ -26,6 +26,7 @@ import { CategoryBadgeComponent } from './components/admin/category/category-bad
 import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
 import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
     AdminComponent,
     CategoryBadgeComponent,
     ProductListComponent,
-    ProductListItemComponent
+    ProductListItemComponent,
+    ValidatableInputComponent
   ],
   imports: [
     BrowserModule,
@@ -66,4 +68,5 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
   bootstrap: [RootComponent]
 })
 export class AppModule {
+
 }

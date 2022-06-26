@@ -94,6 +94,6 @@ export class SwpSafeOption implements PaymentOption {
   public errorParser(data: any) : PaymentError
   {
     const obj:any = this.CsvToJson(data)[0];
-    return {error:obj.errorMessage};
+    return {error:obj.errormessage};
   }
 }

@@ -29,18 +29,18 @@
     <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="...">
     <div class="py-3 bg-dark text-white">
       <div class="row justify-content-between">
-        <div class="col fs-3 fw-bold me-auto">{{product?.name}}</div>
-        <div id="spy" class="col text-end fs-5" >
-          <i class="bi bi-star-fill text-warning" href="#rating"></i>
+        <div class="col-10 fs-3 fw-bold me-auto">{{product?.name}}</div>
+        <a class="col-2 btn text-end fs-5" >
+          <i class="bi bi-star-fill text-warning"></i>
           <span class="text-warning" > {{product?.averageRating}}</span>
           <span class="text-muted"> ({{product?.numberOfRatings}})</span>
-        </div>
+        </a>
       </div>
       <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
       <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
     </div>
     <hr>
-    <!-- Duration -->
+    <!-- Duration Price Total Price -->
 
     <div class="text-white fw-bold fs-5 row justify-content-between">
       <div class="col">
@@ -123,18 +123,18 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
 
 <!--Delete Modal -->
-<div class="modal fade text-black" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content bg-dark border-secondary">
+      <div class="modal-header border-secondary">
         <h5 class="modal-title" id="exampleModalLabel">Produkt löschen</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">Möchten Sie das Produkt wirklich löschen?
+      <div class="modal-body border-secondary">Möchten Sie das Produkt wirklich löschen?
 
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-secondary">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
         <button type="button" (click)="deleteProduct()" data-bs-dismiss="modal" class="btn btn-danger">Löschen</button>
       </div>

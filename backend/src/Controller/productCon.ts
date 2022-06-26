@@ -52,7 +52,10 @@ class ProductController {
         }*/
         console.log(searchTerm);
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
-        query.$text = {$search: searchTerm};
+        query.$text = {
+                        $search:searchTerm,
+
+                      };
       }
 
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu

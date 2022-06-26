@@ -10,6 +10,10 @@ export class OrderFinalizedComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const mdbackdrop = document.querySelector('.modal-backdrop');
+    if (mdbackdrop){
+      mdbackdrop.classList.remove('modal-backdrop', 'show');
+    }
   }
 
 }

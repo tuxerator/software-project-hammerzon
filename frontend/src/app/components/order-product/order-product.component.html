@@ -1,5 +1,5 @@
 <!-- find better colors -->
-<div class="container bg-dark">
+<div class="container bg-dark mt-5">
   <div class="row">
     <!-- left column of cards-->
     <div class="col-lg-8 align-self-center">
@@ -101,61 +101,73 @@
         <img *ngIf="paymentType === PaymentType.BACHELORCARD" src="../../../assets/bachelorcard.png" width="100">
         <img *ngIf="paymentType === PaymentType.HCIPAL" src="../../../assets/hciPal.png" width="100">
         <img *ngIf="paymentType === PaymentType.SWPSAFE" src="../../../assets/SWPsafe.png" width="100">
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" (click)="abourt()" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body border-secondary">
-        <form [formGroup]="accountForm"   class="form-group mx-auto needs-validation " novalidate>
+        <form [formGroup]="accountForm" class="form-group mx-auto needs-validation " novalidate>
+          <!-- Email / SWP-Safe Code-->
           <div class="mb-3" *ngIf="paymentType === PaymentType.HCIPAL || paymentType === PaymentType.SWPSAFE">
             <label for="recipient-name" class="col-form-label"> {{paymentType === PaymentType.HCIPAL ? 'Email:' : 'SWP-Code:'}}</label>
-            <input type="email" class="form-control has-validation" [class.was-validated]="accountForm.controls['account'].touched" formControlName="account" id="exampleInputEmail1" placeholder="{{paymentType === PaymentType.HCIPAL? 'Email angeben...': 'Swp-Code angeben ...'}}" [readonly]="modalState === 'pay'">
-            <div *ngIf="isValid('account')" class="valid-feedback was-validated">Gültige Email</div>
-            <div *ngIf="!isValid('account')" class="invalid-feedback was-validated">Bitte gültige Email angeben</div>
+            <input required type="email" class="form-control" [class]="valdationdToText.getInputClass('account')" formControlName="account" id="exampleInputEmail1" placeholder="{{paymentType === PaymentType.HCIPAL? 'Email angeben...': 'Swp-Code angeben ...'}}" [readonly]="modalState === 'pay'">
+            <div class="" [class]="valdationdToText.getFeedbackClass('account')">{{valdationdToText.getText('account')}}</div>
           </div>
-          <div class="mb-3" *ngIf="modalState === 'pay' && paymentType === PaymentType.HCIPAL">
+          <!-- password -->
+          <div class="mb-3" *ngIf="modalState !== 'confirm' && paymentType === PaymentType.HCIPAL">
             <hr>
             <label for="recipient-name" class="col-form-label">Password:</label>
-            <input *ngIf="modalState === 'pay'" class="form-control" type="password" formControlName="password"  id="passwordInput1" aria-describedby="emailHelp" placeholder="Passwort">
+            <input class="form-control" [class]="valdationdToText.getInputClass('password')" type="password" formControlName="password"  id="passwordInput1" aria-describedby="password" placeholder="Passwort">
+            <div  [class]="valdationdToText.getFeedbackClass('password')">{{valdationdToText.getText('password')}}</div>
           </div>
+          <!-- Bachelorcard -->
           <div *ngIf="paymentType === PaymentType.BACHELORCARD">
             <label for="" class="col-form-label">Kartennummer:</label>
-            <input *ngIf="paymentType === PaymentType.BACHELORCARD" type="email" class="form-control"  formControlName="account" id="cardNumberInput" placeholder="Kartennummer" [readonly]="modalState === 'pay'">
+            <input [class]="valdationdToText.getInputClass('account')" type="email" class="form-control"  formControlName="account" id="cardNumberInput" placeholder="Kartennummer" [readonly]="modalState === 'pay'">
+            <div [class]="valdationdToText.getFeedbackClass('account')">{{valdationdToText.getText('account')}}</div>
           </div>
-          <div *ngIf="modalState === 'pay' && paymentType === PaymentType.BACHELORCARD">
+          <div *ngIf="modalState !== 'confirm' && paymentType === PaymentType.BACHELORCARD">
             <hr>
             <label for="" class="col-form-label">Vollständiger Name:</label>
-            <input class="form-control" type="text" formControlName="fullName"  id="fullNameInput" placeholder="Vollständiger Name">
+            <input [class]="valdationdToText.getInputClass('fullName')" class="form-control"  type="text" formControlName="fullName"  id="fullNameInput" placeholder="Vollständiger Name">
+            <div [class]="valdationdToText.getFeedbackClass('fullName')">{{valdationdToText.getText('fullName')}}</div>
             <label for="recipient-name" class="col-form-label">Sicherheits Code:</label>
-            <input class="form-control" type="password" formControlName="password"  id="fullNameInput" placeholder="Vollständiger Name">
+            <input [class]="valdationdToText.getInputClass('password')" class="form-control" type="password" formControlName="password"  id="fullNameInput" placeholder="Vollständiger Name">
+            <div [class]="valdationdToText.getFeedbackClass('password')">{{valdationdToText.getText('password')}}</div>
             <div class="row">
               <div class="col-sm-6">
                 <label for="recipient-name" class="col-form-label">Monat:</label>
-                <input  class="form-control" type="text" formControlName="expirationMonth"  id="expirationMonthInput" placeholder="Ablaufmonat z.B 09">
+                <input [class]="valdationdToText.getInputClass('expirationDate')" class="form-control" type="text" formControlName="expirationMonth"  id="expirationMonthInput" placeholder="09">
               </div>
               <div class="col-sm-6">
                 <label for="recipient-name" class="col-form-label">Jahr:</label>
-                <input class="form-control" type="text" formControlName="expirationYear"  id="expirationYearInput" placeholder="Ablaufjahr z.B 2024">
+                <input [class]="valdationdToText.getInputClass('expirationDate')" class="form-control" type="text" formControlName="expirationYear"  id="expirationYearInput" placeholder="44">
               </div>
             </div>
+            <div [class]="valdationdToText.getInputClass('expirationDate')" [class]="valdationdToText.getFeedbackClass('expirationDate')">{{valdationdToText.getText('expirationDate')}}</div>
           </div>
         </form>
       </div>
       <div class="modal-footer border-secondary justify-content-center">
         <div class="row d-grid gap-2 w-100">
           <button type="button" class="btn btn-primary " *ngIf="modalState === 'confirm'" (click)="this.confirm()">Bestätigen</button>
-          <button type="button" class="btn btn-primary" *ngIf="modalState === 'pay'" (click)="this.pay()"  data-bs-dismiss="modal" data-bs-target="#modal">Zahlungspflichtig Bestellen</button>
+          <button type="button" class="btn btn-primary" *ngIf="modalState === 'pay'" (click)="this.pay()">Zahlungspflichtig Bestellen</button>
+          <button type="button" class="btn btn-primary" *ngIf="modalState === 'waiting'">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="visually-hidden">Loading...</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<div *ngIf="modalState === 'waiting'" class="bg-dark opacity-75 position-fixed top-0 start-0  vh-100 vw-100" style="z-index: 2000;">
+<!-- Loading Bar after finishing Modal-->
+<!--<div *ngIf="modalState === 'waiting'" class="bg-dark opacity-75 position-fixed top-0 start-0  vh-100 vw-100" style="z-index: 2000;">
   <div class="opacity-100 position-fixed top-50 start-50 text-center">
     <div class="spinner-border text-white" style="width: 3rem; height: 3rem; z-index: 2000;" role="status">
       <span class="visually-hidden ">Loading...</span>
     </div>
   </div>
 </div>
+-->
 
 
 

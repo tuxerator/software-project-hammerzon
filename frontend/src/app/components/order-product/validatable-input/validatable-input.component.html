@@ -1,0 +1,8 @@
+<label *ngIf="label" for="input text-white" class="form-label">{{label}}</label>
+<div class="input-group mb-3">
+  <input required type="text" [(ngModel)]="this.value" (change)="change()"  class="form-control" id="input"  [class]="validatorController.getInputClass(formControlName)" id="exampleInputEmail1" placeholder="{{placeholder || ''}}" [readonly]="readonly">
+  <div>
+    {{value}}
+  </div>
+  <div *ngIf="validatorController.isValid(formControlName)" class="valid-feedback was-validated">{{validatorController.getText(formControlName)}}</div>
+</div>
