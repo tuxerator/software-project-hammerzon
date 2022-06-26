@@ -31,15 +31,3 @@ export class MongoDBController {
     //new UserTestData();
   }
 }
-
-export class MongoDBTest {
-  constructor() {
-    this.initConnection().catch(err => console.log(err));
-  }
-
-  async initConnection(): Promise<void> {
-    await mongoose.connect('mongodb://localhost:27018/swp'); // Connect to MongoDB
-    console.log(`Database is ${ (mongoose.connection.readyState === 1) ? 'ready' : 'errored' }`); // Prints 1 if connected successfully
-    new UserTestData();
-  }
-}

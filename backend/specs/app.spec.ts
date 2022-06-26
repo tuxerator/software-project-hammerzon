@@ -5,6 +5,6 @@ describe('GET /random-url', () => {
     it('should return 200 to accomodate angular', () => {
         return request(app)
             .get('/random-url')
-            .expect(404);
+            .expect(200);
     });
 });
