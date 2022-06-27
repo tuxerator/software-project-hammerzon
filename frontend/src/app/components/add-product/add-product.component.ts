@@ -29,7 +29,7 @@ export class AddProductComponent implements OnInit {
   public isChecked = false;
   public uploading = false;
 
-  public productId?:string;
+  public productId?: string;
 
   public errorMessage?: string;
 
@@ -58,7 +58,7 @@ export class AddProductComponent implements OnInit {
   fromDateControl: FormControl = new FormControl();
   toDateControl: FormControl = new FormControl();
 
-  availabilities: Availability[] = [];
+  availabilities: AvailabilityWithWeekdays[] = [];
   hindrances: Date[] = [];
 
 
@@ -71,18 +71,16 @@ export class AddProductComponent implements OnInit {
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
     const id = routeParams.get('id');
-    if(id)
-    {
-        this.productService.getProductDetails(id).subscribe({
-          next: (product) =>
-          {
-            this.productId = id;
-            this.editProduct(product);
-          },
-          error:() => {
+    if (id) {
+      this.productService.getProductDetails(id).subscribe({
+        next: (product) => {
+          this.productId = id;
+          this.editProduct(product);
+        },
+        error: () => {
 
-          }
-        });
+        }
+      });
     }
 
     this.createFormControls();
@@ -90,25 +88,25 @@ export class AddProductComponent implements OnInit {
       fromDateControl: this.fromDateControl,
       toDateControl: this.toDateControl
     });
+    this.availabilityGroup.addValidators(this.isOverlapping(this.availabilities));
 
     this.addProductForm.addControl('availability', this.availabilityGroup);
   }
 
 
-  time= {hour:8,minute:0};
+  time = { hour: 8, minute: 0 };
 
   //
-  public editProduct(aProduct: Product)
-  {
-    this.appointmentsCount=0;
-    this.imageId=aProduct.image_id;
+  public editProduct(aProduct: Product) {
+    this.appointmentsCount = 0;
+    this.imageId = aProduct.image_id;
     aProduct.duration = new Date(aProduct.duration);
     this.addProductForm = this.formBuilder.group({
-      productName: new FormControl(aProduct.name,[Validators.required]),
-      description: new FormControl(aProduct.description,Validators.required),
-      prize: new FormControl(aProduct.prize,[Validators.required]),
-      durationHour: new FormControl(aProduct.duration.getHours(),[Validators.required]),
-      durationMinute: new FormControl(aProduct.duration.getMinutes(),[Validators.required]),
+      productName: new FormControl(aProduct.name, [Validators.required]),
+      description: new FormControl(aProduct.description, Validators.required),
+      prize: new FormControl(aProduct.prize, [Validators.required]),
+      durationHour: new FormControl(aProduct.duration.getHours(), [Validators.required]),
+      durationMinute: new FormControl(aProduct.duration.getMinutes(), [Validators.required]),
     });
 
     console.log(aProduct.availability);
@@ -131,29 +129,26 @@ export class AddProductComponent implements OnInit {
     }*/
   }
 
-  private getDateTimeString(date:Date):string
-  {
+  private getDateTimeString(date: Date): string {
     //let dateString:string = date.toLocaleString();
-    const dateString:string = `${this.s(date.getFullYear())}-${this.s(date.getMonth()+1)}-${this.s(date.getDate())}T${this.s(date.getHours())}:${this.s(date.getMinutes())}`
+    const dateString: string = `${ this.s(date.getFullYear()) }-${ this.s(date.getMonth() + 1) }-${ this.s(date.getDate()) }T${ this.s(date.getHours()) }:${ this.s(date.getMinutes()) }`
     console.log(dateString);
 
     return dateString;
   }
 
-  private s(number:number):string
-  {
-    if(number < 10)
-    {
-      return `0${number}`;
+  private s(number: number): string {
+    if (number < 10) {
+      return `0${ number }`;
     }
-    return `${number}`;
+    return `${ number }`;
   }
 
   public addAppointment() {
     const name = `appointment${ this.appointmentsCount }`;
-    this.addProductForm.addControl(name+'start', new FormControl('', [Validators.required]));
-    this.addProductForm.addControl(name+'end', new FormControl('', [Validators.required]));
-    this.addProductForm.addControl(name+'date', new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name + 'start', new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name + 'end', new FormControl('', [Validators.required]));
+    this.addProductForm.addControl(name + 'date', new FormControl('', [Validators.required]));
     this.appointmentIndexs.push(name);
     this.appointmentsCount++;
   }
@@ -195,106 +190,108 @@ export class AddProductComponent implements OnInit {
 
     //console.log(`AppointmentDate: ${this.addProductForm.value[this.appointmentIndexs[0]+'start']}`);
 
-      this.isChecked = true;
-      console.log('Create Debug Log');
-      this.addProductForm.markAllAsTouched();
-      // Sind alle Eingaben valid
-      console.log(this.addProductForm);
-      if(this.addProductForm.invalid || !this.imageId || this.fromDate == null || this.toDate == null) return;
-      console.log('Through Validation Debug Log');
-      // Für besser lesbarkeit des Code
-      const form = this.addProductForm.value;
+    this.isChecked = true;
+    console.log('Create Debug Log');
+    this.addProductForm.markAllAsTouched();
+    // Sind alle Eingaben valid
+    console.log(this.addProductForm);
+    if (this.addProductForm.invalid || !this.imageId || this.fromDate == null || this.toDate == null) return;
+    console.log('Through Validation Debug Log');
+    // Für besser lesbarkeit des Code
+    const form = this.addProductForm.value;
 
-      const duratioHour = parseInt(form.durationHour);
-      const durationMinute = parseInt(form.durationMinute);
+    const duratioHour = parseInt(form.durationHour);
+    const durationMinute = parseInt(form.durationMinute);
 
-      // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
-      const duration = new Date(0);
-      // Stunden hinzufügen
+    // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
+    const duration = new Date(0);
+    // Stunden hinzufügen
 
-      duration.setHours(duratioHour);
-      // Minuten hinzufügen
-      duration.setMinutes(durationMinute);
+    duration.setHours(duratioHour);
+    // Minuten hinzufügen
+    duration.setMinutes(durationMinute);
 
 
     console.log(this.addProductForm.controls['availability'].value);
-      const startDate :Date = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day);      ;//new Date(this.productForm.value['fromDateControl']);
-      const endDate :Date = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);  ;//new Date(this.productForm.value['toDateControl']);
+    const startDate: Date = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day);
+    ;//new Date(this.productForm.value['fromDateControl']);
+    const endDate: Date = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);
+    ;//new Date(this.productForm.value['toDateControl']);
 
-      let availabilities: Availability[] = [{startDate,endDate}];
-      console.log(availabilities);
-      // Termine:
-      for (const availName of this.appointmentIndexs) {
-        const start = form[availName+'start'];
-        const end = form[availName+'end'];
-        const date = new Date(form[availName+'date']);
-        const startDate = new Date(date.getTime());
+    let availabilities: Availability[] = [{ startDate, endDate }];
+    console.log(availabilities);
+    // Termine:
+    for (const availName of this.appointmentIndexs) {
+      const start = form[availName + 'start'];
+      const end = form[availName + 'end'];
+      const date = new Date(form[availName + 'date']);
+      const startDate = new Date(date.getTime());
 
-        startDate.setHours(start.hour);
-        startDate.setMinutes(start.minute);
-        startDate.setSeconds(start.second);
+      startDate.setHours(start.hour);
+      startDate.setMinutes(start.minute);
+      startDate.setSeconds(start.second);
 
-        const endDate = new Date(date.getTime());
+      const endDate = new Date(date.getTime());
 
-        endDate.setHours(end.hour);
-        endDate.setMinutes(end.minute);
-        endDate.setSeconds(end.second);
+      endDate.setHours(end.hour);
+      endDate.setMinutes(end.minute);
+      endDate.setSeconds(end.second);
 
-        //console.log(startDate,endDate,date,end,start);
-       // availability.push(new Availability(date));
+      //console.log(startDate,endDate,date,end,start);
+      // availability.push(new Availability(date));
 
-        let isInOneSlot =false;
-        for(const availbility of availabilities)
-        {
-          console.log(availbility);
-          if(startDate.getTime() >= availbility.startDate.getTime() && endDate.getTime() <= availbility.endDate.getTime())
-          {
+      let isInOneSlot = false;
+      for (const availbility of availabilities) {
+        console.log(availbility);
+        if (startDate.getTime() >= availbility.startDate.getTime() && endDate.getTime() <= availbility.endDate.getTime()) {
 
-            availabilities = availabilities.filter(el =>  availbility !== el);
-            const firstAv : Availability = {startDate:availbility.startDate, endDate:startDate};
-            const secondAv : Availability = {startDate:endDate, endDate:availbility.endDate};
-            availabilities.push(firstAv);
-            availabilities.push(secondAv);
-            break;
-          }
+          availabilities = availabilities.filter(el => availbility !== el);
+          const firstAv: Availability = { startDate: availbility.startDate, endDate: startDate };
+          const secondAv: Availability = { startDate: endDate, endDate: availbility.endDate };
+          availabilities.push(firstAv);
+          availabilities.push(secondAv);
+          break;
         }
       }
+    }
 
-      const prize = parseFloat(form.prize);
+    const prize = parseFloat(form.prize);
 
-      // Neues Product erstellen
-      const newProduct:Product = new Product(form.productName,form.description,prize,duration,{start:new Date(Date.UTC(0,0,0,0,0,0)),end:new Date( Date.UTC(0,0,0,23,59,59)) },availabilities,this.imageId);
-      //Product hinzufügen anfrage an das backend schicken
-      this.uploading = true;
+    // Neues Product erstellen
+    const newProduct: Product = new Product(form.productName, form.description, prize, duration, {
+      start: new Date(Date.UTC(0, 0, 0, 0, 0, 0)),
+      end: new Date(Date.UTC(0, 0, 0, 23, 59, 59))
+    }, availabilities, this.imageId);
+    //Product hinzufügen anfrage an das backend schicken
+    this.uploading = true;
 
-     const uploadProduct = () => {
-        this.productService.addProduct(newProduct).subscribe({
-          next: (_message:IdMessageResponse) => {
-            this.errorMessage = undefined;
+    const uploadProduct = () => {
+      this.productService.addProduct(newProduct).subscribe({
+        next: (_message: IdMessageResponse) => {
+          this.errorMessage = undefined;
 
-            this.router.navigate(['productdetails/',_message.id]);
-            this.uploading = false;
-          },
-          error: (err) => {
-            this.errorMessage = err.error.message;
-            console.error(err);
-            this.uploading = false;
-          }
-        });
-      };
+          this.router.navigate(['productdetails/', _message.id]);
+          this.uploading = false;
+        },
+        error: (err) => {
+          this.errorMessage = err.error.message;
+          console.error(err);
+          this.uploading = false;
+        }
+      });
+    };
 
-     // Wenn es das Product schon gegeben hat lösche das alte
-      if(this.productId)
-      {
-        this.productService.removeProduct(this.productId).subscribe({
-            next: () => uploadProduct(),
-          error: (err) => console.error(err.error)
-        });
+    // Wenn es das Product schon gegeben hat lösche das alte
+    if (this.productId) {
+      this.productService.removeProduct(this.productId).subscribe({
+        next: () => uploadProduct(),
+        error: (err) => console.error(err.error)
+      });
 
-      } else {
-        // Sonst upload das neue Product
-        uploadProduct();
-      }
+    } else {
+      // Sonst upload das neue Product
+      uploadProduct();
+    }
 
   }
 
@@ -303,19 +300,31 @@ export class AddProductComponent implements OnInit {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      this.fromDateControl.setValue(this.formatter.format(this.fromDate));
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.toDateControl.setValue(this.formatter.format(this.toDate));
       this.availabilityGroup.markAllAsTouched();
     } else {
       this.toDate = null;
       this.fromDate = date;
+      this.fromDateControl.setValue(this.formatter.format(this.fromDate));
+      this.toDateControl.setValue(this.formatter.format(this.toDate));
+      this.availabilityGroup.markAllAsTouched();
     }
     this.updateGroupValidity(this.availabilityGroup);
+    console.log(this.availabilityGroup);
   }
 
   createFormControls() {
-    this.fromDateControl = new FormControl('', this.isSelectedWeekday(this.fromDate, this.isDisabled));
-    this.toDateControl = new FormControl('', this.isSelectedWeekday(this.toDate, this.isDisabled));
+    this.fromDateControl = new FormControl('', [
+      this.isSelectedWeekday(this.fromDate, this.isDisabled),
+      Validators.required
+    ]);
+    this.toDateControl = new FormControl('', [
+      this.isSelectedWeekday(this.toDate, this.isDisabled),
+      Validators.required,
+    ]);
   }
 
   isHovered(date: NgbDate) {
@@ -354,63 +363,43 @@ export class AddProductComponent implements OnInit {
   isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
 
   toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
-  // update the validity of the controls in the group
-  updateGroupValidity = (formGroup: FormGroup): void => {
-    Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
-    console.log(`Updated Validity for `, formGroup.controls);
-  }
-
-  isInvalid = (form: AbstractControl): boolean => {
-    const invalid = form.touched ? form.invalid : false;
-    console.log(invalid);
-    console.log(`form status: ${ form.status } `);
-    return invalid;
-  }
 
   addAvailability = (): void => {
     if (!this.fromDate || !this.toDate) {
       console.log('no date selected');
+      this.availabilityGroup.markAllAsTouched()
       return;
     }
     const fromDate: Date = this.ngbDateToDate(this.fromDate);
     const toDate: Date = this.ngbDateToDate(this.toDate);
-    const availability = new Availability(fromDate, toDate);
+    const availability = new AvailabilityWithWeekdays(new Availability(fromDate, toDate), this.disabledWeekdays);
 
     this.availabilities.push(availability);
     this.fromDate = null;
     this.toDate = null;
     this.availabilityGroup.markAsUntouched();
+
+    console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
   }
 
-  createAvailabilities = (fromDate: Date, toDate: Date): Availability[] => {
+  createAvailabilities = (availabiliy: Availability): Availability[] => {
     let availabilities: Availability[] = [];
-    const availability = new Availability(fromDate, toDate);
+    const availability = availabiliy;
 
     // check if there are hindrances between the dates
     const hindrances = this.hindrances.filter(hindrance => {
-      return hindrance.getTime() >= fromDate.getTime() && hindrance.getTime() <= toDate.getTime();
+      return hindrance.getTime() >= availabiliy.startDate.getTime() && hindrance.getTime() <= availabiliy.endDate.getTime();
     });
 
-    availabilities = this.splitAvaliability(availability, hindrances);
+    availabilities = this.splitAvailability(availability, hindrances);
 
     return availabilities;
   }
 
-  isSelectedWeekday = (date: NgbDate | null, isDisabled: (date: NgbDate | null) => boolean): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const validationError = isDisabled(date) ? { disabledDate: { value: control.value } } : null;
-      console.log(validationError);
-      return validationError;
-    };
-  }
-
-  ngbDateToDate = (ngbDate: NgbDate | null): Date => {
-    return ngbDate ? new Date(Date.UTC(ngbDate.year, ngbDate.month - 1, ngbDate.day)) : new Date('Invalid Date');
-  }
 
 // split Availability at the given dates
-  splitAvaliability = (availability: Availability, splitDates: Date[]): Availability[] => {
-    const availabilties: Availability[] = [];
+  splitAvailability = (availability: Availability, splitDates: Date[]): Availability[] => {
+    const availabilities: Availability[] = [];
     const startDate: Date = availability.startDate;
     const endDate: Date = availability.endDate;
     let oldSplitDate: Date = startDate;
@@ -421,22 +410,78 @@ export class AddProductComponent implements OnInit {
       if (this.compareDates(splitDate, oldSplitDate) > 0) {
         continue;
       }
-      if (this.compareDates(oldSplitDate, splitDate) < 0) {
-        availabilties.push(new Availability(oldSplitDate, new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
+      if (this.compareDates(oldSplitDate, splitDate) < 0 && this.compareDates(oldSplitDate, endDate) > 0) {
+        availabilities.push(new Availability(oldSplitDate, new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
           splitDate.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
       }
       oldSplitDate.setUTCFullYear(splitDate.getUTCFullYear(), splitDate.getUTCMonth(), splitDate.getUTCDate());
     }
 
-    return availabilties;
+    return availabilities;
+  }
+
+  // Validator functions ------------------------------------------------------
+
+  isSelectedWeekday = (date: NgbDate | null, isDisabled: (date: NgbDate | null) => boolean): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const validationError = isDisabled(date) ? { disabledDate: { value: control.value } } : null;
+      console.log(validationError);
+      return validationError;
+    };
+  }
+
+  /**
+   * Validator that requires that the availabilty does not overlap with any other availabilty
+   */
+  isOverlapping = (availabilities: AvailabilityWithWeekdays[]): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const validationError = availabilities.some(availability => {
+        return this.compareDates(availability.availability.startDate, this.ngbDateToDate(this.toDate)) <= 0 &&
+          this.compareDates(availability.availability.endDate, this.ngbDateToDate(this.fromDate)) >= 0;
+      }) ? { overlapping: { fromDate: this.fromDate, toDate: this.toDate } } : null;
+      console.log(validationError);
+      return validationError;
+    };
+  }
+
+  // Helper functions
+
+  ngbDateToDate = (ngbDate: NgbDate | null): Date => {
+    return ngbDate ? new Date(Date.UTC(ngbDate.year, ngbDate.month - 1, ngbDate.day)) : new Date('Invalid Date');
+  }
+
+  // update the validity of the controls in the group
+  updateGroupValidity = (formGroup: FormGroup): void => {
+    Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
+    console.log(`Updated Validity for `, formGroup.controls);
+  }
+
+  isInvalid = (form: AbstractControl): boolean => {
+    const invalid = form.touched ? form.invalid : false;
+    return invalid;
   }
 
   /**
    * Compares two dates without taking the time into account.
+   * @return 0 if the dates are equal, -1 if date1 is before date2, 1 if date1 is after date2
    */
   compareDates = (date1: Date, date2: Date): number => {
     const date1WithoutTime = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
     const date2WithoutTime = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
     return Math.sign(date1WithoutTime - date2WithoutTime);
+  }
+
+  // Returns all selected weekdays
+  getSelectedWeekdays = (): string[] => this.weekdays.filter((weekday: string, index: number): boolean =>
+    !this.disabledWeekdays.includes(index + 1));
+}
+
+export class AvailabilityWithWeekdays {
+  availability: Availability;
+  disabledWeekdays: number[];
+
+  constructor(availability: Availability, disabledWeekdays: number[]) {
+    this.availability = availability;
+    this.disabledWeekdays = disabledWeekdays;
   }
 }

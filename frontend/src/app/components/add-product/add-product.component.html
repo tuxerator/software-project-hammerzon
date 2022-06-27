@@ -71,7 +71,7 @@
         <div class="col">
           <label class="form-label" for="durationInput">Zeit Auswählen</label>
           <!-- Add Appointment -->
-          <form [formGroup]="availabilityGroup" class="row" novalidate>
+          <form (ngSubmit)="addAvailability()" [formGroup]="availabilityGroup" class="row is-invalid" novalidate>
             <div class="col-4">
               <div class="dp-hidden position-absolute">
                 <div class="input-group">
@@ -123,13 +123,16 @@
                           'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
                           'is-invalid': isInvalid(availabilityGroup)
                        }"
-                       [value]="formatter.format(fromDate)"
                        class="form-control"
                        formControlName="fromDateControl"
                        name="dpFromDate"
-                       placeholder="yyyy-mm-dd">
+                       placeholder="yyyy-mm-dd"
+                       aria-describedby="availabilityFeedback">
                 <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
                         type="button"></button>
+                <div *ngIf="availabilityGroup.errors?.['disabledDate']" class="invalid-feedback">
+                  Der gewählte Tag ist deaktiviert.
+                </div>
               </div>
             </div>
             <div class="col-4">
@@ -140,41 +143,60 @@
                           'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
                           'is-invalid': isInvalid(availabilityGroup)
                        }"
-                       [value]="formatter.format(toDate)"
                        class="form-control"
                        formControlName="toDateControl"
                        name="dpToDate"
-                       placeholder="yyyy-mm-dd">
+                       placeholder="yyyy-mm-dd"
+                       aria-describedby="availabilityFeedback">
                 <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
                         type="button"></button>
               </div>
+              <div *ngIf="availabilityGroup.errors?.['disabledDate']" class="invalid-feedback">
+                Der gewählte Tag ist deaktiviert.
+              </div>
             </div>
             <div class="col d-grid justify-content-md-end">
-              <button class="btn btn-outline-primary" type="button">Hinzufügen</button>
+              <button class="btn btn-outline-primary" type="submit">Hinzufügen</button>
+            </div>
+
+            <!-- Feedback -->
+            <div id="availabilityFeedback" class="invalid-feedback">
+              <div *ngIf="availabilityGroup.errors?.['required']">
+                Bitte ein Datum auswählen.
+              </div>
+              <div *ngIf="availabilityGroup.errors?.['overlapping']">
+                Dieser Zeitraum überschneidet sich mit einem bereits vorhandenen.
+              </div>
             </div>
             <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
             <pre class="col-12">To date: {{toDate | json}}</pre> -->
           </form>
-        </div>        <!--
-                  <div class="d-flex mb-2 has-validation">
-                    <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
-                    <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
-                  </div>
-                  <div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3"
-                     id="durationInput">
-                  <div class="input-group has-validation" id="date selector">
-                    <span class="input-group-text">{{index + 1}}.</span>
-                    <input aria-label="Username" formControlName="{{name}}date" class="form-control"
-                           placeholder="Suche eine Termin aus" required type="date">
-                    <label>Von</label>
-                    <ngb-timepicker formControlName="{{name}}start"></ngb-timepicker>
-                    <label>Bis</label>
-                    <ngb-timepicker formControlName="{{name}}end"></ngb-timepicker>
-                    <button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>
 
-                  </div>
-                  </div>
-        -->
+          <div class="col-12 table-responsive" [class.dp-hidden]="availabilities.length == 0">
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>Von</th>
+                <th>Bis</th>
+                <th>Wochentage</th>
+                <th>Aktion</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let availability of availabilities">
+                <td>{{availability.availability.startDate | date: 'dd.MM.yyyy'}}</td>
+                <td>{{availability.availability.endDate | date: 'dd.MM.yyyy'}}</td>
+                <td>{{getSelectedWeekdays()}}</td>
+                <td>
+                  <button class="btn btn-outline-danger" type="button">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
 
         <!-- Bild hinzufügen -->
@@ -183,7 +205,7 @@
           <input #imageInput (change)="uploadImage(imageInput)" class="form-control" id="inputGroupFile02" type="file">
           <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
-        <span *ngIF="isChecked && !imageId" class="text-danger">Es muss ein Bild hochgeladen werden</span>
+        <span *ngIf="isChecked && !imageId" class="text-danger">Es muss ein Bild hochgeladen werden</span>
 
         <!-- Bild anzeigen -->
         <figure *ngIf="imageId" class="figure">
@@ -194,7 +216,7 @@
 
         <!--Produkt hinzufügen-->
         <div class="d-grid mt-4">
-          <button (click)="onSubmit()" class="btn btn-primary btn-block"
+          <button class="btn btn-primary btn-block"
                   type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
             <div *ngIf="uploading" class="spinner-border text-light" role="status">
               <span class="visually-hidden">Loading...</span>
