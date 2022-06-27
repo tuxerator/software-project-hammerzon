@@ -34,4 +34,8 @@ describe('authentication', () => {
             })
             .expect(201);
     });
+
+    afterAll(() => {
+        User.deleteMany();
+    });
 });

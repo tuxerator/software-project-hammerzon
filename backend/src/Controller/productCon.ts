@@ -52,9 +52,18 @@ class ProductController {
         }*/
         console.log(searchTerm);
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
-        query.$text = {$search: searchTerm};
-      }
+        //query.$text = {$search: searchTerm};
 
+        /*
+          * suche mit regex in den feldern name oder description
+          * langsamer als die $text suche, aber bringt auch Treffer für 
+          * unvollständige wörter
+        */
+        searchTerm.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        const regex =  new RegExp(searchTerm, 'gi');
+        query.$or = [{name : regex},{description : regex}];
+      }
+    console.log(query);
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
     let list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
     // Wieviele Elemente kommen danach noch
@@ -72,7 +81,6 @@ class ProductController {
         response.status(200);
         response.send(listInfo);
     }
-
     // Gibt die Produkt details zurück
   public async getProductDetail(request: Request, response: Response): Promise<void> {
 
