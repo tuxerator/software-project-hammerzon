@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { SessionRequest } from '../types';
+import { PaymentType, SessionRequest } from '../types';
 import {Types} from 'mongoose';
 import { IProduct, Product } from '../Models/Product';
 export type Validator = (request:Request,response:Response)=>boolean
+// used for SubValidation request object
 export type SubRequest = {body:any};
+// Spezial type of Validator which you are able to call in a sub Validation
 export type SubValidator = (request:SubRequest,response:Response)=>boolean;
 
 
@@ -42,17 +44,28 @@ export class Validators{
     // key is the key from where the subobject starts
     public static subValidators(key:string,validators:SubValidator[]):SubValidator
     {
+        const validatorArray = Validators.validatorsArray(validators);
         return (request:SubRequest,response:Response):boolean =>
         {
-            for(const validator of validators)
-            {
-                if(!validator({body:{parent:`${request.body.parent} -> ${key}`,...request.body[key]}},response))
-                {
-                    return false;
-                }
-            }
-            return true;
+            const newRequest = {body:{parent:`${request.body.parent} -> ${key}`,...request.body[key]}};
+
+            return validatorArray(newRequest,response);
         };
+    }
+
+    public static validatorsArray(validators:SubValidator[]):SubValidator
+    {
+      return (request:SubRequest,response:Response):boolean =>
+      {
+          for(const validator of validators)
+          {
+              if(!validator({body:request.body},response))
+              {
+                  return false;
+              }
+          }
+          return true;
+      };
     }
 
     public static subArrayValidators(key:string,validators:SubValidator[]):SubValidator
@@ -99,8 +112,8 @@ export class Validators{
 
 
   public static isValidEmail(key: string): SubValidator {
+    const correctEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return (request: SubRequest, response: Response): boolean => {
-      const correctEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       if (!correctEmail.test(request.body[key].toString())) {
         response.status(400);
         response.send({ code: 400, message: 'Email is not valid' });
@@ -159,6 +172,18 @@ export class Validators{
       }
     };
   }
+  // If a curtain variable is equals to
+  public static varDependentValidators(typeKey:string,equals:any,validators:SubValidator[],check = (value:any,equals:any):boolean => value === equals): SubValidator
+  {
+    const validatorArray = Validators.validatorsArray(validators);
+    return (request: SubRequest, response: Response): boolean => {
+      if(check(request.body[typeKey], equals))
+      {
+         return validatorArray(request,response);
+      }
+      return true;
+    };
+  }
 }
 
 export class ValidatorLists {
@@ -200,7 +225,6 @@ export class ValidatorLists {
     ];
 
   public static PostOrderValidatorList: Validator[] = [
-    Validators.isAuthorized('user'),
     Validators.isRequired('productId'),
     Validators.isValidObjectId('productId'),
     Validators.isRequired('appointmentIndex')
@@ -254,6 +278,8 @@ export class ValidatorGroups {
       Validators.isValidCommentLength(10, 300)
     ]);
 
+
+
     // Product
   public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);
 
@@ -261,5 +287,32 @@ export class ValidatorGroups {
 
     public static OrderRegister = ValidatorGroup(ValidatorLists.PostOrderValidatorList);
 
+    // Payment
 
+    public static CountryPayment = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.isRequired('account'),
+      // Merchant Info required for Bachelor Card
+      Validators.varDependentValidators('paymentType',PaymentType.BACHELORCARD,[
+        Validators.isRequired('merchantInfo'),
+      ]),
+    ]);
+
+    // Pament
+    public static PayPayment = ValidatorGroup([
+      Validators.isAuthorized('user'),
+      Validators.subValidators('postOrder',ValidatorLists.PostOrderValidatorList),
+      Validators.isRequired('paymentType'),
+      // HCIPAL and SWP-Safe
+      Validators.varDependentValidators('paymentType',PaymentType.HCIPAL,[
+        Validators.isRequired('password')
+      ]),
+      Validators.varDependentValidators('paymentType',PaymentType.BACHELORCARD,[
+        Validators.isRequired('expirationDate'),
+        Validators.isRequired('fullName'),
+        Validators.isRequired('merchantInfo'),
+        Validators.isRequired('password')
+      ]),
+
+    ]);
 }
