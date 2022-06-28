@@ -25,9 +25,12 @@
     </div>
 
     <!-- Image and Product name + User Name + Price-->
-    <ul *ngIf="!loading"></ul>
-
-    <img *ngIf="!loading" src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="...">
+    <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="Lädt ..." (load)="onImageLoaded()" >
+    <div *ngIf="loading.image">
+      <svg class="img-fluid ratio-16x9 rounded" role="img" width="100%" height="350">
+        <rect width="100%" height="100%"  fill="grey"></rect>
+      </svg>
+    </div>
     <div class="py-3 bg-dark text-white">
       <div class="row justify-content-between">
         <div class="col-10 fs-3 fw-bold me-auto">{{product?.name}}</div>
@@ -91,9 +94,11 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
         </form>
       </div>
     </div>
-    <div *ngIf="hasOrdered && hasRated && !loading" class="mb-4">
+    <div *ngIf="hasOrdered && hasRated && !loading.hasRated" class="mb-4">
         <div>Bewertung abgegeben, Vielen Dank für die Bewertung!</div>
     </div>
+
+    <!-- TOODO Loading sache-->
 
     <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
     <div class="list-group">
@@ -111,23 +116,27 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
           <div class="text-muted">{{getDate(elem.date)}}</div>
       </div>
     </div>
-  
+
     <hr>
     <!-- Similar Descriptions  -->
     <div class="fw-bold fs-5 mb-2">Ähnliche Dienstleistungen</div>
-    <app-product-list *ngIf="!loading" [list]="similarProducts" [click]="changeId.bind(this)"></app-product-list>
-  
-  <div *ngIf="loading" class="d-flex align-items-center">
-    <div aria-hidden="true" class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Einen Moment, bitte</span>
+    <app-product-list *ngIf="!loading.similar" [list]="similarProducts" [click]="changeId.bind(this)"></app-product-list>
+
+    <div *ngIf="loading.similar" class="d-flex align-items-center">
+      <div aria-hidden="true" class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Einen Moment, bitte</span>
+      </div>
     </div>
   </div>
-
-
-  </div>
-
 </div>
 
+<div *ngIf="loading.product" class="bg-dark opacity-75 position-fixed top-0 start-0  vh-100 vw-100" style="z-index: 2000;">
+  <div class="opacity-100 position-fixed top-50 start-50 text-center">
+    <div class="spinner-border text-white" style="width: 3rem; height: 3rem; z-index: 2000;" role="status">
+      <span class="visually-hidden ">Loading...</span>
+    </div>
+  </div>
+</div>
 
 
 <!--Delete Modal -->
