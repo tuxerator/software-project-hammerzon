@@ -11,7 +11,7 @@ export class ValidationToText
     this.angularForm = angularForm;
   }
 
-  setErrorMessage(message?:string)
+  setErrorMessage(message?:string):void
   {
     this.serverMessage = message;
   }
@@ -79,18 +79,18 @@ export class ValidationToText
     }
     if (this.isValid(key))
     {
-      return {'is-valid':true};
+      return {'is-valid':true,'was-validated':true};
     }
-    return {'is-invalid':true};
+    return {'is-invalid':true,'was-validated':true};
   }
 
   getFeedbackClass(key:string):{[key:string]:boolean}
   {
     if (this.isValid(key))
     {
-      return {'valid-feedback':true,'was-validated':true};
+      return {'valid-feedback':true};
     }
-    return {'invalid-feedback':true, 'was-validated':true};
+    return {'invalid-feedback':true};
   }
 }
 
@@ -104,10 +104,7 @@ interface Validation{
 export class ClientSideValidation implements Validation
 {
 
-  constructor(public text:string,public valid=true)
-  {
-
-  }
+  constructor(public text:string,public valid=true){}
 
   getText(serverMessage:string):string
   {
@@ -115,7 +112,7 @@ export class ClientSideValidation implements Validation
     return this.text;
   }
 
-  getValid(serverMessage: string): boolean {
+  getValid(_: string): boolean {
       return this.valid;
   }
 }
@@ -127,7 +124,8 @@ export class ClientSideFnValidation extends ClientSideValidation{
     super('',valid);
   }
 
-  override getText(serverMessage: string): string {
+
+  override getText(_: string): string {
     return this.fn();
   }
 }

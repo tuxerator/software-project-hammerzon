@@ -37,7 +37,7 @@ export class OrderProductComponent implements OnInit {
     password: new FormControl('', this.PaymentTypeValidators({
       [PaymentType.HCIPAL]: [[],[Validators.required]],
       [PaymentType.SWPSAFE]:[[],[Validators.required]],
-      [PaymentType.BACHELORCARD]:[[],[Validators.required]],
+      [PaymentType.BACHELORCARD]:[[],[Validators.required,this.maxInt(999)]],
     })),
     fullName: new FormControl('',this.PaymentTypeValidators({
       [PaymentType.HCIPAL]: [[],[]],
@@ -47,12 +47,12 @@ export class OrderProductComponent implements OnInit {
     expirationMonth: new FormControl('',this.PaymentTypeValidators({
       [PaymentType.HCIPAL]: [[],[]],
       [PaymentType.SWPSAFE]:[[],[]],
-      [PaymentType.BACHELORCARD]:[[],[Validators.required]],
+      [PaymentType.BACHELORCARD]:[[],[Validators.required,this.maxInt(12)]],
     })),
     expirationYear: new FormControl('',this.PaymentTypeValidators({
       [PaymentType.HCIPAL]: [[],[]],
       [PaymentType.SWPSAFE]:[[],[]],
-      [PaymentType.BACHELORCARD]:[[],[Validators.required]],
+      [PaymentType.BACHELORCARD]:[[],[Validators.required,this.maxInt(99)]],
     })),
   });
 
@@ -84,23 +84,30 @@ export class OrderProductComponent implements OnInit {
       },
       'expirationMonth':{
         valid:[
-          new ServerSideValidation('Ablaufsdatum fehlerhaft',undefined,'Invalid expiry date format'),
-          new ServerSideValidation('Ablaufsdatum fehlerhaft',undefined,'Invalid data'),
           new ClientSideValidation('Ablaufsdatum gültig',false)
         ],
-        invalid: new ClientSideValidation('Ablaufsdatum erwartet')
+        invalid: new ClientSideValidation('Gültiges Ablaufsdatum (MM/JJ) erwartet')
       },
       'expirationYear':{
         valid:[
-          new ServerSideValidation('Ablaufsdatum fehlerhaft',undefined,'Invalid expiry date format'),
-          new ServerSideValidation('Ablaufsdatum fehlerhaft',undefined,'Invalid data'),
+          new ServerSideValidation('Ablaufsdatum (MM/JJ) fehlerhaft',undefined,'Invalid expiry date format'),
+          new ServerSideValidation('Ablaufsdatum (MM/JJ) fehlerhaft',undefined,'Invalid data'),
           new ClientSideValidation('Ablaufsdatum gültig',false)
         ],
-        invalid: new ClientSideValidation('Ablaufsdatum erwartet')
+        invalid: new ClientSideValidation('Gültiges Ablaufsdatum (MM/JJ) erwartet')
       }
     },
     this.accountForm
   );
+
+  constructor(private route:ActivatedRoute,
+              private productService:ProductService,
+              private authService: AuthService,
+              private orderService: OrderService,
+              private router: Router,
+              private formBuilder: FormBuilder,
+              private payment:PaymentService) {
+  }
 
   public getPaymentTypeDependentText(hcipal:string,swpsafe:string,bachelorcard:string):() => string
   {
@@ -119,15 +126,6 @@ export class OrderProductComponent implements OnInit {
     };
   }
 
-  constructor(private route:ActivatedRoute,
-              private productService:ProductService,
-              private authService: AuthService,
-              private orderService: OrderService,
-              private router: Router,
-              private formBuilder: FormBuilder,
-              private payment:PaymentService) {
-  }
-
   public PaymentTypeValidators(validatorsByPaymenttype: {[key in PaymentType]:ValidatorFn[][]}): ValidatorFn {
     return (control:AbstractControl):null|ValidationErrors => {
       const i = this.modalState === 'pay' ? 1 : 0;
@@ -141,6 +139,31 @@ export class OrderProductComponent implements OnInit {
           return err;
         }
       }
+      return null;
+    };
+  }
+
+  // Returns a Validatior Which check wether a given control is parseable to a int and is smaller than a given number
+  public maxInt (number:number)
+  {
+    return (control:AbstractControl) : null|ValidationErrors =>
+    {
+      const value = parseInt(control.value);
+
+      if(!value)
+      {
+        return {
+          notAnumber: true
+        };
+      }
+
+      if(value > number || value < 0)
+      {
+        return {
+          numberToBig: true
+        };
+      }
+
       return null;
     };
   }
@@ -216,6 +239,11 @@ export class OrderProductComponent implements OnInit {
 
   public get PaymentType() {
     return PaymentType;
+  }
+
+  public get Object()
+  {
+    return Object;
   }
 
 

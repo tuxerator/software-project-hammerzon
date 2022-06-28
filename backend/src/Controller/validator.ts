@@ -219,7 +219,6 @@ export class ValidatorGroups {
       Validators.isAuthorized('user'),
       Validators.subValidators('updatedUser', ValidatorLists.UserValidatorList),
     ]);
-
     public static UserLogin = ValidatorGroup(
       [
         Validators.isNotAuthorized('user'),
@@ -237,10 +236,12 @@ export class ValidatorGroups {
         Validators.isAuthorized('admin')
     ]);
 
+
     public static CanConfirm = ValidatorGroup([
         Validators.isRequired('status')
     ]);
 
+    //
     public static ValidRating = ValidatorGroup([
       Validators.isAuthorized('user'),
       Validators.isRequired('rating'),
