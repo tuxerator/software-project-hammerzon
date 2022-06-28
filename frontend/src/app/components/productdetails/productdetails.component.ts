@@ -28,6 +28,7 @@ export class ProductdetailsComponent implements OnInit {
   });
 
   // Zum formatieren der Daten
+  public loading:boolean = false;
 
 
   constructor(private route:ActivatedRoute,
@@ -62,6 +63,7 @@ export class ProductdetailsComponent implements OnInit {
   public changeId(id:string):void
   {
     this.id = id;
+    this.loading = true;
 
     console.log(this.id);
     console.log(this.productService);
@@ -69,9 +71,13 @@ export class ProductdetailsComponent implements OnInit {
     //this.route= ProductInfo.find(product=>product._id===productIDFromRoute);
     this.productService.getProductDetails(this.id).subscribe(
       {
-        next: this.onProductRecieved.bind(this),
+        next: ()=> {
+          this.onProductRecieved.bind(this);
+          this.loading = false;
+        },
         error: (err) => {
           console.log(err);
+          this.loading = false;
           // Wenn etwas schief läuft einfach wieder zu landing page
           this.router.navigate(['/']);
         }
@@ -80,7 +86,10 @@ export class ProductdetailsComponent implements OnInit {
 
     this.productService.getSimilarProducts(this.id).subscribe(
       {
-        next: (res) => this.similarProducts = res.list,
+        next: (res) => {
+          this.similarProducts = res.list;
+          this.loading = false;
+        },
       }
     );
 
@@ -88,10 +97,12 @@ export class ProductdetailsComponent implements OnInit {
       next:(val) => {
         this.hasOrdered = val;
         console.log('has the user ordered? ' + val);
+        this.loading = false;
       },
       error:(err) =>
       {
         console.log(err);
+        this.loading = false;
       }
     });
 
@@ -99,10 +110,12 @@ export class ProductdetailsComponent implements OnInit {
       next:(val) => {
         this.hasRated = val;
         console.log('has the user rated? ' + val);
+        this.loading = false;
       },
       error:(err) =>
       {
         console.log(err);
+        this.loading = false;
       }
     });
 
@@ -138,13 +151,16 @@ export class ProductdetailsComponent implements OnInit {
 
   deleteProduct():void
   {
+    this.loading = true;
     this.productService.removeProduct(this.id).subscribe({
       next:() => {
         this.router.navigate(['/']);
+        this.loading = false;
       },
       error:(err) =>
       {
         console.log(err.error);
+        this.loading = false;
       }
       }
     );
@@ -168,15 +184,18 @@ export class ProductdetailsComponent implements OnInit {
 
       console.log(this.product);
       console.log(this.user);
+      this.loading = true;
 
       this.productService.hasRated(this.id).subscribe({
         next:(val) => {
           this.hasRated = val;
           console.log('has the user rated? ' + val);
+          this.loading = false;
         },
         error:(err) =>
         {
           console.log(err);
+          this.loading = false;
         }
       });
   }
@@ -187,11 +206,16 @@ export class ProductdetailsComponent implements OnInit {
     const form = this.addRatingForm.value;
     if(this.user)
     {
+      this.loading = true;
       const rating : Rating = new Rating(this.currentRating, form.comment);
       this.productService.submitRating(this.id, rating).subscribe({
-        next: this.onProductRecieved.bind(this),
+        next: () => {
+          this.onProductRecieved.bind(this);
+          this.loading = false;
+        },
         error:(error) => {
           console.log(error);
+          this.loading = false;
         }
        });
     }
