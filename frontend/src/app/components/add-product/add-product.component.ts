@@ -6,7 +6,7 @@ import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Availability, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 
 class ImageSnippet {
@@ -43,7 +43,7 @@ export class AddProductComponent implements OnInit {
 
   defaultTimeFrame: Availability = {
     startDate: new Date(),
-    endDate: new Date()
+    endDate: new Date(0, 0, 0, 18, 0, 0),
   }
 
   hoveredDate: NgbDate | null = null;
@@ -57,13 +57,18 @@ export class AddProductComponent implements OnInit {
   availabilityGroup: FormGroup = new FormGroup({});
   fromDateControl: FormControl = new FormControl();
   toDateControl: FormControl = new FormControl();
-
   availabilities: AvailabilityWithWeekdays[] = [];
+
+  hindranceGroup: FormGroup = new FormGroup({});
+  dateControl: FormControl = new FormControl();
+  fromTimeControl: FormControl = new FormControl();
+  toTimeControl: FormControl = new FormControl();
   hindrances: Date[] = [];
+  hindrance?: NgbDateStruct;
 
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private productService: ProductService, private authService: AuthService, private router: Router, private imageService: ImageService,
-              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder) {
+              public calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder) {
     this.fromDate = null;
     this.toDate = null;
   }
@@ -88,9 +93,16 @@ export class AddProductComponent implements OnInit {
       fromDateControl: this.fromDateControl,
       toDateControl: this.toDateControl
     });
+    this.hindranceGroup = this.fb.group({
+      dateControl: this.dateControl,
+      fromTimeControl: this.fromTimeControl,
+      toTimeControl: this.toTimeControl
+    });
+
     this.availabilityGroup.addValidators(this.isOverlapping(this.availabilities));
 
     this.addProductForm.addControl('availability', this.availabilityGroup);
+    this.addProductForm.addControl('hindrance', this.hindranceGroup);
   }
 
 
@@ -195,7 +207,7 @@ export class AddProductComponent implements OnInit {
     this.addProductForm.markAllAsTouched();
     // Sind alle Eingaben valid
     console.log(this.addProductForm);
-    if (this.addProductForm.invalid || !this.imageId || this.fromDate == null || this.toDate == null) return;
+    if (this.addProductForm.invalid || !this.imageId || !this.availabilities) return;
     console.log('Through Validation Debug Log');
     // Für besser lesbarkeit des Code
     const form = this.addProductForm.value;
@@ -213,47 +225,7 @@ export class AddProductComponent implements OnInit {
 
 
     console.log(this.addProductForm.controls['availability'].value);
-    const startDate: Date = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day);
-    ;//new Date(this.productForm.value['fromDateControl']);
-    const endDate: Date = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);
-    ;//new Date(this.productForm.value['toDateControl']);
-
-    let availabilities: Availability[] = [{ startDate, endDate }];
-    console.log(availabilities);
-    // Termine:
-    for (const availName of this.appointmentIndexs) {
-      const start = form[availName + 'start'];
-      const end = form[availName + 'end'];
-      const date = new Date(form[availName + 'date']);
-      const startDate = new Date(date.getTime());
-
-      startDate.setHours(start.hour);
-      startDate.setMinutes(start.minute);
-      startDate.setSeconds(start.second);
-
-      const endDate = new Date(date.getTime());
-
-      endDate.setHours(end.hour);
-      endDate.setMinutes(end.minute);
-      endDate.setSeconds(end.second);
-
-      //console.log(startDate,endDate,date,end,start);
-      // availability.push(new Availability(date));
-
-      let isInOneSlot = false;
-      for (const availbility of availabilities) {
-        console.log(availbility);
-        if (startDate.getTime() >= availbility.startDate.getTime() && endDate.getTime() <= availbility.endDate.getTime()) {
-
-          availabilities = availabilities.filter(el => availbility !== el);
-          const firstAv: Availability = { startDate: availbility.startDate, endDate: startDate };
-          const secondAv: Availability = { startDate: endDate, endDate: availbility.endDate };
-          availabilities.push(firstAv);
-          availabilities.push(secondAv);
-          break;
-        }
-      }
-    }
+    const availabilities: Availability[] = this.availabilities.flatMap(this.createAvailabilities);
 
     const prize = parseFloat(form.prize);
 
@@ -291,6 +263,7 @@ export class AddProductComponent implements OnInit {
     } else {
       // Sonst upload das neue Product
       uploadProduct();
+      console.log('Uploaded Product: %o', newProduct);
     }
 
   }
@@ -318,13 +291,42 @@ export class AddProductComponent implements OnInit {
 
   createFormControls() {
     this.fromDateControl = new FormControl('', [
-      this.isSelectedWeekday(this.fromDate, this.isDisabled),
+      this.isSelectedWeekday(this.fromDate, this.isDisabledAvailability),
       Validators.required
     ]);
     this.toDateControl = new FormControl('', [
-      this.isSelectedWeekday(this.toDate, this.isDisabled),
+      this.isSelectedWeekday(this.toDate, this.isDisabledAvailability),
       Validators.required,
     ]);
+
+    this.dateControl = new FormControl('');
+    this.fromTimeControl = new FormControl('', this.isInDefaultTimeFrame());
+    this.toTimeControl = new FormControl('', this.isInDefaultTimeFrame());
+
+  }
+
+  isInDefaultTimeFrame = (): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+
+      const time = new Date(0, 0, 0, value.hour, value.minute);
+
+      if (time.getTime() < this.defaultTimeFrame.startDate.getTime()) {
+        return {
+          beforeStart: true
+        };
+      }
+      if (time.getTime() > this.defaultTimeFrame.endDate.getTime()) {
+        return {
+          afterEnd: true
+        };
+      }
+
+      return null;
+    }
   }
 
   isHovered(date: NgbDate) {
@@ -360,7 +362,21 @@ export class AddProductComponent implements OnInit {
 
   isToDate = (date: NgbDate) => date.equals(this.toDate);
 
-  isDisabled = (date: NgbDate | null) => date ? this.disabledWeekdays.includes(this.calendar.getWeekday(date)) : false;
+  isDisabledAvailability = (date: NgbDate | null) => {
+    if (!date) {
+      return false;
+    }
+    if (this.isInsideAvailability(date)) {
+      return true;
+    }
+    if (this.disabledWeekdays.includes(this.calendar.getWeekday(date))) {
+      return true;
+    }
+    if (date.before(this.calendar.getToday())) {
+      return true;
+    }
+    return false;
+  }
 
   toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
 
@@ -382,16 +398,56 @@ export class AddProductComponent implements OnInit {
     console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
   }
 
-  createAvailabilities = (availabiliy: Availability): Availability[] => {
+  removeAvailability = (index: number): void => {
+    this.availabilities.splice(index, 1);
+    console.log('removed avaiLability: %o\navailabilities: %o', this.availabilities);
+  }
+
+  isInsideAvailability = (date: NgbDate): boolean => {
+    for (const availability of this.availabilities) {
+      if (availability.availability.startDate.getTime() <= this.ngbDateToDate(date).getTime() && availability.availability.endDate.getTime() >= this.ngbDateToDate(date).getTime()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Hindrance picker ------------------------------------------------------
+
+  isDisabledHindrance = (date: NgbDate | null): boolean => {
+    if (!date) {
+      return false;
+    }
+    return !this.isDisabledAvailability(date) || this.disabledWeekdays.includes(this.calendar.getWeekday(date)) || date.before(this.calendar.getToday());
+  }
+
+  addHindrance = (): void => {
+    if (!this.hindrance) {
+      console.log('no hindrance selected');
+      return;
+    }
+    this.hindrances.push(this.ngbDateToDate(NgbDate.from(this.hindrance)));
+    console.log('added hindrance: %o\nhindrances: %o', this.hindrance, this.hindrances);
+    this.hindrance = undefined;
+  }
+
+  removeHinrance = (index: number): void => {
+    this.hindrances.splice(index, 1);
+    console.log('removed hindrance: %o\nhindrances: %o', this.hindrances);
+  }
+
+  createAvailabilities = (avail: AvailabilityWithWeekdays): Availability[] => {
     let availabilities: Availability[] = [];
-    const availability = availabiliy;
+    const availability = avail.toAvailability();
 
     // check if there are hindrances between the dates
     const hindrances = this.hindrances.filter(hindrance => {
-      return hindrance.getTime() >= availabiliy.startDate.getTime() && hindrance.getTime() <= availabiliy.endDate.getTime();
+      return hindrance.getTime() >= availability.startDate.getTime() && hindrance.getTime() <= availability.endDate.getTime();
     });
+    console.log('hindrances: %o', hindrances);
 
     availabilities = this.splitAvailability(availability, hindrances);
+    console.log('availabilities: %o', availabilities);
 
     return availabilities;
   }
@@ -407,15 +463,18 @@ export class AddProductComponent implements OnInit {
     splitDates.sort((a, b) => a.getTime() - b.getTime());
 
     for (const splitDate of splitDates) {
-      if (this.compareDates(splitDate, oldSplitDate) > 0) {
+      if (this.compareDates(splitDate, oldSplitDate) < 0) {
+        console.log('splitDate %o is before oldSplitDate %o', splitDate, oldSplitDate);
         continue;
       }
-      if (this.compareDates(oldSplitDate, splitDate) < 0 && this.compareDates(oldSplitDate, endDate) > 0) {
-        availabilities.push(new Availability(oldSplitDate, new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
+      if (this.compareDates(oldSplitDate, splitDate) <= 0 && this.compareDates(splitDate, endDate) <= 0) {
+        console.log('splitDate %o is between oldSplitDate %o and endDate %o', splitDate, oldSplitDate, endDate);
+        availabilities.push(new Availability(new Date(oldSplitDate), new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
           splitDate.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
       }
       oldSplitDate.setUTCFullYear(splitDate.getUTCFullYear(), splitDate.getUTCMonth(), splitDate.getUTCDate());
     }
+    availabilities.push(new Availability(new Date(oldSplitDate), endDate));
 
     return availabilities;
   }
@@ -483,5 +542,9 @@ export class AvailabilityWithWeekdays {
   constructor(availability: Availability, disabledWeekdays: number[]) {
     this.availability = availability;
     this.disabledWeekdays = disabledWeekdays;
+  }
+
+  public toAvailability(): Availability {
+    return this.availability;
   }
 }

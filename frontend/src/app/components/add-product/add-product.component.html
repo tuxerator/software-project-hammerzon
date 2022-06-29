@@ -8,7 +8,7 @@
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
              class="input-group has-validation">
-          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i></span>
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i> </span>
           <input class="form-control" formControlName="productName" placeholder="Produktname" required type="text">
           <div *ngIf="!addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger
             Produktname.
@@ -69,9 +69,11 @@
         </div>
 
         <div class="col">
-          <label class="form-label" for="durationInput">Zeit Auswählen</label>
+          <label class="form-label" for="availabilityInput">Zeit Auswählen</label>
           <!-- Add Appointment -->
-          <form (ngSubmit)="addAvailability()" [formGroup]="availabilityGroup" class="row is-invalid" novalidate>
+          <form (ngSubmit)="addAvailability()" [formGroup]="availabilityGroup" class="row is-invalid has-validation"
+                novalidate id="availabilityInput">
+
             <div class="col-4">
               <div class="dp-hidden position-absolute">
                 <div class="input-group">
@@ -81,7 +83,7 @@
                          [dayTemplate]="t"
                          [displayMonths]="2"
                          [footerTemplate]="footerTemplate"
-                         [markDisabled]="isDisabled"
+                         [markDisabled]="isDisabledAvailability"
                          [startDate]="fromDate!"
                          class="form-control"
                          name="datepicker"
@@ -91,10 +93,11 @@
                   <ng-template #t let-date let-focused="focused">
                     <span (mouseenter)="hoveredDate = date"
                           (mouseleave)="hoveredDate = null"
-                          [class.disabled]="isDisabled(date)"
-                          [class.faded]="isHovered(date) || isInside(date) && !isDisabled(date)"
+                          [class.disabled]="isDisabledAvailability(date)"
+                          [class.faded]="isHovered(date) || isInside(date) && !isDisabledAvailability(date)"
                           [class.focused]="focused"
-                          [class.range]="isRange(date) && !isDisabled(date)"
+                          [class.range]="isRange(date) && !isDisabledAvailability(date)"
+                          [class.today]="calendar.getToday().equals(date)"
                           class="custom-day">
                       {{ date.day }}
                     </span>
@@ -117,6 +120,7 @@
               </div>
               <div class="input-group form-group">
                 <input #dpFromDate
+                       (click)="datepicker.toggle()"
                        (change)="updateGroupValidity(availabilityGroup)"
                        (input)="setFromDate(fromDate, dpFromDate.value)"
                        [ngClass]="{
@@ -128,7 +132,7 @@
                        name="dpFromDate"
                        placeholder="yyyy-mm-dd"
                        aria-describedby="availabilityFeedback">
-                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
+                <button (click)="datepicker.toggle()" class="btn btn-secondary bi-calendar-range"
                         type="button"></button>
                 <div *ngIf="availabilityGroup.errors?.['disabledDate']" class="invalid-feedback">
                   Der gewählte Tag ist deaktiviert.
@@ -136,9 +140,11 @@
               </div>
             </div>
             <div class="col-4">
-              <div class="input-group form-group has-validation">
+              <div class="input-group form-group">
                 <input #dpToDate
+                       (click)="datepicker.toggle()"
                        (input)="setToDate(toDate, dpToDate.value)"
+                       (change)="updateGroupValidity(availabilityGroup)"
                        [ngClass]="{
                           'is-valid': !availabilityGroup.invalid && availabilityGroup.touched,
                           'is-invalid': isInvalid(availabilityGroup)
@@ -148,7 +154,7 @@
                        name="dpToDate"
                        placeholder="yyyy-mm-dd"
                        aria-describedby="availabilityFeedback">
-                <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range"
+                <button (click)="datepicker.toggle()" class="btn btn-secondary bi-calendar-range"
                         type="button"></button>
               </div>
               <div *ngIf="availabilityGroup.errors?.['disabledDate']" class="invalid-feedback">
@@ -158,37 +164,37 @@
             <div class="col d-grid justify-content-md-end">
               <button class="btn btn-outline-primary" type="submit">Hinzufügen</button>
             </div>
-
-            <!-- Feedback -->
-            <div id="availabilityFeedback" class="invalid-feedback">
-              <div *ngIf="availabilityGroup.errors?.['required']">
-                Bitte ein Datum auswählen.
-              </div>
-              <div *ngIf="availabilityGroup.errors?.['overlapping']">
-                Dieser Zeitraum überschneidet sich mit einem bereits vorhandenen.
-              </div>
-            </div>
             <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
             <pre class="col-12">To date: {{toDate | json}}</pre> -->
           </form>
 
+          <!-- Feedback -->
+          <div id="availabilityFeedback" class="invalid-feedback is-invalid">
+            <div *ngIf="availabilityGroup.errors?.['required']">
+              Bitte ein Datum auswählen.
+            </div>
+            <div *ngIf="availabilityGroup.errors?.['overlapping']">
+              Dieser Zeitraum überschneidet sich mit einem bereits vorhandenen.
+            </div>
+          </div>
+
           <div class="col-12 table-responsive" [class.dp-hidden]="availabilities.length == 0">
-            <table class="table table-striped">
+            <table class="table table-dark">
               <thead>
               <tr>
                 <th>Von</th>
                 <th>Bis</th>
                 <th>Wochentage</th>
-                <th>Aktion</th>
+                <th class="text-end">Aktion</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let availability of availabilities">
+              <tr *ngFor="let availability of availabilities; let i=index">
                 <td>{{availability.availability.startDate | date: 'dd.MM.yyyy'}}</td>
                 <td>{{availability.availability.endDate | date: 'dd.MM.yyyy'}}</td>
                 <td>{{getSelectedWeekdays()}}</td>
-                <td>
-                  <button class="btn btn-outline-danger" type="button">
+                <td class="text-end">
+                  <button class="btn btn-outline-danger" (click)="removeAvailability(i)" type="button">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -198,6 +204,50 @@
           </div>
         </div>
 
+        <!-- Hindrance selection -->
+        <div class="col row align-items-center">
+          <label class="form-label col-12" for="hindranceInput">Verhinderte Tage</label>
+          <div class="col-4">
+            <form class="input-group col-4">
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp-hindrance" [(ngModel)]="hindrance"
+                     ngbDatepicker
+                     #d="ngbDatepicker" (click)="d.toggle()" [markDisabled]="isDisabledHindrance" id="hindranceInput">
+              <button class="btn btn-secondary" (click)="d.toggle()" type="button">
+                <i class="bi bi-calendar-range"></i>
+              </button>
+            </form>
+          </div>
+          <div class="col">
+            <ngb-timepicker class="col" [formControl]="fromTimeControl"
+                            [class.is-invalid]="fromTimeControl.invalid"></ngb-timepicker>
+            <div class="invalid-feedback">Außerhalb der verfügbaren Zeit</div>
+          </div>
+          <div class="col d-grid justify-content-end">
+            <button type="button" class="btn btn-outline-primary" (click)="addHindrance()">Hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- Hindrances -->
+        <div class="col-12 table-responsive" [class.dp-hidden]="hindrances.length == 0">
+          <table class="table table-dark">
+            <thead>
+            <tr>
+              <th>Verhindert</th>
+              <th class="text-end">Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let hindrance of hindrances; let i=index">
+              <td>{{hindrance | date: 'dd.MM.yyyy'}}</td>
+              <td class="text-end">
+                <button class="btn btn-outline-danger" (click)="removeHinrance(i)" type="button">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- Bild hinzufügen -->
         <label for="appointmentInputs" class="form-label">Product Bild</label>

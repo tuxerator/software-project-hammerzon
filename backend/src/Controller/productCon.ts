@@ -81,7 +81,7 @@ class ProductController {
 
     public async addProduct(request: SessionRequest, response: Response): Promise<void> {
         const product = request.body;
-        console.log(product);
+        console.log('POST:\nproduct: %o', product);
 
     // Setze es auf den Angemeldeten User
     product.user = request.session.user._id;
