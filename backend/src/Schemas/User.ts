@@ -41,8 +41,5 @@ const userSchema: Schema = new Schema<IUser>({
   },
 });
 
-// 3. Create a Model.
-const User: Model<IUser> = model<IUser>('User', userSchema);
 
-
-export { IUser, User };
+export { IUser, userSchema };

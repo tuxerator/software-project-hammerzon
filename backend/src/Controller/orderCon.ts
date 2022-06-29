@@ -1,10 +1,11 @@
 import { Request, response, Response } from 'express';
-import { IOrder, Order, Status } from '../Models/Order';
+import { IOrder, Status } from '../Schemas/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
-import { IAppointment, IProduct, Product } from '../Models/Product';
+import { IAppointment, IProduct } from '../Schemas/Product';
 import { Types } from 'mongoose';
-import { IUser } from '../Models/User';
+import { IUser } from '../Schemas/User';
+import { db } from './mongoDB';
 import session from 'express-session';
 
 
@@ -18,7 +19,7 @@ class OrderController {
       response.send('Not authorized');
     }
     else {
-      const list: IOrder[] = await Order.
+      const list: IOrder[] = await db.Order.
         find({}).
         populate('product').
         populate('orderingUser', '-password').
@@ -45,7 +46,7 @@ class OrderController {
 
     const id = request.session.user._id;
     if (id && Types.ObjectId.isValid(id)) {
-      const orders: IOrder[] = await Order.find({
+      const orders: IOrder[] = await db.Order.find({
         orderingUser: id,
       }).populate('product').populate('orderingUser', '-password').populate({
         path: 'product',
@@ -71,9 +72,9 @@ class OrderController {
     if (id && Types.ObjectId.isValid(id)) {
 
       let orders = [];
-      const products: IProduct[] = await Product.find({ user: id });
+      const products: IProduct[] = await db.Product.find({ user: id });
       for (const p of products) {
-        orders.push(await Order.find({ product: p._id }).populate('product').populate('orderingUser', '-password').exec());
+        orders.push(await db.Order.find({ product: p._id }).populate('product').populate('orderingUser', '-password').exec());
       }
       orders = orders.flat();
       response.status(200);
@@ -87,7 +88,7 @@ class OrderController {
   public async getAppointProductPair(postOrder:PostOrder):Promise<{product:IProduct,appointment:IAppointment}|undefined>
   {
     const postedOrder: PostOrder = postOrder;
-    const updateProduct = await Product.findById(postedOrder.productId);
+    const updateProduct = await db.Product.findById(postedOrder.productId);
     const index = postedOrder.appointmentIndex;
     console.log(updateProduct);
     if (!updateProduct||updateProduct.appointments[index].isReserved === true) {
@@ -103,7 +104,7 @@ class OrderController {
   public async registerOrder(pap:{product:IProduct,appointment:IAppointment},user:IUser): Promise<void> {
 
       console.log(pap);
-      const newOrder = new Order({
+      const newOrder = new db.Order({
         product: new mongoose.Types.ObjectId(pap.product._id),
         orderingUser: new mongoose.Types.ObjectId(user._id),
         timeOfOrder: new Date(),
@@ -131,7 +132,7 @@ class OrderController {
     console.log('deleting Order');
     console.log('order id' + id);
     if (id && Types.ObjectId.isValid(id)) {
-      const order = await Order.findById(id);
+      const order = await db.Order.findById(id);
       if (order.orderingUser.toString() === request.session.user._id || request.session.user.role === 'admin') {
         await order.delete();
       }
@@ -149,8 +150,8 @@ class OrderController {
   public async setStatus(request: SessionRequest, response: Response): Promise<void> {
     const id: string = request.params.id;
     const status: Status = request.body.status as Status;
-    const order: IOrder = await Order.findById(id);
-    const product: IProduct = await Product.findById(order.product);
+    const order: IOrder = await db.Order.findById(id);
+    const product: IProduct = await db.Product.findById(order.product);
     // validating the permissions here because validators don't communicate with the database
     if (product.user.toString() === request.session.user._id || request.session.user.role === 'admin') {
 

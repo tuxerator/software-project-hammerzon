@@ -1,41 +1,53 @@
 import AuthController from '../src/Controller/auth';
 import request from 'supertest';
 import app from '../src/app';
-import { User } from '../src/Models/User';
+import { db } from '../src/Controller/mongoDB';
+import { TestData } from './testdata';
+import bcrypt from 'bcrypt';
 
 describe('authentication', () => {
     let authController : AuthController;
-
-    beforeEach(() => {
+    const testdata = new TestData();
+    const user = testdata.user;
+    beforeAll(async () => {
+     
+    });
+    beforeEach(async () => {
+        await db.User.deleteMany({});
         authController = new AuthController();
         // clear all users from the database before tests are run
-        User.deleteMany({});
+        
     });
 
-    it('should add a new user upon registration', () => {
-        const postedUser = {
-            firstName : 'first',
-            lastName : 'last',
-            email : 'first@test.com',
-            password : 'password',
-            role : 'user',
-            address : {
-                street : 'teststreet',
-                houseNum : '42',
-                postCode : '42424',
-                city : 'testcity',
-                country : 'testcountry'
-            }
-        };
-        const response = request(app)
+    it('should add a new user upon registration', async () => {
+        const response = await request(app)
             .post('/api/auth/register')
-            .send({
-                postedUser
-            })
+            .send(
+                user
+            )
             .expect(201);
+        expect(response.body.code)
+          .withContext('status response code')
+          .toBe(201);
+        expect(response.body.message)
+          .withContext('status response message')
+          .toMatch(/registered/);
+          
+        const dbEntry = await db.UserTest.find({});
+
+        expect(dbEntry)
+          .withContext('created user in database')
+          .toHaveSize(1);
+        expect(bcrypt.compareSync(user.password, dbEntry[0].password as string))
+          .withContext('password properly hashed')
+          .toBe(true);
     });
 
-    afterAll(() => {
-        User.deleteMany();
+
+    afterEach(async () => {
+        await db.User.deleteMany();
+    });
+    afterAll(async () => {
+        
     });
 });

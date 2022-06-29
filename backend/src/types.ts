@@ -1,5 +1,5 @@
 import { Request, Express } from 'express';
-import { Appointment, IAppointment } from './Models/Product';
+import { Appointment, IAppointment } from './Schemas/Product';
 
 interface ListInfo<T> {
   list: T[], // Ergebnis Liste der Abfrage

@@ -1,5 +1,6 @@
-import { IOrder, Order } from './Models/Order';
-import { IUser, User } from './Models/User';
+import { IOrder } from './Schemas/Order';
+import { IUser} from './Schemas/User';
+import { db } from '../src/Controller/mongoDB';
 
 export default class UserTestData{
     public list : any[] = [
@@ -42,14 +43,14 @@ export default class UserTestData{
     }
 
     async insertIfNotExistend(): Promise<void>  {
-      await User.deleteMany({});
-      const vals : IUser[] = await User.find({});
+      await db.User.deleteMany({});
+      const vals : IUser[] = await db.User.find({});
       console.log(vals);
       //if(!vals || vals.length <= 0)
       {
           console.log('Inserting Users');
-          await User.insertMany(this.list);
-          const current: IUser[] = await User.find({}).exec();
+          await db.User.insertMany(this.list);
+          const current: IUser[] = await db.User.find({}).exec();
           console.log(current);
       }/*else{
           console.log('User already exist');

@@ -1,5 +1,6 @@
-import { IOrder, Order } from './Models/Order';
-import { IProduct, Product } from './Models/Product';
+import { IOrder } from './Schemas/Order';
+import { IProduct } from './Schemas/Product';
+import { db } from '../src/Controller/mongoDB';
 
 export default class OrderTestData {
 
@@ -23,15 +24,15 @@ export default class OrderTestData {
 
   constructor() {
     //this.insertIfNotExistend();
-    Order.deleteMany({}).exec();
+    db.Order.deleteMany({}).exec();
   }
 
   async insertIfNotExistend(): Promise<void> {
-    const vals: IOrder[] = await Order.find({});
+    const vals: IOrder[] = await db.Order.find({});
     if (!vals || vals.length <= 0) {
       console.log('Inserting Orders');
-      await Order.insertMany(this.list);
-      const current: IOrder[] = await Order.find({});
+      await db.Order.insertMany(this.list);
+      const current: IOrder[] = await db.Order.find({});
       console.log(current);
     } else {
       console.log('Orders already exist');

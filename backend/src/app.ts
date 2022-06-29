@@ -19,16 +19,13 @@ import session from 'express-session';
 
 import ProductController from './Controller/productCon';
 import OrderController from './Controller/orderCon';
-import { MongoDBController } from './Controller/mongoDB';
 
-import { Order } from './Models/Order';
-
-import { IUser } from './Models/User';
+import { db } from './Controller/mongoDB';
+import { IUser } from './Schemas/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
-import { Category } from './Models/Category';
 import { CategoryController } from './Controller/category';
 import RatingController from './Controller/rating';
 import { PaymentType } from './types';
@@ -103,7 +100,8 @@ const upload = multer({ dest: './uploads/' });
 // important information about this api
 const api = new ApiController();
 // const database = new DatabaseController();
-const mongodb = new MongoDBController();
+//const mongodb = new MongoDBController();
+db.initStandartConnection();
 
 const auth = new AuthController();
 // information about the creator of this api

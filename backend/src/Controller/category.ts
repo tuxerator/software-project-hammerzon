@@ -1,6 +1,5 @@
 import { Request,Response } from 'express';
-import { Image } from '../Models/Image';
-import { Category } from '../Models/Category';
+import { db } from './mongoDB';
 
 export class CategoryController{
 
@@ -12,7 +11,7 @@ export class CategoryController{
     const icon = request.body.icon;
     const custom = request.body.custom;
 
-    const image = Image.findById(image_id);
+    const image = db.Image.findById(image_id);
 
     if(color[0] !== '#')
     {
@@ -30,7 +29,7 @@ export class CategoryController{
 
     const category = {name,image_id,color,icon,custom};
 
-    let db_obj =  new Category(category);
+    let db_obj =  new db.Category(category);
 
     db_obj =  await db_obj.save();
 
@@ -47,7 +46,7 @@ export class CategoryController{
       search = '';
     }
 
-    const categories = await Category.find({name:{$regex:search}});
+    const categories = await db.Category.find({name:{$regex:search}});
 
     response.status(200);
     response.send({categories});

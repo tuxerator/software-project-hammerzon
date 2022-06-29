@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
 import Helper from '../helpers';
-import { IUser, User } from '../Models/User';
+import { IUser } from '../Schemas/User';
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
-
+import { db } from './mongoDB';
 import { Types } from 'mongoose';
 
 class AuthController {
@@ -14,10 +14,9 @@ class AuthController {
 
   async register(request: SessionRequest, response: Response): Promise<void> {
     const newUser: IUser = request.body;
-
     // Testen ob es die Email schon gibt
     newUser.email = newUser.email.toLowerCase();
-    const userMail = await User.findOne({ email: newUser.email }).exec();
+    const userMail = await db.User.findOne({ email: newUser.email }).exec();
     if (userMail) {
       response.status(400);
       response.send({ code: 400, message: 'Email already exists' });
@@ -28,7 +27,7 @@ class AuthController {
     // hash the password for security reasons
     newUser.password = bcrypt.hashSync(newUser.password.toString(), 10);
     // Save into mongoDB
-    const user = new User(newUser);
+    const user = new db.User(newUser);
         // created new User
         await user.save();
 
@@ -40,7 +39,7 @@ class AuthController {
     const loginRequest = request.body;
 
     const email = loginRequest.email;
-    const user: (IUser | undefined) = await User.findOne({ email }).exec();
+    const user: (IUser | undefined) = await db.User.findOne({ email }).exec();
     //console.log(user);
     if (!user) {
       response.status(401);
@@ -75,7 +74,7 @@ class AuthController {
   public async getUserById(request: Request, response: Response): Promise<void> {
     const id = request.params.id;
     if (id && Types.ObjectId.isValid(id)) {
-      const user: IUser = await User.findById(id).exec();
+      const user: IUser = await db.User.findById(id).exec();
       response.status(200);
       response.send(user);
     } else {
@@ -93,7 +92,7 @@ class AuthController {
 
   async update(request: SessionRequest, response: Response): Promise<void> {
 
-    const userDBObj: (IUser | undefined) = await User.findOne({ _id: request.session.user._id }).exec();
+    const userDBObj: (IUser | undefined) = await db.User.findOne({ _id: request.session.user._id }).exec();
 
     if (!userDBObj) {
       response.status(500);

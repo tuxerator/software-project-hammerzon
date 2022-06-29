@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { Schema, Model, model, Document } from 'mongoose';
 import { Appointment, IAppointment } from './Product';
-
 // Model for Orders
 
 interface IOrder extends Document {
@@ -30,6 +29,4 @@ const orderSchema : Schema = new Schema<IOrder>({
     status:         { type: String, enum: Status, default: Status.NNA, requiered: true}
 });
 
-const Order: Model<IOrder> = model<IOrder>('Order', orderSchema);
-
-export {IOrder, Order, Status};
+export {IOrder, Status, orderSchema};

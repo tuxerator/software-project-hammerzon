@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Number, Schema, Model, model, Document } from 'mongoose';
 import { DateOnlyDataType } from 'sequelize/types';
-import { IUser, User } from './User';
+import { IUser, } from './User';
 
 // Model for Products
 interface IProduct extends Document{
@@ -45,7 +45,7 @@ const Rating : Schema = new Schema<IRating>(
   {
     rating: {type: Number , required : true},
     comment : {type : String, required :true},
-    user : {type : mongoose.Schema.Types.ObjectId, ref : User , required : true},
+    user : {type : mongoose.Schema.Types.ObjectId, ref : 'User' , required : true},
     date : {type : Date, required : true}
   });
 
@@ -75,8 +75,5 @@ const productSchema : Schema = new Schema<IProduct>({
 // Index für alle Strings im element
 productSchema.index({'$**': 'text'});
 
-// 3. Create a Model.
-const Product: Model<IProduct> = model<IProduct>('Product', productSchema);
 
-
-export { IProduct, Product, IAppointment, Appointment, IRating };
+export { IProduct, IAppointment, Appointment, IRating , productSchema};

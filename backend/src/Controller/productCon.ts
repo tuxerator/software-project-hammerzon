@@ -1,10 +1,9 @@
 import { query, Request, Response } from 'express';
 import Helper from '../helpers';
-import { IProduct, Product } from '../Models/Product';
+import { IProduct } from '../Schemas/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Types } from 'mongoose';
-import { Order } from '../Models/Order';
-import { Category } from '../Models/Category';
+import { db } from './mongoDB';
 
 class ProductController {
   // Gibt die ProductInfos die zwischen start und start+limit liegen
@@ -12,7 +11,7 @@ class ProductController {
   // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
   //     die Liste [1,2] geben und requestable wäre 1 also {list:[1,2] requestable:1} (vom Type ListInfo<number>)
   public async getList(request: Request, response: Response): Promise<void> {
-    const productCount = await Product.countDocuments().exec();
+    const productCount = await db.Product.countDocuments().exec();
 
 
     // Parse Limit und Start von Query
@@ -31,7 +30,7 @@ class ProductController {
       let categoryId: undefined|Types.ObjectId = undefined;
       if(categoryName)
       {
-         categoryId = (await Category.find({name:categoryName}).exec())[0]?._id;
+         categoryId = (await db.Category.find({name:categoryName}).exec())[0]?._id;
       }
       const query:any = {};
       // wenn es eine passende Category gibt
@@ -65,7 +64,7 @@ class ProductController {
       }
     console.log(query);
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-    let list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
+    let list = await db.Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
     // Wieviele Elemente kommen danach noch
     const requestable =  Math.max(list.length - limit - start,0);
 
@@ -87,7 +86,7 @@ class ProductController {
     const id = request.params.id;
     console.log(id);
     if (id && Types.ObjectId.isValid(id)) {
-      const product: IProduct = await Product.findById(id)
+      const product: IProduct = await db.Product.findById(id)
       .populate('user', '-password -address')
       .populate('category')
       .populate({
@@ -113,7 +112,7 @@ class ProductController {
     const index = parseInt(String(product.appointmentIndex));
     const id = product.productId;
     if (id && Types.ObjectId.isValid(id)) {
-      const updateProduct = await Product.findById(id);
+      const updateProduct = await db.Product.findById(id);
       (await updateProduct).appointments[index].isReserved = false;
       (await updateProduct).save();
       console.log('appointment reset');
@@ -137,10 +136,10 @@ class ProductController {
 
     }
     // Get Product to search from
-    const product = await Product.findById(id);
+    const product = await db.Product.findById(id);
 
     // Find Products some what similar to this product
-    let products = await Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
+    let products = await db.Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
     const productIDs = [product._id,...products.map(p => p._id)];
                     // 1                            0
     const querys = [{_id:{$ne:productIDs}},{_id:{$ne:productIDs},category:{_id:product.category._id}}];
@@ -150,7 +149,7 @@ class ProductController {
     // and after that just find any product
     while(products.length < 3 && (query = querys.pop()))
     {
-      const additionalProducts = await Product.find(query).limit(3 - products.length).populate('user', '-password -address').populate('category').exec();
+      const additionalProducts = await db.Product.find(query).limit(3 - products.length).populate('user', '-password -address').populate('category').exec();
       console.log(products);
       console.log(query);
       products = products.concat(additionalProducts);
@@ -182,7 +181,7 @@ class ProductController {
 
     delete product._id;
 
-    const dbProduct = new Product(product);
+    const dbProduct = new db.Product(product);
 
     await dbProduct.save();
 
@@ -194,7 +193,7 @@ class ProductController {
     {
         const id = request.body.id;
         //
-        const product = await Product.findById(id);
+        const product = await db.Product.findById(id);
 
         if(!product)
         {
@@ -213,7 +212,7 @@ class ProductController {
             response.send({code:403,message:'Not Authorized'});
             return;
         }
-        await Order.deleteMany({product: product._id});
+        await db.Order.deleteMany({product: product._id});
         await product.delete();
         response.status(200);
         response.send({code:200,message:'Product deleted'});

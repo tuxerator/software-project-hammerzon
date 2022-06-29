@@ -1,12 +1,11 @@
-import { IProduct, IRating, Product } from '../Models/Product';
+import { IProduct, IRating } from '../Schemas/Product';
 import { SessionRequest } from '../types';
 import { Types } from 'mongoose';
 import { Response } from 'express';
-import { IUser } from '../Models/User';
-import { IOrder } from '../Models/Order';
-import { Order } from '../Models/Order';
+import { IOrder } from '../Schemas/Order';
+import { db } from './mongoDB';
 import mongoose from 'mongoose';
-import { Session } from 'express-session';
+
 
 class RatingController {
   /**
@@ -31,7 +30,7 @@ class RatingController {
       {
         const newRating = request.body.rating.rating;
         if (id && Types.ObjectId.isValid(id)) {
-          const product : IProduct = await (await Product.findById(id)).populate('ratings.user', '-password');
+          const product : IProduct = await (await db.Product.findById(id)).populate('ratings.user', '-password');
           // update the average rating
           const numberOfRatings = product.numberOfRatings;
           const rating = product.averageRating;
@@ -75,7 +74,7 @@ class RatingController {
   private async hasOrdered(user : mongoose.Types.ObjectId, productID : string) : Promise<boolean> {
     const id = user;
     console.log(productID);
-    const orders : IOrder[] = await Order.find({oderingUser : id});
+    const orders : IOrder[] = await db.Order.find({oderingUser : id});
     for(const order of  orders) {
       console.log(order.product);
       if(order.product.toString() === productID) {
@@ -98,7 +97,7 @@ class RatingController {
     const productID = request.params.id;
     if(id && Types.ObjectId.isValid(id))
     {
-      const orders : IOrder[] = await Order.find({oderingUser : id});
+      const orders : IOrder[] = await db.Order.find({oderingUser : id});
       for(const order of  orders) {
         if(order.product.toString() === productID) {
           response.status(200);
@@ -121,7 +120,7 @@ class RatingController {
     const productId = request.params.id;
     if(id && Types.ObjectId.isValid(id))
     {
-      const product : IProduct = await Product.findById(productId);
+      const product : IProduct = await db.Product.findById(productId);
       for(const rating of product.ratings) {
         if(rating.user.toString() === id){
           response.status(200);

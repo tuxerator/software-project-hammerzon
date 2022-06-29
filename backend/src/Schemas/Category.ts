@@ -1,6 +1,7 @@
 
 import { Number, Schema, Model, model, Document, Types } from 'mongoose';
 
+
 export interface ICategory extends Document {
   // Name of category
   name:string,
@@ -23,5 +24,5 @@ const categorySchema: Schema = new Schema<ICategory>({
   custom:{type:Boolean, required:true}
 });
 
-// 3. Create a Model.
-export const Category: Model<ICategory> = model<ICategory>('Category', categorySchema);
+
+export { categorySchema };

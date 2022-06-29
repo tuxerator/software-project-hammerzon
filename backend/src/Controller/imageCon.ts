@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { Iimage, Image } from '../Models/Image';
+import { Iimage } from '../Schemas/Image';
 import { FileRequest } from '../types';
+import { db } from './mongoDB';
 
 
 export class ImageController {
@@ -25,7 +26,7 @@ export class ImageController {
     if(image_id)
     {
       // find Image in Db
-      dbImage =await Image.findById(image_id).exec();
+      dbImage = await db.Image.findById(image_id).exec();
     }
     // if image already exist in the db
     if(dbImage && dbImage.is_replaceable)
@@ -40,7 +41,7 @@ export class ImageController {
         type: 'image/png',
         is_replaceable
       };
-      dbImage = new Image(img);
+      dbImage = new db.Image(img);
     }
     // save changes / new Object in db
     await dbImage.save();
@@ -63,7 +64,7 @@ export class ImageController {
         return;
       }
       // get Image data from db
-      const dbImage = await Image.findById(id).exec();
+      const dbImage = await db.Image.findById(id).exec();
       // if it doesn't exist
       if (!dbImage) {
         // send error

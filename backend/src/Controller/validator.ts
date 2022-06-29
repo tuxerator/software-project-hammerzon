@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { SessionRequest } from '../types';
 import {Types} from 'mongoose';
-import { IProduct, Product } from '../Models/Product';
+
 export type Validator = (request:Request,response:Response)=>boolean
 export type SubRequest = {body:any};
 export type SubValidator = (request:SubRequest,response:Response)=>boolean;

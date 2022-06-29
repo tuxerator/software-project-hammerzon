@@ -10,24 +10,52 @@
  * {@link https://mongoosejs.com/docs/index.html mongoose}
  */
 import mongoose from 'mongoose';
+import { Model } from 'mongoose';
 import ProductTestData from '../productTestData';
 import OrderTestData from '../orderTestData';
 import UserTestData from '../userTestData';
+import { userSchema ,IUser } from '../Schemas/User';
+import { productSchema, IProduct} from '../Schemas/Product';
+import { orderSchema, IOrder } from '../Schemas/Order';
+import { imageSchema, Iimage } from '../Schemas/Image';
+import { categorySchema, ICategory } from '../Schemas/Category';
 
 
-export class MongoDBController {
+class MongoDBController {
+  standartConnection : mongoose.Connection;
+  testConnection : mongoose.Connection;
+  User : Model<IUser>;
+  Product : Model<IProduct>;
+  Order : Model<IOrder>;
+  Image : Model<Iimage>;
+  Category : Model<ICategory>;
+
+  UserTest : Model<IUser>;
 
   constructor() {
-    this.initConnection().catch(err => console.log(err));
+    //this.initStandartConnection().catch(err => console.log(err));
   }
 
-  async initConnection(): Promise<void> {
-    await mongoose.connect('mongodb://localhost:27017/swp'); // Connect to MongoDB
-    console.log(`Database is ${ (mongoose.connection.readyState === 1) ? 'ready' : 'errored' }`); // Prints 1 if connected successfully
-    new ProductTestData();
-    // ew OrderTestData();
-    new UserTestData();
-    //new OrderTestData();
-    //new UserTestData();
+  initStandartConnection(): void {
+
+    this.standartConnection = mongoose.createConnection('mongodb://localhost:27017/swp'); // Connect to MongoDB
+    console.log(this.standartConnection.readyState);
+    this.standartConnection.once('open', () => {
+      console.log(`Database is ${ (this.standartConnection.readyState === 1) ? 'ready' : 'errored' }`); // Prints 1 if connected successfully
+      this.User = this.standartConnection.model('User', userSchema);
+      this.Product = this.standartConnection.model('Product', productSchema);
+      this.Order = this.standartConnection.model('Order', orderSchema);
+      this.Image = this.standartConnection.model('Image', imageSchema);
+      this.Category = this.standartConnection.model('Category', categorySchema);
+      this.UserTest = this.standartConnection.model('UserTest', userSchema);
+      new ProductTestData();
+      //new OrderTestData();
+      //new UserTestData();
+      new UserTestData();    
+    });
+
   }
 }
+
+const db = new MongoDBController();
+export {db};

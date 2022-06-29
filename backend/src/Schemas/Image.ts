@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { Schema, Model, model, Document } from 'mongoose';
 
-
 // Model for Orders
 
 interface Iimage extends Document {
@@ -18,7 +17,7 @@ const imageSchema: Schema = new Schema<Iimage>({
   is_replaceable: {type:Boolean,default:true}
 });
 
-const Image: Model<Iimage> = model<Iimage>('Image', imageSchema);
+//const Image: Model<Iimage> = model<Iimage>('Image', imageSchema);
 
-export { Image, Iimage };
+export { Iimage , imageSchema};
 
