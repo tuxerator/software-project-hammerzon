@@ -3,6 +3,7 @@ import { Iimage, Image } from './Models/Image';
 import fs from 'fs';
 import path from 'path';
 import { Category } from './Models/Category';
+import Helper from './helpers';
 
 export default class ProductTestData {
 
@@ -23,6 +24,7 @@ export default class ProductTestData {
       user: '6284efd5b72a93135fb79c88',
       prize: 45,
       description: 'Fliesenlegen leicht gemacht!! Wir legen ihre fliesen in nur wenigen Stunden',
+      ngrams : Helper.ngram2('Fliesenlegen', 3).join(' '),
       duration: new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
       appointments: [
         { date: new Date(2022, 8, 14, 13), isReserved: false},
@@ -47,6 +49,7 @@ export default class ProductTestData {
                    ' Stauden und Sträuchern bei Privatkunden.'+
                    ' Auch der Bau von Zäunen und Pergolen gehört zeitweise zu meinen Aufgaben.'+
                    ' Wegen Personalabbaus aufgrund der augenblicklichen wirtschaftlichen Lage sehe ich mich zurzeit nach beruflichen Alternativen um.',
+      ngrams : Helper.ngram2('Gartenarbeit', 3).join(' '),
       duration: new Date('1970-01-01T02:30:00.000Z'), // 1 Sekunde
       appointments: [
         { date: new Date(2022, 8, 14, 13), isReserved: false },
@@ -66,6 +69,7 @@ export default class ProductTestData {
         user:'6284efd5b72a93135fb79c87',
         prize:10,
         description:'„Tischler“ bzw. „Schreiner“ bezeichnet in Deutschland einen Ausbildungsberuf bzw. das „Handwerk“, welches sich auf die schneidende, fügende oder veredelnde Verarbeitung von Holz und Holzwerkstoffen spezialisiert hat. Damit ist der Bau von Möbeln bis hin zu Bauelementen im Sinn der Holztechnik gemeint. Eine Tischler- oder Schreinerei ist die entsprechende Werkstatt.',
+        ngrams : Helper.ngram2('Tischlerarbeit', 3).join(' '),
         duration:new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
         appointments:[
           { date: new Date(2022, 8, 14, 13), isReserved: false },
@@ -84,6 +88,7 @@ export default class ProductTestData {
         user:'6284efd5b72a93135fb79c87',
         prize:10,
         description:'Unter dem Begriff Rohbau ist ein Bauwerk zu verstehen, dessen Fundament inklusive Fundamentplatte, Außenmauern und Dachkonstruktion bereits fertiggestellt ist. Fenster wurden hier allerdings noch nicht eingebaut, auch die Fassadenverkleidung fehlt, genauso der Innenausbau. Wurde der Dachstuhl aufgesetzt, findet meist ein kleines Richtfest statt, an dem neben dem Bauherrn und dessen Familie alle am Hausbau Beteiligten teilnehmen. Das Richtfest ist der Abschluss der Rohbauarbeiten. Ein Prüfstatiker nimmt nach der Fertigstellung die Rohbauarbeiten als fehlerfrei ab. Erst danach kann mit dem Innenausbau begonnen werden.',
+        ngrams : Helper.ngram2('Rohbauarbeiten', 3).join(' '),
         duration:new Date('1970-01-01T12:30:00.000Z'), // 1 Sekunde
         appointments:[
           { date: new Date(2022, 8, 14, 13), isReserved: false },
@@ -98,10 +103,11 @@ export default class ProductTestData {
         ratings : []
     },
     {
-        name:'Innnenarchitketur',
+        name:'Innenarchitketur',
         user:'6284efd5b72a93135fb79c87',
         prize:10,
         description:'Wir machen ihren drinnen zu einer wohlfühl Oase das sie ihr Heim nennen können',
+        ngrams : Helper.ngram2('Innenarchitektur', 3).join(' '),
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(2022, 8, 19, 13),isReserved:true}],
         numberOfRatings : 0,
@@ -113,6 +119,7 @@ export default class ProductTestData {
         user:'6284efd5b72a93135fb79c87',
         prize:10,
         description:'Eine Terrasse von der ihr Nachbar nur Träumen kann.',
+        ngrams : Helper.ngram2('Terassenbau', 3).join(' '),
         duration:new Date('1970-01-01T05:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
@@ -125,6 +132,7 @@ export default class ProductTestData {
         user:'6284efd5b72a93135fb79c87',
         prize:10,
         description:'Der Umzug passiert hier ohne Problem und ohne Stress.',
+        ngrams : Helper.ngram2('Umziehen', 3).join(' '),
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
@@ -136,6 +144,7 @@ export default class ProductTestData {
       user: '6284efd5b72a93135fb79c88',
       prize: 45,
       description: 'Fliesenlegen leicht gemacht!! Wir legen ihre fliesen in nur wenigen Stunden',
+      ngrams : Helper.ngram2('Fliesenlegen mit Alten entfernen', 3).join(' '),
       duration: new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
       appointments: [
         { date: new Date(2022, 8, 14, 13), isReserved: false},

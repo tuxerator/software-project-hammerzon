@@ -76,7 +76,7 @@ const productSchema : Schema = new Schema<IProduct>({
   ratings:          { type: [Rating] , required : true, default : []},
 });
 // Index für alle Strings im element
-productSchema.index({'name': 'text','decription':'text'});
+productSchema.index({'ngrams': 'text'});
 
 // 3. Create a Model.
 const Product: Model<IProduct> = model<IProduct>('Product', productSchema);

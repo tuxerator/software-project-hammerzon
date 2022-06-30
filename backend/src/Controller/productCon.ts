@@ -44,17 +44,13 @@ class ProductController {
       // Wenn es einen Suchebegriff gibt
       if(searchTerm)
       {
-            // Wenn es nur eine Zahl gibt dann ntze es für preis
-        /*let testPrize = parseFloat(searchTerm);
-        if(!testPrize)
-        {
-            testPrize = 0;
-        }*/
+        const searchgrams : string[] = Helper.ngram2(searchTerm, 3);
+        const searchgramString : string = searchgrams.join(' ');
         console.log(searchTerm);
+        console.log(searchgramString);
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
         query.$text = {
-                        $search:searchTerm,
-
+                        $search:searchgramString,
                       };
       }
 
@@ -176,6 +172,7 @@ class ProductController {
     const namegrams :string[] = Helper.ngram2(product.name, 3);
     // ngrams are saved as single string seperated by spaces so textsearch works
     const namegramString : string = namegrams.join(' ');
+    console.log(namegramString);
     product = {... product,
       ngrams : namegramString
     };
