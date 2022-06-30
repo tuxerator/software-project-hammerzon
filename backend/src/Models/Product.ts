@@ -11,6 +11,8 @@ interface IProduct extends Document{
   user:mongoose.Types.ObjectId
   // Genauere Beschreibung des Dienstleistung
   description:string
+  // ngrams für bessere Suche
+  ngrams : string
   // Preis der Dienstleistung
   prize:number
   // Zeit dauer der Dienstleistung
@@ -63,6 +65,7 @@ const productSchema : Schema = new Schema<IProduct>({
   name:            { type: String, required: true },
   user:            { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   description:     { type: String },
+  ngrams:          { type: String , required : true},
   prize:           { type: Number, required: true },
   duration:        { type: Date,   required: true },
   appointments:    { type: [Appointment], required: true },

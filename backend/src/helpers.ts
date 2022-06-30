@@ -36,6 +36,38 @@ class Helper {
     }
     return true;
   }
+
+  public static ngram(word : string, minSize : number) : [string] {
+    const length = word.length;
+    const startSizeRange = minSize;
+    const endSizeRange = Math.max(length, minSize); 
+    let ngramms : [string];
+    for(let i = startSizeRange; i < endSizeRange; i++ )
+    {
+      for(let j = 0; Math.max(0, length - i) +1; j++)
+      {
+        ngramms.push(word.slice(j, j+i));
+      }
+    }
+    return ngramms;
+  }
+
+  public static ngram2(word : string, minSize : number) : string[] {
+    const length = word.length;
+    const startSizeRange = minSize;
+    const endSizeRange = Math.max(length, minSize); 
+    const ngramms : string[] = [];
+    for(let i = startSizeRange; i < endSizeRange; i++ )
+    {
+      for(let j = 0;j < Math.max(0, length - i) +1; j++)
+      {
+        ngramms.push(word.slice(j, j+i));
+      }
+    }
+    return ngramms;
+  }
 }
+
+
 
 export default Helper;

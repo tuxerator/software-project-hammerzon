@@ -165,12 +165,21 @@ class ProductController {
 
 
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
-    const product =   {...request.body,
-        numberOfRatings : 0,
-        averageRating : 1,
-        ratings : []
+    let product =   {...request.body,
+      numberOfRatings : 0,
+      averageRating : 1,
+      ratings : []
     };
     console.log(product);
+
+    // add ngrams
+    const namegrams :string[] = Helper.ngram2(product.name, 3);
+    // ngrams are saved as single string seperated by spaces so textsearch works
+    const namegramString : string = namegrams.join(' ');
+    product = {... product,
+      ngrams : namegramString
+    };
+    
 
     // Setze es auf den Angemeldeten User
     product.user = request.session.user._id;
