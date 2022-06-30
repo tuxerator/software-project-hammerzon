@@ -37,22 +37,15 @@ class Helper {
     return true;
   }
 
-  public static ngram(word : string, minSize : number) : [string] {
-    const length = word.length;
-    const startSizeRange = minSize;
-    const endSizeRange = Math.max(length, minSize); 
-    let ngramms : [string];
-    for(let i = startSizeRange; i < endSizeRange; i++ )
-    {
-      for(let j = 0; Math.max(0, length - i) +1; j++)
-      {
-        ngramms.push(word.slice(j, j+i));
-      }
-    }
-    return ngramms;
-  }
-
-  public static ngram2(word : string, minSize : number) : string[] {
+  /**
+   * generates a list of substrings of the input strings
+   * if the ngram list of the search query and the list of the productname
+   * overlap in any way the product is shown as a result of the seach query
+   * @param word the input string from the searchquery or product name
+   * @param minSize size (n) of the 'n'grams  
+   * @returns 
+   */
+  public static ngram(word : string, minSize : number) : string[] {
     const length = word.length;
     const startSizeRange = minSize;
     const endSizeRange = Math.max(length, minSize); 

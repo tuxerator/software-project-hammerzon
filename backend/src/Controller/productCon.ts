@@ -44,7 +44,7 @@ class ProductController {
       // Wenn es einen Suchebegriff gibt
       if(searchTerm)
       {
-        const searchgrams : string[] = Helper.ngram2(searchTerm, 3);
+        const searchgrams : string[] = Helper.ngram(searchTerm, 3);
         const searchgramString : string = searchgrams.join(' ');
         console.log(searchTerm);
         console.log(searchgramString);
@@ -169,7 +169,7 @@ class ProductController {
     console.log(product);
 
     // add ngrams
-    const namegrams :string[] = Helper.ngram2(product.name, 3);
+    const namegrams :string[] = Helper.ngram(product.name, 3);
     // ngrams are saved as single string seperated by spaces so textsearch works
     const namegramString : string = namegrams.join(' ');
     console.log(namegramString);
