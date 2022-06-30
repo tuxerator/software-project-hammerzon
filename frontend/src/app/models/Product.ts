@@ -84,6 +84,7 @@ export const getCategory = (product:Product): Category|undefined =>
 
 
 export const getAppointmentString = (date?: Date): string => {
+  console.log(date);
   return dateFormater.format(date);
 };
 

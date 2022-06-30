@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { Activity } from '../Models/Activity';
 import { IUser } from '../Models/User';
 
@@ -32,4 +33,13 @@ export class ActivityController{
     // save object to db
     activity.save();
   }
+
+  public async getList(request:Request,response:Response):Promise<void>
+  {
+    const list = await Activity.find({}).exec();
+    console.log(list);
+    response.status(200);
+    response.send(list);
+  }
+
 }

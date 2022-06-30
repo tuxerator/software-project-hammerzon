@@ -27,6 +27,7 @@ import { ProductListComponent } from './components/landingpage/product-list/prod
 import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
+import { ActivityComponent } from './components/admin/activity/activity.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ValidatableInputComponent } from './components/order-product/validatabl
     CategoryBadgeComponent,
     ProductListComponent,
     ProductListItemComponent,
-    ValidatableInputComponent
+    ValidatableInputComponent,
+    ActivityComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
 
 import { Types } from 'mongoose';
+import { ActivityController } from './activity';
 
 class AuthController {
   constructor() {
@@ -19,6 +20,7 @@ class AuthController {
     newUser.email = newUser.email.toLowerCase();
     const userMail = await User.findOne({ email: newUser.email }).exec();
     if (userMail) {
+      ActivityController.addActivity(undefined,`hat versucht sich unter der schon vorhandenen Email ,,${newUser.email}'' zu registieren`);
       response.status(400);
       response.send({ code: 400, message: 'Email already exists' });
       return;
@@ -31,7 +33,7 @@ class AuthController {
     const user = new User(newUser);
         // created new User
         await user.save();
-
+    ActivityController.addActivity(user,'hat sich registriert');
     response.status(201);
     response.send({ code: 201, message: 'User registered' });
     }
@@ -43,6 +45,7 @@ class AuthController {
     const user: (IUser | undefined) = await User.findOne({ email }).exec();
     //console.log(user);
     if (!user) {
+      ActivityController.addActivity(undefined,`hat versucht sich unter ,,${email}'' anzumelden und die Email existiert nicht`);
       response.status(401);
       response.send({ code: 401, message: 'Mail address not found' });
       return;
@@ -51,13 +54,14 @@ class AuthController {
     const password = loginRequest.password;
 
     if (!bcrypt.compareSync(password, user?.password.toString())) {
+      ActivityController.addActivity(undefined,`hat versucht sich unter ,,${email}'' anzumelden und ist am passwort gescheitert`);
       response.status(401); // 401: Unauthorized
       response.send({ code: 401, message: 'Wrong password' });
       return;
     }
     // setzt da Object in eine Session object
     request.session.user = user;
-
+    ActivityController.addActivity(user,'hat sich angemeldet');
     response.status(200);
     response.send({ code: 200, message: 'Login successful', });
   }
@@ -86,23 +90,25 @@ class AuthController {
   }
 
   logout(request: SessionRequest, response: Response): void {
+    ActivityController.addActivity(request.session.user,'hat sich abgemeldet');
     request.session.destroy(err => console.log(err));
+
     response.status(200);
     response.send({ code: 200, message: 'loged out' });
   }
 
   async update(request: SessionRequest, response: Response): Promise<void> {
-
+    // Find Connection to User MOdel so it is possible to save the obj afterwards
     const userDBObj: (IUser | undefined) = await User.findOne({ _id: request.session.user._id }).exec();
 
     if (!userDBObj) {
+      ActivityController.addActivity(undefined,'wollte ein nicht vorhandenes Profile bearbeiten');
       response.status(500);
       response.send({ code: 500, message: 'User doent exist' });
       return;
     }
 
     const userUpdate: IUser = request.body.updatedUser;
-
 
     userDBObj.firstName = userUpdate.firstName;
     userDBObj.lastName = userUpdate.lastName;
@@ -114,31 +120,33 @@ class AuthController {
     userDBObj.markModified('address');
 
     const oldPassword: string = request.body.oldPassword;
+    // if a old password is part of this request
     if (oldPassword) {
+      // check wether oldPassword is correct
       if (!bcrypt.compareSync(oldPassword, userDBObj.password.toString())) {
         response.status(401); // 401: Unauthorized
         response.send({ code: 401, message: 'Wrong password' });
-
+        ActivityController.addActivity(userDBObj,'hat versucht seine persönlichen Informationen zu bearbeiten, jedoch war das Passwort falsch');
         return;
       }
-
+      // check wether new password is to small
       if (userUpdate.password.length < 8) {
         response.status(401); // 401: Unauthorized
         response.send({ code: 401, message: 'Password to short' });
-
+        ActivityController.addActivity(userDBObj,'hat versucht seine persönlichen Informationen zu bearbeiten, jedoch ist das Neue-Passwort zu kurz');
         return;
       }
-
+      // hash new password
       userDBObj.password = bcrypt.hashSync(userUpdate.password.toString(), 10);
-        }
-
-        await userDBObj.save();
-
-        request.session.user = userDBObj;
-
-        response.status(200); // 401: Unauthorized
-        response.send({ code: 401, message: 'Updated Successfull' });
     }
+
+    await userDBObj.save();
+
+    request.session.user = userDBObj;
+    ActivityController.addActivity(userDBObj,'hat seine persönlichen Informationen bearbeitet');
+    response.status(200); // 401: Unauthorized
+    response.send({ code: 401, message: 'Updated Successfull' });
+  }
 }
 
 

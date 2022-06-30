@@ -33,6 +33,11 @@ export class AdminComponent implements OnInit {
       name:'Alle Bestellungen',
       icon:'bi-table',
       selector:'app-all-orders'
+    },
+    {
+      name:'Alle Aktivitäten',
+      icon:'bi-clock-fill',
+      selector:'app-activity'
     }
   ];
   this.currentTab = this.allTabs[0];

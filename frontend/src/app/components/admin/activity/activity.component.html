@@ -1,0 +1,11 @@
+<div class="container">
+  <div *ngFor="let activity of activities">
+    <span class="text-muted">{{getDateString(activity.date)}}</span>
+
+    <span class="text-success fs-6 fw-bold">
+      {{activity.user}}
+    </span>
+    {{activity.activity}}
+
+  </div>
+</div>
