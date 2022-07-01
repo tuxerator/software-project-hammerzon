@@ -21,6 +21,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { NotAvailableComponent } from './components/not-available/not-available.component';
 import { OrderedServicesComponent } from './components/ordered-services/ordered-services.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  AvailabilityPickerComponent
+} from './components/add-product/availability-picker/availability-picker.component';
+import { HindrancePickerComponent } from './components/add-product/hindrance-picker/hindrance-picker.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     OrderFinalizedComponent,
     HeaderComponent,
     NotAvailableComponent,
-    OrderedServicesComponent
+    OrderedServicesComponent,
+    AvailabilityPickerComponent,
+    HindrancePickerComponent
   ],
   imports: [
     BrowserModule,
