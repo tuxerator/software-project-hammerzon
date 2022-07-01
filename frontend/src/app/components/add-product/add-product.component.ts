@@ -6,7 +6,13 @@ import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Availability, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDate,
+  NgbCalendar,
+  NgbDateParserFormatter,
+  NgbDateStruct,
+  NgbTimepickerConfig, NgbTimeStruct
+} from '@ng-bootstrap/ng-bootstrap';
 
 
 class ImageSnippet {
@@ -17,7 +23,8 @@ class ImageSnippet {
 
 @Component({
   templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.css']
+  styleUrls: ['./add-product.component.css'],
+  providers: [ NgbTimepickerConfig]
 })
 export class AddProductComponent implements OnInit {
   public appointmentsCount = 1;
@@ -42,8 +49,8 @@ export class AddProductComponent implements OnInit {
   });
 
   defaultTimeFrame: Availability = {
-    startDate: new Date(),
-    endDate: new Date(0, 0, 0, 18, 0, 0),
+    startDate: new Date(0),
+    endDate: new Date(1970, 0, 1, 18, 0, 0),
   }
 
   hoveredDate: NgbDate | null = null;
@@ -63,14 +70,19 @@ export class AddProductComponent implements OnInit {
   dateControl: FormControl = new FormControl();
   fromTimeControl: FormControl = new FormControl();
   toTimeControl: FormControl = new FormControl();
-  hindrances: Date[] = [];
+  hindrances: Hindrance[] = [];
   hindrance?: NgbDateStruct;
+  wholeDayHindrance: boolean = false;
+  hindranceConfig: NgbTimepickerConfig;
 
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private productService: ProductService, private authService: AuthService, private router: Router, private imageService: ImageService,
-              public calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder) {
+              public calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private fb: FormBuilder, private config: NgbTimepickerConfig) {
     this.fromDate = null;
     this.toDate = null;
+
+    this.hindranceConfig = config;
+    this.hindranceConfig.disabled=this.wholeDayHindrance;
   }
 
   ngOnInit(): void {
@@ -312,7 +324,9 @@ export class AddProductComponent implements OnInit {
         return null;
       }
 
-      const time = new Date(0, 0, 0, value.hour, value.minute);
+      const time = new Date(1970, 0, 1, value.hour, value.minute);
+
+      console.log('Selected Time: %o\nDefaultTimeFrame: %o', time, this.defaultTimeFrame);
 
       if (time.getTime() < this.defaultTimeFrame.startDate.getTime()) {
         return {
@@ -426,7 +440,7 @@ export class AddProductComponent implements OnInit {
       console.log('no hindrance selected');
       return;
     }
-    this.hindrances.push(this.ngbDateToDate(NgbDate.from(this.hindrance)));
+    this.hindrances.push(new Hindrance(this.ngbDateToDate(NgbDate.from(this.hindrance)), this.ngbTimetoDate(this.fromTimeControl.value), this.ngbTimetoDate(this.toTimeControl.value), this.wholeDayHindrance));
     console.log('added hindrance: %o\nhindrances: %o', this.hindrance, this.hindrances);
     this.hindrance = undefined;
   }
@@ -434,6 +448,13 @@ export class AddProductComponent implements OnInit {
   removeHinrance = (index: number): void => {
     this.hindrances.splice(index, 1);
     console.log('removed hindrance: %o\nhindrances: %o', this.hindrances);
+  }
+
+  toggleHindranceTime = (): void => {
+    this.wholeDayHindrance = !this.wholeDayHindrance;
+    this.fromTimeControl.setValue(null);
+    this.toTimeControl.setValue(null);
+    console.log('wholeDayHindrance: %o', this.wholeDayHindrance);
   }
 
   createAvailabilities = (avail: AvailabilityWithWeekdays): Availability[] => {
@@ -454,7 +475,7 @@ export class AddProductComponent implements OnInit {
 
 
 // split Availability at the given dates
-  splitAvailability = (availability: Availability, splitDates: Date[]): Availability[] => {
+  splitAvailability = (availability: Availability, splitDates: Hindrance[]): Availability[] => {
     const availabilities: Availability[] = [];
     const startDate: Date = availability.startDate;
     const endDate: Date = availability.endDate;
@@ -463,16 +484,37 @@ export class AddProductComponent implements OnInit {
     splitDates.sort((a, b) => a.getTime() - b.getTime());
 
     for (const splitDate of splitDates) {
-      if (this.compareDates(splitDate, oldSplitDate) < 0) {
+      if (this.compareDates(splitDate.date, oldSplitDate) < 0) {
         console.log('splitDate %o is before oldSplitDate %o', splitDate, oldSplitDate);
         continue;
       }
-      if (this.compareDates(oldSplitDate, splitDate) <= 0 && this.compareDates(splitDate, endDate) <= 0) {
-        console.log('splitDate %o is between oldSplitDate %o and endDate %o', splitDate, oldSplitDate, endDate);
-        availabilities.push(new Availability(new Date(oldSplitDate), new Date(splitDate.getUTCFullYear(), splitDate.getUTCMonth(),
-          splitDate.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
+      if (splitDate.isWholeDay()) {
+        if (this.compareDates(oldSplitDate, splitDate.date) <= 0 && this.compareDates(splitDate.date, endDate) <= 0) {
+          console.log('splitDate %o is between oldSplitDate %o and endDate %o', splitDate, oldSplitDate, endDate);
+          availabilities.push(new Availability(new Date(oldSplitDate), new Date(splitDate.date.getUTCFullYear(), splitDate.date.getUTCMonth(),
+            splitDate.date.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
+        }
+        oldSplitDate.setUTCFullYear(splitDate.date.getUTCFullYear(), splitDate.date.getUTCMonth(), splitDate.date.getUTCDate() + 1);
       }
-      oldSplitDate.setUTCFullYear(splitDate.getUTCFullYear(), splitDate.getUTCMonth(), splitDate.getUTCDate());
+      else {
+        if (this.compareDates(oldSplitDate, splitDate.date) <= 0 && this.compareDates(splitDate.date, endDate) <= 0) {
+          console.log('splitDate %o is between oldSplitDate %o and endDate %o', splitDate, oldSplitDate, endDate);
+          if (splitDate.fromTime == this.defaultTimeFrame.startDate) {
+            availabilities.push(new Availability(new Date(oldSplitDate), new Date(splitDate.date.getUTCFullYear(), splitDate.date.getUTCMonth(),
+              splitDate.date.getUTCDate() - 1, this.defaultTimeFrame.endDate.getUTCHours(), this.defaultTimeFrame.endDate.getUTCMinutes(), this.defaultTimeFrame.endDate.getUTCSeconds())));
+          }
+          else {
+            availabilities.push(new Availability(new Date(oldSplitDate), new Date(splitDate.date.getUTCFullYear(), splitDate.date.getUTCMonth(),
+              splitDate.date.getUTCDate(), splitDate.fromTime.getUTCHours(), splitDate.fromTime.getUTCMinutes(), splitDate.fromTime.getUTCSeconds())));
+          }
+        }
+        // If the endTime is the same as defaultTimeFrame.endDate, increase oldSplitDate by one day
+        if (splitDate.toTime == this.defaultTimeFrame.endDate) {
+          oldSplitDate.setUTCFullYear(splitDate.date.getUTCFullYear(), splitDate.date.getUTCMonth(), splitDate.date.getUTCDate() + 1);
+        } else {
+          oldSplitDate.setDate(splitDate.date.getTime() + splitDate.toTime.getTime());
+        }
+      }
     }
     availabilities.push(new Availability(new Date(oldSplitDate), endDate));
 
@@ -533,6 +575,10 @@ export class AddProductComponent implements OnInit {
   // Returns all selected weekdays
   getSelectedWeekdays = (): string[] => this.weekdays.filter((weekday: string, index: number): boolean =>
     !this.disabledWeekdays.includes(index + 1));
+
+  ngbTimetoDate = (ngbTime: NgbTimeStruct | null): Date => {
+    return ngbTime ? new Date(Date.UTC(1970, 0, 1, ngbTime.hour, ngbTime.minute, ngbTime.second)) : new Date('Invalid Date');
+  }
 }
 
 export class AvailabilityWithWeekdays {
@@ -548,3 +594,34 @@ export class AvailabilityWithWeekdays {
     return this.availability;
   }
 }
+
+export class Hindrance {
+  date: Date;
+  fromTime: Date;
+  toTime: Date;
+  wholeDay: boolean;
+
+  constructor(date: Date, fromTime: Date, toTime: Date, wholeDay: boolean) {
+    this.date = date;
+    this.fromTime = fromTime;
+    this.toTime = toTime;
+    this.wholeDay = wholeDay;
+  }
+
+  public getTime(): number {
+    return this.date.getTime();
+  }
+
+  public getFromTime(): number {
+    return this.fromTime.getTime();
+  }
+
+  public getToTime(): number {
+    return this.toTime.getTime();
+  }
+
+  public isWholeDay(): boolean {
+    return this.wholeDay;
+  }
+}
+
