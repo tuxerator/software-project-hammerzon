@@ -124,18 +124,32 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
     <div *ngIf="loading.similar" class="d-flex align-items-center">
       <div aria-hidden="true" class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Einen Moment, bitte</span>
+        <span class="placeholder-glow col-6"></span>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="loading.product" class="bg-dark opacity-75 position-fixed top-0 start-0  vh-100 vw-100" style="z-index: 2000;">
-  <div class="opacity-100 position-fixed top-50 start-50 text-center">
-    <div class="spinner-border text-white" style="width: 3rem; height: 3rem; z-index: 2000;" role="status">
-      <span class="visually-hidden ">Loading...</span>
-    </div>
+<div *ngIf="loading.product" aria-hidden="true" >
+  <div class="row justify-content-between">
+    <span class="placeholder-glow col-10"></span> <!--Produktname-->
+    <span class="placeholder-glow col-2"></span>  <!--Durchschnittsbewertung-->
+    <span class="placeholder-glow col-7"></span>  <!--Kategorie-->
+    <span class="placeholder-glow col-7"></span>  <!--Handwerker-->
   </div>
+  <div class="row justify-content-between">
+    <span class="placeholder-glow col-4"></span> <!--Dauer-->
+    <span class="placeholder-glow col-4"></span> <!--Preis-->
+    <span class="placeholder-glow col-4"></span> <!--Total Preis-->
+  </div>
+  <hr>
+    <div class="fw-bold fs-5 mb-2">Beschreibung</div>
+    <span class="placeholder-glow col-12"></span>
+  <hr>
+  <div class="fw-bold fs-5 mb-2">Termine</div>
+  <span class="placeholder-glow col-10"></span>
+  <div class="fw-bold fs-5 mb-2">Bewertung(en)</div>
+  <span class="placeholder-glow col-10"></span> 
 </div>
 
 
