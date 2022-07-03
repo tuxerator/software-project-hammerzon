@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {Types} from 'mongoose';
+import { SocketServer } from './socketServer';
 import Helper from '../helpers';
 import { Activity, IHighlight } from '../Models/Activity';
 import { IUser, User } from '../Models/User';
@@ -50,7 +51,8 @@ export class ActivityController{
     const activity = new Activity({user:user?._id,desc,date:new Date(),highlights});
     console.log(activity);
     // save object to db
-    activity.save();
+    await activity.save();
+    SocketServer.socket.onAddedActivity(activity);
   }
 
   public async getList(request:Request,response:Response):Promise<void>

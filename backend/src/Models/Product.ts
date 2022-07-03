@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { Number, Schema, Model, model, Document } from 'mongoose';
-import { DateOnlyDataType } from 'sequelize/types';
 import { IUser, User } from './User';
 
 // Model for Products
@@ -38,7 +37,7 @@ interface IRating extends Document {
   rating : number,
   comment : string,
   user : mongoose.Types.ObjectId
-  date:DateOnlyDataType
+  date:Date
 }
 
 const Rating : Schema = new Schema<IRating>(

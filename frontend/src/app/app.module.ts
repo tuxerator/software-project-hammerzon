@@ -28,6 +28,11 @@ import { ProductListItemComponent } from './components/landingpage/product-list-
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
 import { ActivityComponent } from './components/admin/activity/activity.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+
+const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
+
 
 @NgModule({
   declarations: [
@@ -62,7 +67,8 @@ import { ActivityComponent } from './components/admin/activity/activity.componen
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     HttpClientModule

@@ -27,6 +27,13 @@ export class ActivityComponent implements OnInit {
         console.log(err.error);
       }
     });
+
+    this.activityService.getLastAddedActivity().subscribe((activity) => {
+      console.log('Added Activity',activity);
+      activity.date = new Date(activity.date);
+      this.activities?.push(activity);
+      console.log('Added Activity',this.activities);
+    });
   }
 
   getDateString(date:Date):string

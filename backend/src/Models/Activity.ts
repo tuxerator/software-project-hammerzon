@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import {Model,model,Schema,Document,Types} from 'mongoose';
 import { User } from './User';
 // Create a Interface
-interface IActivity extends Document{
+export interface IActivity extends Document{
   user:Types.ObjectId;
   desc:string;
 

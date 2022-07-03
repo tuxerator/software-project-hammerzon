@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Socket } from 'ngx-socket-io';
+import { Observable, Subject } from 'rxjs';
 import { Activity } from '../models/Activity';
 
 @Injectable({
@@ -8,7 +9,18 @@ import { Activity } from '../models/Activity';
 })
 export class ActivityService {
 
-  constructor(private http:HttpClient) { }
+  public lastAddedActivityAdvanced = new Subject<Activity>();
+
+  constructor(private http:HttpClient, private socket:Socket) {
+    this.socket.on('addedActivity',(data: Activity) => {
+      this.lastAddedActivityAdvanced.next(data);
+    });
+  }
+
+  getLastAddedActivity():Observable<Activity>
+  {
+    return this.lastAddedActivityAdvanced;
+  }
 
   // Return every Activity form Server
   getActivityList():Observable<Activity[]>{
@@ -25,4 +37,6 @@ export class ActivityService {
 
     return observable;
   }
+
+
 }
