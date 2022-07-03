@@ -1,0 +1,6 @@
+<div *ngIf="category" type="button" [class]="isVer() ? ['text-center']:['me-2']">
+  <i [class]="getIconClass()" ></i>
+  <br *ngIf="isVer()">
+  {{category.name}}
+</div>
+

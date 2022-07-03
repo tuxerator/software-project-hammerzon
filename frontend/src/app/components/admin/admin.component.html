@@ -1,0 +1,42 @@
+<div class="row" style="min-height: 65vh;">
+  <div class="col-lg-2 border-end border-secondary" style="min-height: 100%">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+      <h5 class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none p-3">
+        <i class="bi bi-speedometer me-2"></i>
+        Dashboard
+      </h5>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li *ngFor="let tab of allTabs">
+          <a class="nav-link" [ngClass]="getTabClasses(tab)" (click)="changeTab(tab)">
+            <i class="bi {{tab.icon}}"></i>
+             {{tab.name}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+
+
+  <div class="col-lg-10 p-4" style="max-height:100%; overflow-y: scroll;">
+    <ng-container [ngSwitch]="currentTab?.selector">
+      <ng-container *ngSwitchCase="'app-category'">
+        <app-category></app-category>
+      </ng-container>
+      <ng-container *ngSwitchCase="'app-all-orders'">
+        <app-all-orders></app-all-orders>
+      </ng-container>
+      <ng-container *ngSwitchCase="'app-activity'">
+        <app-activity></app-activity>
+      </ng-container>
+  </ng-container>
+  </div>
+
+
+
+
+</div>
+
+
