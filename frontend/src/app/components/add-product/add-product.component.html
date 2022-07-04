@@ -3,7 +3,7 @@
     <article class="card-body row gy-3">
       <h4
         class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
-      <form [formGroup]="addProductForm" class="needs-validation col" novalidate>
+      <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()" class="needs-validation col" novalidate>
 
         <!--Produktname-->
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
@@ -70,11 +70,19 @@
 
         <!-- Availability -->
         <app-availability-picker (newAvailability)="addAvailability($event)"
-                                 [form]="availabilityGroup"></app-availability-picker>
+                                 [form]="availabilityGroup"
+                                 [(defaultTimeFrame)]="defaultTimeFrame"
+        ></app-availability-picker>
+
+        <hr>
 
         <!-- Hindrance -->
         <app-hindrance-picker (newHindrance)="addHindrance($event)" [form]="hindranceGroup"
-                              [markDisabled]="isOutsideAvailability()"></app-hindrance-picker>
+                              [markDisabled]="isOutsideAvailability()"
+                              [timeValidators]="[isInDefaultTimeFrame()]"
+                              [setFromTime]="defaultTimeFrame.startDate"
+                              [setToTime]="defaultTimeFrame.endDate"
+        ></app-hindrance-picker>
 
         <!-- Bild hinzufügen -->
         <label for="appointmentInputs" class="form-label">Product Bild</label>

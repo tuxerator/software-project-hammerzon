@@ -19,10 +19,11 @@ import {
   NgbCalendar,
   NgbDateParserFormatter,
   NgbDateStruct,
-  NgbTimepickerConfig, NgbTimeStruct, NgbDateNativeUTCAdapter, NgbDateAdapter
+  NgbTimepickerConfig, NgbTimeStruct, NgbDateNativeUTCAdapter, NgbDateAdapter, NgbTimeAdapter
 } from '@ng-bootstrap/ng-bootstrap';
 import { Hindrance } from './hindrance-picker/hindrance-picker.component';
-import { ngbDateToDate } from '../../../util/util';
+import { ngbDateToDate, utcOffset } from '../../../util/util';
+import { NgbTimeDateAdapter } from '../../../util/nbgAdapter';
 
 
 class ImageSnippet {
@@ -34,6 +35,7 @@ class ImageSnippet {
 @Component({
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
+  providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeDateAdapter }]
 })
 export class AddProductComponent implements OnInit {
   public appointmentsCount = 1;
@@ -58,8 +60,8 @@ export class AddProductComponent implements OnInit {
   });
 
   defaultTimeFrame: Availability = {
-    startDate: new Date(0),
-    endDate: new Date(1970, 0, 1, 18, 0, 0),
+    startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
+    endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
   }
 
 
@@ -99,9 +101,6 @@ export class AddProductComponent implements OnInit {
     this.addProductForm.addControl('availability', this.availabilityGroup);
     this.addProductForm.addControl('hindrance', this.hindranceGroup);
   }
-
-
-  time = { hour: 8, minute: 0 };
 
   //
   public editProduct(aProduct: Product) {
@@ -175,7 +174,7 @@ export class AddProductComponent implements OnInit {
 
   }
 
-  /*public onSubmit(): void {
+  public onSubmit(): void {
     // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus
     if (this.uploading) return;
 
@@ -211,8 +210,8 @@ export class AddProductComponent implements OnInit {
 
     // Neues Product erstellen
     const newProduct: Product = new Product(form.productName, form.description, prize, duration, {
-      start: new Date(Date.UTC(0, 0, 0, 0, 0, 0)),
-      end: new Date(Date.UTC(0, 0, 0, 23, 59, 59))
+      start: new Date(Date.UTC(1970, 0, 1, 0, 0, 0)),
+      end: new Date(Date.UTC(1970, 0, 1, 23, 59, 59))
     }, availabilities, this.imageId);
     //Product hinzufügen anfrage an das backend schicken
     this.uploading = true;
@@ -246,7 +245,7 @@ export class AddProductComponent implements OnInit {
       console.log('Uploaded Product: %o', newProduct);
     }
 
-  }*/
+  }
 
   // Availability picker ------------------------------------------------------
 
@@ -267,25 +266,18 @@ export class AddProductComponent implements OnInit {
       if (this.availabilities.length === 0) {
         return true;
       }
-      return this.availabilities.some(availability => {
-        const result = dateNative != null ? availability.startDate <= dateNative && availability.endDate >= dateNative : true;
-        console.log(`isOutsideAvailability: ${ result }`);
+      return !this.availabilities.some(availability => {
+        const result = dateNative != null ? (availability.startDate <= dateNative && availability.endDate >= dateNative) : false;
         return result;
       });
     }
   }
 
-  createAvailabilities = (avail: Availability): Availability[] => {
+  createAvailabilities = (availability: Availability): Availability[] => {
     let availabilities: Availability[] = [];
-    const availability = avail.toAvailability();
 
-    // check if there are hindrances between the dates
-    const hindrances = this.hindrances.filter(hindrance => {
-      return hindrance.getTime() >= availability.startDate.getTime() && hindrance.getTime() <= availability.endDate.getTime();
-    });
-    console.log('hindrances: %o', hindrances);
-
-    availabilities = this.splitAvailability(availability, hindrances);
+    // Split availability into multiple availabilities such that the hindrances are excluded
+    availabilities = this.splitAvailability(availability, this.hindrances);
     console.log('availabilities: %o', availabilities);
 
     return availabilities;
@@ -293,24 +285,54 @@ export class AddProductComponent implements OnInit {
 
 
   // split Availability at the given dates
-  splitAvailability = (availability: Availability, splitDates: Hindrance[]): Availability[] => {
+  splitAvailability = (availability: Availability, hindrances: Hindrance[]): Availability[] => {
     const availabilities: Availability[] = [];
     const startDate: Date = availability.startDate;
     const endDate: Date = availability.endDate;
-    let currentDate: Date = startDate;
+    let currentDate: Date = new Date(startDate.getTime() + this.defaultTimeFrame.startDate.getTime());
+    // check if there are hindrances between the dates
+    const splitDates: Hindrance[] = hindrances.filter(hindrance => availability.startDate <= hindrance.date && hindrance.date <= availability.endDate);
+    const dayInMills: number = 24 * 60 * 60 * 1000;
+
+    console.log('splitDates: %o', splitDates)
 
     if (splitDates.length === 0) {
       availabilities.push(availability);
       return availabilities;
     }
 
-    let nextSplitDate: number = splitDates[0].date.getTime();
-
     splitDates.sort(Hindrance.compare);
 
-    // Initialize d with the time to the first hindrance
-    let d: Date = new Date();
 
+    for (const splitDate of splitDates) {
+      let nextSplitDate: number = splitDate.fromTime ? splitDate.date.getTime() + splitDate.fromTime?.getTime() : splitDate.date.getTime() + this.defaultTimeFrame.startDate.getTime();
+
+      if (splitDate.wholeDay) {
+        availabilities.push(new Availability(currentDate, new Date(nextSplitDate - dayInMills + this.defaultTimeFrame.endDate.getTime())));
+        currentDate = new Date(nextSplitDate + dayInMills);
+        continue;
+      }
+
+      if (splitDate.fromTime == this.defaultTimeFrame.startDate) {
+        availabilities.push(new Availability(currentDate, new Date(nextSplitDate - dayInMills)));
+      } else {
+        availabilities.push(new Availability(currentDate, new Date(nextSplitDate)));
+      }
+
+      if (splitDate.toTime) {
+        if (splitDate.toTime < this.defaultTimeFrame.endDate) {
+          currentDate = new Date(splitDate.date.getTime() + splitDate.toTime.getTime());
+        }
+      } else {
+        currentDate = new Date(nextSplitDate + dayInMills);
+      }
+    }
+
+    // If currentDate isn't >= than endDate add last availability
+    console.log('currentDate: %o\nendDate: %o', currentDate, endDate);
+    if (currentDate.getTime() < endDate.getTime() + this.defaultTimeFrame.endDate.getTime()) {
+      availabilities.push(new Availability(currentDate, endDate));
+    }
     return availabilities;
   }
 
@@ -324,7 +346,7 @@ export class AddProductComponent implements OnInit {
         return null;
       }
 
-      const time = new Date(1970, 0, 1, value.hour, value.minute);
+      const time = value;
 
       console.log('Selected Time: %o\nDefaultTimeFrame: %o', time, this.defaultTimeFrame);
 

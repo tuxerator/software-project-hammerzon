@@ -5,69 +5,11 @@ import {
   NgbTimeStruct,
   NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { AvailabilityPickerComponent } from '../availability-picker/availability-picker.component';
-import { isInteger } from '../../../../util/util';
+import { addTimezoneOffset, isInteger, utcOffset } from '../../../../util/util';
+import { NgbDateNativeAdapter, NgbTimeDateAdapter } from '../../../../util/nbgAdapter';
 
-/**
- *  NgbTimeAdapter implementation that uses native JavaScript dates as user time model
- */
-@Injectable()
-export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
-  /**
-   * Converts from Date to NgbDateStruct
-   */
-  override fromModel(value: Date | null): NgbTimeStruct | null {
-    if (!value) {
-      return null;
-    }
-    return {
-      hour: value.getHours(),
-      minute: value.getMinutes(),
-      second: value.getSeconds()
-    };
-  }
-
-  /**
-   * Converts from NgbTimeStruct to Date
-   */
-  override toModel(time: NgbTimeStruct | null): Date | null {
-    return time != null ? new Date(time.second * 1000 + time.minute * 60 * 1000 + time.hour * 60 * 60 * 1000) : null;
-  }
-}
-
-/**
- * [`NgbDateAdapter`](#/components/datepicker/api#NgbDateAdapter) implementation that uses
- * native javascript dates as a user date model.
- */
-@Injectable()
-export class NgbDateNativeAdapter extends NgbDateAdapter<Date> {
-  /**
-   * Converts a native `Date` to a `NgbDateStruct`.
-   */
-  fromModel(date: Date | null): NgbDateStruct | null {
-    return (date instanceof Date && !isNaN(date.getTime())) ? this._fromNativeDate(date) : null;
-  }
-
-  /**
-   * Converts a `NgbDateStruct` to a native `Date`.
-   */
-  toModel(date: NgbDateStruct | null): Date | null {
-    return date && isInteger(date.year) && isInteger(date.month) && isInteger(date.day) ? this._toNativeDate(date) :
-      null;
-  }
-
-  protected _fromNativeDate(date: Date): NgbDateStruct {
-    return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-  }
-
-  protected _toNativeDate(date: NgbDateStruct): Date {
-    const jsDate = new Date(date.year, date.month - 1, date.day, 12);
-    // avoid 30 -> 1930 conversion
-    jsDate.setFullYear(date.year);
-    return jsDate;
-  }
-}
 
 @Component({
   selector: 'app-hindrance-picker',
@@ -82,6 +24,8 @@ export class HindrancePickerComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() markDisabled!: (date: NgbDate, current?: ({ year: number, month: number } | undefined)) => boolean;
   @Input() timeValidators?: ValidatorFn[];
+  @Input() setFromTime?: Date;
+  @Input() setToTime?: Date;
 
   @Output() newHindrance = new EventEmitter<Hindrance>();
 
@@ -92,7 +36,9 @@ export class HindrancePickerComponent implements OnInit {
   date: Date | null = null;
   fromTime: Date | null = null;
   toTime: Date | null = null;
-  wholeDayHindrance: boolean = false;
+  wholeDayHindrance: boolean = true;
+
+  addTimeZoneOffset = addTimezoneOffset;
 
   constructor(private dateAdapter: NgbDateAdapter<Date>, private fb: FormBuilder) {
   }
@@ -100,6 +46,12 @@ export class HindrancePickerComponent implements OnInit {
   disable = (date: NgbDate) => true;
 
   ngOnInit(): void {
+    this.timeValidators?.push(Validators.required);
+
+    this.fromTime = this.setFromTime ? this.setFromTime : null;
+    this.toTime = this.setToTime ? this.setToTime : null;
+
+    console.log('timeValidators: %o', this.timeValidators);
     this.fromTimeControl = new FormControl('', this.timeValidators);
     this.toTimeControl = new FormControl('', this.timeValidators);
     if (!this.form) {
@@ -136,6 +88,8 @@ export class HindrancePickerComponent implements OnInit {
     this.wholeDayHindrance = !this.wholeDayHindrance;
     this.fromTime = null;
     this.toTime = null;
+    this.fromTimeControl.setErrors(null);
+    this.toTimeControl.setErrors(null);
     console.log('wholeDayHindrance: %o', this.wholeDayHindrance);
   }
 

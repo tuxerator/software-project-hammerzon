@@ -10,6 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Availability } from '../../../models/Product';
+import { utcOffset } from '../../../../util/util';
 
 @Component({
   selector: 'app-availability-picker',
@@ -18,7 +19,12 @@ import { Availability } from '../../../models/Product';
 })
 export class AvailabilityPickerComponent implements OnInit {
   @Input() form!: FormGroup;
+  @Input() defaultTimeFrame: Availability = {
+    startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
+    endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
+  }
 
+  @Output() defaultTimeFrameChange = new EventEmitter<Availability>();
   @Output() newAvailability = new EventEmitter<Availability[]>();
 
   fromDateControl!: FormControl;
@@ -28,6 +34,7 @@ export class AvailabilityPickerComponent implements OnInit {
 
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
+
 
   disabledWeekdays: number[] = [];
 
@@ -199,8 +206,15 @@ export class AvailabilityPickerComponent implements OnInit {
     console.log(`Updated Validity for `, formGroup.controls);
   }
 
+  // Emit defaultTimeFrame
+  emitDefaultTimeFrame = (): void => {
+    this.defaultTimeFrameChange.emit(this.defaultTimeFrame);
+  }
+
   ngbDateToDate = (ngbDate: NgbDate | null): Date => {
-    return ngbDate ? new Date(Date.UTC(ngbDate.year, ngbDate.month - 1, ngbDate.day)) : new Date('Invalid Date');
+    const jsDate = ngbDate ? new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day) : new Date('Invalid Date');
+    ngbDate ? jsDate.setFullYear(ngbDate.year) : null;
+    return jsDate;
   }
 }
 
@@ -225,15 +239,9 @@ export class AvailabilityWithWeekdays {
     this.disabledWeekdays.sort((a, b) => a - b);
     if (this.disabledWeekdays.length > 0) {
       // Initialize d with the amount of days to the next disabled weekday
-      let d = this.disabledWeekdays.find((value) => startDateDay < value % 7);
+      let d = this.disabledWeekdays[0] >= startDateDay ? this.disabledWeekdays[0] - startDateDay : 7 - startDateDay + this.disabledWeekdays[0];
+      let i = 1 % this.disabledWeekdays.length;
       console.log('d: %o', d);
-      if (!d) {
-        d = this.disabledWeekdays[0] + 7;
-        i = 1;
-      } else {
-        i = this.disabledWeekdays.indexOf(d) + 1;
-      }
-      d = d - startDateDay;
       let nextDate = new Date(currentDate.getTime() + d * 24 * 60 * 60 * 1000);
       while (nextDate < this.availability.endDate) {
         console.log('currentDate: %o, nextDate: %o', currentDate, nextDate);
@@ -245,6 +253,7 @@ export class AvailabilityWithWeekdays {
           currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
         }
         d = this.disabledWeekdays[i] % 7 > nextDate.getDay() ? this.disabledWeekdays[i] % 7 - nextDate.getDay() : this.disabledWeekdays[i] % 7 - nextDate.getDay() + 7;
+        console.log('d: %o', d);
         nextDate = new Date(nextDate.getTime() + d * 24 * 60 * 60 * 1000);
         i = (i + 1) % this.disabledWeekdays.length;
       }
