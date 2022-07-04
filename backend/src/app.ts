@@ -8,27 +8,23 @@
  */
 
 import errorHandler from 'errorhandler';
-import express, { application } from 'express';
+import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 // created by us
 import ApiController from './Controller/api';
-import AboutController from './Controller/about';
 import session from 'express-session';
 
 import ProductController from './Controller/productCon';
 import OrderController from './Controller/orderCon';
 import { MongoDBController } from './Controller/mongoDB';
 
-import { Order } from './Models/Order';
-
 import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
 import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
-import { Category } from './Models/Category';
 import { CategoryController } from './Controller/category';
 import RatingController from './Controller/rating';
 import { PaymentType } from './types';
