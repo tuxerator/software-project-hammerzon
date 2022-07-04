@@ -42,7 +42,7 @@ class Helper {
    * if the ngram list of the search query and the list of the productname
    * overlap in any way the product is shown as a result of the seach query
    * @param word the input string from the searchquery or product name
-   * @param minSize size (n) of the 'n'grams  
+   * @param minSize size of the string slices  
    * @returns 
    */
   public static ngram(word : string, minSize : number) : string[] {
