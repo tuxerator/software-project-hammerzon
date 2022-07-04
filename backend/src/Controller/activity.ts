@@ -52,7 +52,18 @@ export class ActivityController{
     console.log(activity);
     // save object to db
     await activity.save();
-    SocketServer.socket.onAddedActivity(activity);
+    // To also Send User Information
+    const userActivity:any = {};
+    userActivity.desc = activity.desc;
+    userActivity.user = user ? {firstName:user?.firstName,lastName:user?.lastName}: undefined;
+    userActivity.highlights = activity.highlights;
+    userActivity.date = activity.date;
+
+    console.log(userActivity);
+
+    console.log(user);
+    // activity.user = user;
+    SocketServer.socket.onAddedActivity(userActivity);
   }
 
   public async getList(request:Request,response:Response):Promise<void>

@@ -69,7 +69,7 @@ class ProductController {
       }
 
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-    let list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
+    let list = await Product.find(query).skip(start).select('-ngrams').populate('user', '-password -address').populate('category').exec();
     // Wieviele Elemente kommen danach noch
     const requestable =  Math.max(list.length - limit - start,0);
 
@@ -92,7 +92,7 @@ class ProductController {
     const id = request.params.id;
     console.log(id);
     if (id && Types.ObjectId.isValid(id)) {
-      const product: IProduct = await Product.findById(id)
+      const product: IProduct = await Product.findById(id).select('-ngrams')
       .populate('user', '-password -address')
       .populate('category')
       .populate({
@@ -104,7 +104,7 @@ class ProductController {
       })
       .exec();
       console.log(request.session.user);
-      ActivityController.addActivity(request.session.user,[' schaut sich die Dienstleistung', green(product.name), 'an']);
+      ActivityController.addActivity(request.session.user,[' schaut sich die Dienstleistung', green(product?.name), 'an']);
       response.status(200);
       response.send(product);
     } else {
