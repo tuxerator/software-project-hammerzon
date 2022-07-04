@@ -25,13 +25,15 @@ import { AdminComponent } from './components/admin/admin.component';
 import { CategoryBadgeComponent } from './components/admin/category/category-badge/category-badge.component';
 import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
 import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
-import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
+
 import { ActivityComponent } from './components/admin/activity/activity.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
+
 
 
 @NgModule({

@@ -55,11 +55,17 @@ class ProductController {
         }*/
         console.log(searchTerm);
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
-        query.$text = {
-                        $search:searchTerm,
 
-                      };
         ActivityController.addActivity(request.session.user,['sucht nach dem Begriff ', green(searchTerm)]);
+
+        const searchgrams : string[] = Helper.ngram(searchTerm, 3);
+        const searchgramString : string = searchgrams.join(' ');
+        console.log(searchTerm);
+        console.log(searchgramString);
+        // dann suche mithilfe diesem in Description und Name nach passenden elementen
+        query.$text = {
+                        $search:searchgramString,
+                      };
       }
 
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
@@ -173,12 +179,22 @@ class ProductController {
 
 
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
-    const product =   {...request.body,
-        numberOfRatings : 0,
-        averageRating : 1,
-        ratings : []
+    let product =   {...request.body,
+      numberOfRatings : 0,
+      averageRating : 1,
+      ratings : []
     };
     console.log(product);
+
+    // add ngrams
+    const namegrams :string[] = Helper.ngram(product.name, 3);
+    // ngrams are saved as single string seperated by spaces so textsearch works
+    const namegramString : string = namegrams.join(' ');
+    console.log(namegramString);
+    product = {... product,
+      ngrams : namegramString
+    };
+
 
     // Setze es auf den Angemeldeten User
     product.user = request.session.user._id;

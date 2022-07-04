@@ -69,7 +69,7 @@ export class OrderProductComponent implements OnInit {
       },
       'password': {
         valid:[
-                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','',''),undefined,this.getPaymentTypeDependentText('Invalid Data','','')),
+                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','',''),undefined,this.getPaymentTypeDependentText('Invalid data','','')),
                 new ServerSideValidation('Nicht Genügend Guthaben',undefined,'Not enough balance on account'),
                 new ServerSideValidation('Sicherheits Code nicht korrekt',undefined,'Missing data: Missing payment>paymentDetails>securityCode'),
                 new ClientSideValidation('Korrektes Passwort',false)
