@@ -5,7 +5,15 @@ import {
   NgbTimeStruct,
   NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { AvailabilityPickerComponent } from '../availability-picker/availability-picker.component';
 import { addTimezoneOffset, isInteger, utcOffset } from '../../../../util/util';
 import { NgbDateNativeAdapter, NgbTimeDateAdapter } from '../../../../util/nbgAdapter';
@@ -27,7 +35,7 @@ export class HindrancePickerComponent implements OnInit {
   @Input() setFromTime?: Date;
   @Input() setToTime?: Date;
 
-  @Output() newHindrance = new EventEmitter<Hindrance>();
+  @Output() newHindrance = new EventEmitter<Hindrance[]>();
 
   fromTimeControl!: FormControl;
   toTimeControl!: FormControl;
@@ -64,6 +72,8 @@ export class HindrancePickerComponent implements OnInit {
       this.form.addControl('toTimeControl', this.toTimeControl);
     }
 
+    this.form.addValidators(this.fromTimeAfterToTime());
+
     console.log(this.markDisabled);
   }
 
@@ -74,25 +84,48 @@ export class HindrancePickerComponent implements OnInit {
     }
     const hindrance = new Hindrance(this.date!, this.fromTime, this.toTime, this.wholeDayHindrance);
     this.hindrances.push(hindrance);
-    this.newHindrance.emit(hindrance);
+    this.hindrances.sort(Hindrance.compare);
+    this.newHindrance.emit(this.hindrances);
     console.log('added hindrance: %o\nhindrances: %o', this.date, this.hindrances);
     this.date = null;
   }
 
   removeHindrance = (index: number): void => {
     this.hindrances.splice(index, 1);
+    this.hindrances.sort(Hindrance.compare);
+    this.newHindrance.emit(this.hindrances);
     console.log('removed hindrance: %o\nhindrances: %o', this.hindrances);
   }
 
   toggleHindranceTime = (): void => {
     this.wholeDayHindrance = !this.wholeDayHindrance;
-    this.fromTime = null;
-    this.toTime = null;
     this.fromTimeControl.setErrors(null);
     this.toTimeControl.setErrors(null);
     console.log('wholeDayHindrance: %o', this.wholeDayHindrance);
   }
 
+  hindrancesLength = (): boolean => {
+    console.log('hindrancesLength: %o', this.hindrances.length);
+    return this.hindrances.length == 0;
+  };
+
+  /**
+   * Validator that requires fromTime to be before toTime.
+   */
+  fromTimeAfterToTime = (): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const fromTime: Date | null = control.get('fromTimeControl') ? control.get('fromTimeControl')!.value : null;
+      const toTime: Date | null = control.get('toTimeControl') ? control.get('toTimeControl')!.value : null;
+      console.log('fromTime: %o, toTime: %o', fromTime, toTime);
+      console.log('control: %o', control);
+      if (fromTime && toTime) {
+        if (fromTime > toTime) {
+          return { fromTimeAfterToTime: true };
+        }
+      }
+      return null;
+    };
+  }
 
 }
 

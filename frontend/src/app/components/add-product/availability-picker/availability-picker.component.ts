@@ -153,16 +153,18 @@ export class AvailabilityPickerComponent implements OnInit {
     const availability = new AvailabilityWithWeekdays(new Availability(fromDate, toDate), this.disabledWeekdays.slice());
 
     this.availabilities.push(availability);
+    this.availabilities.sort((a, b) => a.availability.startDate.getTime() - b.availability.startDate.getTime());
     this.fromDate = null;
     this.toDate = null;
     this.form.markAsUntouched();
-    this.newAvailability.emit(availability.toAvailabilities());
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities()));
 
     console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
   }
 
   removeAvailability = (index: number): void => {
     this.availabilities.splice(index, 1);
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities()));
     console.log('removed avaiLability: %o\navailabilities: %o', this.availabilities);
   }
 

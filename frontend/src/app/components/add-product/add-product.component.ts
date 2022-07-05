@@ -250,14 +250,14 @@ export class AddProductComponent implements OnInit {
   // Availability picker ------------------------------------------------------
 
   addAvailability(availability: Availability[]) {
-    this.availabilities = this.availabilities.concat(availability);
+    this.availabilities = availability;
     console.log('add-product availabilities: %o', this.availabilities);
   }
 
   // Hindrance picker ------------------------------------------------------
 
-  addHindrance(hindrance: Hindrance) {
-    this.hindrances.push(hindrance);
+  addHindrance(hindrances: Hindrance[]) {
+    this.hindrances = hindrances;
   }
 
   isOutsideAvailability(this: AddProductComponent) {

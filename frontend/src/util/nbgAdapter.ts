@@ -10,7 +10,7 @@ export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
   /**
    * Converts from Date to NgbDateStruct
    */
-  override fromModel(value: Date | null): NgbTimeStruct | null {
+  fromModel(value: Date | null): NgbTimeStruct | null {
     if (!value) {
       return null;
     }
@@ -24,7 +24,7 @@ export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
   /**
    * Converts from NgbTimeStruct to Date
    */
-  override toModel(time: NgbTimeStruct | null): Date | null {
+  toModel(time: NgbTimeStruct | null): Date | null {
     const timeUTC = time != null ? Date.UTC(1970, 0, 1, time.hour, time.minute, time.second) : null;
     return timeUTC != null ? new Date(timeUTC) : null;
   }

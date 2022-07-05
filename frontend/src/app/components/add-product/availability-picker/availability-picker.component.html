@@ -41,7 +41,7 @@
                   <input (click)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)"
                          autocomplete="off"
                          class="btn-check" id="btncheck{{i}}" type="checkbox">
-                  <label class="btn btn-outline-primary custom-day" for="btncheck{{i}}">{{ day }}</label>
+                  <label class="btn btn-outline-primary custom-day" for="bncheck{{i}}">{{ day }}</label>
                 </ng-template>
               </div>
             </div>
@@ -111,25 +111,25 @@
   <!-- DefaultTimeFrame -->
   <label class="form-label" for="defaultTimePicker">Verfügbar</label>
   <div class="col-12 row align-items-center" id="defaultTimePicker">
+    <label class="col-auto col-form-label" for="defaultFromTimeInput">Von:</label>
     <div class="col-auto row align-items-center">
-      <div class="col-auto">Von</div>
       <ngb-timepicker [(ngModel)]="defaultTimeFrame.startDate"
                       (ngModelChange)="emitDefaultTimeFrame()"
                       [ngModelOptions]="{ standalone: true }"
-                      class="col-auto"
+                      id="defaultFromTimeInput"
       ></ngb-timepicker>
     </div>
+    <label class="col-auto col-form-label" for="defaultToTimeInput">Bis:</label>
     <div class="col-auto row align-items-center">
-      <div class="col-auto">Bis</div>
       <ngb-timepicker [(ngModel)]="defaultTimeFrame.endDate"
                       (ngModelChange)="emitDefaultTimeFrame()"
                       [ngModelOptions]="{ standalone: true }"
-                      class="col-auto"
+                      id="defaultToTimeInput"
       ></ngb-timepicker>
     </div>
   </div>
 
-  <div [class.dp-hidden]="availabilities.length == 0" class="col-12 table-responsive">
+  <div [hidden]="!availabilities.length" class="col-12 table-responsive">
     <table class="table table-dark">
       <thead>
       <tr>
