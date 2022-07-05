@@ -14,13 +14,16 @@
           <p class="text-light">{{product?.description}}</p>
 
           <h5>Termine</h5>
+          <app-appointment-selector></app-appointment-selector>
           <div class="row row-cols-3" role="group">
-           <!-- <div class="col mb-2 d-grid"  *ngFor="let a of product?.appointments; let i = index" >
-                  <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
-            </div> -->
-              <!-- <ng-template #elseBlock> Please log in to place an Order </ng-template> -->
-              <input [(ngModel)]="appointmentDate" type="datetime-local" required>
-              <button class="btn btn-primary" [queryParams]="user?{dateTime:appointmentDate}:{}" [routerLink]="user?['order-product',appointmentDate]:['/login']">Bestellen</button>
+            <!-- <div class="col mb-2 d-grid"  *ngFor="let a of product?.appointments; let i = index" >
+                   <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
+             </div> -->
+            <!-- <ng-template #elseBlock> Please log in to place an Order </ng-template> -->
+            <input [(ngModel)]="appointmentDate" type="datetime-local" required>
+            <button class="btn btn-primary" [queryParams]="user?{dateTime:appointmentDate}:{}"
+                    [routerLink]="user?['order-product',appointmentDate]:['/login']">Bestellen
+            </button>
           </div>
 
 

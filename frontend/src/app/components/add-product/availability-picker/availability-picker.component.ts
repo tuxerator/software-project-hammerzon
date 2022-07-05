@@ -41,8 +41,7 @@ export class AvailabilityPickerComponent implements OnInit {
   readonly weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
   availabilities: AvailabilityWithWeekdays[] = [];
 
-  constructor(private rootFormGroup: FormGroupDirective,
-              private formatter: NgbDateParserFormatter,
+  constructor(private formatter: NgbDateParserFormatter,
               public calendar: NgbCalendar,
               private fb: FormBuilder) {
     this.fromDate = null;

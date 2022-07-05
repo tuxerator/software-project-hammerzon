@@ -1,0 +1,23 @@
+<div class="container">
+  <form class="input-group row align-items-center" [formGroup]="form">
+    <div class="col-auto">
+      <form class="input-group">
+        <input ngbDatepicker
+               #datePicker="ngbDatepicker"
+               class="form-control"
+               [(ngModel)]="date"
+               [formControl]="dateControl"
+               (click)="datePicker.toggle()"
+               placeholder="yyyy-mm-dd"
+               name="datePicker">
+        <button class="btn btn-secondary" (click)="datePicker.toggle()">
+          <i class="bi bi-calendar"></i>
+        </button>
+      </form>
+    </div>
+    <div class="col row align-items-center">
+      <label class="col-auto col-form-label">Uhrzeit:</label>
+      <ngb-timepicker class="col-auto" [(ngModel)]="time" [formControl]="timeControl" id="timePicker"></ngb-timepicker>
+    </div>
+  </form>
+</div>

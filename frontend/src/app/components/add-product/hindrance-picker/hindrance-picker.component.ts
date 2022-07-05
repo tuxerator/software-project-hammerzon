@@ -99,6 +99,8 @@ export class HindrancePickerComponent implements OnInit {
 
   toggleHindranceTime = (): void => {
     this.wholeDayHindrance = !this.wholeDayHindrance;
+    this.fromTime = this.setFromTime ? this.setFromTime : null;
+    this.toTime = this.setToTime ? this.setToTime : null;
     this.fromTimeControl.setErrors(null);
     this.toTimeControl.setErrors(null);
     console.log('wholeDayHindrance: %o', this.wholeDayHindrance);

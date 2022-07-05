@@ -25,6 +25,9 @@ import {
   AvailabilityPickerComponent
 } from './components/add-product/availability-picker/availability-picker.component';
 import { HindrancePickerComponent } from './components/add-product/hindrance-picker/hindrance-picker.component';
+import {
+  AppointmentSelectorComponent
+} from './components/productdetails/appointment-selector/appointment-selector.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import { HindrancePickerComponent } from './components/add-product/hindrance-pic
     NotAvailableComponent,
     OrderedServicesComponent,
     AvailabilityPickerComponent,
-    HindrancePickerComponent
+    HindrancePickerComponent,
+    AppointmentSelectorComponent
   ],
   imports: [
     BrowserModule,
