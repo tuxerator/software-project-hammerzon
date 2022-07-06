@@ -38,7 +38,8 @@ interface IRating extends Document {
   rating : number,
   comment : string,
   user : mongoose.Types.ObjectId
-  date:DateOnlyDataType
+  date : DateOnlyDataType,
+  helpfulUsers : String[]
 }
 
 const Rating : Schema = new Schema<IRating>(
@@ -46,7 +47,8 @@ const Rating : Schema = new Schema<IRating>(
     rating: {type: Number , required : true},
     comment : {type : String, required :true},
     user : {type : mongoose.Schema.Types.ObjectId, ref : User , required : true},
-    date : {type : Date, required : true}
+    date : {type : Date, required : true},
+    helpfulUsers : {type : [String] , required : true}
   });
 
 

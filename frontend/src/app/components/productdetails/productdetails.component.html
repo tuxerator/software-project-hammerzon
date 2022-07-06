@@ -107,7 +107,13 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
           <p class="text-white align-center fw-light mb-4">
               {{elem.comment}}
           </p>
-          <div class="text-muted">{{getDate(elem.date)}}</div>
+          <div class="row justify-content-start">
+            <div class="text-muted col-auto">{{getDate(elem.date)}}</div>
+            <button *ngIf="authService.isLogedIn() && canRateAsHelpful(elem.helpfulUsers)" (click)="rateAsHelpful(elem)" type="button" class="btn btn-link col-auto">Diese Bewertung ist hilfreich.</button>
+            <button *ngIf="authService.isLogedIn() && !canRateAsHelpful(elem.helpfulUsers)" (click)="unrateAsHelpful(elem)" type="button" class="btn btn-link col-auto">Diese Bewertung ist nicht mehr hilfreich.</button>
+          </div>
+          <div *ngIf="elem.helpfulUsers.length == 1" class="text-white">Eine Person fand diese Bewertung hilfreich.</div>
+          <div *ngIf="elem.helpfulUsers.length > 1" class="text-white">{{elem.helpfulUsers.length}} Personen fanden diese Bewertung hilfreich.</div>
       </div>
     </div>
 
