@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { getCategory, Product } from 'src/app/models/Product';
+import { Category } from 'src/app/models/Category';
+import { getCategory, getDurationString, Product } from 'src/app/models/Product';
 
 @Component({
   selector: 'app-product-list-item',
@@ -20,9 +21,14 @@ export class ProductListItemComponent implements OnInit {
 
   }
 
-  public getCategory()
+  public getCategory():undefined|Category
   {
     return this.productInfo ? getCategory(this.productInfo) : undefined;
+  }
+
+  public getDuration():string
+  {
+    return this.productInfo ? getDurationString(this.productInfo.duration) : '';
   }
 
   public onClick()

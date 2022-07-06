@@ -92,6 +92,10 @@ export class LandingpageComponent implements OnInit {
       next: value => {
         console.log(value);
         this.productListInfo = value;
+        /*this.productListInfo.list = this.productListInfo.list.map(x => {
+          x.duration = new Date(x.duration);
+          return x;
+        })*/
         this.loading = false;
       },
 

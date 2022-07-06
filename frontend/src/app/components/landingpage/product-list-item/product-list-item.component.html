@@ -7,12 +7,28 @@
     </div>
     <!-- Infos -->
     <div  class="col-9 px-2 pb-2">
-      <h6 class="text-warning text-end"><i class="bi bi-star-fill"></i>{{productInfo.averageRating}} <span class="text-muted">({{productInfo.numberOfRatings}})</span></h6>
+      <!--- Rating -->
+      <h6 *ngIf="productInfo.numberOfRatings! > 0" class="text-warning text-end">
+        <ngb-rating [(rate)]="productInfo.averageRating!" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+        <label class="text-warning">{{productInfo.averageRating}}</label>
+        <span class="text-muted">({{productInfo.numberOfRatings}})</span>
+      </h6>
+      <!--- No Reviews -->
+      <h6 *ngIf="productInfo.numberOfRatings! <= 0" class="text-muted text-end">
+        Keine Bewertungen
+      </h6>
+      <!-- Product Name -->
       <div class="fs-4 fw-bold"> {{productInfo?.name}}</div>
+      <!-- Category Badge Horizontal -->
       <app-category-badge class="text-muted" [category]="getCategory()" direction="hor"></app-category-badge>
+      <!-- Price -->
       <div class="text-primary">
         {{productInfo.prize}} €/Std.
       </div>
+      <div class="text-success">
+        {{getDuration()}}
+      </div>
+      <!-- Creator / User of the product -->
       <div class="mt-2 text-end text-secondary">
         {{productInfo.user?.firstName}} {{productInfo.user?.lastName}}
       </div>
