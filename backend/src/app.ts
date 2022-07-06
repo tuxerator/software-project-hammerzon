@@ -149,6 +149,9 @@ app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 // add availability to product
 app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
 
+// get availability of product
+app.get('/api/product/:id/availability/list', ValidatorGroup([Validators.hasValidObjectId('id')]), product.getAvailabilityList);
+
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);

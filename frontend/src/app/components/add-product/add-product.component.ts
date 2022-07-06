@@ -23,7 +23,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { Hindrance } from './hindrance-picker/hindrance-picker.component';
 import { ngbDateToDate, utcOffset } from '../../../util/util';
-import { NgbTimeDateAdapter } from '../../../util/nbgAdapter';
+import { NgbTimeUTCDateAdapter } from '../../../util/nbgAdapter';
 
 
 class ImageSnippet {
@@ -35,7 +35,7 @@ class ImageSnippet {
 @Component({
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
-  providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeDateAdapter }]
+  providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeUTCDateAdapter }]
 })
 export class AddProductComponent implements OnInit {
   public appointmentsCount = 1;
@@ -198,9 +198,9 @@ export class AddProductComponent implements OnInit {
     const duration = new Date(0);
     // Stunden hinzufügen
 
-    duration.setHours(duratioHour);
+    duration.setUTCHours(duratioHour);
     // Minuten hinzufügen
-    duration.setMinutes(durationMinute);
+    duration.setUTCMinutes(durationMinute);
 
 
     console.log(this.addProductForm.controls['availability'].value);
@@ -209,10 +209,17 @@ export class AddProductComponent implements OnInit {
     const prize = parseFloat(form.prize);
 
     // Neues Product erstellen
-    const newProduct: Product = new Product(form.productName, form.description, prize, duration, {
-      start: new Date(Date.UTC(1970, 0, 1, 0, 0, 0)),
-      end: new Date(Date.UTC(1970, 0, 1, 23, 59, 59))
-    }, availabilities, this.imageId);
+    const newProduct: Product = new Product(
+      form.productName,
+      form.description,
+      prize,
+      duration,
+      {
+        start: this.defaultTimeFrame.startDate,
+        end: this.defaultTimeFrame.endDate
+      },
+      availabilities, this.imageId
+    );
     //Product hinzufügen anfrage an das backend schicken
     this.uploading = true;
 
@@ -258,6 +265,8 @@ export class AddProductComponent implements OnInit {
 
   addHindrance(hindrances: Hindrance[]) {
     this.hindrances = hindrances;
+    this.availabilities = this.availabilities.flatMap(this.createAvailabilities);
+    console.log('add-product availabilities: %o', this.availabilities);
   }
 
   isOutsideAvailability(this: AddProductComponent) {
@@ -305,6 +314,8 @@ export class AddProductComponent implements OnInit {
 
 
     for (const splitDate of splitDates) {
+      console.log('splitDate: %o', splitDate);
+
       let nextSplitDate: number = splitDate.fromTime ? splitDate.date.getTime() + splitDate.fromTime?.getTime() : splitDate.date.getTime() + this.defaultTimeFrame.startDate.getTime();
 
       if (splitDate.wholeDay) {
@@ -367,16 +378,6 @@ export class AddProductComponent implements OnInit {
 
   // Helper functions
 
-
-  /**
-   * Compares two dates without taking the time into account.
-   * @return 0 if the dates are equal, -1 if date1 is before date2, 1 if date1 is after date2
-   */
-  compareDates = (date1: Date, date2: Date): number => {
-    const date1WithoutTime = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
-    const date2WithoutTime = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
-    return Math.sign(date1WithoutTime - date2WithoutTime);
-  }
 
   ngbTimetoDate = (ngbTime: NgbTimeStruct | null): Date => {
     return ngbTime ? new Date(Date.UTC(1970, 0, 1, ngbTime.hour, ngbTime.minute, ngbTime.second)) : new Date('Invalid Date');

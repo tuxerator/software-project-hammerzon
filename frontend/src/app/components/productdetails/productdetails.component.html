@@ -14,23 +14,20 @@
           <p class="text-light">{{product?.description}}</p>
 
           <h5>Termine</h5>
-          <app-appointment-selector></app-appointment-selector>
-          <div class="row row-cols-3" role="group">
-            <!-- <div class="col mb-2 d-grid"  *ngFor="let a of product?.appointments; let i = index" >
-                   <button class="btn btn-primary" [ngClass]="{'disabled':a.isReserved, 'btn-secondary':a.isReserved}" [routerLink]="user ? ['order-product',i] : ['/login']"> {{getAppointString(a?.date)}} </button>
-             </div> -->
-            <!-- <ng-template #elseBlock> Please log in to place an Order </ng-template> -->
-            <input [(ngModel)]="appointmentDate" type="datetime-local" required>
-            <button class="btn btn-primary" [queryParams]="user?{dateTime:appointmentDate}:{}"
-                    [routerLink]="user?['order-product',appointmentDate]:['/login']">Bestellen
-            </button>
+          <app-appointment-selector
+            (createAppointmentEvent)="orderProduct($event)"
+            [duration]="product.duration.getTime()"
+          ></app-appointment-selector>
+
+
+          <div
+            *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
+            class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
+              class="bi bi-pencil-square"></i></button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+              class="bi bi-trash-fill"></i></button>
           </div>
-
-
-          <div *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'" class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button"  class="btn btn-success"  [routerLink]="['/add-product',product?._id]"><i class="bi bi-pencil-square"></i></button>
-                <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-trash-fill"></i></button>
-        </div>
         </div>
     </div>
   </div>

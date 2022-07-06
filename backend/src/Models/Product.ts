@@ -37,17 +37,17 @@ const Availability: Schema = new Schema<IAvailability>({
 
 // create the Schema of IProduct
 const productSchema: Schema = new Schema<IProduct>({
-    name: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    description: { type: String },
-    prize: { type: Number, required: true },
-    duration: { type: Date, required: true },
-    defaultTimeFrame: {
-      start: { type: Date, required: true, max: 24 * 60 * 60 * 1000 },
-      end: { type: Date, required: true, max: 24 * 60 * 60 * 1000 },
-    },
-    availability: { type: [Availability], required: true },
-    image_id: { type: mongoose.Schema.Types.ObjectId, required: true }
+  name: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  description: { type: String },
+  prize: { type: Number, required: true },
+  duration: { type: Date, required: true },
+  defaultTimeFrame: {
+    start: { type: Date, required: true, max: 24 * 60 * 60 * 1000 },
+    end: { type: Date, required: true, max: 24 * 60 * 60 * 1000 },
+  },
+  availability: { type: [Availability], required: true, _id: false },
+  image_id: { type: mongoose.Schema.Types.ObjectId, required: true }
 });
 
 

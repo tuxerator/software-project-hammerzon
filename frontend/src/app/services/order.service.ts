@@ -62,10 +62,13 @@ export class OrderService {
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
   }*/
 
-  setStatus(orderId:string, status: Status) : Observable<Status>
-  {
+  setStatus(orderId: string, status: Status): Observable<Status> {
     console.log('toggle service:' + status);
-    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, {status});
+    return this.http.post<Status>(`/api/order/${ orderId }/setStatus`, { status });
+  }
+
+  getAvailabilityList(productId: string): Observable<Availability[]> {
+    return this.http.get<Availability[]>(`api/product/${ productId }/availability/list`);
   }
 
 }

@@ -1,16 +1,17 @@
 <div class="container">
-  <form class="input-group row align-items-center" [formGroup]="form">
+  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="input-group row align-items-center">
     <div class="col-auto">
       <form class="input-group">
         <input ngbDatepicker
-               #datePicker="ngbDatepicker"
+               #appointDatePicker="ngbDatepicker"
                class="form-control"
                [(ngModel)]="date"
+               (click)="appointDatePicker.toggle()"
                [formControl]="dateControl"
-               (click)="datePicker.toggle()"
+               [markDisabled]="markDisabled"
                placeholder="yyyy-mm-dd"
                name="datePicker">
-        <button class="btn btn-secondary" (click)="datePicker.toggle()">
+        <button (click)="appointDatePicker.toggle()" class="btn btn-secondary">
           <i class="bi bi-calendar"></i>
         </button>
       </form>
@@ -18,6 +19,11 @@
     <div class="col row align-items-center">
       <label class="col-auto col-form-label">Uhrzeit:</label>
       <ngb-timepicker class="col-auto" [(ngModel)]="time" [formControl]="timeControl" id="timePicker"></ngb-timepicker>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-primary" type="submit">
+        Termin buchen
+      </button>
     </div>
   </form>
 </div>

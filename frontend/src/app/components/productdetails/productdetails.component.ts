@@ -12,22 +12,20 @@ import { delay, timeout } from 'rxjs';
   styleUrls: ['./productdetails.component.css']
 })
 export class ProductdetailsComponent implements OnInit {
-  product: Product | undefined;
+  product!: Product;
   //public productID: string;
   user: User | undefined;
-  appointmentDate?:Date;
+  appointmentDate?: Date;
 
-  id:string = '';
+  id: string = '';
 
   // Zum formatieren der Daten
 
 
-
-  constructor(private route:ActivatedRoute,
-              private productService:ProductService,
-              private router:Router,
+  constructor(private route: ActivatedRoute,
+              private productService: ProductService,
+              private router: Router,
               public authService: AuthService) {
-    console.log('kommt zu Params');
   }
 
   ngOnInit(): void {
@@ -59,7 +57,10 @@ export class ProductdetailsComponent implements OnInit {
         }
       }
     );
+
     this.user = this.authService.user;
+
+    console.log('product: ', this.product);
     // is there a user logged in? get the user.
     /*this.authService.getUser().subscribe(
       {
@@ -73,12 +74,11 @@ export class ProductdetailsComponent implements OnInit {
     );*/
   }
 
-  tryOrder()
-  {
-
-  if(this.product && this.appointmentDate){
-      const appointment = {startDate:this.appointmentDate,endDate:this.appointmentDate?.getTime() + this.product?.duration.getTime()
-
+  tryOrder() {
+    if (this.product && this.appointmentDate) {
+      const appointment = {
+        startDate: this.appointmentDate,
+        endDate: this.appointmentDate?.getTime() + this.product?.duration.getTime()
       }
     }
   }
@@ -88,25 +88,40 @@ export class ProductdetailsComponent implements OnInit {
   }
 
   getAppointString(app?: Availability): string {
-    if(app)
-    {
-    return getAppointmentString(app);
-    }return 'Fehler';
+    if (app) {
+      return getAppointmentString(app);
+    }
+    return 'Fehler';
   }
 
-  deleteProduct()
-  {
+  deleteProduct() {
     this.productService.removeProduct(this.id).subscribe({
-      next:() => {
-        this.router.navigate(['/']);
-      },
-      error:(err) =>
-      {
-        console.log(err.error);
+        next: () => {
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.log(err.error);
+        }
       }
-    }
     );
 
+  }
+
+  /**
+   * Routs to order-product page if user is logged in otherwise routes to login page.
+   */
+  orderProduct(appointment: Availability) {
+    if (this.user) {
+      this.router.navigate(['order-product'], {
+        relativeTo: this.route,
+        queryParams: {
+          dateTime: appointment.startDate,
+          test: 'test'
+        }
+      });
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
 }

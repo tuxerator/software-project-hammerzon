@@ -36,11 +36,11 @@ export class OrderProductComponent implements OnInit {
     {
       this.startDate  = new Date(date);
     }
-    /*this.route.queryParams.subscribe(params => {
-      console.log(params);
+    this.route.queryParams.subscribe(params => {
+        console.log(params);
         this.startDate = new Date(params['dateTime']);
       }
-    );*/
+    );
 
     /**
      * get information about the product , register the order (make functions?)

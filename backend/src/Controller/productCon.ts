@@ -137,16 +137,32 @@ class ProductController {
     }
 
     public async addHindrance(req: Request, res: Response): Promise<void> {
-        const hindrance: IAvailability = req.body;
-        const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+      const hindrance: IAvailability = req.body;
+      const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
 
-        // Get Availabi
+      // Get Availabi
 
-        await product.save();
+      await product.save();
 
-        res.status(200);
-        res.send({ code: 200, message: 'Add Successfull', id: product._id });
+      res.status(200);
+      res.send({ code: 200, message: 'Add Successfull', id: product._id });
     }
+
+  /**
+   * Sends a list of all availabitlitys of a product
+   * @param req
+   * @param res
+   */
+  public async getAvailabilityList(req: Request, res: Response): Promise<void> {
+    const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+    if (!product) {
+      res.status(400);
+      res.send({ code: 400, message: 'Product does not exist' });
+      return;
+    }
+    res.status(200);
+    res.send(product.availability);
+  }
 }
 
 

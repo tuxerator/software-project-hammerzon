@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { AvailabilityPickerComponent } from '../availability-picker/availability-picker.component';
 import { addTimezoneOffset, isInteger, utcOffset } from '../../../../util/util';
-import { NgbDateNativeAdapter, NgbTimeDateAdapter } from '../../../../util/nbgAdapter';
+import { NgbDateNativeAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 
 @Component({
@@ -24,7 +24,7 @@ import { NgbDateNativeAdapter, NgbTimeDateAdapter } from '../../../../util/nbgAd
   templateUrl: './hindrance-picker.component.html',
   styleUrls: ['./hindrance-picker.component.css'],
   providers: [
-    { provide: NgbTimeAdapter, useClass: NgbTimeDateAdapter },
+    { provide: NgbTimeAdapter, useClass: NgbTimeUTCDateAdapter },
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }
   ]
 })
@@ -85,6 +85,7 @@ export class HindrancePickerComponent implements OnInit {
     const hindrance = new Hindrance(this.date!, this.fromTime, this.toTime, this.wholeDayHindrance);
     this.hindrances.push(hindrance);
     this.hindrances.sort(Hindrance.compare);
+
     this.newHindrance.emit(this.hindrances);
     console.log('added hindrance: %o\nhindrances: %o', this.date, this.hindrances);
     this.date = null;

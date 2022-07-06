@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import {
   AbstractControl, Form, FormBuilder,
   FormControl,
@@ -11,11 +11,13 @@ import {
 } from '@angular/forms';
 import { Availability } from '../../../models/Product';
 import { utcOffset } from '../../../../util/util';
+import { NgbTimeDateAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 @Component({
   selector: 'app-availability-picker',
   templateUrl: './availability-picker.component.html',
-  styleUrls: ['./availability-picker.component.css']
+  styleUrls: ['./availability-picker.component.css'],
+  providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeUTCDateAdapter }]
 })
 export class AvailabilityPickerComponent implements OnInit {
   @Input() form!: FormGroup;
@@ -139,7 +141,10 @@ export class AvailabilityPickerComponent implements OnInit {
     return false;
   }
 
-  toggleWeekday = (weekday: number) => this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
+  toggleWeekday = (weekday: number) => {
+    this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
+    console.log('toggled weekday: ', weekday);
+  }
 
   addAvailability = (): void => {
     if (!this.fromDate || !this.toDate) {

@@ -38,10 +38,10 @@
               <div><small>Aktive Wochentage:</small></div>
               <div class="btn-group">
                 <ng-template [ngForOf]="weekdays" let-day let-i="index" ngFor>
-                  <input (click)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)"
+                  <input (change)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)"
                          autocomplete="off"
                          class="btn-check" id="btncheck{{i}}" type="checkbox">
-                  <label class="btn btn-outline-primary custom-day" for="bncheck{{i}}">{{ day }}</label>
+                  <label class="btn btn-outline-primary custom-day" for="btncheck{{i}}">{{ day }}</label>
                 </ng-template>
               </div>
             </div>

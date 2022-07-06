@@ -16,7 +16,7 @@ export const ValidatorGroup = (validators:Validator[]) =>
 {
     return (request:Request,response:Response,next:NextFunction):void =>
     {
-        console.log(request.body);
+        console.log('requestURL: %o', request.originalUrl);
         for(const validator of validators)
         {
             if(!validator(request,response))
@@ -149,6 +149,21 @@ export class Validators{
       response.send(`${ key } is smaller than ${ length }`);
       return false;
     };
+  }
+
+  /**
+   * Checks if parameter id exists and is a valid ObjectId
+   */
+  public static hasValidObjectId(key: string): Validator {
+    return (request: Request, response: Response): boolean => {
+      const id = request.params[key];
+      if (id && Types.ObjectId.isValid(id)) {
+        return true;
+      }
+      response.status(400);
+      response.send({ code: 40, message: `${ key } is not a valid ObjectID` });
+      return false;
+    }
   }
 }
 
