@@ -4,8 +4,11 @@
           <app-product-list *ngIf="!loading" [list]="productListInfo?.list"></app-product-list>
 
           <div *ngIf="loading" class="d-flex align-items-center">
-            <strong>Lädt...</strong>
-            <div aria-hidden="true" class="spinner-border spinner-light ms-auto" role="status"></div>
+            <div aria-hidden="true">
+              <span class="placeholder-glow col-12"></span>
+              <span class="placeholder-glow col-12"></span>
+              <span class="placeholder-glow col-12"></span>
+            </div>
           </div>
 
           <div *ngIf="!loading && productListInfo?.list?.length === 0" class="d-flex align-items-center">
