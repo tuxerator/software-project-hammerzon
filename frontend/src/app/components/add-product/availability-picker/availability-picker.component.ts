@@ -161,14 +161,14 @@ export class AvailabilityPickerComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.form.markAsUntouched();
-    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities()));
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this.defaultTimeFrame)));
 
     console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
   }
 
   removeAvailability = (index: number): void => {
     this.availabilities.splice(index, 1);
-    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities()));
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this.defaultTimeFrame)));
     console.log('removed avaiLability: %o\navailabilities: %o', this.availabilities);
   }
 
@@ -237,7 +237,7 @@ export class AvailabilityWithWeekdays {
   getSelectedWeekdays = (weekdays: string[]): string[] => weekdays.filter((weekday: string, index: number): boolean =>
     !this.disabledWeekdays.includes(index + 1));
 
-  public toAvailabilities(): Availability[] {
+  public toAvailabilities(defaultTimeFrame: Availability): Availability[] {
     const availabilities: Availability[] = [];
     const startDateDay = this.availability.startDate.getDay();
     let currentDate = this.availability.startDate;
@@ -248,23 +248,29 @@ export class AvailabilityWithWeekdays {
       let d = this.disabledWeekdays[0] >= startDateDay ? this.disabledWeekdays[0] - startDateDay : 7 - startDateDay + this.disabledWeekdays[0];
       let i = 1 % this.disabledWeekdays.length;
       console.log('d: %o', d);
+
       let nextDate = new Date(currentDate.getTime() + d * 24 * 60 * 60 * 1000);
+
       while (nextDate < this.availability.endDate) {
         console.log('currentDate: %o, nextDate: %o', currentDate, nextDate);
         console.log('currendDayWeekday: %o, nextDayWeekday: %o', currentDate.getDay(), nextDate.getDay());
+
         if (!this.disabledWeekdays.some((value => currentDate.getDay() == value % 7))) {
-          availabilities.push(new Availability(currentDate, new Date(nextDate.getTime() - 24 * 60 * 60 * 1000)));
+          availabilities.push(new Availability(new Date(currentDate.getTime() + defaultTimeFrame.startDate.getTime()), new Date(nextDate.getTime() - 24 * 60 * 60 * 1000 + defaultTimeFrame.endDate.getTime())));
           currentDate = new Date(nextDate.getTime() + 24 * 60 * 60 * 1000);
-        } else {
+        }
+        else {
           currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
         }
+
         d = this.disabledWeekdays[i] % 7 > nextDate.getDay() ? this.disabledWeekdays[i] % 7 - nextDate.getDay() : this.disabledWeekdays[i] % 7 - nextDate.getDay() + 7;
+
         console.log('d: %o', d);
         nextDate = new Date(nextDate.getTime() + d * 24 * 60 * 60 * 1000);
         i = (i + 1) % this.disabledWeekdays.length;
       }
     }
-    availabilities.push(new Availability(currentDate, this.availability.endDate));
+    availabilities.push(new Availability(new Date(currentDate.getTime() + defaultTimeFrame.startDate.getTime()), new Date(this.availability.endDate.getTime() + defaultTimeFrame.endDate.getTime())));
     console.log('Emitting availabilities: %o', availabilities);
     return availabilities;
   }

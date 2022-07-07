@@ -22,7 +22,7 @@ import {
   NgbTimepickerConfig, NgbTimeStruct, NgbDateNativeUTCAdapter, NgbDateAdapter, NgbTimeAdapter
 } from '@ng-bootstrap/ng-bootstrap';
 import { Hindrance } from './hindrance-picker/hindrance-picker.component';
-import { ngbDateToDate, utcOffset } from '../../../util/util';
+import { compareDates, ngbDateToDate, utcOffset } from '../../../util/util';
 import { NgbTimeUTCDateAdapter } from '../../../util/nbgAdapter';
 
 
@@ -191,20 +191,19 @@ export class AddProductComponent implements OnInit {
     // Für besser lesbarkeit des Code
     const form = this.addProductForm.value;
 
-    const duratioHour = parseInt(form.durationHour);
+    const durationHour = parseInt(form.durationHour);
     const durationMinute = parseInt(form.durationMinute);
 
     // Neues Datum/Zeitfenster von beginn der Zeitzählung der Computer
     const duration = new Date(0);
     // Stunden hinzufügen
 
-    duration.setUTCHours(duratioHour);
+    duration.setUTCHours(durationHour);
     // Minuten hinzufügen
     duration.setUTCMinutes(durationMinute);
 
 
-    console.log(this.addProductForm.controls['availability'].value);
-    const availabilities: Availability[] = this.availabilities.flatMap(this.createAvailabilities);
+    const availabilities: Availability[] = this.availabilities;
 
     const prize = parseFloat(form.prize);
 
@@ -258,6 +257,7 @@ export class AddProductComponent implements OnInit {
 
   addAvailability(availability: Availability[]) {
     this.availabilities = availability;
+    this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
   }
 
@@ -276,7 +276,7 @@ export class AddProductComponent implements OnInit {
         return true;
       }
       return !this.availabilities.some(availability => {
-        const result = dateNative != null ? (availability.startDate <= dateNative && availability.endDate >= dateNative) : false;
+        const result = dateNative != null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
         return result;
       });
     }
@@ -286,6 +286,7 @@ export class AddProductComponent implements OnInit {
     let availabilities: Availability[] = [];
 
     // Split availability into multiple availabilities such that the hindrances are excluded
+    console.log('hindrances: %o', this.hindrances);
     availabilities = this.splitAvailability(availability, this.hindrances);
     console.log('availabilities: %o', availabilities);
 
@@ -298,9 +299,13 @@ export class AddProductComponent implements OnInit {
     const availabilities: Availability[] = [];
     const startDate: Date = availability.startDate;
     const endDate: Date = availability.endDate;
-    let currentDate: Date = new Date(startDate.getTime() + this.defaultTimeFrame.startDate.getTime());
+    let currentDate: number = startDate.getTime();
     // check if there are hindrances between the dates
-    const splitDates: Hindrance[] = hindrances.filter(hindrance => availability.startDate <= hindrance.date && hindrance.date <= availability.endDate);
+    const splitDates: Hindrance[] = hindrances.filter(hindrance => {
+      const hindranceStartDate: Date = hindrance.fromTime ? new Date(hindrance.date.getTime() + hindrance.fromTime.getTime()) : hindrance.date;
+      const hindranceEndDate: Date = hindrance.toTime ? new Date(hindrance.date.getTime() + hindrance.toTime.getTime()) : hindrance.date;
+      return availability.startDate <= hindranceStartDate && hindranceEndDate <= availability.endDate;
+    });
     const dayInMills: number = 24 * 60 * 60 * 1000;
 
     console.log('splitDates: %o', splitDates)
@@ -315,34 +320,33 @@ export class AddProductComponent implements OnInit {
 
     for (const splitDate of splitDates) {
       console.log('splitDate: %o', splitDate);
+      console.log('defaultTimeFrame: %o', this.defaultTimeFrame);
 
-      let nextSplitDate: number = splitDate.fromTime ? splitDate.date.getTime() + splitDate.fromTime?.getTime() : splitDate.date.getTime() + this.defaultTimeFrame.startDate.getTime();
+      let nextSplitDate: number =  splitDate.date.getTime();
+      let availabilityStartDate: number = currentDate;
+      let availabilityEndDate: number = nextSplitDate - dayInMills + this.defaultTimeFrame.endDate.getTime();
+      currentDate = nextSplitDate + dayInMills + this.defaultTimeFrame.startDate.getTime();
 
-      if (splitDate.wholeDay) {
-        availabilities.push(new Availability(currentDate, new Date(nextSplitDate - dayInMills + this.defaultTimeFrame.endDate.getTime())));
-        currentDate = new Date(nextSplitDate + dayInMills);
-        continue;
-      }
-
-      if (splitDate.fromTime == this.defaultTimeFrame.startDate) {
-        availabilities.push(new Availability(currentDate, new Date(nextSplitDate - dayInMills)));
-      } else {
-        availabilities.push(new Availability(currentDate, new Date(nextSplitDate)));
+      if (splitDate.fromTime && splitDate.fromTime.getTime() != this.defaultTimeFrame.startDate.getTime()) {
+        availabilityEndDate = nextSplitDate + splitDate.fromTime.getTime();
       }
 
       if (splitDate.toTime) {
         if (splitDate.toTime < this.defaultTimeFrame.endDate) {
-          currentDate = new Date(splitDate.date.getTime() + splitDate.toTime.getTime());
+          currentDate = nextSplitDate + splitDate.toTime.getTime();
         }
-      } else {
-        currentDate = new Date(nextSplitDate + dayInMills);
       }
+
+      if (availabilityStartDate == availabilityEndDate) {
+        continue;
+      }
+      availabilities.push(new Availability(new Date(availabilityStartDate), new Date(availabilityEndDate)));
     }
 
     // If currentDate isn't >= than endDate add last availability
-    console.log('currentDate: %o\nendDate: %o', currentDate, endDate);
-    if (currentDate.getTime() < endDate.getTime() + this.defaultTimeFrame.endDate.getTime()) {
-      availabilities.push(new Availability(currentDate, endDate));
+    console.log('currentDate: %o\nendDate: %o', new Date(currentDate), endDate);
+    if (currentDate < endDate.getTime()) {
+      availabilities.push(new Availability(new Date(currentDate), endDate));
     }
     return availabilities;
   }
@@ -359,7 +363,6 @@ export class AddProductComponent implements OnInit {
 
       const time = value;
 
-      console.log('Selected Time: %o\nDefaultTimeFrame: %o', time, this.defaultTimeFrame);
 
       if (time.getTime() < this.defaultTimeFrame.startDate.getTime()) {
         return {
