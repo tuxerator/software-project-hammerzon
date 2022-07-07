@@ -6,10 +6,9 @@ import { HciPalOption } from './PaymentOptions/hcipaloption';
 import { CheckRequest, CountryRequest, PaymentOption } from './PaymentOptions/paymentoption';
 import { BachelorOption } from './PaymentOptions/bacheloroption';
 import { xml2json } from 'xml-js';
-
 import { SwpSafeOption } from './PaymentOptions/swpsafeoption';
 import { ActivityController } from './activity';
-import { green } from '../Models/Activity';
+import { green, lightBlue, white } from '../Models/Activity';
 
 // Controlls Payment of an Order/ a Service
 export class PaymentController
@@ -173,7 +172,7 @@ export class PaymentController
           const order = await this.order.registerOrder(pap,request.session.user);
           response.status(200);
 
-          ActivityController.addActivity(request.session.user,[' bestellte das Product ',green(pap.product.name), 'mit der #' ,green(order.id)]);
+          ActivityController.addActivity(request.session.user,[green('bestellte'),' das Product ',lightBlue(pap.product.name), 'mit der #' ,lightBlue(order.id.toString())]);
 
           response.send({message:'Payment Successfull'});
         }else{

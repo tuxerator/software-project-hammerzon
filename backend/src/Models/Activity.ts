@@ -39,3 +39,5 @@ export const blue = (text:string):IHighlight => color(text,'primary');
 export const yellow = (text:string):IHighlight => color(text,'warning');
 export const green = (text:string):IHighlight => color(text,'success');
 export const white = (text:string):IHighlight => color(text,'white');
+export const lightGrey = (text:string):IHighlight => color(text,'secondary');
+export const lightBlue = (text:string):IHighlight => color(text,'info');

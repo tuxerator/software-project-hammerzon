@@ -1,4 +1,4 @@
-<div *ngIf="!loading.product" class="container mt-2 p-4 col-lg-6 mx-auto">
+<div *ngIf="!loading.product" class="container mt-2 p-4 col-lg-7 mx-auto">
   <div class="bg-dark mx-auto">
     <div class="row justify-content-between">
       <nav class="col-md-8" aria-label="breadcrumb"
@@ -26,18 +26,18 @@
 
     <!-- Image and Product name + User Name + Price-->
     <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="Lädt ..." (load)="onImageLoaded()" >
-    <div class="py-3 bg-dark text-white">
+
+    <div class="pt-2 bg-dark text-white">
       <div class="row justify-content-between">
-        <div class="col-md-9 fs-3 fw-bold me-auto">{{product?.name}}</div>
-        <a *ngIf="product!.numberOfRatings! > 0" class="col-md-3 btn text-md-end fs-5" >
+        <div class="col-md-8 fs-3 fw-bold me-auto">{{product?.name}}</div>
+        <a *ngIf="product!.numberOfRatings! > 0" class="col-md-4 btn text-md-end fs-5" >
           <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true"></ngb-rating>
           <span class="text-warning" > {{product?.averageRating}}</span>
           <span class="text-muted"> ({{product?.numberOfRatings}})</span>
         </a>
-        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-3 btn text-md-end fs-5 text-muted">
+        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 btn text-md-end fs-5 text-muted">
           Keine Bewertungen
         </a>
-
       </div>
       <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
       <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
@@ -76,11 +76,17 @@
     <hr>
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
-    <div id="rating" class="fw-bold fs-5 mb-2">Bewertung(en)
-        <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true"></ngb-rating>
-        <span class="text-warning" > {{product?.averageRating}}</span>
-        <span class="text-muted"> ({{product?.numberOfRatings}})</span>
-      </div>
+    <div id="rating" class="fw-bold fs-5 mb-2">
+        Bewertung(en)
+        <a *ngIf="product?.numberOfRatings! > 0">
+          <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true"></ngb-rating>
+          <span class="text-warning" > {{product?.averageRating}}</span>
+          <span class="text-muted"> ({{product?.numberOfRatings}})</span>
+        </a>
+        <a *ngIf="product!.numberOfRatings! <= 0" >
+          <span class="text-muted fs-6"> Keine Bewertungen </span>
+        </a>
+    </div>
     <div *ngIf="hasOrdered && !hasRated" class="mb-4">
       <div class="bg-dark">
         <form class="" (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
@@ -135,7 +141,8 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
   </div>
 </div>
 
-<div *ngIf="loading.product" aria-hidden="true" class="container mt-2 p-4 col-lg-6 mx-auto">
+<!-- Loading Screen --->
+<div *ngIf="loading.product" aria-hidden="true" class="container mt-2 p-4 col-lg-7 mx-auto">
   <nav class="col-md-8" aria-label="breadcrumb"
         style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
         <ol class="breadcrumb">

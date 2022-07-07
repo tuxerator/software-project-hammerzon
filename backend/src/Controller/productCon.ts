@@ -6,7 +6,7 @@ import { Types } from 'mongoose';
 import { Order } from '../Models/Order';
 import { Category } from '../Models/Category';
 import { ActivityController } from './activity';
-import { green } from '../Models/Activity';
+import { green, lightBlue, lightGrey, red, white } from '../Models/Activity';
 import { yellow } from '../Models/Activity';
 
 class ProductController {
@@ -56,7 +56,7 @@ class ProductController {
         console.log(searchTerm);
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
 
-        ActivityController.addActivity(request.session.user,['sucht nach dem Begriff ', green(searchTerm)]);
+        ActivityController.addActivity(request.session.user,[green(' sucht '),' nach dem Begriff ', lightBlue(searchTerm)]);
 
         const searchgrams : string[] = Helper.ngram(searchTerm, 3);
         const searchgramString : string = searchgrams.join(' ');
@@ -104,12 +104,12 @@ class ProductController {
       })
       .exec();
       console.log(request.session.user);
-      ActivityController.addActivity(request.session.user,[' schaut sich die Dienstleistung', green(product?.name), 'an']);
+      ActivityController.addActivity(request.session.user,[green('schaut'),' sich die ', green('Dienstleistung'), lightBlue(product?.name), 'an']);
       response.status(200);
       response.send(product);
     } else {
       console.log(request.session.user);
-      ActivityController.addActivity(request.session.user,[' verschucht die nicht vorhandene Dienstleistung', yellow(id), 'anzuchauen']);
+      ActivityController.addActivity(request.session.user,[' verschucht die nicht vorhandene ', red('Dienstleistung'), lightBlue(id), red(' anzuchauen')]);
       response.status(500);
       response.send('there is no product with such an id');
     }

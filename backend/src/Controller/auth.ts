@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 
 import { Types } from 'mongoose';
 import { ActivityController } from './activity';
-import { green,yellow } from '../Models/Activity';
+import { green,lightBlue,red,white,yellow } from '../Models/Activity';
 
 class AuthController {
   constructor() {
@@ -21,7 +21,7 @@ class AuthController {
     newUser.email = newUser.email.toLowerCase();
     const userMail = await User.findOne({ email: newUser.email }).exec();
     if (userMail) {
-      ActivityController.addActivity(undefined,['hat versucht sich unter der schon ', yellow(`vorhandenen Email ${newUser.email} zu registieren`)]);
+      ActivityController.addActivity(undefined,['hat versucht sich unter der schon', yellow('vorhandenen Email '), lightBlue(newUser.email.toString()), ' zu ',yellow('registieren')]);
       response.status(400);
       response.send({ code: 400, message: 'Email already exists' });
       return;
@@ -42,11 +42,11 @@ class AuthController {
   async login(request: SessionRequest, response: Response): Promise<void> {
     const loginRequest = request.body;
 
-    const email = loginRequest.email;
+    const email:string = loginRequest.email;
     const user: (IUser | undefined) = await User.findOne({ email }).exec();
     //console.log(user);
     if (!user) {
-      ActivityController.addActivity(undefined,['hat versucht sich unter ',yellow(`${email} anzumelden`), 'und die Email existiert nicht']);
+      ActivityController.addActivity(undefined,['hat versucht sich unter ',lightBlue(email), yellow('anzumelden'), 'und die Email existiert nicht']);
       response.status(401);
       response.send({ code: 401, message: 'Mail address not found' });
       return;
@@ -55,7 +55,7 @@ class AuthController {
     const password = loginRequest.password;
 
     if (!bcrypt.compareSync(password, user?.password.toString())) {
-      ActivityController.addActivity(undefined,['hat versucht sich unter ',yellow(`${email} anzumelden`),'und ist am passwort gescheitert']);
+      ActivityController.addActivity(undefined,['hat versucht sich unter ',lightBlue(email), yellow('anzumelden'),'und ist am passwort gescheitert']);
       response.status(401); // 401: Unauthorized
       response.send({ code: 401, message: 'Wrong password' });
       return;
@@ -103,7 +103,7 @@ class AuthController {
     const userDBObj: (IUser | undefined) = await User.findOne({ _id: request.session.user._id }).exec();
 
     if (!userDBObj) {
-      ActivityController.addActivity(undefined,['wollte ein ',yellow('nicht vorhandenes Profile bearbeiten')]);
+      ActivityController.addActivity(undefined,['wollte ein ',red('nicht vorhandenes Profile bearbeiten')]);
       response.status(500);
       response.send({ code: 500, message: 'User doent exist' });
       return;
