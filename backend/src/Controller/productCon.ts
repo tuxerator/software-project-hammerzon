@@ -33,7 +33,7 @@ class ProductController {
       {
          categoryId = (await Category.find({name:categoryName}).exec())[0]?._id;
       }
-      const query:any = {};
+      let query:any = {};
       // wenn es eine passende Category gibt
       if(categoryId)
       {
@@ -45,17 +45,46 @@ class ProductController {
       if(searchTerm)
       {
         const searchgrams : string[] = Helper.ngram(searchTerm, 3);
+    
         const searchgramString : string = searchgrams.join(' ');
-        console.log(searchTerm);
-        console.log(searchgramString);
+      
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
+        /*
         query.$text = {
                         $search:searchgramString,
                       };
-      }
+        */
 
+        query = {
+          $text : { $search : searchgramString},
+          score : { $meta : 'textScore'}
+        };
+        
+      }
+    console.log('query:');
+    console.log(query);
     // Sonst gebe einfach alle bis zu nem bestimmten limit hinzu
-    let list = await Product.find(query).skip(start).populate('user', '-password -address').populate('category').exec();
+    let list;
+    if(query.score)
+    {
+      list = await Product.find(query)
+        .sort({score : {$meta : 'textScore'}})
+        .skip(start)
+        .select('-ngrams -prefixNgrams')
+        .populate('user', '-password -address')
+        .populate('category')
+        .exec();
+    }
+    else
+    {
+      list = await Product.find(query)
+        .skip(start)
+        .select('-ngrams -prefixNgrams')
+        .populate('user', '-password -address')
+        .populate('category')
+        .exec();
+    }
+
     // Wieviele Elemente kommen danach noch
     const requestable =  Math.max(list.length - limit - start,0);
 
@@ -169,12 +198,14 @@ class ProductController {
     console.log(product);
 
     // add ngrams
-    const namegrams :string[] = Helper.ngram(product.name, 3);
-    // ngrams are saved as single string seperated by spaces so textsearch works
-    const namegramString : string = namegrams.join(' ');
-    console.log(namegramString);
+    const namegrams : string = Helper.ngram(product.name, 3).join(' ');
+
+    // add prefix ngrams
+    const prefixNgrams : string = Helper.prefixNgram(product.name, 3).join(' ');
+
     product = {... product,
-      ngrams : namegramString
+      ngrams : namegrams,
+      prefixNgrams : prefixNgrams
     };
     
 
