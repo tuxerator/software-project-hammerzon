@@ -28,6 +28,7 @@ export class ProductListItemComponent implements OnInit {
 
   public getDuration():string
   {
+    this.productInfo.duration = new Date(this.productInfo.duration);
     return this.productInfo ? getDurationString(this.productInfo.duration) : '';
   }
 

@@ -2,11 +2,11 @@
   <!--<p class="text-secondary">{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>-->
   <div class="row">
     <!--Image -->
-    <div class="col-3 px-2 pb-2 m-auto">
-      <img class="img-fluid col rounded"  src="api/img/{{productInfo.image_id}}">
+    <div class="col-4 col-lg-3 m-auto">
+        <img class="img-fluid  col rounded"  src="api/img/{{productInfo.image_id}}">
     </div>
     <!-- Infos -->
-    <div  class="col-9 px-2 pb-2">
+    <div  class="col-8 col-lg-9 px-2 pb-2">
       <!--- Rating -->
       <h6 *ngIf="productInfo.numberOfRatings! > 0" class="text-warning text-end">
         <ngb-rating [(rate)]="productInfo.averageRating!" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
@@ -22,12 +22,14 @@
       <!-- Category Badge Horizontal -->
       <app-category-badge class="text-muted" [category]="getCategory()" direction="hor"></app-category-badge>
       <!-- Price -->
-      <div class="text-primary">
-        {{productInfo.prize}} €/Std.
-      </div>
-      <div class="text-success">
-        {{getDuration()}}
-      </div>
+
+        <div class="text-primary">
+          {{productInfo.prize}} €/Std.
+        </div>
+        <div class="text-success">
+          {{getDuration()}}
+        </div>
+
       <!-- Creator / User of the product -->
       <div class="mt-2 text-end text-secondary">
         {{productInfo.user?.firstName}} {{productInfo.user?.lastName}}

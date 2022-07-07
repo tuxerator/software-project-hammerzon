@@ -29,12 +29,16 @@
     <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="...">
     <div class="py-3 bg-dark text-white">
       <div class="row justify-content-between">
-        <div class="col-10 fs-3 fw-bold me-auto">{{product?.name}}</div>
-        <a class="col-2 btn text-end fs-5" >
-          <i class="bi bi-star-fill text-warning"></i>
+        <div class="col-md-9 fs-3 fw-bold me-auto">{{product?.name}}</div>
+        <a *ngIf="product!.numberOfRatings! > 0" class="col-md-3 btn text-md-end fs-5" >
+          <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true"></ngb-rating>
           <span class="text-warning" > {{product?.averageRating}}</span>
           <span class="text-muted"> ({{product?.numberOfRatings}})</span>
         </a>
+        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-3 btn text-md-end fs-5 text-muted">
+          Keine Bewertungen
+        </a>
+
       </div>
       <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
       <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
@@ -43,13 +47,14 @@
     <!-- Duration Price Total Price -->
 
     <div class="text-white fw-bold fs-5 row justify-content-between">
-      <div class="col">
+      <div class="col-md-4">
         Dauer <span class="text-success"> {{getDurString()}}</span>
       </div>
-      <div class="col text-center">
-        Preis <span class="text-primary"> {{product?.prize}} €/Std.</span>
+      <div class="col-md-4 text-md-center">
+          Preis
+         <span class="text-primary"> {{product?.prize}} €/Std.</span>
       </div>
-      <div class="col text-end">
+      <div class="col-md-4 text-md-end">
         Total Preis <span class="text-muted"> {{getTotalPrice()}} €</span>
       </div>
     </div>
@@ -72,21 +77,24 @@
     <hr>
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
-    <div id="rating" class="fw-bold fs-5 mb-2">Bewertung(en)<i class="bi bi-star-fill text-warning"></i><span class="text-warning" > {{product?.averageRating}}</span><span class="text-muted"> ({{product?.numberOfRatings}})</span></div>
+    <div id="rating" class="fw-bold fs-5 mb-2">Bewertung(en)
+        <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true"></ngb-rating>
+        <span class="text-warning" > {{product?.averageRating}}</span>
+        <span class="text-muted"> ({{product?.numberOfRatings}})</span>
+      </div>
     <div *ngIf="hasOrdered && !hasRated" class="mb-4">
       <div class="bg-dark">
-        <form (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
-          <label for="exampleFormControlSelect1">Wie viele Sterne möchtest du vergeben?</label>
-          <div class="form-group">
-            <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="currentRating"></ngb-rating>
-            <label class="text-warning">{{currentRating}}</label>
+        <form class="" (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
+          <label for="exampleFormControlSelect1">Bewertung Abgeben?</label>
+          <div class="form-group w-100 py-2">
+              <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="currentRating"></ngb-rating>
+              <label class="text-warning">{{currentRating}}</label>
           </div>
-          <div class="form-group mt-2">
-            <label for="exampleFormControlTextarea1">Teile deine Bewertung...</label>
+          <div class="form-group py-2">
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-              formControlName="comment"></textarea>
+              formControlName="comment" placeholder="Erfahrung beschreiben"></textarea>
           </div>
-          <input class="ms-auto" type="submit" class="btn btn-primary mt-2" value="Bewertung abschicken">
+          <input type="submit" class="btn btn-primary mt-2" value="Bewertung abschicken">
         </form>
       </div>
     </div>
@@ -98,16 +106,18 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
     <div class="list-group">
       <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of product?.ratings">
           <div class="row justify-content-start">
-            <div class="col-auto  fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
-            <div class="col-auto">
-              <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
-              <label class="text-warning">{{elem.rating}}</label>
-            </div>
+            <div class="col-auto fs-5 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
           </div>
-          <p class="text-white align-center fw-light mb-4">
+          <div>
+            <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+            <label class="text-warning">{{elem.rating}}</label>
+          </div>
+          <p class="text-white align-center fw-light mb-2">
               {{elem.comment}}
           </p>
-          <div class="text-muted">{{getDate(elem.date)}}</div>
+          <div class="text-end">
+            <span class="text-muted">{{getDate(elem.date)}}</span>
+          </div>
       </div>
     </div>
 
