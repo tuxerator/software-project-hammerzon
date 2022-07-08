@@ -133,6 +133,34 @@ class RatingController {
     response.status(200);
     response.send(false);
   }
+
+  public async updateRating(request: SessionRequest , response : Response) : Promise<void>{
+    const productId = request.params.id;
+    const id = request.session.user._id;
+    const rating : IRating = request.body.rating;
+    if(id && Types.ObjectId.isValid(id)){
+      const product : IProduct = await Product.findById(productId).populate({
+        path: 'ratings',
+        populate: {
+          path: 'user',
+          model: 'User'
+        }
+      }).select('-password')
+      .exec();
+
+      const k = product.ratings.find(elem => elem._id.toString() === rating._id);
+      if(rating.helpfulUsers.length < k.helpfulUsers.length){
+        k.helpfulUsers = k.helpfulUsers.filter(elem => elem !== id);
+      }else{
+        k.helpfulUsers.push(id);
+      }
+      product.save();
+      response.status(200);
+      response.send(product);
+    }else{
+    response.status(500);
+    response.send('wrong user');}
+  }
 }
 
 

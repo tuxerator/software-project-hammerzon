@@ -41,7 +41,8 @@ export class Rating {
   rating : number;
   comment : string;
   user? : User;
-  date?:Date
+  date?:Date;
+  helpfulUsers : string[] = [];
 
   constructor(rating: number, comment: string) {
     this.rating = rating;

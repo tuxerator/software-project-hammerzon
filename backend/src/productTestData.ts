@@ -36,7 +36,8 @@ export default class ProductTestData {
       image_id: '',
       numberOfRatings : 0,
       rating : 1,
-      comments : []
+      comments : [],
+      helpfulUsers : []
     },
     {
       name: 'Gartenarbeit',
@@ -61,7 +62,8 @@ export default class ProductTestData {
       ],
       numberOfRatings : 0,
       rating : 1,
-      comments : []
+      comments : [],
+      helpfulUsers : []
 
     },
     {
@@ -81,7 +83,8 @@ export default class ProductTestData {
         ],
         numberOfRatings : 0,
         rating : 1,
-        comments : []
+        comments : [],
+        helpfulUsers : []
     },
     {
         name:'Rohbauarbeiten',
@@ -100,7 +103,8 @@ export default class ProductTestData {
         ],
         numberOfRatings : 0,
         averageRating : 1,
-        ratings : []
+        ratings : [],
+        helpfulUsers : []
     },
     {
         name:'Innenarchitketur',
@@ -112,7 +116,8 @@ export default class ProductTestData {
         appointments:[{date:new Date(2022, 8, 19, 13),isReserved:true}],
         numberOfRatings : 0,
         averageRating : 1,
-        ratings : []
+        ratings : [],
+        helpfulUsers : []
     },
     {
         name:'Terrassenbau',
@@ -124,7 +129,8 @@ export default class ProductTestData {
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
         averageRating : 1,
-        ratings : []
+        ratings : [],
+        helpfulUsers : []
 
     },
     {
@@ -137,7 +143,8 @@ export default class ProductTestData {
         appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
         averageRating : 1,
-        ratings : []
+        ratings : [],
+        helpfulUsers : []
 
     },{
       name: 'Fliesenlegen mit Alten entfernen',

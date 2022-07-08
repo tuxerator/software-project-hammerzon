@@ -168,6 +168,8 @@ app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.
 app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, rating.canRate);
 
 app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, rating.hasRated);
+
+app.post('/api/product/:id/updateRating',rating.updateRating.bind(rating));
 // Imager Controller endpoints
 // Add Images
 app.post('/api/img/upload', upload.single('img'), image.postImage);

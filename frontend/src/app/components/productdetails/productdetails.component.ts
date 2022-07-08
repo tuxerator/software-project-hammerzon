@@ -47,9 +47,9 @@ export class ProductdetailsComponent implements OnInit {
     this.id = String(routeParams.get('id'));
     this.changeId(this.id);
 
-    this.user = this.authService.user;
+    //this.user = this.authService.user;
     // is there a user logged in? get the user.
-    /*this.authService.getUser().subscribe(
+    this.authService.getUser().subscribe(
       {
         next: (val) => {
           this.user = val;
@@ -58,7 +58,7 @@ export class ProductdetailsComponent implements OnInit {
           console.log(err);
         }
       }
-    );*/
+    );
   }
 
   public onImageLoaded()
@@ -243,4 +243,57 @@ export class ProductdetailsComponent implements OnInit {
   setProduct(product:Product) : void {
     this.product = product;
   }
+
+  //erhöhen/reduzieren des "hilfreiche Bewertungen" counters
+
+  canRateAsHelpful(array : string[]) : boolean{
+    const id = this.user?._id;
+    if(id){
+      return !array.includes(id)
+    }
+    return false;
+  }
+
+  rateAsHelpful(rating : Rating) : void{
+    const id = this.user?._id;
+    const pid = this.product?._id;
+    if(id && pid){
+      rating.helpfulUsers.push(id);
+      this.productService.updateRating(pid , rating).subscribe({
+        next:
+          this.onProductRecieved.bind(this),
+        error:(err) =>
+        {
+          console.log(err);
+        }
+      })
+    }
+  }
+
+  unrateAsHelpful(rating: Rating) : void {
+    const pid = this.product?._id;
+    const id = this.user?._id;
+    console.log("pid");
+    console.log(pid);
+    console.log("id");
+    console.log(id);
+    if(id && pid){
+      console.log(rating.helpfulUsers);
+      console.log(id);
+      rating.helpfulUsers = rating.helpfulUsers.filter(elem =>  elem !== id)
+      this.productService.updateRating(pid , rating).subscribe({
+        next:
+          this.onProductRecieved.bind(this),
+        error:(err) =>
+        {
+          console.log(err);
+        }
+      })
+    }
+    
+    
+  }
+
 }
+
+
