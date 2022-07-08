@@ -58,10 +58,10 @@
               class="input-group has-validation col" id="durationInput">
               <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
               <input aria-label="Stunden" class="form-control" formControlName="durationHour" placeholder="Stunden"
-                     required type="text">
+                     required type="number" (change)="updateDuration()">
               <span class="input-group-text">std.</span>
               <input aria-label="Minuten" class="form-control" formControlName="durationMinute" placeholder="Minuten"
-                     required type="text">
+                     required type="number" (change)="updateDuration()">
               <span class="input-group-text">min.</span>
               <div
                 *ngIf="!addProductForm.controls['durationHour']?.invalid && !addProductForm.controls['durationMinute']?.invalid"
@@ -81,6 +81,7 @@
         <app-availability-picker (newAvailability)="addAvailability($event)"
                                  [form]="availabilityGroup"
                                  [(defaultTimeFrame)]="defaultTimeFrame"
+                                 [duration]="duration"
                                  class="col-12"
         ></app-availability-picker>
 

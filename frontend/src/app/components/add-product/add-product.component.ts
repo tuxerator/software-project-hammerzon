@@ -59,6 +59,7 @@ export class AddProductComponent implements OnInit {
     durationMinute: new FormControl('', [Validators.required]),
   });
 
+  duration: Date = new Date(0);
   defaultTimeFrame: Availability = {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
@@ -148,6 +149,15 @@ export class AddProductComponent implements OnInit {
       return `0${ number }`;
     }
     return `${ number }`;
+  }
+
+  updateDuration = () => {
+    const hoursControl = this.addProductForm.get('durationHour') as FormControl;
+    const minutesControl = this.addProductForm.get('durationMinute') as FormControl;
+    const hours = hoursControl ? parseInt(hoursControl.value, 10) : 0;
+    const minutes = minutesControl ? parseInt(minutesControl.value, 10) : 0;
+    this.duration.setUTCHours(hours);
+    this.duration.setUTCMinutes(minutes);
   }
 
   uploadImage(inputElement: any) {

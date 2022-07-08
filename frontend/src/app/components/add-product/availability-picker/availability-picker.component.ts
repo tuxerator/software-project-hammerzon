@@ -25,6 +25,7 @@ export class AvailabilityPickerComponent implements OnInit {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
   }
+  @Input() duration: Date | null = null;
 
   @Output() defaultTimeFrameChange = new EventEmitter<Availability>();
   @Output() newAvailability = new EventEmitter<Availability[]>();
@@ -204,6 +205,43 @@ export class AvailabilityPickerComponent implements OnInit {
       console.log(validationError);
       return validationError;
     };
+  }
+
+  /**
+   * Validator that requires defaultTimeFrame to be at least as long as duration.
+   */
+  defaultTimeFrameLongerThanDuration = (): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const duration = this.duration?.getTime();
+
+      let validationError: ValidationErrors | null = null;
+
+      // Duration needs to be set
+      if (!duration) {
+
+        validationError = {
+          noDuration: { message: 'No duration set' }
+        };
+
+      }
+      else {
+        const timeFrame = this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime();
+
+        // Default time frame needs to be at least as long as duration
+        if (timeFrame < duration) {
+          validationError = {
+            defaultTimeFrameTooShort: {
+              message: 'Default time frame is too short',
+              duration: duration,
+              timeFrame: timeFrame
+            }
+          };
+        }
+      }
+
+      console.log(validationError);
+      return validationError;
+    }
   }
 
   // update the validity of the controls in the group

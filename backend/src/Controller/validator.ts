@@ -163,7 +163,7 @@ export class Validators{
       response.status(400);
       response.send({ code: 40, message: `${ key } is not a valid ObjectID` });
       return false;
-    }
+    };
   }
 }
 

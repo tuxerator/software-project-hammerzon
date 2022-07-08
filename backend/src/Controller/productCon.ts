@@ -4,8 +4,10 @@ import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Model, Types } from 'mongoose';
 import { Order } from '../Models/Order';
+import ProductTestData from '../productTestData';
 
 class ProductController {
+
   // Gibt die ProductInfos die zwischen start und start+limit liegen
   // und eine zusätzliche Informationen requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, zurück
   // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
@@ -154,12 +156,14 @@ class ProductController {
    * @param res
    */
   public async getAvailabilityList(req: Request, res: Response): Promise<void> {
+    console.log('GET:\nproduct availabilities from product: %o', req.params.id);
     const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
     if (!product) {
       res.status(400);
       res.send({ code: 400, message: 'Product does not exist' });
       return;
     }
+    console.log('availabilities: %o', product.availability);
     res.status(200);
     res.send(product.availability);
   }

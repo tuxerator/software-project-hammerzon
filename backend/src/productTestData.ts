@@ -1,7 +1,8 @@
-import { IProduct, Product } from './Models/Product';
+import { IAvailability, IProduct, Product } from './Models/Product';
 import { Iimage, Image } from './Models/Image';
 import fs from 'fs';
 import path from 'path';
+import errorHandler from 'errorhandler';
 
 export default class ProductTestData {
 
@@ -111,9 +112,44 @@ export default class ProductTestData {
     }
   ];
 
-  constructor() {
-    //Product.deleteMany({});
-    this.insertIfNotExistend();
+  constructor(amout:number) {
+    Product.deleteMany({});
+
+
+    for (let i = 0; i < amout; i++) {
+        const start = new Date((Math.random() * 23) * 60 * 60 * 1000);
+        const end = new Date((Math.random() * 23 - start.getHours()) * 60 * 60 * 1000 );
+      const product = new Product({
+        name: `test${i + 1}`,
+        user: '6284efd5b72a93135fb79c87',
+        prize: 10,
+        description: `This is test product ${i +1}`,
+        duration: Math.random() * 36,
+        defaultTimeFrame: {
+          start: start,
+          end: end
+        },
+        availability: [],
+        image_id: '62bb5fb68f0312ffbcd0c817'
+      });
+
+      let availability: IAvailability = {
+        startDate: new Date,
+        endDate: new Date,
+      }
+      for (let i = 0; i < Math.floor(Math.random() * 100); i++) {
+          availability.startDate = new Date(availability.endDate.getTime() + Math.floor(Math.random() * 100) * 24 * 60 * 60 * 1000);
+          availability.endDate = new Date(new Date().getTime() + availability.startDate.getTime() + Math.floor(Math.random() * 100) * 24 * 60 * 60 * 1000);
+
+          availability.startDate = new Date(availability.startDate.getTime() + product.defaultTimeFrame.start.getTime());
+          availability.endDate = new Date(availability.endDate.getTime() + product.defaultTimeFrame.end.getTime());
+
+          product.availability.push(availability);
+        }
+
+        console.log('created product: ', product);
+      product.save().catch(errorHandler);
+    }
   }
 
   async insertIfNotExistend(): Promise<void> {
