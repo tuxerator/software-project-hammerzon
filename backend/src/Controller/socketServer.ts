@@ -13,7 +13,7 @@ export class SocketServer{
     this.server.on('connection', (client) => {
         console.log('new client');
 
-        client.on('testMessageChannel', data => {
+        client.on('testMessageChannel', (data) => {
             console.log(data);
         });
     });

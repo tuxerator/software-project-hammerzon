@@ -12,6 +12,8 @@ interface IProduct extends Document{
   description:string
   // ngrams für bessere Suche
   ngrams : string
+  // prefix ngrams für weniger false positives
+  prefixNgrams : string
   // Preis der Dienstleistung
   prize:number
   // Zeit dauer der Dienstleistung
@@ -67,6 +69,7 @@ const productSchema : Schema = new Schema<IProduct>({
   user:            { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   description:     { type: String },
   ngrams:          { type: String , required : true},
+  prefixNgrams:    { type: String , required : true},
   prize:           { type: Number, required: true },
   duration:        { type: Date,   required: true },
   appointments:    { type: [Appointment], required: true },
@@ -77,7 +80,17 @@ const productSchema : Schema = new Schema<IProduct>({
   ratings:          { type: [Rating] , required : true, default : []},
 });
 // Index für alle Strings im element
-productSchema.index({'ngrams': 'text','description':'text'});
+productSchema.index({
+  'ngrams': 'text',
+  'prefixNgrams' : 'text'
+},
+{
+  weights : {
+    ngrams : 5,
+    prefixNgrams : 10
+  }
+}
+);
 
 // 3. Create a Model.
 const Product: Model<IProduct> = model<IProduct>('Product', productSchema);

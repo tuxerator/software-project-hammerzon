@@ -52,18 +52,40 @@ class Helper {
    * @returns
    */
   public static ngram(word : string, minSize : number) : string[] {
+    if( word.length <= minSize) 
+    {
+      return [word];
+    }
     const length = word.length;
     const startSizeRange = minSize;
-    const endSizeRange = Math.max(length, minSize);
-    const ngramms : string[] = [];
+    const endSizeRange = Math.max(length, minSize); 
+    const ngrams : string[] = [];
     for(let i = startSizeRange; i < endSizeRange; i++ )
     {
       for(let j = 0;j < Math.max(0, length - i) +1; j++)
       {
-        ngramms.push(word.slice(j, j+i));
+        ngrams.push(word.slice(j, j+i));
       }
     }
-    return ngramms;
+    return ngrams;
+  }
+
+  /**
+   * the first substrings of word should get more weight when searching
+   * @param word 
+   * @param minSize 
+   * @returns 
+   */
+  public static prefixNgram(word : string, minSize : number) : string[] {
+    const length = word.length;
+    const prefixNgrams : string[] = [];
+    const first = word.slice(0, minSize);
+    prefixNgrams.push(first);
+    for(let i = minSize; i < length; i++) 
+    {
+      prefixNgrams.push(first + word.slice(minSize, i));
+    }
+    return prefixNgrams;
   }
 }
 
