@@ -49,7 +49,7 @@
 
     <div class="text-white fw-bold fs-5 row justify-content-between">
       <div class="col-md-4">
-        Dauer <span class="text-success"> {{getDurString()}}</span>
+        Dauer <span class="text-success">ca. {{getDurString()}}</span>
       </div>
       <div class="col-md-4 text-md-center">
         Preis
@@ -114,16 +114,16 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
     <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
     <div class="list-group">
-      <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of product?.ratings">
-        <div class="row justify-content-start">
+      <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of showMoreRating ? product?.ratings : product?.ratings?.slice(0,3)">
+        <div class="row justify-content-start ">
           <div class="col-auto fs-6 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
           <div class="col-auto fs-6">
             <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
             <label class="text-warning">{{elem.rating}}</label>
           </div>
         </div>
-        <div class="text-muted">{{getDate(elem.date)}}</div>
-        <p class="text-white align-center fw-light mb-2">
+        <div class="text-muted mb-2">{{getDate(elem.date)}}</div>
+        <p class="text-white align-center fw-light mb-3">
           {{elem.comment}}
         </p>
 
@@ -138,8 +138,11 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
             mehr hilfreich
           </button>
 
-        </div>
+        </div >
 
+      </div>
+      <div *ngIf="product!.ratings!.length! > 3" class="list-group-item bg-dark border-secondary text-center">
+        <a class="btn btn-link" (click)="showMoreRating = !showMoreRating">{{showMoreRating?  'Weniger Anzeigen' : 'Mehr Anzeigen'}}</a>
       </div>
     </div>
 

@@ -22,6 +22,7 @@ export class ProductdetailsComponent implements OnInit {
   hasRated : boolean = false;
   currentRating : number = 1;
   id:string = '';
+  showMoreRating:boolean = false;
 
   similarProducts?:Product[];
   public addRatingForm : FormGroup = this.formBuilder.group({
