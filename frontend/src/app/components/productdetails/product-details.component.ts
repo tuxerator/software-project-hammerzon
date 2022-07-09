@@ -8,14 +8,15 @@ import { ProductService } from '../../services/product.service';
 import { delay, timeout } from 'rxjs';
 
 @Component({
-  templateUrl: './productdetails.component.html',
-  styleUrls: ['./productdetails.component.css']
+  templateUrl: './product-details.component.html',
+  styleUrls: ['./product-details.component.css']
 })
-export class ProductdetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit {
   product!: Product;
   //public productID: string;
   user: User | undefined;
   appointmentDate?: Date;
+  defaultTimeFrame!: Availability;
 
   id: string = '';
 
@@ -46,6 +47,8 @@ export class ProductdetailsComponent implements OnInit {
           /*for (let i = 0; i < this.product.appointments.length; i++) {
             this.product.appointments[i].date = new Date(this.product.appointments[i].date);
           }*/
+
+          this.defaultTimeFrame = new Availability(new Date(this.product.defaultTimeFrame.start), new Date(this.product.defaultTimeFrame.end));
 
           console.log(this.product);
           console.log(this.user);
@@ -120,7 +123,7 @@ export class ProductdetailsComponent implements OnInit {
         }
       });
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['login']);
     }
   }
 

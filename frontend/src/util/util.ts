@@ -1,6 +1,7 @@
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 export const utcOffset: number = new Date(0).getTime();
+export const dayInMilliseconds: number = 24 * 60 * 60 * 1000;
 
 export function isInteger(value: any): value is number {
   return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;

@@ -31,17 +31,16 @@ export class OrderService {
     return this.http.get<Order[]>('api/order/listByCreator');
   }
 
-  valdiateOrder(productId: string, appointment:Availability): Observable<MessageResponse>
-  {
-    const postOrder: PostOrder = {productId, appointment};
-    return this.http.post<MessageResponse>('api/order/validate',postOrder);
+  validateOrder(productId: string, appointment: Availability): Observable<MessageResponse> {
+    const postOrder: PostOrder = { productId, appointment };
+    return this.http.post<MessageResponse>('api/order/validate', postOrder);
   }
+
   /**
    * register an order with productID and a single appointment.
    */
-  addOrder(productId: string, appointment:Availability) : Observable<MessageResponse & {orderRegistered:Boolean}>
-  {
-    const postOrder: PostOrder = {productId, appointment};
+  addOrder(productId: string, appointment: Availability): Observable<MessageResponse & { orderRegistered: Boolean }> {
+    const postOrder: PostOrder = { productId, appointment };
     return this.http.post<MessageResponse & {orderRegistered:Boolean}>('api/order/add', postOrder);
   }
 
@@ -69,6 +68,11 @@ export class OrderService {
 
   getAvailabilityList(productId: string): Observable<Availability[]> {
     return this.http.get<Availability[]>(`api/product/${ productId }/availability/list`);
+  }
+
+
+  validateAppointment(productId: string, appointment: Availability): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`api/order/validate`, { productId, appointment });
   }
 
 }

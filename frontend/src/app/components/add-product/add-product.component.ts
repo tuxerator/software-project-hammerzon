@@ -293,7 +293,7 @@ export class AddProductComponent implements OnInit {
   }
 
   createAvailabilities = (availability: Availability): Availability[] => {
-    let availabilities: Availability[] = [];
+    let availabilities: Availability[];
 
     // Split availability into multiple availabilities such that the hindrances are excluded
     console.log('hindrances: %o', this.hindrances);

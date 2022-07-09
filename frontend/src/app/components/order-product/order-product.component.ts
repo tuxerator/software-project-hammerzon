@@ -85,8 +85,9 @@ export class OrderProductComponent implements OnInit {
           next: (val) => {
             this.orderRegistered = val.orderRegistered;
             console.log('orderRegistered:' + this.orderRegistered);
-            if (this.orderRegistered === true) {
-              const url = `productdetails/${ this.product?._id }/order-product/${this.appointment?.startDate}/order-finalized`;
+            if (this.orderRegistered) {
+              const url = `productdetails/${ this.product?._id }/order-product/${ this.appointment?.startDate }/order-finalized`;
+              console.log('navigating to: ' + url);
               this.router.navigateByUrl(url);
             } else {
               // appointment not available

@@ -162,7 +162,7 @@ app.get('/api/img/:id', image.getImage);
 // OrderController endpoints
 
 // validate order
-app.post('/api/order/validate', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.validateOrder);
+app.post('/api/order/validate', asyncHandler(isValidAppointment), order.validateOrder);
 
 // add a new Order
 app.post('/api/order/add', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.addOrder);

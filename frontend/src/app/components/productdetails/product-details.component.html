@@ -17,6 +17,7 @@
           <app-appointment-selector
             (createAppointmentEvent)="orderProduct($event)"
             [duration]="product.duration.getTime()"
+            [defaultTimeFrame]="defaultTimeFrame"
           ></app-appointment-selector>
 
 

@@ -40,11 +40,26 @@ export class Product {
 export class Availability {
   startDate: Date;
   endDate: Date;
+
   // gibt an ob es noch zu lesen der Termin noch angegeben wird
 
   constructor(startDate: Date, endDate: Date) {
     this.startDate = startDate;
     this.endDate = endDate;
+  }
+
+  public static compare = (a: Availability, b: Availability): number => {
+    const startA = a.startDate.getTime();
+    const startB = b.startDate.getTime();
+    const endA = a.endDate.getTime();
+    const endB = b.endDate.getTime();
+
+    const startDiff = startA - startB;
+    if (!startDiff) {
+      return endA - endB;
+    }
+
+    return startDiff;
   }
 }
 
