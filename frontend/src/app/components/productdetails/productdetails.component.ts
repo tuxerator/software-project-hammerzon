@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
 import { Category } from 'src/app/models/Category';
-import { Product, getAppointmentString, getDurationString, Rating,getCategory } from '../../models/Product';
+import { Product, getAppointmentString, getDurationString, Rating,getCategory, roundTo2Digits } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReadableByteStreamControllerCallback } from 'stream/web';
@@ -70,7 +70,6 @@ export class ProductdetailsComponent implements OnInit {
   public changeId(id:string):void
   {
     this.id = id;
-
 
     this.loading.product = true;
     this.loading.similar = true;
@@ -199,18 +198,18 @@ export class ProductdetailsComponent implements OnInit {
 
       console.log(this.product);
       console.log(this.user);
-      this.loading.product = true;
+      //this.loading.product = true;
 
       this.productService.hasRated(this.id).subscribe({
         next:(val) => {
           this.hasRated = val;
           console.log('has the user rated? ' + val);
-          this.loading.product = false;
+          //this.loading.product = false;
         },
         error:(err) =>
         {
           console.log(err);
-          this.loading.product = false;
+          //this.loading.product = false;
         }
       });
   }
@@ -218,14 +217,16 @@ export class ProductdetailsComponent implements OnInit {
 
   onSubmit()
   {
+    console.log('On Submit');
     const form = this.addRatingForm.value;
     if(this.user)
     {
+      console.log('is On Submit and User');
       this.loading.hasRated = true;
       const rating : Rating = new Rating(this.currentRating, form.comment);
       this.productService.submitRating(this.id, rating).subscribe({
-        next: () => {
-          this.onProductRecieved.bind(this);
+        next: (product) => {
+          this.onProductRecieved(product);
           this.loading.hasRated = false;
         },
         error:(error) => {
@@ -249,7 +250,7 @@ export class ProductdetailsComponent implements OnInit {
   canRateAsHelpful(array : string[]) : boolean{
     const id = this.user?._id;
     if(id){
-      return !array.includes(id)
+      return !array.includes(id);
     }
     return false;
   }
@@ -266,21 +267,21 @@ export class ProductdetailsComponent implements OnInit {
         {
           console.log(err);
         }
-      })
+      });
     }
   }
 
   unrateAsHelpful(rating: Rating) : void {
     const pid = this.product?._id;
     const id = this.user?._id;
-    console.log("pid");
+    console.log('pid');
     console.log(pid);
-    console.log("id");
+    console.log('id');
     console.log(id);
     if(id && pid){
       console.log(rating.helpfulUsers);
       console.log(id);
-      rating.helpfulUsers = rating.helpfulUsers.filter(elem =>  elem !== id)
+      rating.helpfulUsers = rating.helpfulUsers.filter(elem =>  elem !== id);
       this.productService.updateRating(pid , rating).subscribe({
         next:
           this.onProductRecieved.bind(this),
@@ -288,10 +289,14 @@ export class ProductdetailsComponent implements OnInit {
         {
           console.log(err);
         }
-      })
+      });
     }
-    
-    
+  }
+
+
+  public get roundTo2Digits():(val: number) => string
+  {
+    return roundTo2Digits;
   }
 
 }

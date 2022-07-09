@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit {
 
   public isOnLandingPage():boolean
   {
-    console.log(this.router.url);
+    //console.log(this.router.url);
     let url = this.router.url;
     const queryStart = url.indexOf('?');
 

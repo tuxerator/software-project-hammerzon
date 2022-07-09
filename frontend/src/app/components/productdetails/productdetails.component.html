@@ -34,7 +34,7 @@
         <a *ngIf="product!.numberOfRatings! > 0" class="col-md-4 btn text-md-end fs-5">
           <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
           </ngb-rating>
-          <span class="text-warning"> {{product?.averageRating}}</span>
+          <span class="text-warning">{{roundTo2Digits(product!.averageRating!)}}</span>
           <span class="text-muted"> ({{product?.numberOfRatings}})</span>
         </a>
         <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 btn text-md-end fs-5 text-muted">
@@ -83,7 +83,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
       <a *ngIf="product?.numberOfRatings! > 0">
         <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
         </ngb-rating>
-        <span class="text-warning"> {{product?.averageRating}}</span>
+        <span class="text-warning"> {{roundTo2Digits(product!.averageRating!)}}</span>
         <span class="text-muted"> ({{product?.numberOfRatings}})</span>
       </a>
       <a *ngIf="product!.numberOfRatings! <= 0">
@@ -116,26 +116,30 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
     <div class="list-group">
       <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of product?.ratings">
         <div class="row justify-content-start">
-          <div class="col-auto fs-5 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
+          <div class="col-auto fs-6 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
+          <div class="col-auto fs-6">
+            <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+            <label class="text-warning">{{elem.rating}}</label>
+          </div>
         </div>
-        <div>
-          <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
-          <label class="text-warning">{{elem.rating}}</label>
-        </div>
+        <div class="text-muted">{{getDate(elem.date)}}</div>
         <p class="text-white align-center fw-light mb-2">
           {{elem.comment}}
         </p>
-        <div class="row justify-content-end">
-          <div class="text-muted col-auto">{{getDate(elem.date)}}</div>
+
+        <div class="row pe-2" [class]="elem.helpfulUsers.length == 0 ? ['justify-content-end']: ['justify-content-between']">
+          <span *ngIf="elem.helpfulUsers.length == 1" class="col-auto text-muted">Eine Person fand diese Bewertung hilfreich.</span>
+          <span *ngIf="elem.helpfulUsers.length > 1" class="col-auto text-muted">{{elem.helpfulUsers.length}} Personen fanden diese
+              Bewertung hilfreich.</span>
           <button *ngIf="authService.isLogedIn() && canRateAsHelpful(elem.helpfulUsers)" (click)="rateAsHelpful(elem)"
-            type="button" class="btn btn-link col-auto">Diese Bewertung ist hilfreich.</button>
+            type="button" class="btn btn-outline-secondary btn-sm col-auto"> <i class="bi bi-hand-thumbs-up-fill"></i> Hilfreich</button>
           <button *ngIf="authService.isLogedIn() && !canRateAsHelpful(elem.helpfulUsers)"
-            (click)="unrateAsHelpful(elem)" type="button" class="btn btn-link col-auto">Diese Bewertung ist nicht mehr
-            hilfreich.</button>
+            (click)="unrateAsHelpful(elem)" type="button" class="btn btn-outline-secondary btn-sm col-auto"> <i class="bi bi-hand-thumbs-down-fill"></i> Nicht
+            mehr hilfreich
+          </button>
+
         </div>
-        <div *ngIf="elem.helpfulUsers.length == 1" class="text-white">Eine Person fand diese Bewertung hilfreich.</div>
-        <div *ngIf="elem.helpfulUsers.length > 1" class="text-white">{{elem.helpfulUsers.length}} Personen fanden diese
-          Bewertung hilfreich.</div>
+
       </div>
     </div>
 

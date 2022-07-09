@@ -82,7 +82,8 @@ const productSchema : Schema = new Schema<IProduct>({
 // Index für alle Strings im element
 productSchema.index({
   'ngrams': 'text',
-  'prefixNgrams' : 'text'
+  'prefixNgrams' : 'text',
+  'description':'text'
 },
 {
   weights : {

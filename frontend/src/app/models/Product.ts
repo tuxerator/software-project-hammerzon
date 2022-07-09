@@ -85,8 +85,12 @@ export const getCategory = (product:Product): Category|undefined =>
 
 
 export const getAppointmentString = (date?: Date): string => {
-  console.log(date);
+  //console.log(date);
   return dateFormater.format(date);
 };
 
 
+export const roundTo2Digits = (val:number):string =>
+{
+    return (Math.round(val * 100) / 100) + '';
+};

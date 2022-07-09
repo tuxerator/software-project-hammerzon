@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/Category';
-import { getCategory, getDurationString, Product } from 'src/app/models/Product';
+import { getCategory, getDurationString, Product, roundTo2Digits } from 'src/app/models/Product';
 
 @Component({
   selector: 'app-product-list-item',
@@ -38,6 +38,11 @@ export class ProductListItemComponent implements OnInit {
     {
       this.click(this.productInfo._id);
     }
+  }
+
+  public get roundTo2Digits():(val: number) => string
+  {
+    return roundTo2Digits;
   }
 
 }

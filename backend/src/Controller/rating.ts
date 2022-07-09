@@ -138,7 +138,12 @@ class RatingController {
     const productId = request.params.id;
     const id = request.session.user._id;
     const rating : IRating = request.body.rating;
+
+    console.log(productId);
+    console.log(id);
+    console.log(rating);
     if(id && Types.ObjectId.isValid(id)){
+      console.log('before finding product');
       const product : IProduct = await Product.findById(productId).populate({
         path: 'ratings',
         populate: {
@@ -147,6 +152,8 @@ class RatingController {
         }
       }).select('-password')
       .exec();
+
+      console.log(product);
 
       const k = product.ratings.find(elem => elem._id.toString() === rating._id);
       if(rating.helpfulUsers.length < k.helpfulUsers.length){
@@ -159,7 +166,7 @@ class RatingController {
       response.send(product);
     }else{
     response.status(500);
-    response.send('wrong user');}
+    response.send('User does not exist');}
   }
 }
 

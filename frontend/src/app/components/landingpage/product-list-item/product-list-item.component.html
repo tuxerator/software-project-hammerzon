@@ -10,7 +10,7 @@
       <!--- Rating -->
       <h6 *ngIf="productInfo.numberOfRatings! > 0" class="text-warning text-end">
         <ngb-rating [(rate)]="productInfo.averageRating!" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
-        <label class="text-warning">{{productInfo.averageRating}}</label>
+        <label class="text-warning">{{roundTo2Digits(productInfo!.averageRating!)}}</label>
         <span class="text-muted">({{productInfo.numberOfRatings}})</span>
       </h6>
       <!--- No Reviews -->
