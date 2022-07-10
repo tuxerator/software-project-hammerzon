@@ -10,7 +10,7 @@ import session from 'express-session';
 
 class OrderController {
   /**
-   * gets every finalized Order from the schema in a list.
+   * gets every Order from the schema in a list, with populated Product and User fields.
    */
   public async listAllOrders(request: SessionRequest, response: Response): Promise<void> {
     if (!request.session.user || !(request.session.user.role === 'admin')) {
@@ -39,7 +39,7 @@ class OrderController {
   }
 
   /**
-   * finds all orders a user has finalized
+   * finds all orders a specific user has placed
    */
   public async listAllOrdersByUser(request: SessionRequest, response: Response): Promise<void> {
 
@@ -64,7 +64,7 @@ class OrderController {
   }
 
   /**
-   * list all orders for the products a user added
+   * list all orders for the products a specific user offers
    */
   public async listOrdersByCreator(request: SessionRequest, response: Response): Promise<void> {
     const id = request.session.user._id;

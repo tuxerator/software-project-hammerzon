@@ -31,7 +31,7 @@ export class PaymentController
   }
 
   /**
-   *
+   * Checks if the users account is from germany (only then the user should be able to place an order)
    * @param request
    * {
    *   account: 'name'
@@ -51,7 +51,6 @@ export class PaymentController
     const paymentType: PaymentType = request.body.paymentType;
     // get the right payment config = (every information needed for a axios request)
     const paymentConfig = this.payOptions[paymentType];
-
 
     const req = new CountryRequest;
     req.account = request.body.account;
@@ -92,6 +91,9 @@ export class PaymentController
   }
   // MiddelWare => isRequired Password + (Session.paymentAccount Correct Account)
   /**
+   * 
+   * Pay for a product and place an order
+   * 
    * request:
    * - hcipal, swpsafe
    * postOrder

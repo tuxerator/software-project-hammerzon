@@ -41,9 +41,10 @@ class Helper {
    * generates a list of substrings of the input strings
    * if the ngram list of the search query and the list of the productname
    * overlap in any way the product is shown as a result of the seach query
-   * @param word the input string from the searchquery or product name
-   * @param minSize size of the string slices  
-   * @returns 
+   * @param word      - the input string from the searchquery or product name
+   * @param minSize   - minimum size of the string slices. The smaller this number is, 
+   *                    the more products will (falsly) match the search query
+   * @returns         - list of substrings
    */
   public static ngram(word : string, minSize : number) : string[] {
     if( word.length <= minSize) 
@@ -65,9 +66,10 @@ class Helper {
   }
 
   /**
-   * the first substrings of word should get more weight when searching
-   * @param word 
-   * @param minSize 
+   * gets substrings, which are only prefixes of the word, because
+   * the prefixes should get more weight when searching.
+   * @param word      - the product name
+   * @param minSize   - minimum size of the substrings
    * @returns 
    */
   public static prefixNgram(word : string, minSize : number) : string[] {

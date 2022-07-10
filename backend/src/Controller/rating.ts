@@ -11,8 +11,6 @@ import { Session } from 'express-session';
 class RatingController {
   /**
    * add a rating to a product
-   * validate: - rating is between 1 and 5
-   *           - user has ordered the product
    * @param request - productid as route parameter
    * {
    *   rating: Rating
@@ -26,6 +24,7 @@ class RatingController {
   public async addRating(request: SessionRequest, response: Response): Promise<void> {
     const id = request.params.id;
     const user = request.session.user._id;
+    // check if the user has ordered the product and can rate
     this.hasOrdered(user, id).then(async (result) => {
       if(result)
       {
@@ -43,11 +42,9 @@ class RatingController {
              user,date:new Date()};
 
           product.ratings = [add, ... product.ratings];
-          console.log(product.ratings);
           product.save();
+          // send the updated product to the frontend
           const returnProduct : any = product;
-          console.log(numberOfRatings);
-          console.log(returnProduct.ratings);
           returnProduct.ratings[0].user = request.session.user;
           response.status(200);
           response.send(returnProduct);
