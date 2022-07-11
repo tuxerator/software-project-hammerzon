@@ -8,7 +8,7 @@ import { AllOrdersComponent } from './components/all-orders/all-orders.component
 import { OrderProductComponent } from './components/order-product/order-product.component';
 import { LoginComponent } from './components/login/login.component';
 import { PersonalProfileComponent } from './components/personalprofile/personalprofile.component';
-import { ProductDetailsComponent } from './components/productdetails/productdetails.component';
+import { ProductDetailsComponent } from './components/productdetails/product-details.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
@@ -49,7 +49,7 @@ const routes: Routes = [
     path: 'productdetails/:id/order-product/order-finalized',
     component: OrderFinalizedComponent,
     canActivate: [AuthGuardService]
-  }
+  },
   // Admin
   { path: 'admin', component: AdminComponent, canActivate: [AdminAuthGuardService] },
   { path: 'admin/category', component: CategoryComponent, canActivate: [AdminAuthGuardService] },
