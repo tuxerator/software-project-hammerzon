@@ -1,0 +1,98 @@
+<form class="row row-cols-sm-auto needs-validation" [formGroup]="productForm"
+      (focusout)="updateGroupValidity(productForm); consoleLog('lost focus')" novalidate>
+  <div class="col-12">
+    <div class="dp-hidden position-absolute">
+      <div class="input-group">
+        <input #datepicker="ngbDatepicker"
+               (dateSelect)="onDateSelection($event)"
+               [autoClose]="'outside'"
+               [dayTemplate]="t"
+               [displayMonths]="2"
+               [footerTemplate]="footerTemplate"
+               [markDisabled]="isDisabled"
+               [startDate]="fromDate!"
+               class="form-control"
+               name="datepicker"
+               ngbDatepicker
+               outsideDays="hidden"
+               tabindex="-1">
+        <ng-template #t let-date let-focused="focused">
+          <span (mouseenter)="hoveredDate = date"
+                (mouseleave)="hoveredDate = null"
+                [class.disabled]="isDisabled(date)"
+                [class.faded]="isHovered(date) || isInside(date) && !isDisabled(date)"
+                [class.focused]="focused"
+                [class.range]="isRange(date) && !isDisabled(date)"
+                class="custom-day">
+            {{ date.day }}
+          </span>
+        </ng-template>
+        <ng-template #footerTemplate>
+          <hr class="my-0">
+          <div class="m-2">
+            <div><small>Aktive Wochentage:</small></div>
+            <div class="btn-group">
+              <ng-template [ngForOf]="weekdays" let-day let-i="index" ngFor>
+                <input (click)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)" autocomplete="off"
+                       class="btn-check" id="btncheck{{i}}" type="checkbox">
+                <label class="btn btn-outline-primary custom-day" for="btncheck{{i}}">{{ day }}</label>
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="input-group">
+      <input #dpFromDate
+             (input)="fromDate = validateInput(fromDate, dpFromDate.value)" [value]="formatter.format(fromDate)"
+             class="form-control"
+             id="fromDateControl"
+             name="dpFromDate"
+             placeholder="yyyy-mm-dd"
+             formControlName="fromDateControl"
+             [class.is-invalid]="productForm.invalid && productForm.touched"
+             required>
+      <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
+      <div class="invalid-feedback">Invalid</div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="input-group"
+         [class.was-validated]="productForm.touched">
+      <input #dpToDate
+             (input)="toDate = validateInput(toDate, dpToDate.value)" [value]="formatter.format(toDate)"
+             class="form-control"
+             id="toDateControl"
+             name="dpToDate"
+             placeholder="yyyy-mm-dd"
+             formControlName="toDateControl"
+             [class.is-invalid]="productForm.invalid && productForm.touched"
+             required>
+      <button (click)="datepicker.toggle()" class="btn btn-outline-secondary bi-calendar-range" type="button"></button>
+      <div class="invalid-feedback">Invalid</div>
+    </div>
+  </div>
+  <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
+  <pre class="col-12">To date: {{toDate | json}}</pre> -->
+</form>
+<div>{{ productForm.invalid }}</div>
+
+<!--Nicht verfügbare Termine angeben-->
+<div class="d-flex mb-2 has-validation">
+  <label for="appointmentInputs" class="form-label">Nicht verfügbare Termine</label>
+  <button class="ms-auto btn btn-success" (click)="addAppointment()" type="button">+</button>
+</div>
+<div *ngFor="let name of appointmentIndexs;let index = index" class="mb-3"
+   id="durationInput">
+<div class="input-group has-validation" id="date selector">
+  <span class="input-group-text">{{index + 1}}.</span>
+  <input aria-label="Username" class="form-control"
+         placeholder="Suche eine Termin aus" required type="date">
+  <label>Von</label>
+  <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
+  <label>Bis</label>
+  <ngb-timepicker [(ngModel)]="time"></ngb-timepicker>
+ <!--<button (click)="removeAppointment(name)" class="btn btn-danger" type="button">-</button>-->
+
+</div>
+</div>

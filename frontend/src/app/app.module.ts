@@ -13,7 +13,7 @@ import { PersonalProfileComponent } from './components/personalprofile/personalp
 import { RegistrationComponent } from './components/registration/registration.component';
 import { OrderProductComponent } from './components/order-product/order-product.component';
 import { LoginComponent } from './components/login/login.component';
-import { ProductdetailsComponent } from './components/productdetails/productdetails.component';
+import { ProductDetailsComponent } from './components/productdetails/product-details.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderFinalizedComponent } from './components/order-finalized/order-finalized.component';
@@ -25,16 +25,18 @@ import { AdminComponent } from './components/admin/admin.component';
 import { CategoryBadgeComponent } from './components/admin/category/category-badge/category-badge.component';
 import { ProductListComponent } from './components/landingpage/product-list/product-list.component';
 import { ProductListItemComponent } from './components/landingpage/product-list-item/product-list-item.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
 
 import { ActivityComponent } from './components/admin/activity/activity.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AvailabilityPickerComponent } from './components/add-product/availability-picker/availability-picker.component';
+import { HindrancePickerComponent } from './components/add-product/hindrance-picker/hindrance-picker.component';
+import { AppointmentSelectorComponent } from './components/productdetails/appointment-selector/appointment-selector.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
-
-
 
 @NgModule({
   declarations: [
@@ -48,12 +50,16 @@ const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
     OrderProductComponent,
     PersonalProfileComponent,
     LoginComponent,
-    ProductdetailsComponent,
+    ProductDetailsComponent,
     AddProductComponent,
     OrderHistoryComponent,
     OrderFinalizedComponent,
     HeaderComponent,
     NotAvailableComponent,
+    OrderedServicesComponent,
+    AvailabilityPickerComponent,
+    HindrancePickerComponent,
+    AppointmentSelectorComponent
     OrderedServicesComponent,
     CategoryComponent,
     AdminComponent,

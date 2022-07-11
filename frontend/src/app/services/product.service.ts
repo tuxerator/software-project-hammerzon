@@ -50,7 +50,7 @@ export class ProductService {
 
   removeProduct(id:string):Observable<MessageResponse>
   {
-    return this.http.post<MessageResponse>('api/product/delete',{id});
+    return this.http.delete<MessageResponse>(`api/product/delete/${ id }`);
   }
 
   getSimilarProducts(id:string):Observable<ListInfoReponse<Product>>

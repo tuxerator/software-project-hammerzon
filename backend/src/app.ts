@@ -24,7 +24,14 @@ import { IUser } from './Models/User';
 import AuthController from './Controller/auth';
 import multer from 'multer';
 import { ImageController } from './Controller/imageCon';
-import { ValidatorGroup, ValidatorGroups, Validators } from './Controller/validator';
+import {
+    asyncHandler,
+    isValidAppointment,
+    isValidAvailability,
+    ValidatorGroup,
+    ValidatorGroups,
+    Validators
+} from './Controller/validator';
 import { CategoryController } from './Controller/category';
 import RatingController from './Controller/rating';
 import { PaymentType } from './types';
@@ -157,9 +164,14 @@ app.get('/api/product/similar/:id', product.getSimilarProduct);
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
-app.post('/api/product/delete', ValidatorGroup([Validators.isAuthorized('user'),Validators.isRequired('id')]),product.removeProduct);
+//  delete product
+app.delete('/api/product/delete/:id', ValidationGroup([Validators.isAuthorized('user')]), product.removeProduct);
 
-app.post('/api/resetAppointment',ValidatorGroups.OrderRegister, product.resetAppointment);
+// add availability to product
+app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
+
+// get availability of product
+app.get('/api/product/:id/availability/list', ValidatorGroup([Validators.hasValidObjectId('id')]), product.getAvailabilityList);
 
 // rating controller endpoints
 // add a rating between 1 and 5 with a comment
@@ -175,19 +187,21 @@ app.post('/api/product/:id/updateRating',rating.updateRating.bind(rating));
 app.post('/api/img/upload', upload.single('img'), image.postImage);
 
 // Removed Images
-app.get('/api/img/:id',image.getImage);
+app.get('/api/img/:id', image.getImage);
 
 // OrderController endpoints
 
-// register a new Order
-// app.post('/api/order/register', ValidatorGroups.OrderRegister, order.registerOrder);
+// validate order
+app.post('/api/order/validate', asyncHandler(isValidAppointment), order.validateOrder);
+
+// add a new Order
+app.post('/api/order/add', ValidatorGroups.OrderRegister, asyncHandler(isValidAppointment), order.addOrder);
 
 // delete an order
 app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
 
 // list all orders for the admin page
 app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
-
 
 // list all orders by user
 app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);

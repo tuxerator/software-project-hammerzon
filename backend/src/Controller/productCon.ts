@@ -1,8 +1,8 @@
 import { query, Request, Response } from 'express';
 import Helper from '../helpers';
-import { IProduct, Product } from '../Models/Product';
+import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Order } from '../Models/Order';
 import { Category } from '../Models/Category';
 import { ActivityController } from './activity';
@@ -59,9 +59,9 @@ class ProductController {
         ActivityController.addActivity(request.session.user,[green(' sucht '),' nach dem Begriff ', lightBlue(searchTerm)]);
 
         const searchgrams : string[] = Helper.ngram(searchTerm, 3);
-    
+
         const searchgramString : string = searchgrams.join(' ');
-      
+
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
         /*
         query.$text = {
@@ -73,7 +73,7 @@ class ProductController {
           $text : { $search : searchgramString},
           score : { $meta : 'textScore'}
         };
-        
+
       }
     console.log('query:');
     console.log(query);
@@ -213,7 +213,7 @@ class ProductController {
       averageRating : 1,
       ratings : []
     };
-    console.log(product);
+    console.log('POST:\nproduct: %o', product);
 
     // add ngrams
     const namegrams : string = Helper.ngram(product.name, 3).join(' ');
@@ -242,7 +242,7 @@ class ProductController {
 
     public async removeProduct(request:SessionRequest,response:Response):Promise<void>
     {
-        const id = request.body.id;
+        const id = request.params.id;
         //
         const product = await Product.findById(id);
 
@@ -268,6 +268,47 @@ class ProductController {
         response.status(200);
         response.send({code:200,message:'Product deleted'});
     }
+
+    public async addAvailability(req: Request, res: Response): Promise<void> {
+        const availability: IAvailability = req.body;
+        const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+
+        product.availability.push(availability);
+        await product.save();
+
+        res.status(200);
+        res.send({ code: 200, message: 'Add Successfull', id: product._id });
+    }
+
+    public async addHindrance(req: Request, res: Response): Promise<void> {
+      const hindrance: IAvailability = req.body;
+      const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+
+      // Get Availabi
+
+      await product.save();
+
+      res.status(200);
+      res.send({ code: 200, message: 'Add Successfull', id: product._id });
+    }
+
+  /**
+   * Sends a list of all availabitlitys of a product
+   * @param req
+   * @param res
+   */
+  public async getAvailabilityList(req: Request, res: Response): Promise<void> {
+    console.log('GET:\nproduct availabilities from product: %o', req.params.id);
+    const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
+    if (!product) {
+      res.status(400);
+      res.send({ code: 400, message: 'Product does not exist' });
+      return;
+    }
+    console.log('availabilities: %o', product.availability);
+    res.status(200);
+    res.send(product.availability);
+  }
 }
 
 

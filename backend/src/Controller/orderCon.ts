@@ -3,9 +3,11 @@ import { IOrder, Order, Status } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
 import { IAppointment, IProduct, Product } from '../Models/Product';
-import { Types } from 'mongoose';
 import { IUser } from '../Models/User';
+import { Types } from 'mongoose';
 import session from 'express-session';
+import { AppointmentSocket } from './appointmentSocket';
+import productCon from './productCon';
 
 
 class OrderController {
@@ -84,6 +86,14 @@ class OrderController {
     }
   }
 
+    /**
+     * Validates a order for correctness
+     */
+    public async validateOrder(request: SessionRequest, response: Response): Promise<void>{
+        response.status(200);
+        response.send({ code: 200, message: 'Order is valid' });
+    }
+
   public async getAppointProductPair(postOrder:PostOrder):Promise<{product:IProduct,appointment:IAppointment}|undefined>
   {
     const postedOrder: PostOrder = postOrder;
@@ -102,46 +112,70 @@ class OrderController {
    */
   public async registerOrder(pap:{product:IProduct,appointment:IAppointment},user:IUser): Promise<IOrder> {
 
-      console.log(pap);
-      const newOrder = new Order({
-        product: new mongoose.Types.ObjectId(pap.product._id),
-        orderingUser: new mongoose.Types.ObjectId(user._id),
-        timeOfOrder: new Date(),
-        appointment: pap.appointment,
-        status: Status.NNA
-      });
-      await newOrder.save();
-      console.log('saved order:' + newOrder);
-      pap.appointment.isReserved = true;
-      pap.product.markModified('appointments');
-      await pap.product.save();
-      console.log(pap.product.appointments);
-      return newOrder;
-      //response.status(201);
-      //response.send(true);
+    console.log(pap);
+    const newOrder = new Order({
+      product: new mongoose.Types.ObjectId(pap.product._id),
+      orderingUser: new mongoose.Types.ObjectId(user._id),
+      timeOfOrder: new Date(),
+      appointment: pap.appointment,
+      status: Status.NNA
+    });
+    await newOrder.save();
+    console.log('saved order:' + newOrder);
+    pap.appointment.isReserved = true;
+    pap.product.markModified('appointments');
+    await pap.product.save();
+    console.log(pap.product.appointments);
+    return newOrder;
+    //response.status(201);
+    //response.send(true);
   }
-
-
 
   /**
-   * delete an order
+   * Add a new order to the database
    */
-  public async deleteOrder(request: SessionRequest, response: Response): Promise<void> {
-    const id: string = request.params.id;
-    console.log('deleting Order');
-    console.log('order id' + id);
-    if (id && Types.ObjectId.isValid(id)) {
-      const order = await Order.findById(id);
-      if (order.orderingUser.toString() === request.session.user._id || request.session.user.role === 'admin') {
-        await order.delete();
-      }
-      console.log('order deleted');
-      response.status(200);
-    } else {
-      response.status(500);
-      response.send('there is no order with such an id');
-    }
+  public async addOrder(request: SessionRequest, response: Response): Promise<void> {
+    const order: PostOrder = request.body;
+    const orderingUserId = request.session.user._id;
+
+    const dbOrder = new Order({
+      product: order.productId,
+      orderingUser: orderingUserId,
+      appointment: order.appointment,
+      confirmed: false
+    });
+    await dbOrder.save();
+
+    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+    //AppointmentSocket.socket.removeAppointmentWithoutSending(product.user,order.appointment);
+
+    response.status(200);
+    response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id, orderRegistered: true });
   }
+
+    public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>
+    {
+        const id:string = request.params.id;
+        console.log('deleting Order');
+        console.log('order id' + id);
+        if(id && Types.ObjectId.isValid(id))
+        {
+            const order = await Order.findById(id);
+            if(order.orderingUser === request.session.user._id || request.session.user.role === 'admin')
+            {
+                await order.delete();
+            }
+
+            console.log('order deleted');
+            response.status(200);
+            response.send();
+        }
+        else
+        {
+            response.status(500);
+            response.send('there is no order with such an id');
+        }
+    }
 
   /**
    * sets the status field of an order.
@@ -154,16 +188,33 @@ class OrderController {
     // validating the permissions here because validators don't communicate with the database
     if (product.user.toString() === request.session.user._id || request.session.user.role === 'admin') {
 
-        order.status = status;
-        order.save();
-        response.status(200);
-        response.send({ status });
+      order.status = status;
+      order.save();
+      response.status(200);
+      response.send({ status });
 
-    }
-    else {
+    } else {
       response.status(500);
       response.send('confirmation failed');
     }
+  }
+
+  public async registerAppointment(request: SessionRequest, response: Response): Promise<void> {
+    const order: PostOrder = request.body;
+    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+
+    AppointmentSocket.socket.onAppointmnetAdded(product.user, order.appointment);
+    response.status(200);
+    response.send({ message: 'appointment registered', code: 200 })
+  }
+
+  public async unregisterAppointment(request: SessionRequest, response: Response): Promise<void> {
+    const order: PostOrder = request.body;
+    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+
+    AppointmentSocket.socket.onAppointmnetRemoved(product.user, order.appointment);
+    response.status(200);
+    response.send({ message: 'appointment unregistered', code: 200 });
   }
 
 }

@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Order, Status } from '../models/Order';
+import { Appointment } from './productdetails.service';
+import { Availability, Product } from '../models/Product';
+import { MessageResponse } from '../components/types';
+import { Socket } from 'ngx-socket-io';
 
-export type PostOrder={
-  productId : string,
-  appointmentIndex : number
+export type PostOrder = {
+  productId: string,
+  appointment: Availability
+}
+
+export type AppointemntAction = {
+  appointment: Availability,
+  action: 'add' | 'remove';
 }
 
 @Injectable({
@@ -13,7 +22,27 @@ export type PostOrder={
 })
 export class OrderService {
 
-  constructor(private http: HttpClient) {
+  public appointmentChanged = new Subject<AppointemntAction>();
+
+  constructor(private http: HttpClient, private socket: Socket) {
+
+  }
+
+  private _currentlySelectedAppointment?: Availability;
+
+  get currentlySelectedAppointment(): Availability | undefined {
+    return this._currentlySelectedAppointment;
+  }
+
+  set currentlySelectedAppointment(value: Availability | undefined) {
+    this._currentlySelectedAppointment = value;
+  }
+
+  getAppointmentChanged(product: Product): Observable<AppointemntAction> {
+    this.socket.on(`${ product.user!._id }:appointment`, (data: AppointemntAction) => {
+      this.appointmentChanged.next(data);
+    });
+    return this.appointmentChanged;
   }
 
   listAllOrders(): Observable<Order[]> {
@@ -28,13 +57,17 @@ export class OrderService {
     return this.http.get<Order[]>('api/order/listByCreator');
   }
 
+  validateOrder(productId: string, appointment: Availability): Observable<MessageResponse> {
+    const postOrder: PostOrder = { productId, appointment };
+    return this.http.post<MessageResponse>('api/order/validate', postOrder);
+  }
+
   /**
    * register an order with productID and a single appointment.
    */
-  registerOrder(productId: string, appointmentIndex: number) : Observable<Boolean>
-  {
-    const postOrder: PostOrder = {productId, appointmentIndex};
-    return this.http.post<Boolean>('api/order/register', postOrder);
+  addOrder(productId: string, appointment: Availability): Observable<MessageResponse & { orderRegistered: Boolean }> {
+    const postOrder: PostOrder = { productId, appointment };
+    return this.http.post<MessageResponse & {orderRegistered:Boolean}>('api/order/add', postOrder);
   }
 
   /**
@@ -47,17 +80,25 @@ export class OrderService {
   /**
    * resets the isReserved status of an appointment to false
    */
-  resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
+  /*resetProduct(productId:string, appointmentIndex:number) : Observable<PostOrder>
   {
-    const postOrder:PostOrder = {productId, appointmentIndex};
+    //const postOrder:PostOrder = {productId, appointmentIndex};
     console.log('reset appointment service');
     return this.http.post<PostOrder>('api/resetAppointment', postOrder);
+  }*/
+
+  setStatus(orderId: string, status: Status): Observable<Status> {
+    console.log('toggle service:' + status);
+    return this.http.post<Status>(`/api/order/${ orderId }/setStatus`, { status });
   }
 
-  setStatus(orderId:string, status: Status) : Observable<Status>
-  {
-    console.log('toggle service:' + status);
-    return this.http.post<Status>(`/api/order/${orderId}/setStatus`, {status});
+  getAvailabilityList(productId: string): Observable<Availability[]> {
+    return this.http.get<Availability[]>(`api/product/${ productId }/availability/list`);
+  }
+
+
+  validateAppointment(productId: string, appointment: Availability): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`api/order/validate`, { productId, appointment });
   }
 
 }

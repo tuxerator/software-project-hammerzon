@@ -4,7 +4,7 @@ import { OrderService, PostOrder } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { Appointment, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
+import { Availability, getAppointmentString, getDurationString, Product } from 'src/app/models/Product';
 import { ProductService } from 'src/app/services/product.service';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { PaymentService, PaymentType } from 'src/app/services/payment.service';
@@ -17,12 +17,13 @@ import { ClientSideFnValidation, ClientSideValidation, ServerSideFnFnValidation,
   styleUrls: ['./order-product.component.css']
 })
 export class OrderProductComponent implements OnInit {
-  product : Product|undefined;
-  user: User|undefined;
-  appointment:Appointment|undefined;
-  appointmentIndex = 0;
+  product: Product | undefined;
+  user: User | undefined;
+  appointment: Availability | undefined;
   orderRegistered : Boolean|undefined;
   cancelled : Boolean = false;
+
+
   paymentType:PaymentType = PaymentType.HCIPAL;
   modalState: 'confirm'|'pay'|'waiting' = 'confirm';
   merchantName = '';
@@ -251,8 +252,7 @@ export class OrderProductComponent implements OnInit {
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
-    const appointmentIndex = parseInt(String(routeParams.get('i')));
-    this.appointmentIndex = appointmentIndex;
+    this.appointment = this.orderService.currentlySelectedAppointment;
 
 
     /**
@@ -263,13 +263,10 @@ export class OrderProductComponent implements OnInit {
         next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
-          this.appointment = this.product.appointments[appointmentIndex];
-          this.appointment.date = new Date(this.appointment.date);
+
         },
         error: (err) => {
           console.log(err);
-
-          //this.router.navigateByUrl('not-available');
         }
       }
     );
@@ -303,6 +300,9 @@ export class OrderProductComponent implements OnInit {
   }
 
   getAppointString(): string {
-    return getAppointmentString(this.appointment?.date);
+    if(this.appointment)
+    {
+    return getAppointmentString(this.appointment);
+    }return 'Fehler';
   }
 }

@@ -13,9 +13,10 @@ export class Product {
   prize: number;
   // Zeit dauer der Dienstleistung
   duration: Date;
+  // Default timeframe for availability
+  defaultTimeFrame: { start: Date, end: Date }
   // Möglichen daten wo man die Dienstleistung kaufen kann
-  appointments: Appointment[];
-
+  availability: Availability[];
   image_id: string;
 
   category?:Category | string;
@@ -26,13 +27,21 @@ export class Product {
 
   ratings? : Rating[];
 
-  constructor(name: string, description: string, prize: number, duration: Date, appointments: Appointment[], image_id: string,category:string) {
-    this.name = name;
-    this.description = description;
-    this.prize = prize;
-    this.duration = duration;
-    this.appointments = appointments;
-    this.image_id = image_id;
+  constructor(name: string,
+              description: string,
+              prize: number,
+              duration: Date,
+              defaultTimeFrame: { start: Date, end: Date },
+              availability: Availability[],
+              image_id: string,
+              category:string) {
+          this.name = name;
+          this.description = description;
+          this.prize = prize;
+          this.duration = duration;
+    this.defaultTimeFrame = defaultTimeFrame;
+    this.availability = availability;
+          this.image_id = image_id;
     this.category = category;
   }
 }
@@ -51,14 +60,30 @@ export class Rating {
 }
 
 
-export class Appointment {
-  date: Date;
-  // gibt an ob es noch zu lesen der Termin noch angegeben wird
-  isReserved: boolean;
 
-  constructor(date: Date) {
-    this.date = date;
-    this.isReserved = false;
+export class Availability {
+  startDate: Date;
+  endDate: Date;
+
+  // gibt an ob es noch zu lesen der Termin noch angegeben wird
+
+  constructor(startDate: Date, endDate: Date) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  public static compare = (a: Availability, b: Availability): number => {
+    const startA = a.startDate.getTime();
+    const startB = b.startDate.getTime();
+    const endA = a.endDate.getTime();
+    const endB = b.endDate.getTime();
+
+    const startDiff = startA - startB;
+    if (!startDiff) {
+      return endA - endB;
+    }
+
+    return startDiff;
   }
 }
 
@@ -75,7 +100,7 @@ const dateFormater = Intl.DateTimeFormat(
 );
 
 export const getDurationString = (duration?: Date): string => {
-  return duration?.getHours() + ' Std. ' + duration?.getMinutes() + ' Min.';
+  return duration?.getUTCHours() + ' Std. ' + duration?.getUTCMinutes() + ' Min.';
 };
 
 export const getCategory = (product:Product): Category|undefined =>
@@ -83,9 +108,11 @@ export const getCategory = (product:Product): Category|undefined =>
   return product.category as Category;
 };
 
+export const getAppointmentString = (appointment: Availability): string => {
+  return dateFormater.format(appointment.startDate);
+};
 
-export const getAppointmentString = (date?: Date): string => {
-  //console.log(date);
+export const getDateString = (date:Date): string => {
   return dateFormater.format(date);
 };
 
