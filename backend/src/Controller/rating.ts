@@ -86,6 +86,8 @@ class RatingController {
     return false;
   }
 
+
+
   /**
    * checks if the user has ordered the product
    * intended usage in the frontend

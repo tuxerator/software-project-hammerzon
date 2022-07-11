@@ -1,7 +1,6 @@
-<div class="container">
-  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="input-group row align-items-center gy-2">
-    <div [class.is-invalid]="form.touched" class="col-12 row align-items-center">
-      <div class="col-auto">
+  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="row gy-2">
+    <div [class.is-invalid]="form.touched" class="col-12 row w-100 align-items-center">
+      <div class="col-6">
         <form class="input-group">
           <input #appointDatePicker="ngbDatepicker"
                  (click)="appointDatePicker.toggle()"
@@ -18,7 +17,7 @@
           </button>
         </form>
       </div>
-      <div class="col-auto row align-items-center">
+      <div class="col-6 row align-items-center justify-content-center">
         <label class="col-auto col-form-label">Uhrzeit:</label>
         <ngb-timepicker (ngModelChange)="updateGroupValidity(form)" [(ngModel)]="time" [formControl]="timeControl"
                         class="col-auto"
@@ -42,4 +41,3 @@
       </button>
     </div>
   </form>
-</div>

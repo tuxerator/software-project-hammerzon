@@ -214,13 +214,13 @@ export class OrderProductComponent implements OnInit {
           const expirationMonth= this.accountForm.value.expirationMonth;
           const expirationYear = this.accountForm.value.expirationYear;
           const fullName = this.accountForm.value.fullName;
-          const postOrder: PostOrder = {productId:this.product!._id, appointmentIndex:this.appointmentIndex};
+          const postOrder: PostOrder = {productId:this.product!._id, appointment:this.orderService.currentlySelectedAppointment!};
           this.modalState = 'waiting';
           this.payment.getPaymentFinish(this.paymentType,postOrder,password,fullName,this.merchantName,`${expirationMonth}/${expirationYear}`)
           .subscribe({
             next: () => {
               this.closeModal();
-              const url = `productdetails/${this.product?._id}/order-product/${this.appointmentIndex}/order-finalized`;
+              const url = `productdetails/${this.product?._id}/order-product/order-finalized`;
               this.router.navigateByUrl(url);
             },
             error: (err) => {

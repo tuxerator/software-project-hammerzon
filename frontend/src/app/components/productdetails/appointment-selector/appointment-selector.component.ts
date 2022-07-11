@@ -81,18 +81,18 @@ export class AppointmentSelectorComponent implements OnInit {
     });
 
     console.log('form group: %o', this.form);
-
+    console.log('defaultTimeFrame',this.defaultTimeFrame);
     this.time = new Date(getDayTime(this.defaultTimeFrame.startDate));
 
     this.onAppointmentChanged?.subscribe(
       (appAction: AppointemntAction) => {
-        if (appAction.action == 'add') {
+        if (appAction.action === 'add') {
           this.existingAppointments.push(appAction.appointment);
           if (this.datePicker.isOpen()) {
             this.datePicker.close();
             this.datePicker.open();
           }
-        } else if (appAction.action == 'remove') {
+        } else if (appAction.action === 'remove') {
           const index = this.existingAppointments.findIndex(ap1 => Availability.compare(ap1, appAction.appointment) === 0);
           this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)]
           if (this.datePicker.isOpen()) {
@@ -101,7 +101,7 @@ export class AppointmentSelectorComponent implements OnInit {
           }
         }
       }
-    )
+    );
 
     this.productId = String(this.route.snapshot.paramMap.get('id'));
 
@@ -113,7 +113,7 @@ export class AppointmentSelectorComponent implements OnInit {
 
         // after receiving the availabilities, get the existing appointments
         this.availabilities.forEach((availability) => {
-          let date = new Date(availability.startDate.getFullYear(), availability.startDate.getMonth(), availability.startDate.getDate());
+          const date = new Date(availability.startDate.getFullYear(), availability.startDate.getMonth(), availability.startDate.getDate());
           date.setUTCFullYear(availability.startDate.getUTCFullYear());
           date.setUTCHours(this.defaultTimeFrame.startDate.getUTCHours(), this.defaultTimeFrame.startDate.getMinutes(), this.defaultTimeFrame.startDate.getSeconds());
 
@@ -206,7 +206,7 @@ export class AppointmentSelectorComponent implements OnInit {
 
     // If the date is not inside an availability, it gets disabled
     return isInsideAvailability;
-  }
+  };
 
   createAppointment(): void {
     if (!this.form.valid) {
@@ -232,14 +232,14 @@ export class AppointmentSelectorComponent implements OnInit {
           console.log('time is not in the default time frame');
           return {
             timeOutsideDefaultTimeFrame: true
-          }
+          };
         }
 
         const existingAppoint = this.existingAppointments;
 
         existingAppoint.sort(Availability.compare);
 
-        let selectedAppoint = createAppointment(new Date(this.time!.getTime() + this.date!.getTime()), this.duration, this.defaultTimeFrame);
+        const selectedAppoint = createAppointment(new Date(this.time!.getTime() + this.date!.getTime()), this.duration, this.defaultTimeFrame);
 
         for (const appoint of existingAppoint) {
           console.log('appoint: %o, selectedAppoint: %o', appoint, selectedAppoint);
@@ -263,8 +263,8 @@ export class AppointmentSelectorComponent implements OnInit {
         }
       }
       return null;
-    }
-  }
+    };
+  };
 }
 
 /**

@@ -61,9 +61,11 @@ export class OrderHistoryComponent implements OnInit {
         }
         for(let i = 0; i < this.orderList.length; i++)
         {
+
           this.orderList[i].appointment.startDate = new Date(this.orderList[i].appointment.startDate);
           this.orderList[i].appointment.endDate = new Date(this.orderList[i].appointment.endDate);
         }
+        console.log(this.orderList);
       },
 
       // error: There was an error.
@@ -117,7 +119,7 @@ export class OrderHistoryComponent implements OnInit {
             headerRows : 1,
             body : [
               ['Dienstleistung', 'Handwerker', 'Termin', 'Preis'],
-              [product.name, `${product.user?.firstName} ${product.user?.lastName}`, this.getDateString(order.appointment.date), `${cost} €`]
+              [product.name, `${product.user?.firstName} ${product.user?.lastName}`, this.getDateString(order.appointment), `${cost} €`]
             ]
           }
         },

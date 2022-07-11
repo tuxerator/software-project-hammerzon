@@ -92,18 +92,22 @@ export class ProductDetailsComponent implements OnInit {
     console.log(this.productService);
     //Find product that correspond with the name provided in route.
     //this.route= ProductInfo.find(product=>product._id===productIDFromRoute);
+    this.loading.product = true;
     this.productService.getProductDetails(this.id).subscribe(
       {
         next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
-          /*for (let i = 0; i < this.product.appointments.length; i++) {
-            this.product.appointments[i].date = new Date(this.product.appointments[i].date);
-          }*/
+          console.log('Availabilitys', this.product.availability);
+          for (let i = 0; i < this.product.availability.length; i++) {
+            this.product.availability[i].startDate = new Date(this.product.availability[i].startDate);
+            this.product.availability[i].endDate = new Date(this.product.availability[i].endDate);
+          }
 
           this.defaultTimeFrame = new Availability(new Date(this.product.defaultTimeFrame.start), new Date(this.product.defaultTimeFrame.end));
+          console.log('Seted DefaulttimeFrame',this.defaultTimeFrame);
           this.orderService.getAppointmentChanged(this.product).subscribe(this.appointmentChanged.next);
-
+          this.loading.product = false;
           console.log(this.product);
           console.log(this.user);
         },
@@ -259,8 +263,12 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  getDate(date: Date): string {
+  getDate(date?: Date): string {
+    if(date)
+    {
     return getDateString(date);
+    }
+    return 'Fehler';
   }
 
   //erhöhen/reduzieren des "hilfreiche Bewertungen" counters
@@ -318,7 +326,7 @@ export class ProductDetailsComponent implements OnInit {
       const appointment = {
         startDate: this.appointmentDate,
         endDate: this.appointmentDate?.getTime() + this.product?.duration.getTime()
-      }
+      };
     }
   }
 

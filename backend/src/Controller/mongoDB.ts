@@ -25,7 +25,7 @@ export class MongoDBController {
     await mongoose.connect('mongodb://localhost:27017/swp'); // Connect to MongoDB
     console.log(`Database is ${ (mongoose.connection.readyState === 1) ? 'ready' : 'errored' }`); // Prints 1 if connected successfully
     new ProductTestData();
-    // ew OrderTestData();
+    new OrderTestData();
     new UserTestData();
   }
 }

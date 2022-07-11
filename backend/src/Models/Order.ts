@@ -12,8 +12,7 @@ interface IOrder extends Document{
     // Bestellzeitpunkt
     appointment : IAppointment;
     confirmed : boolean;
-    createdAt : Date;
-    updatedAt : Date;
+    timeOfOrder:Date
 }
 
 enum Status {
@@ -37,7 +36,8 @@ const orderSchema : Schema = new Schema<IOrder>({
         endDate: { type: Date, required: true },
     }, required: true, _id: false },
     confirmed:      { type: Boolean, default: false },
-}, { timestamps: true });
+    timeOfOrder: {type:Date,required:true}
+});
 
 const Order : Model<IOrder> = model<IOrder>('Order', orderSchema);
 

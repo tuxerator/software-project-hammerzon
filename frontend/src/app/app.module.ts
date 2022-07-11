@@ -28,7 +28,6 @@ import { ProductListItemComponent } from './components/landingpage/product-list-
 import { ValidatableInputComponent } from './components/order-product/validatable-input/validatable-input.component';
 
 import { ActivityComponent } from './components/admin/activity/activity.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AvailabilityPickerComponent } from './components/add-product/availability-picker/availability-picker.component';

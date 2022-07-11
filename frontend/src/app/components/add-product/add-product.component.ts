@@ -47,8 +47,6 @@ export class AddProductComponent implements OnInit {
 
   public imageId?: string = undefined;
 
-  public imageId?: string;
-
   private selectedCategory?:Category;
 
 
@@ -203,7 +201,7 @@ export class AddProductComponent implements OnInit {
     const minutes = minutesControl ? parseInt(minutesControl.value, 10) : 0;
     this.duration.setUTCHours(hours);
     this.duration.setUTCMinutes(minutes);
-  }
+  };
 
   uploadImage(inputElement: any):void {
     const file: File = inputElement.files[0];
@@ -264,7 +262,7 @@ export class AddProductComponent implements OnInit {
       },
       availabilities,
       this.imageId,
-      this.selectedCategory._id
+      this.selectedCategory!._id
     );
     //Product hinzufügen anfrage an das backend schicken
     this.uploading = true;
@@ -323,22 +321,22 @@ export class AddProductComponent implements OnInit {
         return true;
       }
       return !this.availabilities.some(availability => {
-        const result = dateNative != null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
+        const result = dateNative !== null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
         return result;
       });
     }
   }
 
   createAvailabilities = (availability: Availability): Availability[] => {
-    let availabilities: Availability[];
+    //const availabilities:
 
     // Split availability into multiple availabilities such that the hindrances are excluded
     console.log('hindrances: %o', this.hindrances);
-    availabilities = this.splitAvailability(availability, this.hindrances);
+    const availabilities : Availability[] = this.splitAvailability(availability, this.hindrances);
     console.log('availabilities: %o', availabilities);
 
     return availabilities;
-  }
+  };
 
 
   // split Availability at the given dates
@@ -355,7 +353,7 @@ export class AddProductComponent implements OnInit {
     });
     const dayInMills: number = 24 * 60 * 60 * 1000;
 
-    console.log('splitDates: %o', splitDates)
+    console.log('splitDates: %o', splitDates);
 
     if (splitDates.length === 0) {
       availabilities.push(availability);
@@ -369,12 +367,12 @@ export class AddProductComponent implements OnInit {
       console.log('splitDate: %o', splitDate);
       console.log('defaultTimeFrame: %o', this.defaultTimeFrame);
 
-      let nextSplitDate: number =  splitDate.date.getTime();
-      let availabilityStartDate: number = currentDate;
+      const nextSplitDate: number =  splitDate.date.getTime();
+      const availabilityStartDate: number = currentDate;
       let availabilityEndDate: number = nextSplitDate - dayInMills + this.defaultTimeFrame.endDate.getTime();
       currentDate = nextSplitDate + dayInMills + this.defaultTimeFrame.startDate.getTime();
 
-      if (splitDate.fromTime && splitDate.fromTime.getTime() != this.defaultTimeFrame.startDate.getTime()) {
+      if (splitDate.fromTime && splitDate.fromTime.getTime() !== this.defaultTimeFrame.startDate.getTime()) {
         availabilityEndDate = nextSplitDate + splitDate.fromTime.getTime();
       }
 
@@ -384,7 +382,7 @@ export class AddProductComponent implements OnInit {
         }
       }
 
-      if (availabilityStartDate == availabilityEndDate) {
+      if (availabilityStartDate === availabilityEndDate) {
         continue;
       }
       availabilities.push(new Availability(new Date(availabilityStartDate), new Date(availabilityEndDate)));
@@ -396,7 +394,7 @@ export class AddProductComponent implements OnInit {
       availabilities.push(new Availability(new Date(currentDate), endDate));
     }
     return availabilities;
-  }
+  };
 
   // Validator functions ------------------------------------------------------
 
@@ -423,15 +421,15 @@ export class AddProductComponent implements OnInit {
       }
 
       return null;
-    }
-  }
+    };
+  };
 
   // Helper functions
 
 
   ngbTimetoDate = (ngbTime: NgbTimeStruct | null): Date => {
     return ngbTime ? new Date(Date.UTC(1970, 0, 1, ngbTime.hour, ngbTime.minute, ngbTime.second)) : new Date('Invalid Date');
-  }
+  };
 }
 
 

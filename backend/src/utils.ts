@@ -3,13 +3,13 @@ import { IAvailability } from './Models/Product';
 export const utcOffset: number = new Date(0).getTime();
 export const dayInMilliseconds: number = 24 * 60 * 60 * 1000;
 
-export function isInteger(value: any): value is number {
+export const isInteger = (value: any): value is number =>  {
   return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
-}
+};
 
 export const addTimezoneOffset = (date: Date): Date => {
   return new Date(date.getTime() + utcOffset);
-}
+};
 
 /**
  * Compares two dates without taking the time into account.
@@ -19,7 +19,7 @@ export const compareDates = (date1: Date, date2: Date): number => {
   const date1WithoutTime = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
   const date2WithoutTime = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
   return Math.sign(date1WithoutTime - date2WithoutTime);
-}
+};
 
 
 export const compareAvailabilty = (a: IAvailability, b: IAvailability): number => {
@@ -33,4 +33,4 @@ export const compareAvailabilty = (a: IAvailability, b: IAvailability): number =
     return endA - endB;
   }
   return startDiff;
-}
+};

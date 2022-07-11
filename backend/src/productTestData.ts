@@ -1,9 +1,10 @@
-import { IAppointment, IProduct, Product } from './Models/Product';
+import { IProduct, Product } from './Models/Product';
 import { Iimage, Image } from './Models/Image';
 import fs from 'fs';
 import path from 'path';
 import { Category } from './Models/Category';
 import Helper from './helpers';
+import mongoose from 'mongoose';
 
 export default class ProductTestData {
 
@@ -18,7 +19,7 @@ export default class ProductTestData {
     'fliesen-legen.jpeg',
   ];
 
-  public list: any[] = [
+  public list: (Pick<IProduct,'name'|'prize'|'description'|'ngrams'|'prefixNgrams'|'availability'|'defaultTimeFrame'|'numberOfRatings'|'averageRating'|'ratings'|'duration'> & {user:string}) [] = [
     {
       name: 'Fliesenlegen',
       user: '6284efd5b72a93135fb79c88',
@@ -27,22 +28,21 @@ export default class ProductTestData {
       ngrams : Helper.ngram('Fliesenlegen', 3).join(' '),
       prefixNgrams : Helper.prefixNgram('Fliesenlegen', 3).join(' '),
       duration: new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
-      appointments: [
-        { date: new Date(2022, 8, 14, 13), isReserved: false},
-        { date: new Date(2022, 8, 15, 13), isReserved: false },
-        { date: new Date(2022, 8, 16, 13), isReserved: false },
-        { date: new Date(2022, 8, 17, 13), isReserved: false },
-        { date: new Date(2022, 8, 18, 13), isReserved: false },
-      ],
-      image_id: '',
+      availability: [{
+        startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+      }],
+      defaultTimeFrame:{
+        start: new Date('1970-01-01T08:00:00.000Z'),
+        end: new Date('1970-01-01T18:00:00.000Z'),
+      },
       numberOfRatings : 0,
-      rating : 1,
-      comments : [],
-      helpfulUsers : []
+      averageRating : 1,
+      ratings : []
     },
     {
       name: 'Gartenarbeit',
-      user: '6284efd5b72a93135fb79c87',
+      user: '6284efd5b72a93135fb79c88',
       prize: 80,
       description: 'Meine Berufsausbildung habe ich vor sechs Jahren bei der Gartenbau GmbH'+
                    ' mit der Fachrichtung Zierpflanzenbau abgeschossen. Neben meinen fachlichen'+
@@ -54,19 +54,17 @@ export default class ProductTestData {
       ngrams : Helper.ngram('Gartenarbeit', 3).join(' '),
       prefixNgrams : Helper.prefixNgram('Gartenarbeit', 3).join(' '),
       duration: new Date('1970-01-01T02:30:00.000Z'), // 1 Sekunde
-      appointments: [
-        { date: new Date(2022, 8, 14, 13), isReserved: false },
-        { date: new Date(2022, 8, 15, 13), isReserved: false },
-        { date: new Date(2022, 8, 16, 13), isReserved: false },
-        { date: new Date(2022, 8, 17, 13), isReserved: false },
-        { date: new Date(2022, 8, 18, 13), isReserved: false },
-        { date: new Date(2022, 8, 19, 13), isReserved: false },
-      ],
       numberOfRatings : 0,
-      rating : 1,
-      comments : [],
-      helpfulUsers : []
-
+      availability: [{
+        startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+      }],
+      defaultTimeFrame:{
+        start: new Date('1970-01-01T08:00:00.000Z'),
+        end: new Date('1970-01-01T18:00:00.000Z'),
+      },
+      averageRating : 1,
+      ratings : []
     },
     {
         name:'Tischlerarbeit',
@@ -75,19 +73,18 @@ export default class ProductTestData {
         description:'„Tischler“ bzw. „Schreiner“ bezeichnet in Deutschland einen Ausbildungsberuf bzw. das „Handwerk“, welches sich auf die schneidende, fügende oder veredelnde Verarbeitung von Holz und Holzwerkstoffen spezialisiert hat. Damit ist der Bau von Möbeln bis hin zu Bauelementen im Sinn der Holztechnik gemeint. Eine Tischler- oder Schreinerei ist die entsprechende Werkstatt.',
         ngrams : Helper.ngram('Tischlerarbeit', 3).join(' '),
         prefixNgrams : Helper.prefixNgram('Tischlerarbeit', 3).join(' '),
-        duration:new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
-        appointments:[
-          { date: new Date(2022, 8, 14, 13), isReserved: false },
-          { date: new Date(2022, 8, 15, 13), isReserved: false },
-          { date: new Date(2022, 8, 16, 13), isReserved: false },
-          { date: new Date(2022, 8, 17, 13), isReserved: false },
-          { date: new Date(2022, 8, 18, 13), isReserved: false },
-          { date: new Date(2022, 8, 19, 13), isReserved: false },
-        ],
+        duration: new Date('1970-01-01T02:30:00.000Z'), // 1 Sekunde
         numberOfRatings : 0,
-        rating : 1,
-        comments : [],
-        helpfulUsers : []
+        availability: [{
+          startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+        }],
+        defaultTimeFrame:{
+          start: new Date('1970-01-01T08:00:00.000Z'),
+          end: new Date('1970-01-01T18:00:00.000Z'),
+        },
+        averageRating : 1,
+        ratings : []
     },
     {
         name:'Rohbauarbeiten',
@@ -97,18 +94,17 @@ export default class ProductTestData {
         ngrams : Helper.ngram('Rohbauarbeiten', 3).join(' '),
         prefixNgrams : Helper.prefixNgram('Rohbauarbeiten', 3).join(' '),
         duration:new Date('1970-01-01T12:30:00.000Z'), // 1 Sekunde
-        appointments:[
-          { date: new Date(2022, 8, 14, 13), isReserved: false },
-          { date: new Date(2022, 8, 15, 13), isReserved: false },
-          { date: new Date(2022, 8, 16, 13), isReserved: false },
-          { date: new Date(2022, 8, 17, 13), isReserved: false },
-          { date: new Date(2022, 8, 18, 13), isReserved: false },
-          { date: new Date(2022, 8, 19, 13), isReserved: false },
-        ],
         numberOfRatings : 0,
+        availability: [{
+          startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+        }],
+        defaultTimeFrame:{
+          start: new Date('1970-01-01T08:00:00.000Z'),
+          end: new Date('1970-01-01T18:00:00.000Z'),
+        },
         averageRating : 1,
-        ratings : [],
-        helpfulUsers : []
+        ratings : []
     },
     {
         name:'Innenarchitketur',
@@ -118,11 +114,18 @@ export default class ProductTestData {
         ngrams : Helper.ngram('Innenarchitektur', 3).join(' '),
         prefixNgrams : Helper.prefixNgram('Innenarchitektur', 3).join(' '),
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
-        appointments:[{date:new Date(2022, 8, 19, 13),isReserved:true}],
+
+        availability: [{
+          startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+        }],
+        defaultTimeFrame:{
+          start: new Date('1970-01-01T08:00:00.000Z'),
+          end: new Date('1970-01-01T18:00:00.000Z'),
+        },
         numberOfRatings : 0,
         averageRating : 1,
-        ratings : [],
-        helpfulUsers : []
+        ratings : []
     },
     {
         name:'Terrassenbau',
@@ -132,12 +135,17 @@ export default class ProductTestData {
         ngrams : Helper.ngram('Terassenbau', 3).join(' '),
         prefixNgrams : Helper.prefixNgram('Terassenbau', 3).join(' '),
         duration:new Date('1970-01-01T05:30:00.000Z'), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
+        availability: [{
+          startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+        }],
+        defaultTimeFrame:{
+          start: new Date('1970-01-01T08:00:00.000Z'),
+          end: new Date('1970-01-01T18:00:00.000Z'),
+        },
         averageRating : 1,
-        ratings : [],
-        helpfulUsers : []
-
+        ratings : []
     },
     {
         name:'Umziehen',
@@ -147,11 +155,17 @@ export default class ProductTestData {
         ngrams : Helper.ngram('Umziehen', 3).join(' '),
         prefixNgrams : Helper.prefixNgram('Umziehen', 3).join(' '),
         duration:new Date('1970-01-01T01:30:00.000Z'), // 1 Sekunde
-        appointments:[{date:new Date(),isReserved:false}],
         numberOfRatings : 0,
-        averageRating : 1,
-        ratings : [],
-        helpfulUsers : []
+      availability: [{
+        startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+      }],
+      defaultTimeFrame:{
+        start: new Date('1970-01-01T08:00:00.000Z'),
+        end: new Date('1970-01-01T18:00:00.000Z'),
+      },
+      averageRating : 1,
+      ratings : []
 
     },{
       name: 'Fliesenlegen mit Alten entfernen',
@@ -161,19 +175,22 @@ export default class ProductTestData {
       ngrams : Helper.ngram('Fliesenlegen mit Alten entfernen', 3).join(' '),
       prefixNgrams : Helper.prefixNgram('Fliesenlegen mit Alten entfernen', 3).join(' '),
       duration: new Date('1970-01-01T00:30:00.000Z'), // 1 Sekunde
-      appointments: [
-        { date: new Date(2022, 8, 14, 13), isReserved: false},
-        { date: new Date(2022, 8, 15, 13), isReserved: false },
-        { date: new Date(2022, 8, 16, 13), isReserved: false },
-        { date: new Date(2022, 8, 17, 13), isReserved: false },
-        { date: new Date(2022, 8, 18, 13), isReserved: false },
-      ],
-      image_id: ''
+      numberOfRatings : 0,
+      availability: [{
+        startDate: new Date('2022-08-19T08:00:00.000Z'),
+        endDate: new Date('2023-08-19T18:00:00.000Z')
+      }],
+      defaultTimeFrame:{
+        start: new Date('1970-01-01T08:00:00.000Z'),
+        end: new Date('1970-01-01T18:00:00.000Z'),
+      },
+      averageRating : 1,
+      ratings : []
     },
   ];
 
   constructor() {
-    Product.deleteMany({});
+    //Product.deleteMany({});
     this.insertIfNotExistend();
   }
 
@@ -215,12 +232,15 @@ export default class ProductTestData {
       console.log('Inserting Products');
       const newList = this.list.map((d,i) => {
         console.log(i);
-        console.log(imgs[i]);
-        d.image_id = imgs[i%imgs.length];
-        d.category = categoryIds[i%categoryLists.length]._id;
-        return d;
+        const val:any = {...d,image_id:'',category:''};
+        //console.log(imgs[i]);
+        val.image_id = imgs[i%imgs.length];
+        val.category = categoryIds[i%categoryLists.length]._id;
+        console.log(d.availability);
+        return val;
       });
-      console.log(newList);
+
+      //console.log(newList);
       await Product.insertMany(newList);
       const current: IProduct[] = await Product.find({}).populate('user', '-password').exec();
       console.log(current);

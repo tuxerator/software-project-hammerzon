@@ -8,6 +8,7 @@ import { Types } from 'mongoose';
 import session from 'express-session';
 import { AppointmentSocket } from './appointmentSocket';
 import productCon from './productCon';
+import { SocketServer } from './socketServer';
 
 
 class OrderController {
@@ -117,8 +118,10 @@ class OrderController {
 
     await newOrder.save();
     console.log('saved order:' + newOrder);
+    const product =  (await Product.findById(pap.product._id).populate<{user:IUser}>('user').exec());
+    SocketServer.socket.onAppointmnetAdded(product.user,newOrder.appointment);
 
-    //AppointmentSocket.socket.removeAppointmentWithoutSending(product.user,order.appointment);
+    //SocketServer.socket.removeAppointmentWithoutSending(product.user,order.appointment);
 
     await pap.product.save();
     return newOrder;
@@ -198,7 +201,7 @@ class OrderController {
 
     AppointmentSocket.socket.onAppointmnetAdded(product.user, order.appointment);
     response.status(200);
-    response.send({ message: 'appointment registered', code: 200 })
+    response.send({ message: 'appointment registered', code: 200 });
   }
 
   public async unregisterAppointment(request: SessionRequest, response: Response): Promise<void> {

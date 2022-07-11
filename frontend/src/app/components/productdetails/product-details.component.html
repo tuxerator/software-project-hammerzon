@@ -65,22 +65,13 @@
     <div class="fw-bold fs-5 mb-2">Beschreibung</div>
     <div class="text-light">{{product?.description}}</div>
     <hr>
-
           <h5>Termine</h5>
-          <app-appointment-selector
+          <app-appointment-selector *ngIf="defaultTimeFrame"
             (createAppointmentEvent)="orderProduct($event)"
             [duration]="product.duration.getTime()"
             [defaultTimeFrame]="defaultTimeFrame"
             [onAppointmentChanged]="appointmentChanged"
           ></app-appointment-selector>
-          <div
-            *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
-            class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
-              class="bi bi-pencil-square"></i></button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-              class="bi bi-trash-fill"></i></button>
-          </div>
   <hr>
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->

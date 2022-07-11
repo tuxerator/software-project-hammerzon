@@ -385,7 +385,7 @@ export const isValidAppointment = async (req: Request, res: Response, next: Next
 
   //console.log();
   if (productAvailability.some(availability => {
-    return (availability.startDate > appointment.startDate && availability.endDate < appointment.endDate)
+    return (availability.startDate > appointment.startDate && availability.endDate < appointment.endDate);
   })) {
     console.log('Validating appointment: ' + JSON.stringify(appointment) + ' validation error: outside availability all availabilities');
     res.status(400);
