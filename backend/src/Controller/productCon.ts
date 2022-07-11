@@ -100,7 +100,7 @@ class ProductController {
 
     public async removeProduct(request:SessionRequest,response:Response):Promise<void>
     {
-        const id = request.body.id;
+        const id = request.params.id;
         //
       console.log(id);
         const product = await Product.findById(id);

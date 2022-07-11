@@ -9,10 +9,10 @@ import {
   Validators
 } from '@angular/forms';
 import { NgbDateNativeAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
-import { NgbDate, NgbDateAdapter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateAdapter, NgbInputDatepicker, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { Availability } from '../../../models/Product';
-import { OrderService } from '../../../services/order.service';
-import { Observable, of } from 'rxjs';
+import { AppointemntAction, OrderService } from '../../../services/order.service';
+import { Observable, of, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   compareDates,
@@ -35,8 +35,11 @@ export class AppointmentSelectorComponent implements OnInit {
   @Input() duration: number = 0;
   @Input() defaultTimeFrame: Availability = new Availability(new Date(0), new Date(0));
 
+  @Input() onAppointmentChanged!: Subject<AppointemntAction>;
+
   @Output() createAppointmentEvent = new EventEmitter<Availability>();
 
+  @ViewChild('appointDatePicker') datePicker!: NgbInputDatepicker;
   private productId!: string;
 
   form!: FormGroup;
@@ -71,9 +74,34 @@ export class AppointmentSelectorComponent implements OnInit {
     this.timeControl = new FormControl('', [Validators.required]);
 
     this.form = this.fb.group({
-      dateControl: [],
-      timeControl: [],
+      dateControl: this.dateControl,
+      timeControl: this.timeControl,
+    }, {
+      validators: [this.validateTime()]
     });
+
+    console.log('form group: %o', this.form);
+
+    this.time = new Date(getDayTime(this.defaultTimeFrame.startDate));
+
+    this.onAppointmentChanged?.subscribe(
+      (appAction: AppointemntAction) => {
+        if (appAction.action == 'add') {
+          this.existingAppointments.push(appAction.appointment);
+          if (this.datePicker.isOpen()) {
+            this.datePicker.close();
+            this.datePicker.open();
+          }
+        } else if (appAction.action == 'remove') {
+          const index = this.existingAppointments.findIndex(ap1 => Availability.compare(ap1, appAction.appointment) === 0);
+          this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)]
+          if (this.datePicker.isOpen()) {
+            this.datePicker.close();
+            this.datePicker.open();
+          }
+        }
+      }
+    )
 
     this.productId = String(this.route.snapshot.paramMap.get('id'));
 
@@ -245,6 +273,7 @@ export class AppointmentSelectorComponent implements OnInit {
 @Injectable({ providedIn: 'root' })
 export class AppointmentValidator {
   constructor(private orderService: OrderService) {
+
   }
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {

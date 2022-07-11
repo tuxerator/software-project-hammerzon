@@ -109,7 +109,6 @@ export class AvailabilityPickerComponent implements OnInit {
     console.log(this.form);
   }
 
-
   isHovered(date: NgbDate) {
     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) &&
       date.before(this.hoveredDate);
@@ -203,6 +202,7 @@ export class AvailabilityPickerComponent implements OnInit {
     }
     return false;
   }
+
 
   // Validator functions -------------------------------------------------------------
 

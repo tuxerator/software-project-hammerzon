@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Order, Status } from '../models/Order';
 import { Appointment } from './productdetails.service';
-import { Availability } from '../models/Product';
+import { Availability, Product } from '../models/Product';
 import { MessageResponse } from '../components/types';
+import { Socket } from 'ngx-socket-io';
 
 export type PostOrder = {
   productId: string,
   appointment: Availability
+}
+
+export type AppointemntAction = {
+  appointment: Availability,
+  action: 'add' | 'remove';
 }
 
 @Injectable({
@@ -16,7 +22,27 @@ export type PostOrder = {
 })
 export class OrderService {
 
-  constructor(private http: HttpClient) {
+  public appointmentChanged = new Subject<AppointemntAction>();
+
+  constructor(private http: HttpClient, private socket: Socket) {
+
+  }
+
+  private _currentlySelectedAppointment?: Availability;
+
+  get currentlySelectedAppointment(): Availability | undefined {
+    return this._currentlySelectedAppointment;
+  }
+
+  set currentlySelectedAppointment(value: Availability | undefined) {
+    this._currentlySelectedAppointment = value;
+  }
+
+  getAppointmentChanged(product: Product): Observable<AppointemntAction> {
+    this.socket.on(`${ product.user!._id }:appointment`, (data: AppointemntAction) => {
+      this.appointmentChanged.next(data);
+    });
+    return this.appointmentChanged;
   }
 
   listAllOrders(): Observable<Order[]> {

@@ -3,8 +3,11 @@ import { IOrder, Order, Status } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
 import { IProduct, Product } from '../Models/Product';
+import { IUser } from '../Models/User';
 import { Types } from 'mongoose';
 import session from 'express-session';
+import { AppointmentSocket } from './appointmentSocket';
+import productCon from './productCon';
 
 
 class OrderController {
@@ -158,6 +161,24 @@ class OrderController {
       response.status(500);
       response.send('confirmation failed');
     }
+  }
+
+  public async registerAppointment(request: SessionRequest, response: Response): Promise<void> {
+    const order: PostOrder = request.body;
+    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+
+    AppointmentSocket.socket.onAppointmnetAdded(product.user, order.appointment);
+    response.status(200);
+    response.send({ message: 'appointment registered', code: 200 })
+  }
+
+  public async unregisterAppointment(request: SessionRequest, response: Response): Promise<void> {
+    const order: PostOrder = request.body;
+    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+
+    AppointmentSocket.socket.onAppointmnetRemoved(product.user, order.appointment);
+    response.status(200);
+    response.send({ message: 'appointment unregistered', code: 200 });
   }
 
 }

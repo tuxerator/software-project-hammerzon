@@ -252,6 +252,9 @@ export const isValidAppointment = async (req: Request, res: Response, next: Next
   appointment.startDate = new Date(appointment.startDate);
   appointment.endDate = new Date(appointment.endDate);
 
+  const userId = (await Product.findById(product._id).exec()).user;
+
+  const productIds = (await Product.where('user').equals(userId).select('_id').exec()).map(pro => pro._id);
 
   // Get all appointments of the user offering the product
   const orders: IOrder[] = await Order.find({ product: { $in: productIds } });

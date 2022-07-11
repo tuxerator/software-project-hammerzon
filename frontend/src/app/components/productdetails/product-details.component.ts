@@ -5,7 +5,9 @@ import { AuthService } from '../../services/auth.service';
 
 import { Product, getAppointmentString, getDurationString, Availability } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
-import { delay, timeout } from 'rxjs';
+import { Subject } from 'rxjs';
+import { AppointemntAction, OrderService } from '../../services/order.service';
+import { AppointmentSelectorComponent } from './appointment-selector/appointment-selector.component';
 
 @Component({
   templateUrl: './product-details.component.html',
@@ -17,6 +19,10 @@ export class ProductDetailsComponent implements OnInit {
   user: User | undefined;
   appointmentDate?: Date;
   defaultTimeFrame!: Availability;
+  appointmentChanged: Subject<AppointemntAction> = new Subject<AppointemntAction>();
+
+  //@ViewChild('selector') appointmentSelector:AppointmentSelectorComponent;
+
 
   id: string = '';
 
@@ -26,7 +32,8 @@ export class ProductDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private productService: ProductService,
               private router: Router,
-              public authService: AuthService) {
+              public authService: AuthService,
+              public orderService: OrderService) {
   }
 
   ngOnInit(): void {
@@ -49,6 +56,7 @@ export class ProductDetailsComponent implements OnInit {
           }*/
 
           this.defaultTimeFrame = new Availability(new Date(this.product.defaultTimeFrame.start), new Date(this.product.defaultTimeFrame.end));
+          this.orderService.getAppointmentChanged(this.product).subscribe(this.appointmentChanged.next);
 
           console.log(this.product);
           console.log(this.user);
@@ -76,6 +84,7 @@ export class ProductDetailsComponent implements OnInit {
       }
     );*/
   }
+
 
   tryOrder() {
     if (this.product && this.appointmentDate) {
@@ -115,6 +124,7 @@ export class ProductDetailsComponent implements OnInit {
    */
   orderProduct(appointment: Availability) {
     if (this.user) {
+      this.orderService.currentlySelectedAppointment = appointment;
       this.router.navigate(['order-product'], {
         relativeTo: this.route
       });

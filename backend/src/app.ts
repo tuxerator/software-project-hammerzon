@@ -146,6 +146,9 @@ app.get('/api/product/:id', product.getProductDetail.bind(product));
 // add product
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
+//  delete product
+app.delete('/api/product/delete/:id', product.removeProduct);
+
 // add availability to product
 app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);
 

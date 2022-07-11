@@ -15,10 +15,10 @@ export class OrderProductComponent implements OnInit {
   product: Product | undefined;
   user: User | undefined;
   appointment: Availability | undefined;
-  appointmentIndex: Number = 0;
   orderRegistered: Boolean | undefined;
   cancelled: Boolean = false;
   startDate?:Date;
+
 
   constructor(private route: ActivatedRoute,
               private productService: ProductService,
@@ -31,16 +31,8 @@ export class OrderProductComponent implements OnInit {
     // get the productinfo again
     const routeParams = this.route.snapshot.paramMap;
     const productIDFromRoute = String(routeParams.get('id'));
-    const date = routeParams.get('i');
-    if(date)
-    {
-      this.startDate  = new Date(date);
-    }
-    this.route.queryParams.subscribe(params => {
-        console.log(params);
-        this.startDate = new Date(params['dateTime']);
-      }
-    );
+    this.appointment = this.orderService.currentlySelectedAppointment;
+
 
     /**
      * get information about the product , register the order (make functions?)

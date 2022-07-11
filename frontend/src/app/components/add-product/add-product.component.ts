@@ -90,6 +90,9 @@ export class AddProductComponent implements OnInit {
       this.productService.getProductDetails(id).subscribe({
         next: (product) => {
           this.productId = id;
+          product.availability = product.availability.map(ava =>
+            new Availability(new Date(ava.startDate), new Date(ava.endDate)));
+
           this.editProduct(product);
         },
         error: () => {

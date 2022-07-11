@@ -13,10 +13,7 @@ export class Product {
   // Zeit dauer der Dienstleistung
   duration: Date;
   // Default timeframe for availability
-  defaultTimeFrame: {
-    start: Date;
-    end: Date;
-  };
+  defaultTimeFrame: { start: Date, end: Date }
   // Möglichen daten wo man die Dienstleistung kaufen kann
   availability: Availability[];
   image_id: string;
@@ -26,10 +23,7 @@ export class Product {
     this.description = description;
     this.prize = prize;
     this.duration = duration;
-    this.defaultTimeFrame = {
-      start: defaultTimeFrame.start,
-      end: defaultTimeFrame.end
-    };
+    this.defaultTimeFrame = defaultTimeFrame;
     this.availability = availability;
     this.image_id = image_id;
   }
