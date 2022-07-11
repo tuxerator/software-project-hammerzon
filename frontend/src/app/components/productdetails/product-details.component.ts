@@ -116,11 +116,7 @@ export class ProductDetailsComponent implements OnInit {
   orderProduct(appointment: Availability) {
     if (this.user) {
       this.router.navigate(['order-product'], {
-        relativeTo: this.route,
-        queryParams: {
-          dateTime: appointment.startDate,
-          test: 'test'
-        }
+        relativeTo: this.route
       });
     } else {
       this.router.navigate(['login']);

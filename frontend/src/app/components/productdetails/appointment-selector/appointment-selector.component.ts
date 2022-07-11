@@ -1,12 +1,26 @@
-import { Component, EventEmitter, Injectable, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { Component, EventEmitter, Injectable, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { NgbDateNativeAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 import { NgbDate, NgbDateAdapter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { Availability } from '../../../models/Product';
 import { OrderService } from '../../../services/order.service';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { compareDates, dayInMilliseconds } from '../../../../util/util';
+import {
+  compareDates,
+  createAppointment,
+  dayInMilliseconds,
+  getDayTime,
+  updateGroupValidity, utcOffset
+} from '../../../../util/util';
 
 @Component({
   selector: 'app-appointment-selector',
@@ -35,6 +49,10 @@ export class AppointmentSelectorComponent implements OnInit {
   private availabilities: Availability[] = [];
   private existingAppointments: Availability[] = [];
 
+  get updateGroupValidity(): (formGroup: FormGroup) => void {
+    return updateGroupValidity;
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -47,9 +65,10 @@ export class AppointmentSelectorComponent implements OnInit {
   ngOnInit(): void {
     // Create FormControls
     this.dateControl = new FormControl('', {
+      validators: [Validators.required],
       asyncValidators: [this.appointmentValidator.validate.bind(this)]
     });
-    this.timeControl = new FormControl('');
+    this.timeControl = new FormControl('', [Validators.required]);
 
     this.form = this.fb.group({
       dateControl: [],
@@ -91,7 +110,7 @@ export class AppointmentSelectorComponent implements OnInit {
             date.setTime(date.getTime() + dayInMilliseconds);
           }
         });
-        setTimeout(console.log.bind(console, 'existingAppointments: %o', this.existingAppointments), 500);
+        setTimeout(console.log.bind(console, 'availabilities: %o\nexistingAppointments: %o', this.availabilities, this.existingAppointments), 500);
       },
       error: (err) => {
         console.log(err);
@@ -117,29 +136,39 @@ export class AppointmentSelectorComponent implements OnInit {
 
     // If the date is inside an availability, it only gets disabled if it is in an existing appointment
     if (!isInsideAvailability) {
+
       if (this.existingAppointments.some(appointment => {
         const startDate = appointment.startDate;
         const endDate = appointment.endDate;
-        return compareDates(startDate, utcDate) == 0 && compareDates(utcDate, endDate) == 0;
+
+        return compareDates(startDate, utcDate) <= 0 && compareDates(utcDate, endDate) <= 0;
       })) {
         const existingAppoint = this.existingAppointments.filter(appointment => {
-          return compareDates(appointment.startDate, utcDate) == 0 && compareDates(utcDate, appointment.endDate) == 0;
+          return compareDates(appointment.startDate, utcDate) <= 0 && compareDates(utcDate, appointment.endDate) <= 0;
         });
 
         existingAppoint.sort(Availability.compare);
 
-        let lastAppoint = utcDate.getTime() + this.defaultTimeFrame.startDate.getTime();
+        let lastAppoint = utcDate.getTime() - utcOffset + this.defaultTimeFrame.startDate.getTime();
 
         for (const appoint of existingAppoint) {
           console.log('appoint: %o, lastAppoint: %o', appoint, new Date(lastAppoint));
-          if (appoint.startDate.getTime() - lastAppoint >= this.duration) {
+          if (appoint.startDate.getTime() - utcOffset - lastAppoint >= this.duration) {
             return false;
           }
 
-          lastAppoint = appoint.endDate.getTime();
+          lastAppoint = appoint.endDate.getTime() - utcOffset;
         }
 
-        if (this.defaultTimeFrame.endDate.getTime() - lastAppoint >= this.duration) {
+        const diff = utcDate.getTime() + this.defaultTimeFrame.endDate.getTime() - lastAppoint;
+
+        console.log('diff: %o', diff);
+
+        if (this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime() < this.duration && diff >= 2 * 60 * 60 * 1000) {
+          return false;
+        }
+
+        if (diff >= this.duration) {
           return false;
         }
 
@@ -151,20 +180,62 @@ export class AppointmentSelectorComponent implements OnInit {
     return isInsideAvailability;
   }
 
-  createAppointment()
-    :
-    void {
-    if (this.date && this.time
-    ) {
-      const availability: Availability = {
-        startDate: new Date(this.date.getTime() + this.time.getTime()),
-        endDate: new Date(this.date.getTime() + this.time.getTime() + this.duration),
-      };
-      this.createAppointmentEvent.emit(availability);
+  createAppointment(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
+    if (this.date && this.time) {
+      const appointment: Availability = createAppointment(new Date(this.date.getTime() + this.time.getTime()), this.duration, this.defaultTimeFrame);
+      console.log('POST appointment: %o', appointment);
+      this.createAppointmentEvent.emit(appointment);
       return;
     }
     console.log('Shouldn\'t be reached. Fix your code!\n' +
       'date: %o\n' + 'time: %o', this.date, this.time);
+  }
+
+  // Validator which requires the time to be such that the appointment fits into the availability
+  validateTime = (): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      console.log('validating time: ', this.date, this.time);
+      if (this.time && this.date) {
+        if (this.time.getTime() - utcOffset < this.defaultTimeFrame.startDate.getTime() || this.time.getTime() - utcOffset > this.defaultTimeFrame.endDate.getTime()) {
+          console.log('time is not in the default time frame');
+          return {
+            timeOutsideDefaultTimeFrame: true
+          }
+        }
+
+        const existingAppoint = this.existingAppointments;
+
+        existingAppoint.sort(Availability.compare);
+
+        let selectedAppoint = createAppointment(new Date(this.time!.getTime() + this.date!.getTime()), this.duration, this.defaultTimeFrame);
+
+        for (const appoint of existingAppoint) {
+          console.log('appoint: %o, selectedAppoint: %o', appoint, selectedAppoint);
+          if (appoint.startDate.getTime() <= selectedAppoint.endDate.getTime() && appoint.endDate.getTime() >= selectedAppoint.startDate.getTime()) {
+            console.log('appointment overlaps with existing appointment');
+            return {
+              overlappingAppointment: {
+                appointment: appoint,
+              }
+            };
+          }
+        }
+
+        if (this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime() >= this.duration) {
+          if (compareDates(selectedAppoint.startDate, selectedAppoint.endDate)) {
+            console.log('appointment is not in the default time frame');
+            return {
+              appointOutsideDefaultTimeFrame: true
+            };
+          }
+        }
+      }
+      return null;
+    }
   }
 }
 

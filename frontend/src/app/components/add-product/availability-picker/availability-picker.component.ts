@@ -10,7 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Availability } from '../../../models/Product';
-import { utcOffset } from '../../../../util/util';
+import { utcOffset, updateGroupValidity } from '../../../../util/util';
 import { NgbTimeDateAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 @Component({
@@ -20,11 +20,18 @@ import { NgbTimeDateAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgA
   providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeUTCDateAdapter }]
 })
 export class AvailabilityPickerComponent implements OnInit {
+  readonly weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
   @Input() form!: FormGroup;
-  @Input() defaultTimeFrame: Availability = {
+
+  _defaultTimeFrame: Availability = {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
   }
+
+  @Input() set defaultTimeFrame(value: Availability) {
+    this._defaultTimeFrame = value;
+  }
+
   @Input() duration: Date | null = null;
 
   @Output() defaultTimeFrameChange = new EventEmitter<Availability>();
@@ -38,11 +45,25 @@ export class AvailabilityPickerComponent implements OnInit {
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
+  private _availabilitiesWithoutWeekdays?: Availability[];
 
   disabledWeekdays: number[] = [];
 
-  readonly weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  set availabilitiesWithoutWeekdays(value: Availability[]) {
+    this._availabilitiesWithoutWeekdays = value;
+
+    if (this._availabilitiesWithoutWeekdays) {
+      this.availabilities = this._availabilitiesWithoutWeekdays.map(availability => {
+        return new AvailabilityWithWeekdays(availability, []);
+      });
+    }
+  }
+
   availabilities: AvailabilityWithWeekdays[] = [];
+
+  get updateGroupValidity(): (formGroup: FormGroup) => void {
+    return updateGroupValidity;
+  }
 
   constructor(private formatter: NgbDateParserFormatter,
               public calendar: NgbCalendar,
@@ -66,6 +87,7 @@ export class AvailabilityPickerComponent implements OnInit {
     }
 
     this.form.addValidators(this.isOverlapping(this.availabilities));
+
   }
 
   onDateSelection(date: NgbDate) {
@@ -83,7 +105,7 @@ export class AvailabilityPickerComponent implements OnInit {
       this.toDateControl.setValue(this.formatter.format(this.toDate));
       this.form.markAllAsTouched();
     }
-    this.updateGroupValidity(this.form);
+    updateGroupValidity(this.form);
     console.log(this.form);
   }
 
@@ -162,14 +184,14 @@ export class AvailabilityPickerComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.form.markAsUntouched();
-    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this.defaultTimeFrame)));
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this._defaultTimeFrame)));
 
     console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
   }
 
   removeAvailability = (index: number): void => {
     this.availabilities.splice(index, 1);
-    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this.defaultTimeFrame)));
+    this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this._defaultTimeFrame)));
     console.log('removed avaiLability: %o\navailabilities: %o', this.availabilities);
   }
 
@@ -225,7 +247,7 @@ export class AvailabilityPickerComponent implements OnInit {
 
       }
       else {
-        const timeFrame = this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime();
+        const timeFrame = this._defaultTimeFrame.endDate.getTime() - this._defaultTimeFrame.startDate.getTime();
 
         // Default time frame needs to be at least as long as duration
         if (timeFrame < duration) {
@@ -244,15 +266,9 @@ export class AvailabilityPickerComponent implements OnInit {
     }
   }
 
-  // update the validity of the controls in the group
-  updateGroupValidity = (formGroup: FormGroup): void => {
-    Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
-    console.log(`Updated Validity for `, formGroup.controls);
-  }
-
   // Emit defaultTimeFrame
   emitDefaultTimeFrame = (): void => {
-    this.defaultTimeFrameChange.emit(this.defaultTimeFrame);
+    this.defaultTimeFrameChange.emit(this._defaultTimeFrame);
   }
 
   ngbDateToDate = (ngbDate: NgbDate | null): Date => {

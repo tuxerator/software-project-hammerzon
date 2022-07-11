@@ -1,27 +1,43 @@
 <div class="container">
-  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="input-group row align-items-center">
-    <div class="col-auto">
-      <form class="input-group">
-        <input ngbDatepicker
-               #appointDatePicker="ngbDatepicker"
-               class="form-control"
-               [(ngModel)]="date"
-               (click)="appointDatePicker.toggle()"
-               [formControl]="dateControl"
-               [markDisabled]="markDisabled"
-               placeholder="yyyy-mm-dd"
-               name="datePicker">
-        <button (click)="appointDatePicker.toggle()" class="btn btn-secondary">
-          <i class="bi bi-calendar"></i>
-        </button>
-      </form>
+  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="input-group row align-items-center gy-2">
+    <div [class.is-invalid]="form.touched" class="col-12 row align-items-center">
+      <div class="col-auto">
+        <form class="input-group">
+          <input #appointDatePicker="ngbDatepicker"
+                 (click)="appointDatePicker.toggle()"
+                 [(ngModel)]="date"
+                 [class.is-invalid]="dateControl.invalid && dateControl.touched"
+                 [formControl]="dateControl"
+                 [markDisabled]="markDisabled"
+                 class="form-control"
+                 name="datePicker"
+                 ngbDatepicker
+                 placeholder="YYYY-MM-DD">
+          <button (click)="appointDatePicker.toggle()" class="btn btn-secondary">
+            <i class="bi bi-calendar"></i>
+          </button>
+        </form>
+      </div>
+      <div class="col-auto row align-items-center">
+        <label class="col-auto col-form-label">Uhrzeit:</label>
+        <ngb-timepicker (ngModelChange)="updateGroupValidity(form)" [(ngModel)]="time" [formControl]="timeControl"
+                        class="col-auto"
+                        id="timePicker"></ngb-timepicker>
+      </div>
     </div>
-    <div class="col row align-items-center">
-      <label class="col-auto col-form-label">Uhrzeit:</label>
-      <ngb-timepicker class="col-auto" [(ngModel)]="time" [formControl]="timeControl" id="timePicker"></ngb-timepicker>
+    <div class="col-12 invalid-feedback">
+      <div *ngIf="form.hasError('required', ['dateControl'])">
+        Bitte ein Datum auswählen.
+      </div>
+      <div *ngIf="form.errors?.['timeOutsideDefaultTimeFrame']">
+        Uhrzeit liegt außerhalb der verfügbaren Zeit.
+      </div>
+      <div *ngIf="form.errors?.['appointOutsideDefaultTimeFrame']">
+        Termin liegt außerhalb der verfügbaren Zeit.
+      </div>
     </div>
     <div class="col-12">
-      <button class="btn btn-primary" type="submit">
+      <button [disabled]="form.invalid" class="btn btn-primary" type="submit">
         Termin buchen
       </button>
     </div>

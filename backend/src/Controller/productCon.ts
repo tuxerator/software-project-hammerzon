@@ -102,6 +102,7 @@ class ProductController {
     {
         const id = request.body.id;
         //
+      console.log(id);
         const product = await Product.findById(id);
 
         if(!product)

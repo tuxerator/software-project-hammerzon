@@ -254,7 +254,8 @@ export const isValidAppointment = async (req: Request, res: Response, next: Next
 
 
   // Get all appointments of the user offering the product
-  const orders: IOrder[] = await Order.where('product').equals(product._id).exec();
+  const orders: IOrder[] = await Order.find({ product: { $in: productIds } });
+
   const appointments: IAppointment[] = orders.map(order => order.appointment);
 
   // Check if the new appointment overlaps with any existing appointment

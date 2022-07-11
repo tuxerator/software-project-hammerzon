@@ -76,7 +76,7 @@ const dateFormater = Intl.DateTimeFormat(
 );
 
 export const getDurationString = (duration?: Date): string => {
-  return duration?.getHours() + ' std. ' + duration?.getMinutes() + ' min';
+  return duration?.getUTCHours() + ' Std. ' + duration?.getUTCMinutes() + ' Min.';
 };
 
 

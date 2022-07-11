@@ -25,8 +25,8 @@ interface IProduct extends Document {
 }
 
 interface IAvailability {
-    startDate: Date,
-    endDate: Date,
+  startDate: Date;
+  endDate: Date;
 }
 
 const Availability: Schema = new Schema<IAvailability>({

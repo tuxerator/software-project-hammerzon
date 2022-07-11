@@ -78,7 +78,8 @@
         <hr style="margin-bottom: 0">
 
         <!-- Availability -->
-        <app-availability-picker (newAvailability)="addAvailability($event)"
+        <app-availability-picker #availabilityPicker
+                                 (newAvailability)="addAvailability($event)"
                                  [form]="availabilityGroup"
                                  [(defaultTimeFrame)]="defaultTimeFrame"
                                  [duration]="duration"

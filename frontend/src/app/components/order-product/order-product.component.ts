@@ -50,13 +50,6 @@ export class OrderProductComponent implements OnInit {
         next: (val) => {
           this.product = val;
           this.product.duration = new Date(this.product.duration);
-          if(this.startDate)
-          {
-            this.appointment = {
-              startDate:this.startDate,
-              endDate:new Date(this.startDate?.getTime() + this.product.duration.getTime())
-            };
-          }
 
         },
         error: (err) => {

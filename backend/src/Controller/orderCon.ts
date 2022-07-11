@@ -96,19 +96,23 @@ class OrderController {
     /**
      * Add a new order to the database
      */
-    public async addOrder(request: SessionRequest, response: Response): Promise<void>{
-        const order: PostOrder = request.body;
-        const orderingUserId = request.session.user._id;
+    public async addOrder(request: SessionRequest, response: Response): Promise<void> {
+      const order: PostOrder = request.body;
+      const orderingUserId = request.session.user._id;
 
-        const dbOrder = new Order({
-          product : order.productId,
-          orderingUser : orderingUserId,
-          appointment : order.appointment,
-          confirmed: false
-        });
-        await dbOrder.save();
-        response.status(200);
-        response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id, orderRegistered:true});
+      const dbOrder = new Order({
+        product: order.productId,
+        orderingUser: orderingUserId,
+        appointment: order.appointment,
+        confirmed: false
+      });
+      await dbOrder.save();
+
+      const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+      //AppointmentSocket.socket.removeAppointmentWithoutSending(product.user,order.appointment);
+
+      response.status(200);
+      response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id, orderRegistered: true });
     }
 
     public async deleteOrder(request: SessionRequest, response: Response) : Promise<void>
@@ -145,13 +149,12 @@ class OrderController {
     // validating the permissions here because validators don't communicate with the database
     if (product.user.toString() === request.session.user._id || request.session.user.role === 'admin') {
 
-        order.status = status;
-        order.save();
-        response.status(200);
-        response.send({ status });
+      order.status = status;
+      order.save();
+      response.status(200);
+      response.send({ status });
 
-    }
-    else {
+    } else {
       response.status(500);
       response.send('confirmation failed');
     }

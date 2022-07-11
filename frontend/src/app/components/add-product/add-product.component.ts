@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -24,6 +24,7 @@ import {
 import { Hindrance } from './hindrance-picker/hindrance-picker.component';
 import { compareDates, ngbDateToDate, utcOffset } from '../../../util/util';
 import { NgbTimeUTCDateAdapter } from '../../../util/nbgAdapter';
+import { AvailabilityPickerComponent } from './availability-picker/availability-picker.component';
 
 
 class ImageSnippet {
@@ -38,6 +39,8 @@ class ImageSnippet {
   providers: [{ provide: NgbTimeAdapter, useClass: NgbTimeUTCDateAdapter }]
 })
 export class AddProductComponent implements OnInit {
+  @ViewChild('availabilityPicker') availabilityPicker!: AvailabilityPickerComponent;
+
   public appointmentsCount = 1;
 
   public appointmentIndexs: string[] = [];
@@ -105,7 +108,6 @@ export class AddProductComponent implements OnInit {
 
   //
   public editProduct(aProduct: Product) {
-    this.appointmentsCount = 0;
     this.imageId = aProduct.image_id;
     aProduct.duration = new Date(aProduct.duration);
     this.addProductForm = this.formBuilder.group({
@@ -115,6 +117,14 @@ export class AddProductComponent implements OnInit {
       durationHour: new FormControl(aProduct.duration.getHours(), [Validators.required]),
       durationMinute: new FormControl(aProduct.duration.getMinutes(), [Validators.required]),
     });
+
+    this.availabilities = aProduct.availability;
+
+    this.availabilityPicker.availabilitiesWithoutWeekdays = this.availabilities;
+    this.availabilityPicker.defaultTimeFrame = new Availability(
+      new Date(aProduct.defaultTimeFrame.start),
+      new Date(aProduct.defaultTimeFrame.end)
+    );
 
     console.log(aProduct.availability);
     //const appointment = aProduct.appointments[0];

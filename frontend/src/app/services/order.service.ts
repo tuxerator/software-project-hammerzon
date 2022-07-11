@@ -6,9 +6,9 @@ import { Appointment } from './productdetails.service';
 import { Availability } from '../models/Product';
 import { MessageResponse } from '../components/types';
 
-export type PostOrder={
-  productId : string,
-  appointment : Availability
+export type PostOrder = {
+  productId: string,
+  appointment: Availability
 }
 
 @Injectable({
