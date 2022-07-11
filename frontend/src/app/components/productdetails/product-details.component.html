@@ -73,8 +73,6 @@
             [defaultTimeFrame]="defaultTimeFrame"
             [onAppointmentChanged]="appointmentChanged"
           ></app-appointment-selector>
-
-
           <div
             *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
             class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -83,10 +81,6 @@
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
               class="bi bi-trash-fill"></i></button>
           </div>
-        </div>
-    </div>
-  </div>
-
   <hr>
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
@@ -105,7 +99,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
     <div *ngIf="hasOrdered && !hasRated" class="mb-4">
       <div class="bg-dark">
         <form class="" (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
-          <label for="exampleFormControlSelect1">Bewertung Abgeben?</label>
+          <label for="">Bewertung Abgeben?</label>
           <div class="form-group w-100 py-2">
             <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="currentRating"></ngb-rating>
             <label class="text-warning">{{currentRating}}</label>

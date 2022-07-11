@@ -34,14 +34,14 @@ export class Product {
               defaultTimeFrame: { start: Date, end: Date },
               availability: Availability[],
               image_id: string,
-              category:string) {
-          this.name = name;
-          this.description = description;
-          this.prize = prize;
-          this.duration = duration;
+              category?: string) {
+    this.name = name;
+    this.description = description;
+    this.prize = prize;
+    this.duration = duration;
     this.defaultTimeFrame = defaultTimeFrame;
     this.availability = availability;
-          this.image_id = image_id;
+    this.image_id = image_id;
     this.category = category;
   }
 }

@@ -146,7 +146,7 @@ class ProductController {
 
 
   public async resetAppointment(request: Request, response: Response): Promise<void> {
-    console.log('resetting');
+    /*console.log('resetting');
     const product: PostOrder = request.body;
     const index = parseInt(String(product.appointmentIndex));
     const id = product.productId;
@@ -159,7 +159,7 @@ class ProductController {
     } else {
       response.status(500);
       response.send('There is no product with such an id');
-    }
+    }*/
   }
   // test for Product id
   public async getSimilarProduct(request:Request, response: Response):Promise<void>{

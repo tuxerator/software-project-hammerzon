@@ -165,7 +165,7 @@ app.get('/api/product/similar/:id', product.getSimilarProduct);
 app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
 
 //  delete product
-app.delete('/api/product/delete/:id', ValidationGroup([Validators.isAuthorized('user')]), product.removeProduct);
+app.delete('/api/product/delete/:id', ValidatorGroups.UserAuthorized, product.removeProduct);
 
 // add availability to product
 app.post('/api/product/:id/availability/add', asyncHandler(isValidAvailability), product.addAvailability);

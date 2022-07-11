@@ -2,7 +2,7 @@ import { Request, response, Response } from 'express';
 import { IOrder, Order, Status } from '../Models/Order';
 import { PostOrder, SessionRequest, OrderInfo } from '../types';
 import mongoose from 'mongoose';
-import { IAppointment, IProduct, Product } from '../Models/Product';
+import { IAvailability, IProduct, Product } from '../Models/Product';
 import { IUser } from '../Models/User';
 import { Types } from 'mongoose';
 import session from 'express-session';
@@ -94,23 +94,17 @@ class OrderController {
         response.send({ code: 200, message: 'Order is valid' });
     }
 
-  public async getAppointProductPair(postOrder:PostOrder):Promise<{product:IProduct,appointment:IAppointment}|undefined>
-  {
+  public async getAppointProductPair(postOrder: PostOrder): Promise<{ product: IProduct, appointment: IAvailability } | undefined> {
     const postedOrder: PostOrder = postOrder;
     const updateProduct = await Product.findById(postedOrder.productId);
-    const index = postedOrder.appointmentIndex;
-    console.log(updateProduct);
-    if (!updateProduct||updateProduct.appointments[index].isReserved === true) {
-      return undefined;
-    }
 
-    return {product:updateProduct,appointment:updateProduct.appointments[index]};
+    return { product: updateProduct, appointment: postedOrder.appointment };
   }
 
   /**
    * register an order
    */
-  public async registerOrder(pap:{product:IProduct,appointment:IAppointment},user:IUser): Promise<IOrder> {
+  public async registerOrder(pap: { product: IProduct, appointment: IAvailability }, user: IUser): Promise<IOrder> {
 
     console.log(pap);
     const newOrder = new Order({
@@ -120,15 +114,14 @@ class OrderController {
       appointment: pap.appointment,
       status: Status.NNA
     });
+
     await newOrder.save();
     console.log('saved order:' + newOrder);
-    pap.appointment.isReserved = true;
-    pap.product.markModified('appointments');
+
+    //AppointmentSocket.socket.removeAppointmentWithoutSending(product.user,order.appointment);
+
     await pap.product.save();
-    console.log(pap.product.appointments);
     return newOrder;
-    //response.status(201);
-    //response.send(true);
   }
 
   /**

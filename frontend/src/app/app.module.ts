@@ -59,7 +59,7 @@ const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
     OrderedServicesComponent,
     AvailabilityPickerComponent,
     HindrancePickerComponent,
-    AppointmentSelectorComponent
+    AppointmentSelectorComponent,
     OrderedServicesComponent,
     CategoryComponent,
     AdminComponent,
