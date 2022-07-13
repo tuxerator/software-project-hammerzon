@@ -8,7 +8,7 @@
             </thead>
             <tbody class="table-body">
               <tr *ngFor="let activity of activities">
-                <td class="text-muted">{{getDateString(activity.date)}}</td>
+                <td class="text-secondary">{{getDateString(activity.date)}}</td>
                 <td>
                   <!--User Name -->
                   <span class="text-primary fs-6 fw-bold" *ngIf="activity.user">

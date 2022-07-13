@@ -34,7 +34,7 @@ export class SocketServer{
     }
     this.appointments[user._id].push(appointment);
 
-    this.server.emit(`${ user }:appointment`, { appointment, action: 'add' });
+    this.server.emit(`${ user._id }:appointment`, { appointment, action: 'add' });
   }
 
   public onAppointmnetRemoved(user: IUser, appointment: IAvailability): void {

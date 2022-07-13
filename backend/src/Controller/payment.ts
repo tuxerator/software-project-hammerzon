@@ -103,7 +103,7 @@ export class PaymentController
    * paymentType
    *
    */
-  public async Payment(request: SessionRequest,response: Response): Promise<void>
+  public async payment(request: SessionRequest, response: Response): Promise<void>
   {
     const postOrder = request.body.postOrder;
     //const accountPassword = request.body.password;

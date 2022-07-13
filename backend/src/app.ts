@@ -232,7 +232,7 @@ app.get('/api/admin/activity/list',activity.getList);
 
 app.post('/api/payment/country',ValidatorGroups.CountryPayment,payment.IsFromGermany.bind(payment));
 
-app.post('/api/payment/pay',ValidatorGroups.PayPayment,payment.Payment.bind(payment));
+app.post('/api/payment/pay',ValidatorGroups.PayPayment, asyncHandler(isValidAppointment), payment.payment.bind(payment));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(errorHandler());

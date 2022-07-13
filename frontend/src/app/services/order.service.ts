@@ -40,6 +40,7 @@ export class OrderService {
 
   getAppointmentChanged(product: Product): Observable<AppointemntAction> {
     this.socket.on(`${ product.user!._id }:appointment`, (data: AppointemntAction) => {
+      console.log('New appointment received:\nchannel: %o\ndata: %o', product.user!._id, data);
       this.appointmentChanged.next(data);
     });
     return this.appointmentChanged;
@@ -98,7 +99,7 @@ export class OrderService {
 
 
   validateAppointment(productId: string, appointment: Availability): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(`api/order/validate`, { productId, appointment });
+    return this.http.post<MessageResponse>(`api/order/validate`, { postOrder:{productId, appointment }});
   }
 
 }

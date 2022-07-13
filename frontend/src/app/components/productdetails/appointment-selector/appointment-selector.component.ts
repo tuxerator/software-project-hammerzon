@@ -56,6 +56,10 @@ export class AppointmentSelectorComponent implements OnInit {
     return updateGroupValidity;
   }
 
+  get console(): Console {
+    return console;
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -84,23 +88,29 @@ export class AppointmentSelectorComponent implements OnInit {
     console.log('defaultTimeFrame',this.defaultTimeFrame);
     this.time = new Date(getDayTime(this.defaultTimeFrame.startDate));
 
-    this.onAppointmentChanged?.subscribe(
-      (appAction: AppointemntAction) => {
-        if (appAction.action === 'add') {
-          this.existingAppointments.push(appAction.appointment);
-          if (this.datePicker.isOpen()) {
-            this.datePicker.close();
-            this.datePicker.open();
+    this.onAppointmentChanged?.subscribe( {
+      next: (appAction: AppointemntAction) => {
+          console.log('AppointmentAction: %o', appAction);
+          if (appAction.action === 'add') {
+            appAction.appointment = new Availability(new Date(appAction.appointment.startDate), new Date(appAction.appointment.endDate));
+            this.existingAppointments.push(appAction.appointment);
+            if (this.datePicker.isOpen()) {
+              this.datePicker.close();
+              this.datePicker.open();
+            }
+          } else if (appAction.action === 'remove') {
+            const index = this.existingAppointments.findIndex(ap1 => Availability.compare(ap1, appAction.appointment) === 0);
+            this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)]
+            if (this.datePicker.isOpen()) {
+              this.datePicker.close();
+              this.datePicker.open();
+            }
           }
-        } else if (appAction.action === 'remove') {
-          const index = this.existingAppointments.findIndex(ap1 => Availability.compare(ap1, appAction.appointment) === 0);
-          this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)]
-          if (this.datePicker.isOpen()) {
-            this.datePicker.close();
-            this.datePicker.open();
-          }
-        }
-      }
+        },
+      error: (error: any) => {
+      console.error('Error in onAppointmentChanged: %o', error);
+    }
+  }
     );
 
     this.productId = String(this.route.snapshot.paramMap.get('id'));
@@ -110,6 +120,14 @@ export class AppointmentSelectorComponent implements OnInit {
         this.availabilities = val.map((availability) => {
           return new Availability(new Date(availability.startDate), new Date(availability.endDate));
         });
+
+        if (this.availabilities.length > 0) {
+          this.datePicker.startDate = {
+            year: this.availabilities[0].startDate.getFullYear(),
+            month: this.availabilities[0].startDate.getMonth() + 1,
+            day: this.availabilities[0].startDate.getDate()
+          };
+        }
 
         // after receiving the availabilities, get the existing appointments
         this.availabilities.forEach((availability) => {

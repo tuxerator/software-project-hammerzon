@@ -93,21 +93,25 @@ export class ProductDetailsComponent implements OnInit {
     //Find product that correspond with the name provided in route.
     //this.route= ProductInfo.find(product=>product._id===productIDFromRoute);
     this.loading.product = true;
+/*
     this.productService.getProductDetails(this.id).subscribe(
       {
         next: (val) => {
-          this.product = val;
+          this.onProductRecieved(val);
           this.product.duration = new Date(this.product.duration);
-          console.log('Availabilitys', this.product.availability);
-          for (let i = 0; i < this.product.availability.length; i++) {
-            this.product.availability[i].startDate = new Date(this.product.availability[i].startDate);
-            this.product.availability[i].endDate = new Date(this.product.availability[i].endDate);
-          }
+
+          console.log('Availabilities', this.product.availability);
+
+
 
           this.defaultTimeFrame = new Availability(new Date(this.product.defaultTimeFrame.start), new Date(this.product.defaultTimeFrame.end));
-          console.log('Seted DefaulttimeFrame',this.defaultTimeFrame);
-          this.orderService.getAppointmentChanged(this.product).subscribe(this.appointmentChanged.next);
+
+          console.log('Set defaultTimeFrame',this.defaultTimeFrame);
+
+          this.orderService.getAppointmentChanged(this.product).subscribe(this.appointmentChanged.next.bind(this.appointmentChanged));
+
           this.loading.product = false;
+
           console.log(this.product);
           console.log(this.user);
         },
@@ -118,6 +122,7 @@ export class ProductDetailsComponent implements OnInit {
         }
       }
     );
+*/
 
     this.user = this.authService.user;
 
@@ -219,6 +224,8 @@ export class ProductDetailsComponent implements OnInit {
       this.product.availability[i].startDate = new Date(this.product.availability[i].startDate);
       this.product.availability[i].endDate = new Date(this.product.availability[i].endDate);
     }
+
+    this.defaultTimeFrame = new Availability(new Date(this.product.defaultTimeFrame.start), new Date(this.product.defaultTimeFrame.end));
 
     if (this.product.ratings) {
       for (let i = 0; i < this.product.ratings.length; i++) {
@@ -375,7 +382,7 @@ export class ProductDetailsComponent implements OnInit {
 
   getTotalPrice(): number {
     if (this.product) {
-      return this.product.prize * (this.product.duration.getTime() / (3600000) + 1);
+      return this.product.prize * (this.product.duration.getTime() / (3600000));
     }
     return 0;
   }

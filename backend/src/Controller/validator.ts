@@ -348,9 +348,9 @@ export class ValidatorGroups {
  * Checks if the new appointment does not overlap with any existing appointment of the user offering the product
  */
 export const isValidAppointment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const product: IProduct = await Product.findById(new Types.ObjectId(req.body.productId)).exec();
+  const product: IProduct = await Product.findById(new Types.ObjectId(req.body.postOrder.productId)).exec();
   const productAvailability: IAvailability[] = product.availability;
-  const appointment: IAppointment = req.body.appointment;
+  const appointment: IAppointment = req.body.postOrder.appointment;
 
   appointment.startDate = new Date(appointment.startDate);
   appointment.endDate = new Date(appointment.endDate);

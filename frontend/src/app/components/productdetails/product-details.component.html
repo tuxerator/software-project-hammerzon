@@ -2,7 +2,7 @@
   <div class="bg-dark mx-auto">
     <div class="row justify-content-between">
       <nav class="col-md-8" aria-label="breadcrumb"
-        style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+           style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']">Dienstleistungen</a></li>
           <li class="breadcrumb-item">
@@ -16,17 +16,21 @@
 
       <div
         *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
-        class="col-md-2 mb-2 d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
+        class="col-md-auto mb-2 row justify-content-md-end">
+        <div class="col-auto">
+          <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
             class="bi bi-pencil-square"></i></button>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
             class="bi bi-trash-fill"></i></button>
+        </div>
       </div>
     </div>
 
     <!-- Image and Product name + User Name + Price-->
     <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="Lädt ..."
-      (load)="onImageLoaded()">
+         (load)="onImageLoaded()">
 
     <div class="pt-2 bg-dark text-white">
       <div class="row justify-content-between">
@@ -35,13 +39,13 @@
           <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
           </ngb-rating>
           <span class="text-warning">{{roundTo2Digits(product!.averageRating!)}}</span>
-          <span class="text-muted"> ({{product?.numberOfRatings}})</span>
+          <span class="text-secondary"> ({{product?.numberOfRatings}})</span>
         </a>
-        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 btn text-md-end fs-5 text-muted">
+        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 btn text-md-end fs-5 text-secondary">
           Keine Bewertungen
         </a>
       </div>
-      <app-category-badge [category]="getCategory()" class="text-muted" direction="hor"></app-category-badge>
+      <app-category-badge [category]="getCategory()" class="text-secondary" direction="hor"></app-category-badge>
       <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
     </div>
     <hr>
@@ -56,7 +60,7 @@
         <span class="text-primary"> {{product?.prize}} €/Std.</span>
       </div>
       <div class="col-md-4 text-md-end">
-        Total Preis <span class="text-muted"> {{getTotalPrice()}} €</span>
+        Total Preis <span class="text-secondary"> {{getTotalPrice()}} €</span>
       </div>
     </div>
 
@@ -65,14 +69,14 @@
     <div class="fw-bold fs-5 mb-2">Beschreibung</div>
     <div class="text-light">{{product?.description}}</div>
     <hr>
-          <h5>Termine</h5>
-          <app-appointment-selector *ngIf="defaultTimeFrame"
-            (createAppointmentEvent)="orderProduct($event)"
-            [duration]="product.duration.getTime()"
-            [defaultTimeFrame]="defaultTimeFrame"
-            [onAppointmentChanged]="appointmentChanged"
-          ></app-appointment-selector>
-  <hr>
+    <h5>Termine</h5>
+    <app-appointment-selector *ngIf="defaultTimeFrame"
+                              (createAppointmentEvent)="orderProduct($event)"
+                              [duration]="product.duration.getTime()"
+                              [defaultTimeFrame]="defaultTimeFrame"
+                              [onAppointmentChanged]="appointmentChanged"
+    ></app-appointment-selector>
+    <hr>
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
     <div id="rating" class="fw-bold fs-5 mb-2">
@@ -81,10 +85,10 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
         <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
         </ngb-rating>
         <span class="text-warning"> {{roundTo2Digits(product!.averageRating!)}}</span>
-        <span class="text-muted"> ({{product?.numberOfRatings}})</span>
+        <span class="text-secondary"> ({{product?.numberOfRatings}})</span>
       </a>
       <a *ngIf="product!.numberOfRatings! <= 0">
-        <span class="text-muted fs-6"> Keine Bewertungen </span>
+        <span class="text-secondary fs-6"> Keine Bewertungen </span>
       </a>
     </div>
     <div *ngIf="hasOrdered && !hasRated" class="mb-4">
@@ -97,7 +101,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
           </div>
           <div class="form-group py-2">
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="comment"
-              placeholder="Erfahrung beschreiben"></textarea>
+                      placeholder="Erfahrung beschreiben"></textarea>
           </div>
           <input type="submit" class="btn btn-primary mt-2" value="Bewertung abschicken">
         </form>
@@ -111,7 +115,8 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
     <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
     <div class="list-group">
-      <div class="list-group-item bg-dark border-secondary" *ngFor="let elem of showMoreRating ? product?.ratings : product?.ratings?.slice(0,3)">
+      <div class="list-group-item bg-dark border-secondary"
+           *ngFor="let elem of showMoreRating ? product?.ratings : product?.ratings?.slice(0,3)">
         <div class="row justify-content-start ">
           <div class="col-auto fs-6 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
           <div class="col-auto fs-6">
@@ -119,27 +124,32 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
             <label class="text-warning">{{elem.rating}}</label>
           </div>
         </div>
-        <div class="text-muted mb-2">{{getDate(elem.date)}}</div>
+        <div class="text-secondary mb-2">{{getDate(elem.date)}}</div>
         <p class="text-white align-center fw-light mb-3">
           {{elem.comment}}
         </p>
 
-        <div class="row pe-2" [class]="elem.helpfulUsers.length == 0 ? ['justify-content-end']: ['justify-content-between']">
-          <span *ngIf="elem.helpfulUsers.length == 1" class="col-auto text-muted">Eine Person fand diese Bewertung hilfreich.</span>
-          <span *ngIf="elem.helpfulUsers.length > 1" class="col-auto text-muted">{{elem.helpfulUsers.length}} Personen fanden diese
+        <div class="row pe-2"
+             [class]="elem.helpfulUsers.length == 0 ? ['justify-content-end']: ['justify-content-between']">
+          <span *ngIf="elem.helpfulUsers.length == 1" class="col-auto text-secondary">Eine Person fand diese Bewertung hilfreich.</span>
+          <span *ngIf="elem.helpfulUsers.length > 1" class="col-auto text-secondary">{{elem.helpfulUsers.length}} Personen fanden diese
               Bewertung hilfreich.</span>
           <button *ngIf="authService.isLogedIn() && canRateAsHelpful(elem.helpfulUsers)" (click)="rateAsHelpful(elem)"
-            type="button" class="btn btn-outline-secondary btn-sm col-auto"> <i class="bi bi-hand-thumbs-up-fill"></i> Hilfreich</button>
+                  type="button" class="btn btn-outline-secondary btn-sm col-auto"><i
+            class="bi bi-hand-thumbs-up-fill"></i> Hilfreich
+          </button>
           <button *ngIf="authService.isLogedIn() && !canRateAsHelpful(elem.helpfulUsers)"
-            (click)="unrateAsHelpful(elem)" type="button" class="btn btn-outline-secondary btn-sm col-auto"> <i class="bi bi-hand-thumbs-down-fill"></i> Nicht
+                  (click)="unrateAsHelpful(elem)" type="button" class="btn btn-outline-secondary btn-sm col-auto"><i
+            class="bi bi-hand-thumbs-down-fill"></i> Nicht
             mehr hilfreich
           </button>
 
-        </div >
+        </div>
 
       </div>
       <div *ngIf="product!.ratings!.length! > 3" class="list-group-item bg-dark border-secondary text-center">
-        <a class="btn btn-link" (click)="showMoreRating = !showMoreRating">{{showMoreRating?  'Weniger Anzeigen' : 'Mehr Anzeigen'}}</a>
+        <a class="btn btn-link"
+           (click)="showMoreRating = !showMoreRating">{{showMoreRating ? 'Weniger Anzeigen' : 'Mehr Anzeigen'}}</a>
       </div>
     </div>
 
@@ -160,20 +170,20 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 <!-- Loading Screen --->
 <div *ngIf="loading.product" aria-hidden="true" class="container mt-2 p-4 col-lg-7 mx-auto">
   <nav class="col-md-8" aria-label="breadcrumb"
-    style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+       style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']">Dienstleistungen</a></li>
       <li class="breadcrumb-item placeholder-glow">
         <span class="placeholder bg-secondary text-secondary">Placerholder</span>
       </li>
       <li class="breadcrumb-item active placeholder-glow" aria-current="page"><span
-          class="placeholder bg-secondary">Placerholder</span></li>
+        class="placeholder bg-secondary">Placerholder</span></li>
     </ol>
   </nav>
 
   <div>
     <svg class="placerholder-glow placeholder bg-secondary img-fluid ratio-16x9 rounded" role="img" width="100%"
-      height="450">
+         height="450">
       <rect width="100%" height="100%"></rect>
     </svg>
   </div>

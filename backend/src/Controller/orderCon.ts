@@ -6,7 +6,6 @@ import { IAvailability, IProduct, Product } from '../Models/Product';
 import { IUser } from '../Models/User';
 import { Types } from 'mongoose';
 import session from 'express-session';
-import { AppointmentSocket } from './appointmentSocket';
 import productCon from './productCon';
 import { SocketServer } from './socketServer';
 
@@ -195,6 +194,7 @@ class OrderController {
     }
   }
 
+/*
   public async registerAppointment(request: SessionRequest, response: Response): Promise<void> {
     const order: PostOrder = request.body;
     const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
@@ -212,6 +212,7 @@ class OrderController {
     response.status(200);
     response.send({ message: 'appointment unregistered', code: 200 });
   }
+*/
 
 }
 

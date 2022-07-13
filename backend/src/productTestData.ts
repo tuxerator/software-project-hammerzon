@@ -19,7 +19,13 @@ export default class ProductTestData {
     'fliesen-legen.jpeg',
   ];
 
-  public list: (Pick<IProduct,'name'|'prize'|'description'|'ngrams'|'prefixNgrams'|'availability'|'defaultTimeFrame'|'numberOfRatings'|'averageRating'|'ratings'|'duration'> & {user:string}) [] = [
+  public list: (Pick<IProduct,'name'|'prize'|'description'|'ngrams'|'prefixNgrams'|'availability'|'defaultTimeFrame'|'numberOfRatings'|'averageRating'|'duration'> & {user:string, ratings: {
+    rating:number,
+    comment:string,
+    user:string,
+    date:Date,
+    helpfulUsers:string[]
+    }[]}) [] = [
     {
       name: 'Fliesenlegen',
       user: '6284efd5b72a93135fb79c88',
@@ -36,9 +42,21 @@ export default class ProductTestData {
         start: new Date('1970-01-01T08:00:00.000Z'),
         end: new Date('1970-01-01T18:00:00.000Z'),
       },
-      numberOfRatings : 0,
-      averageRating : 1,
-      ratings : []
+      numberOfRatings : 2,
+      averageRating : 3.5,
+      ratings : [{
+        rating: 3,
+        comment: 'Gut',
+        user: '6284efd5b72a93135fb79c87',
+        date: new Date(),
+        helpfulUsers: []
+      },{
+        rating: 4,
+        comment: 'Gut',
+        user: '6284efd5b72a93135fb79c88',
+        date: new Date(),
+        helpfulUsers: ['']
+      }]
     },
     {
       name: 'Gartenarbeit',
@@ -54,7 +72,7 @@ export default class ProductTestData {
       ngrams : Helper.ngram('Gartenarbeit', 3).join(' '),
       prefixNgrams : Helper.prefixNgram('Gartenarbeit', 3).join(' '),
       duration: new Date('1970-01-01T02:30:00.000Z'), // 1 Sekunde
-      numberOfRatings : 0,
+      numberOfRatings : 2,
       availability: [{
         startDate: new Date('2022-08-19T08:00:00.000Z'),
         endDate: new Date('2023-08-19T18:00:00.000Z')
@@ -64,7 +82,19 @@ export default class ProductTestData {
         end: new Date('1970-01-01T18:00:00.000Z'),
       },
       averageRating : 1,
-      ratings : []
+      ratings : [{
+        rating: 1,
+        comment: 'Gut',
+        user: '6284efd5b72a93135fb79c87',
+        date: new Date(),
+        helpfulUsers: []
+      },{
+        rating: 1,
+        comment: 'Gut',
+        user: '6284efd5b72a93135fb79c87',
+        date: new Date(),
+        helpfulUsers: []
+      }]
     },
     {
         name:'Tischlerarbeit',

@@ -11,16 +11,16 @@
       <h6 *ngIf="productInfo.numberOfRatings! > 0" class="text-warning text-end">
         <ngb-rating [(rate)]="productInfo.averageRating!" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
         <label class="text-warning">{{roundTo2Digits(productInfo!.averageRating!)}}</label>
-        <span class="text-muted">({{productInfo.numberOfRatings}})</span>
+        <span class="text-secondary">({{productInfo.numberOfRatings}})</span>
       </h6>
       <!--- No Reviews -->
-      <h6 *ngIf="productInfo.numberOfRatings! <= 0" class="text-muted text-end">
+      <h6 *ngIf="productInfo.numberOfRatings! <= 0" class="text-secondary text-end">
         Keine Bewertungen
       </h6>
       <!-- Product Name -->
       <div class="fs-4 fw-bold"> {{productInfo?.name}}</div>
       <!-- Category Badge Horizontal -->
-      <app-category-badge class="text-muted" [category]="getCategory()" direction="hor"></app-category-badge>
+      <app-category-badge class="text-secondary" [category]="getCategory()" direction="hor"></app-category-badge>
       <!-- Price -->
 
         <div class="text-primary">

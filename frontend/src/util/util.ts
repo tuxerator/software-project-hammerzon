@@ -55,6 +55,7 @@ export const createAppointment = (startDate: Date, duration: number, defaultTime
 
 // update the validity of the controls in the group
 export const updateGroupValidity = (formGroup: FormGroup): void => {
+  console.log('update validity for: %o', formGroup);
   Object.keys(formGroup.controls).forEach(key => formGroup.controls[key].updateValueAndValidity());
   console.log(`Updated Validity for `, formGroup.controls);
 }

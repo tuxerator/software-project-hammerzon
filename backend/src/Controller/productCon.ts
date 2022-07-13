@@ -177,6 +177,12 @@ class ProductController {
     // Get Product to search from
     const product = await Product.findById(id);
 
+    if (!product) {
+      response.status(400);
+      response.send({code: 400, message: 'Product not found'});
+      return;
+    }
+
     // Find Products some what similar to this product
     let products = await Product.find({$text: {$search: `${product.name} ${product.description}`},_id:{$ne:product._id}}, {score: {$meta: 'textScore'}}).sort({score: {$meta: 'textScore'}}).limit(3).populate('user', '-password -address').populate('category').exec();
     const productIDs = [product._id,...products.map(p => p._id)];

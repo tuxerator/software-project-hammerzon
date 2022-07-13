@@ -19,7 +19,10 @@ export class ActivityComponent implements OnInit {
         //console.log(activities);
         activities = activities.map(x => {x.date = new Date(x.date); return x;});
 
-        this.activities = activities;
+        this.activities = activities.sort((a, b) => {
+          return b.date.getTime() - a.date.getTime();
+        });
+
 
         //console.log(this.activities);
       },
@@ -31,7 +34,7 @@ export class ActivityComponent implements OnInit {
     this.activityService.getLastAddedActivity().subscribe((activity) => {
       console.log('Added Activity',activity);
       activity.date = new Date(activity.date);
-      this.activities?.push(activity);
+      this.activities = [activity].concat(this.activities!);
       //console.log('Added Activity',this.activities);
     });
   }
