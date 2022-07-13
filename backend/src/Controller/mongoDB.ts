@@ -13,12 +13,21 @@ import mongoose from 'mongoose';
 import ProductTestData from '../productTestData';
 import OrderTestData from '../orderTestData';
 import UserTestData from '../userTestData';
-
+import {MongoMemoryServer} from 'mongodb-memory-server';
 
 export class MongoDBController {
 
-  constructor() {
-    this.initConnection().catch(err => console.log(err));
+  mongod?:MongoMemoryServer;
+  constructor(testing:boolean) {
+    if(testing)
+    {
+      console.log('in here');
+
+      this.initMemoryDb();
+    }else{
+      console.log('in there');
+      this.initConnection().catch(err => console.log(err));
+    }
   }
 
   async initConnection(): Promise<void> {
@@ -28,4 +37,27 @@ export class MongoDBController {
     new OrderTestData();
     new UserTestData();
   }
+
+  async initMemoryDb(): Promise<void>
+  {
+    if(this.mongod)
+    {
+      //await this.mongod.start();
+      this.mongod = await MongoMemoryServer.create();
+
+      const uri = await this.mongod.getUri();
+
+      const mongooseOpts = {
+          dbName:'TestingDb'
+      };
+
+      await mongoose.connect(uri, mongooseOpts);
+    }
+  }
+
+  async disconnectDB() {
+    await mongoose.disconnect();
+  }
+
+
 }

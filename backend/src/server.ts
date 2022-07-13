@@ -1,4 +1,4 @@
-import app from './app';
+import { app } from './app';
 
 /**
  *  Zeige TypeScript Zeile in Fehlernachrichten
@@ -10,11 +10,13 @@ SourceMap.install();
 /**
  *  Hier starten wir den Express-Server, indem wir den Server an einen Netzwerkport (Standard: 80) binden
  */
-const server = app.listen(app.get('port'), () => {
+const appInstance = app(false);
+
+const server = appInstance.listen(appInstance.get('port'), () => {
     console.log(
         'Server running at http://localhost:%d in %s mode',
-        app.get('port'),
-        app.get('env')
+        appInstance.get('port'),
+        appInstance.get('env')
     );
     console.log('Press CTRL-C to stop\n');
 });

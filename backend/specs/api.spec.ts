@@ -5,12 +5,18 @@
  */
 
 import request from 'supertest';
-import app from '../src/app';
+import {app} from '../src/app';
+
+
 
 describe('GET /api', () => {
+
+    const appInstance = app(true);
+
     it('should return 200 OK', () => {
-        return request(app)
+        return request(appInstance)
             .get('/api')
             .expect(200);
     });
 });
+
