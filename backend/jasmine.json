@@ -7,5 +7,6 @@
     "env": {
         "stopSpecOnExpectationFailure": false,
         "random": true
-    }
+    },
+    "timeoutInterval": 10000
 }

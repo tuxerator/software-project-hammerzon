@@ -1,4 +1,4 @@
-import { app } from './app';
+import App from './app';
 
 /**
  *  Zeige TypeScript Zeile in Fehlernachrichten
@@ -10,7 +10,7 @@ SourceMap.install();
 /**
  *  Hier starten wir den Express-Server, indem wir den Server an einen Netzwerkport (Standard: 80) binden
  */
-const appInstance = app(false);
+const appInstance = new App({}).getExpressInstance();
 
 const server = appInstance.listen(appInstance.get('port'), () => {
     console.log(

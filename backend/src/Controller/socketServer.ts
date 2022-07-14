@@ -6,7 +6,7 @@ import { IActivity } from '../Models/Activity';
 
 export class SocketServer{
   private readonly server: Server;
-  public static socket:SocketServer;
+  public static socket?:SocketServer;
 
   public appointments: { [user: string]: IAvailability[] } = {};
   constructor(app:Express.Application){

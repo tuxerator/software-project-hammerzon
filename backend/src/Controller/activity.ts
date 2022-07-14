@@ -63,7 +63,7 @@ export class ActivityController{
 
     console.log(user);
     // activity.user = user;
-    SocketServer.socket.onAddedActivity(userActivity);
+    SocketServer.socket?.onAddedActivity(userActivity);
   }
 
   public async getList(request:Request,response:Response):Promise<void>

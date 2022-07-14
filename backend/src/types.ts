@@ -48,6 +48,10 @@ export type BachelorCardRequest = {
   paymentType : number
 }
 
+export type AppOptions = {
+  testing:boolean
+}
+
 
 
 

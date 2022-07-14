@@ -22,7 +22,6 @@ export class MongoDBController {
     if(testing)
     {
       console.log('in here');
-
       this.initMemoryDb();
     }else{
       console.log('in there');
@@ -40,24 +39,19 @@ export class MongoDBController {
 
   async initMemoryDb(): Promise<void>
   {
-    if(this.mongod)
-    {
       //await this.mongod.start();
       this.mongod = await MongoMemoryServer.create();
-
       const uri = await this.mongod.getUri();
-
+      console.log(uri);
       const mongooseOpts = {
           dbName:'TestingDb'
       };
 
       await mongoose.connect(uri, mongooseOpts);
-    }
+
   }
 
   async disconnectDB() {
     await mongoose.disconnect();
   }
-
-
 }

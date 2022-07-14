@@ -1,5 +1,5 @@
 import request from 'supertest';
-import {app} from '../src/app';
+import { appInstance } from '../src/serverTest';
 
 /*
 describe('GET /random-url', () => {
