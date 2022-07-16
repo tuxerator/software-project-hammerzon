@@ -13,7 +13,12 @@ class AuthController {
   constructor() {
 
   }
-
+  /**
+   * register a new user
+   * @param request       - {IUser}
+   * @param response 
+   * @returns 
+   */
   async register(request: SessionRequest, response: Response): Promise<void> {
     const newUser: IUser = request.body;
 
@@ -39,6 +44,12 @@ class AuthController {
     response.send({ code: 201, message: 'User registered' });
     }
 
+  /**
+   * create a session for the user
+   * @param request     - {email, password}
+   * @param response 
+   * @returns 
+   */
   async login(request: SessionRequest, response: Response): Promise<void> {
     const loginRequest = request.body;
 
@@ -85,7 +96,7 @@ class AuthController {
       response.send(user);
     } else {
       response.status(500);
-      response.send('there is no user with such an id');
+      response.send({message :'there is no user with such an id'});
     }
 
   }
