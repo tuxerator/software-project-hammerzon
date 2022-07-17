@@ -109,6 +109,12 @@ class AuthController {
     response.send({ code: 200, message: 'loged out' });
   }
 
+  /**
+   * update userdata
+   * @param request { oldPassword, updatedUser }
+   * @param response 
+   * @returns 
+   */
   async update(request: SessionRequest, response: Response): Promise<void> {
     // Find Connection to User MOdel so it is possible to save the obj afterwards
     const userDBObj: (IUser | undefined) = await User.findOne({ _id: request.session.user._id }).exec();
@@ -116,7 +122,7 @@ class AuthController {
     if (!userDBObj) {
       ActivityController.addActivity(undefined,['wollte ein ',red('nicht vorhandenes Profile bearbeiten')]);
       response.status(500);
-      response.send({ code: 500, message: 'User doent exist' });
+      response.send({ code: 500, message: 'User doesnt exist' });
       return;
     }
 
@@ -156,8 +162,8 @@ class AuthController {
 
     request.session.user = userDBObj;
     ActivityController.addActivity(userDBObj,['hat seine ', green('persönlichen Informationen bearbeitet')]);
-    response.status(200); // 401: Unauthorized
-    response.send({ code: 401, message: 'Updated Successfull' });
+    response.status(200); 
+    response.send({ code: 200, message: 'Updated Successfull' });
   }
 }
 

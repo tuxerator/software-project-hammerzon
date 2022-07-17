@@ -1,6 +1,6 @@
-import { User } from '../src/Models/User';
+import { IUser, User } from '../src/Models/User';
 import { appInstance } from '../src/serverTest';
-import request from 'supertest';
+import request, { agent } from 'supertest';
 import bcrypt from 'bcrypt';
 
 describe('authentication', () => {
@@ -11,6 +11,7 @@ describe('authentication', () => {
     await User.deleteMany({});
 
     await new User({
+      _id : '6284efd5b72a93135fb79c90',
       email: 'test@test.com',
       password: '$2b$10$8mG78C7buR8e/TEVTmaFWe3QksXrSaNjX96E9GFeDZJsITly7EvXi', //password
       firstName: 'first',
@@ -163,10 +164,181 @@ describe('authentication', () => {
     const response = await request(appInstance)
       .get('/api/getUserById/42')
       .expect(500);
-      
+
     expect(response.body.message).toBe('there is no user with such an id');
+  });
+
+  it('should log out the user on request', async () => {
+    // login
+    const agent = await TestUtils.login();
+
+    // logout
+    const logoutResponse = await agent
+      .get('/api/auth/logout')
+      .expect(200);
+    // did the logout work?
+    const isLoggedInResponse = await agent
+      .get('/api/auth/logintest')
+      .expect(403);
+    expect(isLoggedInResponse.body.message).toBe('Not Authorized');
+  });
+
+  it('should return from the validator if no user is logged in on logout', async () => {
+    const agent = request.agent(appInstance);
+    const logoutResponse = await agent
+      .get('/api/auth/logout')
+      .expect(403);
+
+    expect(logoutResponse.body.message).toBe('Not Authorized');
+  });
+
+  it('should update userdata if the user is logged in and data in the request is correct', async () => {
+    // login
+    const agent = await TestUtils.login();
+    // update
+    const updatedUser = TestUtils.updatedUser;
+    const updateRequest = {
+      oldPassword : 'password',
+      updatedUser  
+    };
+
+    const updateResponse = await agent
+      .post('/api/auth/update')
+      .send(updateRequest)
+      .expect(200);
+    
+    expect(updateResponse.body.message)
+    .withContext('Success message from the update method')
+    .toBe('Updated Successfull');
+      
+
+    // check if the updates where saved to the database
+    const id = '6284efd5b72a93135fb79c90';
+    const user = await User.findOne({ id }).exec();
+    
+    expect(TestUtils.compare(user, updatedUser))
+      .withContext('saved user in the database has the data from the request')
+      .toBe(true);
+
+  });
+
+  it('should return an error message, if the user is not in the database', async () => {
+    const updatedUser = TestUtils.updatedUser;
+    const updateRequest = {
+      oldPassword : 'password',
+      updatedUser  
+    };
+    const agent = await TestUtils.login();
+
+    await User.deleteMany({});
+
+    const updateResponse = await agent
+      .post('/api/auth/update')
+      .send(updateRequest)
+      .expect(500);
+
+    expect(updateResponse.body.message).toBe('User doesnt exist');
+
+  });
+
+  it('should return an error message if a wrong old password is provided in the request', async () => {
+    const updatedUser = TestUtils.updatedUser;
+    const updateRequest = {
+      oldPassword : 'wrongpassword',
+      updatedUser  
+    };
+    const agent = await TestUtils.login();
+
+    const updateResponse = await agent
+      .post('/api/auth/update')
+      .send(updateRequest)
+      .expect(401);
+    expect(updateResponse.body.message).toBe('Wrong password');
+
+    const id = '6284efd5b72a93135fb79c90';
+    const user = await User.findOne({ id }).exec();
+
+    expect(TestUtils.compare(user, updatedUser))
+      .withContext('the user in the database should not have been changed')
+      .toBe(false);
+  });
+
+  it('should return an error message if the new password is too short', async () => {
+    const updatedUser = {
+      password: '123',
+      firstName: 'new',
+      lastName: 'new',
+      role: 'user',
+      address: {
+        street: 'new',
+        houseNum: 'new', // String da es auch 10a gibt
+        postCode: 'new',
+        city: 'new',
+        country: 'new',
+      }
+    };
+    const updateRequest = {
+      oldPassword : 'password',
+      updatedUser  
+    };
+    const agent = await TestUtils.login();
+
+    const updateResponse = await agent
+      .post('/api/auth/update')
+      .send(updateRequest)
+      .expect(401);
+
+    expect(updateResponse.body.message).toBe('Password to short');
+
+    const id = '6284efd5b72a93135fb79c90';
+    const user = await User.findOne({ id }).exec();
+
+    expect(TestUtils.compare(user, updatedUser))
+      .withContext('the user in the database should not have been changed')
+      .toBe(false);
+
   });
 
 
 });
+
+class TestUtils {
+  public static updatedUser  = {
+    password: 'newpassword',
+    firstName: 'new',
+    lastName: 'new',
+    role: 'user',
+    address: {
+      street: 'new',
+      houseNum: 'new', // String da es auch 10a gibt
+      postCode: 'new',
+      city: 'new',
+      country: 'new',
+    }
+  };
+  static async login() : Promise<request.SuperAgentTest> {
+    const loginRequest = {
+      email: 'test@test.com',
+      password: 'password'
+    };
+    const agent = request.agent(appInstance);
+    const loginResponse = await agent
+      .post('/api/auth/login')
+      .send(loginRequest)
+      .expect(200);
+    return agent;
+  }
+
+  static compare(user1 : any , user2 : any) : boolean {
+    return ( (user1.firstName) === (user2.firstName)
+    && (user1.lastName) === (user2.lastName)
+    && (user1.address.street) === (user2.address.street)
+    && (user1.address.houseNum) === (user2.address.houseNum)
+    && (user1.address.postCode) === (user2.address.postCode)
+    && (user1.address.city) === (user2.address.city)
+    && (user1.address.country) === (user2.address.country)
+    && (bcrypt.compareSync(user2.password, '' + user1.password)) );
+    
+  }
+}
 
