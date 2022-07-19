@@ -69,6 +69,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     //Get the Product name from the current route.
     console.log('kommt zu Params');
     const routeParams = this.route.snapshot.paramMap;
@@ -146,6 +147,15 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   public changeId(id: string): void {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
+
+    window.scroll({
+      top: 0,
+      left: 0,
+    });
     this.id = id;
 
     this.loading.product = true;
@@ -208,12 +218,7 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
 
-
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
+    
 
   }
 

@@ -82,17 +82,6 @@ export class Validators{
     };
   }
 
-  public static canConfirm(key: string): Validator {
-    return (request: SessionRequest, response: Response): boolean => {
-      // either admin or user and product.user match
-      if (request.session.user && (request.session.user.role === 'user' && request.session.user.id === request.body.product[key]) || request.session.user.role === 'admin') {
-        return true;
-      }
-      response.status(403);
-      response.send({ code: 403, message: 'Not Authorized' });
-      return false;
-    };
-  }
 
   public static isNotAuthorized(role: 'user' | 'admin'): Validator {
     return (request: SessionRequest, response: Response): boolean => {
@@ -287,10 +276,6 @@ export class ValidatorGroups {
     Validators.isAuthorized('admin')
   ]);
 
-  public static CanConfirm = ValidatorGroup([
-    Validators.canConfirm('user'),
-    Validators.isRequired('status')
-  ]);
 
     //
     public static ValidRating = ValidatorGroup([

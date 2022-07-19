@@ -92,8 +92,8 @@ productSchema.index({
 },
 {
   weights : {
-    ngrams : 5,
-    prefixNgrams : 10
+    ngrams : 100,
+    prefixNgrams : 200
   }
 }
 );

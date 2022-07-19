@@ -45,7 +45,7 @@ export class ImageController {
     // save changes / new Object in db
     await dbImage.save();
 
-    console.log(dbImage);
+    //console.log(dbImage);
 
     // delete Uploaded-file from Project-Directory
     fs.unlinkSync(filePath);

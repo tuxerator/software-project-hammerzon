@@ -71,7 +71,7 @@ export class AddProductComponent implements OnInit {
   defaultTimeFrame: Availability = {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
-  }
+  };
 
 
   availabilityGroup!: FormGroup;
@@ -204,18 +204,24 @@ export class AddProductComponent implements OnInit {
   };
 
   uploadImage(inputElement: any):void {
+    this.imageId = undefined;
     const file: File = inputElement.files[0];
     this.imageService.uploadFileImage(file,this.imageId).subscribe({
       next: (res) => {
-        this.imageId = res.id;
+        this.setImageID(res.id);
       },
       error: (err) => {
         console.log(err);
       }
     }
   );
+    
 
-
+  }
+  setImageID(id:string) :void {
+    console.log(this.imageId);
+    this.imageId = id;
+    console.log(this.imageId);
   }
 
   public onSubmit(): void {
@@ -324,7 +330,7 @@ export class AddProductComponent implements OnInit {
         const result = dateNative !== null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
         return result;
       });
-    }
+    };
   }
 
   createAvailabilities = (availability: Availability): Availability[] => {

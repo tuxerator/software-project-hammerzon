@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService, PostOrder } from 'src/app/services/order.service';
 import { User } from 'src/app/models/User';
@@ -16,7 +16,7 @@ import { ClientSideFnValidation, ClientSideValidation, ServerSideFnFnValidation,
   templateUrl: './order-product.component.html',
   styleUrls: ['./order-product.component.css']
 })
-export class OrderProductComponent implements OnInit {
+export class OrderProductComponent implements OnInit , OnDestroy{
   product: Product | undefined;
   user: User | undefined;
   appointment: Availability | undefined;
@@ -70,7 +70,7 @@ export class OrderProductComponent implements OnInit {
       },
       'password': {
         valid:[
-                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','',''),undefined,this.getPaymentTypeDependentText('Invalid data','','')),
+                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','','Sicherheitscode nicht korrekt'),undefined,this.getPaymentTypeDependentText('Invalid data','','Invalid data')),
                 new ServerSideValidation('Nicht Genügend Guthaben',undefined,'Not enough balance on account'),
                 new ServerSideValidation('Sicherheits Code nicht korrekt',undefined,'Missing data: Missing payment>paymentDetails>securityCode'),
                 new ClientSideValidation('Korrektes Passwort',false)
@@ -85,6 +85,8 @@ export class OrderProductComponent implements OnInit {
       },
       'expirationMonth':{
         valid:[
+          new ServerSideValidation('Ablaufsdatum (MM/JJ) fehlerhaft',undefined,'Invalid expiry date format'),
+          new ServerSideValidation('Ablaufsdatum (MM/JJ) fehlerhaft',undefined,'Invalid data'),
           new ClientSideValidation('Ablaufsdatum gültig',false)
         ],
         invalid: new ClientSideValidation('Gültiges Ablaufsdatum (MM/JJ) erwartet')
@@ -151,7 +153,7 @@ export class OrderProductComponent implements OnInit {
     {
       const value = parseInt(control.value);
 
-      if(!value)
+      if(value === undefined || value === NaN)
       {
         return {
           notAnumber: true
@@ -246,7 +248,9 @@ export class OrderProductComponent implements OnInit {
   {
     return Object;
   }
-
+  ngOnDestroy(): void {
+      this.closeModal();
+  }
 
   ngOnInit(): void {
     // get the productinfo again

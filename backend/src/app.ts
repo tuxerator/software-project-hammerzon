@@ -212,7 +212,7 @@ class App
     // list all orders by the product creator
     this.app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
     // toggle the confirmation status of an order
-    this.app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
+    this.app.post('/api/order/:id/setStatus', ValidatorGroup([Validators.isRequired('status')]), order.setStatus);
 
     // Category
 
