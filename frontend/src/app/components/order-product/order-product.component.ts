@@ -64,18 +64,19 @@ export class OrderProductComponent implements OnInit {
                 new ServerSideFnValidation(this.getPaymentTypeDependentText('Emailadresse nicht gefunden', 'Swpsafe-Code nicht gültig', 'Karte nicht vorhanden'),undefined,'Bad Request'),
                 new ServerSideValidation('Account kommt aus nicht aus Deutschland',undefined,'Is not from germany'),
                 new ServerSideValidation('Nicht Genügend Guthaben',undefined,'Not enough balance on account'),
+                new ServerSideValidation('Dieser Termin wurde schon gebucht',undefined,'Appointment overlaps with existing appointment'),
                 new ClientSideFnValidation(this.getPaymentTypeDependentText('Email gültig','Swp-Code gültig','Kartenummer korrekt'),false)
               ],
         invalid:new ClientSideFnValidation(this.getPaymentTypeDependentText('Ungültige Email','Swp-Code erwartet','Kartennummer erwartet'))
       },
       'password': {
         valid:[
-                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','',''),undefined,this.getPaymentTypeDependentText('Invalid data','','')),
+                new ServerSideFnFnValidation(this.getPaymentTypeDependentText('Passwort nicht korrekt','','Sicherheits Code nicht korrekt'),undefined,this.getPaymentTypeDependentText('Invalid data','','Invalid data')),
                 new ServerSideValidation('Nicht Genügend Guthaben',undefined,'Not enough balance on account'),
                 new ServerSideValidation('Sicherheits Code nicht korrekt',undefined,'Missing data: Missing payment>paymentDetails>securityCode'),
                 new ClientSideValidation('Korrektes Passwort',false)
               ],
-        invalid:new ClientSideValidation('Ungültige Eingabe')
+        invalid: new ClientSideValidation('Ungültige Eingabe')
       },
       'fullName': {
         valid:[
@@ -85,6 +86,8 @@ export class OrderProductComponent implements OnInit {
       },
       'expirationMonth':{
         valid:[
+          new ServerSideValidation('Ablaufsdatum (MM/JJ) fehlerhaft',undefined,'Invalid expiry date format'),
+          new ServerSideValidation('Eingabefehlerhaft',undefined,'Invalid data'),
           new ClientSideValidation('Ablaufsdatum gültig',false)
         ],
         invalid: new ClientSideValidation('Gültiges Ablaufsdatum (MM/JJ) erwartet')
@@ -151,7 +154,7 @@ export class OrderProductComponent implements OnInit {
     {
       const value = parseInt(control.value);
 
-      if(!value)
+      if(value === undefined || value === NaN)
       {
         return {
           notAnumber: true
@@ -173,6 +176,7 @@ export class OrderProductComponent implements OnInit {
     this.modalState = 'confirm';
     this.accountForm.markAsUntouched();
     //this.errorMessage = undefined;
+    this.valdationdToText.setErrorMessage(undefined);
     const keys = Object.keys(this.accountForm.controls);
     keys.forEach(key => {
       this.accountForm.controls[key].setValue('');
@@ -207,6 +211,7 @@ export class OrderProductComponent implements OnInit {
     if(this.modalState === 'pay')
     {
       this.accountForm.markAllAsTouched();
+      //this.valdationdToText.setErrorMessage(undefined);
       console.log(this.accountForm);
       if(this.accountForm.valid)
         {

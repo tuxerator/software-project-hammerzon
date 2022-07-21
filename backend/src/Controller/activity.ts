@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import {Types} from 'mongoose';
+
 import { SocketServer } from './socketServer';
-import Helper from '../helpers';
-import { Activity, IHighlight } from '../Models/Activity';
-import { IUser, User } from '../Models/User';
+import Helper from '../utils/helpers';
+import { Activity, IActivity, IHighlight } from '../Models/Activity';
+import { IUser } from '../Models/User';
 
 // Controlls Every
 export class ActivityController{
@@ -42,7 +42,7 @@ export class ActivityController{
     await this.addActivityToDB(user,desciption,highlights);
   }
   // Adds Activity to Database
-  private static async  addActivityToDB(user:IUser|undefined, desc:String,highlights:IHighlight[]):Promise<void>
+  private static async addActivityToDB(user:IUser|undefined, desc:String,highlights:IHighlight[]):Promise<void>
   {
     console.log(user);
     //const userDb = (await User.find({_id:user.id}).exec());
@@ -53,11 +53,12 @@ export class ActivityController{
     // save object to db
     await activity.save();
     // To also Send User Information
-    const userActivity:any = {};
-    userActivity.desc = activity.desc;
-    userActivity.user = user ? {firstName:user?.firstName,lastName:user?.lastName}: undefined;
-    userActivity.highlights = activity.highlights;
-    userActivity.date = activity.date;
+    const userActivity: Pick<IActivity,'desc'|'highlights'|'date'> & {user:{firstName:string,lastName:string}} = {
+      desc: activity.desc,
+      user: {firstName:user?.firstName,lastName:user?.lastName},
+      highlights: activity.highlights,
+      date: activity.date
+    };
 
     console.log(userActivity);
 
@@ -75,3 +76,5 @@ export class ActivityController{
   }
 
 }
+
+export const activity = ActivityController.getInstance();

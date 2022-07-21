@@ -1,4 +1,4 @@
-import { IAvailability } from './Models/Product';
+import { IAvailability } from '../Models/Product';
 
 export const utcOffset: number = new Date(0).getTime();
 export const dayInMilliseconds: number = 24 * 60 * 60 * 1000;

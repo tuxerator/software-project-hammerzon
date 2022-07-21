@@ -1,5 +1,5 @@
 import { query, Request, Response } from 'express';
-import Helper from '../helpers';
+import Helper from '../utils/helpers';
 import { IAvailability, IProduct, Product } from '../Models/Product';
 import { ListInfo, SessionRequest, PostOrder } from '../types';
 import { Model, Types } from 'mongoose';
@@ -9,7 +9,7 @@ import { ActivityController } from './activity';
 import { green, lightBlue, lightGrey, red, white } from '../Models/Activity';
 import { yellow } from '../Models/Activity';
 
-class ProductController {
+export class ProductController {
   // Gibt die ProductInfos die zwischen start und start+limit liegen
   // und eine zusätzliche Informationen requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, zurück
   // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
@@ -317,6 +317,6 @@ class ProductController {
   }
 }
 
+export const product = new ProductController();
 
-export default ProductController;
 

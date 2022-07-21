@@ -8,7 +8,7 @@ import { Order } from '../Models/Order';
 import mongoose from 'mongoose';
 import { Session } from 'express-session';
 
-class RatingController {
+export class RatingController {
   /**
    * add a rating to a product
    * validate: - rating is between 1 and 5
@@ -173,4 +173,4 @@ class RatingController {
 }
 
 
-export default RatingController;
+export const rating = new RatingController();

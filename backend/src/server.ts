@@ -7,11 +7,10 @@ import SourceMap from 'source-map-support';
 import { SocketServer } from './Controller/socketServer';
 
 SourceMap.install();
-/**
- *  Hier starten wir den Express-Server, indem wir den Server an einen Netzwerkport (Standard: 80) binden
- */
-const appInstance = new App({}).getExpressInstance();
 
+// create an app-instance with a normal connection to a
+const appInstance = new App({}).getExpressInstance();
+// Start server on port 80
 const server = appInstance.listen(appInstance.get('port'), () => {
     console.log(
         'Server running at http://localhost:%d in %s mode',
@@ -21,5 +20,5 @@ const server = appInstance.listen(appInstance.get('port'), () => {
     console.log('Press CTRL-C to stop\n');
 });
 
-
+// Socket for Aktivity-Channels + Appointment-Channels
 const socketServer = new SocketServer(server);

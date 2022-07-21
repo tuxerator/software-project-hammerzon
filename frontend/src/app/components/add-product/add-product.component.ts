@@ -204,19 +204,27 @@ export class AddProductComponent implements OnInit {
   };
 
   uploadImage(inputElement: any):void {
+    this.imageId = undefined;
     const file: File = inputElement.files[0];
     this.imageService.uploadFileImage(file,this.imageId).subscribe({
       next: (res) => {
+        console.log('image response',this.imageId);
         this.imageId = res.id;
+        console.log('image send',this.imageId);
       },
       error: (err) => {
         console.log(err);
       }
     }
   );
-
-
   }
+
+  private setImageId(id:string)
+  {
+
+    this.imageId = id;
+  }
+
 
   public onSubmit(): void {
     // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus

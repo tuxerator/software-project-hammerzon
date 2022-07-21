@@ -25,7 +25,7 @@ export class ImageController {
     if(image_id)
     {
       // find Image in Db
-      dbImage =await Image.findById(image_id).exec();
+      dbImage = await Image.findById(image_id).exec();
     }
     // if image already exist in the db
     if(dbImage && dbImage.is_replaceable)
@@ -45,7 +45,7 @@ export class ImageController {
     // save changes / new Object in db
     await dbImage.save();
 
-    console.log(dbImage);
+    //console.log(dbImage);
 
     // delete Uploaded-file from Project-Directory
     fs.unlinkSync(filePath);
@@ -81,4 +81,4 @@ export class ImageController {
     }
 }
 
-
+export const image = new ImageController();

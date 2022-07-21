@@ -49,7 +49,7 @@ const names: NameInfo[] = [
   {
     firstName: 'Henri',
     lastName: 'Grotzeck',
-    optionalAttribut: 'Ich bin ein weitere Person. Der teils am Frontend arbeitet'
+    optionalAttribut: 'Ich bin eine weitere Person und spiele gerne Fußball'
   }
 ];
 
@@ -91,3 +91,6 @@ export default class ApiController {
     console.log(list);
   }
 }
+
+
+export const api = new ApiController();

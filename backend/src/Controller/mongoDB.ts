@@ -14,12 +14,14 @@ import ProductTestData from '../productTestData';
 import OrderTestData from '../orderTestData';
 import UserTestData from '../userTestData';
 import {MongoMemoryServer} from 'mongodb-memory-server';
+import { AppOptions } from '../types';
+import Lazy from '../utils/lazy';
 
 export class MongoDBController {
 
   mongod?:MongoMemoryServer;
-  constructor(testing:boolean) {
-    if(testing)
+  constructor(options?:Partial<AppOptions>) {
+    if(options?.testing)
     {
       console.log('in here');
       this.initMemoryDb();
@@ -50,8 +52,9 @@ export class MongoDBController {
       await mongoose.connect(uri, mongooseOpts);
 
   }
-
   async disconnectDB() {
     await mongoose.disconnect();
   }
+
 }
+export const mongodb = new Lazy<MongoDBController>( (options?:Partial<AppOptions>) => new MongoDBController(options));

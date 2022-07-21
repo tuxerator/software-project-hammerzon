@@ -1,4 +1,5 @@
-import { Response } from 'express';
+import { response, Response } from 'express';
+import { SessionRequest } from '../types';
 
 // Hilfs funktionen die Abfragen allgemein Vereinfachen
 class Helper {
@@ -52,13 +53,13 @@ class Helper {
    * @returns
    */
   public static ngram(word : string, minSize : number) : string[] {
-    if( word.length <= minSize) 
+    if( word.length <= minSize)
     {
       return [word];
     }
     const length = word.length;
     const startSizeRange = minSize;
-    const endSizeRange = Math.max(length, minSize); 
+    const endSizeRange = Math.max(length, minSize);
     const ngrams : string[] = [];
     for(let i = startSizeRange; i < endSizeRange; i++ )
     {
@@ -72,23 +73,42 @@ class Helper {
 
   /**
    * the first substrings of word should get more weight when searching
-   * @param word 
-   * @param minSize 
-   * @returns 
+   * @param word
+   * @param minSize
+   * @returns
    */
   public static prefixNgram(word : string, minSize : number) : string[] {
     const length = word.length;
     const prefixNgrams : string[] = [];
     const first = word.slice(0, minSize);
     prefixNgrams.push(first);
-    for(let i = minSize; i < length; i++) 
+    for(let i = minSize; i < length; i++)
     {
       prefixNgrams.push(first + word.slice(minSize, i));
     }
     return prefixNgrams;
   }
+
+
+
+
 }
 
+
+export const asyncError: (req:SessionRequest,res:Response) => void = (fn:(req:SessionRequest,res:Response) => void) =>
+{
+    return (req:SessionRequest,res:Response) =>
+    {
+      try {
+        fn(req,res);
+      } catch (error) {
+
+        res.status(500);
+        res.send({code:500, message:'Internal Server Error'});
+
+      }
+    };
+};
 
 
 export default Helper;

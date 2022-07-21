@@ -5,12 +5,10 @@ import mongoose from 'mongoose';
 import { IAvailability, IProduct, Product } from '../Models/Product';
 import { IUser } from '../Models/User';
 import { Types } from 'mongoose';
-import session from 'express-session';
-import productCon from './productCon';
 import { SocketServer } from './socketServer';
 
 
-class OrderController {
+export class OrderController {
   /**
    * gets every finalized Order from the schema in a list.
    */
@@ -181,7 +179,7 @@ class OrderController {
     const order: IOrder = await Order.findById(id);
     const product: IProduct = await Product.findById(order.product);
     // validating the permissions here because validators don't communicate with the database
-    if (product.user.toString() === request.session.user._id || request.session.user.role === 'admin') {
+    if ( product.user.toString() === request.session.user._id || request.session.user.role === 'admin') {
 
       order.status = status;
       order.save();
@@ -216,4 +214,4 @@ class OrderController {
 
 }
 
-export default OrderController;
+export const order = new OrderController();
