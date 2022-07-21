@@ -10,7 +10,7 @@
               {{getCategory()?.name}}
             </a>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{product?.name}}</li>
+          <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
         </ol>
       </nav>
 
@@ -18,7 +18,7 @@
         *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
         class="col-md-auto mb-2 row justify-content-md-end">
         <div class="col-auto">
-          <button type="button" class="btn btn-success" [routerLink]="['/add-product',product?._id]"><i
+          <button type="button" class="btn btn-success" [routerLink]="['/add-product',product._id]"><i
             class="bi bi-pencil-square"></i></button>
         </div>
         <div class="col-auto">
@@ -34,19 +34,19 @@
 
     <div class="pt-2 bg-dark text-white">
       <div class="row justify-content-between">
-        <div class="col-md-8 fs-3 fw-bold me-auto">{{product?.name}}</div>
-        <a *ngIf="product!.numberOfRatings! > 0" class="col-md-4 btn text-md-end fs-5">
+        <div class="col-md-8 fs-3 fw-bold me-auto">{{product.name}}</div>
+        <div *ngIf="product!.numberOfRatings! > 0" class="col-md-4 text-md-end  fs-5">
           <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
           </ngb-rating>
           <span class="text-warning">{{roundTo2Digits(product!.averageRating!)}}</span>
-          <span class="text-secondary"> ({{product?.numberOfRatings}})</span>
-        </a>
-        <a *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 btn text-md-end fs-5 text-secondary">
+          <span class="text-secondary"> ({{product.numberOfRatings}})</span>
+        </div>
+        <div *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 text-md-end  fs-5 text-secondary">
           Keine Bewertungen
-        </a>
+        </div>
       </div>
       <app-category-badge [category]="getCategory()" class="text-secondary" direction="hor"></app-category-badge>
-      <div class="text-secondary text-end">{{product?.user?.firstName}} {{product?.user?.lastName}}</div>
+      <div class="text-secondary text-end">{{product.user?.firstName}} {{product.user?.lastName}}</div>
     </div>
     <hr>
     <!-- Duration Price Total Price -->
@@ -57,7 +57,7 @@
       </div>
       <div class="col-md-4 text-md-center">
         Preis
-        <span class="text-primary"> {{product?.prize}} €/Std.</span>
+        <span class="text-primary"> {{product.prize}} €/Std.</span>
       </div>
       <div class="col-md-4 text-md-end">
         Total Preis <span class="text-secondary"> {{getTotalPrice()}} €</span>
@@ -67,7 +67,7 @@
     <!-- Description -->
     <hr>
     <div class="fw-bold fs-5 mb-2">Beschreibung</div>
-    <div class="text-light">{{product?.description}}</div>
+    <div class="text-light">{{product.description}}</div>
     <hr>
     <h5>Termine</h5>
     <app-appointment-selector *ngIf="defaultTimeFrame"
@@ -77,6 +77,7 @@
                               [onAppointmentChanged]="appointmentChanged"
     ></app-appointment-selector>
     <hr>
+    <!-- Ratings/ Reviews -->
     <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
 Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
     <div id="rating" class="fw-bold fs-5 mb-2">
@@ -85,7 +86,7 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
         <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
         </ngb-rating>
         <span class="text-warning"> {{roundTo2Digits(product!.averageRating!)}}</span>
-        <span class="text-secondary"> ({{product?.numberOfRatings}})</span>
+        <span class="text-secondary"> ({{product.numberOfRatings}})</span>
       </a>
       <a *ngIf="product!.numberOfRatings! <= 0">
         <span class="text-secondary fs-6"> Keine Bewertungen </span>
@@ -113,7 +114,12 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
 
     <!-- TOODO Loading sache-->
 
+    <div *ngIf="product.numberOfRatings !== undefined && product.numberOfRatings <= 0" class="text-center text-secondary">
+      Keine Bewertungen vorhanden
+    </div>
     <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
+
+
     <div class="list-group">
       <div class="list-group-item bg-dark border-secondary"
            *ngFor="let elem of showMoreRating ? product?.ratings : product?.ratings?.slice(0,3)">
@@ -159,8 +165,8 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
     <app-product-list *ngIf="!loading.similar" [list]="similarProducts" [click]="changeId.bind(this)">
     </app-product-list>
 
-    <div *ngIf="loading.similar" class="d-flex align-items-center">
-      <div aria-hidden="true" class="spinner-border text-primary" role="status">
+    <div *ngIf="loading.similar" class="w-100 d-flex justify-content-center">
+      <div aria-hidden="true" class="spinner-border text-secondary" role="status">
         <span class="placeholder-glow col-6"></span>
       </div>
     </div>

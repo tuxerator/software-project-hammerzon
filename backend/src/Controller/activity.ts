@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { SocketServer } from './socketServer';
-import Helper from '../utils/helpers';
+import Helper from '../Utils/helpers';
 import { Activity, IActivity, IHighlight } from '../Models/Activity';
 import { IUser } from '../Models/User';
 

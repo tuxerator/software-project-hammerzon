@@ -1,13 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { PaymentType, SessionRequest } from '../types';
-import {Request, Response} from 'express';
+import {Response} from 'express';
 import { HciPalOption } from './PaymentOptions/hcipaloption';
 import { CheckRequest, CountryRequest, PaymentOption } from './PaymentOptions/paymentoption';
 import { BachelorOption } from './PaymentOptions/bacheloroption';
-import { xml2json } from 'xml-js';
 import { SwpSafeOption } from './PaymentOptions/swpsafeoption';
 import { ActivityController } from './activity';
-import { green, lightBlue, white } from '../Models/Activity';
+import { green, lightBlue } from '../Models/Activity';
 import { order } from './orderCon';
 
 // Controlls Payment of an Order/ a Service
@@ -38,7 +37,7 @@ export class PaymentController
    * }
    * @param response
    */
-  public async IsFromGermany(request: SessionRequest,response: Response):Promise<void>
+  public async isFromGermany(request: SessionRequest,response: Response):Promise<void>
   {
 
     const paymentType: PaymentType = request.body.paymentType;
@@ -134,7 +133,6 @@ export class PaymentController
     // get the right payment config = (every information needed for a axios request)
     const paymentConfig = this.payOptions[paymentType];
     // add a new RequestType in types.ts for more payment options
-    const body = request.body;
 
     const req = new CheckRequest();
     req.account = request.session.paymentAccount.account;

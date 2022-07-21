@@ -1,5 +1,4 @@
-import { response, Response } from 'express';
-import { SessionRequest } from '../types';
+import {  Response } from 'express';
 
 // Hilfs funktionen die Abfragen allgemein Vereinfachen
 class Helper {
@@ -38,7 +37,7 @@ class Helper {
     return true;
   }
 
-  public static isString(value:any):boolean
+  public static isString(value:unknown):boolean
   {
     return typeof value === 'string' || value instanceof String;
   }
@@ -88,27 +87,13 @@ class Helper {
     }
     return prefixNgrams;
   }
-
-
-
-
 }
 
-
-export const asyncError: (req:SessionRequest,res:Response) => void = (fn:(req:SessionRequest,res:Response) => void) =>
-{
-    return (req:SessionRequest,res:Response) =>
-    {
-      try {
-        fn(req,res);
-      } catch (error) {
-
-        res.status(500);
-        res.send({code:500, message:'Internal Server Error'});
-
-      }
-    };
-};
+/**
+ * create error handle for a async function
+ * @param fn function on which errors should be handled
+ * @returns errorHandler(function(req,res))
+ */
 
 
 export default Helper;

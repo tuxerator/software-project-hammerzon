@@ -213,13 +213,13 @@ export class OrderProductComponent implements OnInit {
       this.accountForm.markAllAsTouched();
       //this.valdationdToText.setErrorMessage(undefined);
       console.log(this.accountForm);
-      if(this.accountForm.valid)
+      if(this.accountForm.valid && this.product && this.orderService.currentlySelectedAppointment)
         {
           const password = this.accountForm.value.password;
           const expirationMonth= this.accountForm.value.expirationMonth;
           const expirationYear = this.accountForm.value.expirationYear;
           const fullName = this.accountForm.value.fullName;
-          const postOrder: PostOrder = {productId:this.product!._id, appointment:this.orderService.currentlySelectedAppointment!};
+          const postOrder: PostOrder = {productId:this.product._id, appointment:this.orderService.currentlySelectedAppointment};
           this.modalState = 'waiting';
           this.payment.getPaymentFinish(this.paymentType,postOrder,password,fullName,this.merchantName,`${expirationMonth}/${expirationYear}`)
           .subscribe({
@@ -243,11 +243,11 @@ export class OrderProductComponent implements OnInit {
     this.paymentType = type;
   }
 
-  public get PaymentType() {
+  public get PaymentType():typeof PaymentType {
     return PaymentType;
   }
 
-  public get Object()
+  public get Object() : ObjectConstructor
   {
     return Object;
   }

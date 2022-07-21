@@ -99,7 +99,7 @@ export class OrderService {
 
 
   validateAppointment(productId: string, appointment: Availability): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(`api/order/validate`, { postOrder:{productId, appointment }});
+    return this.http.post<MessageResponse>('api/order/validate', { postOrder:{productId, appointment }});
   }
 
 }

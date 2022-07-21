@@ -1,5 +1,8 @@
 import { AppOptions } from '../types';
 
+/**
+ * A Lazy instance is instanced when value is needed with additional provided AppOptions if needed so instancing can be diffierent in differen enviroments
+ */
 class Lazy<T>{
   private _instance?:T;
   public constructor(private _create:(options?:Partial<AppOptions>) => T)

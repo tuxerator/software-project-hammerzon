@@ -1,11 +1,10 @@
 import { Server } from 'socket.io';
 import { IAvailability } from '../Models/Product';
 import { IUser } from '../Models/User';
-import { compareAvailabilty } from '../utils/utils';
+import { compareAvailabilty } from '../Utils/utils';
 import { IActivity } from '../Models/Activity';
 
 export class SocketServer{
-
 
   private readonly server: Server;
   public static socket?:SocketServer;
@@ -44,7 +43,7 @@ export class SocketServer{
     this.server.emit(`${ user }:appointment`, { appointment, action: 'remove' });
   }
 
-  public removeAppointmentWithoutNotify(user: IUser, appointment: IAvailability) {
+  public removeAppointmentWithoutNotify(user: IUser, appointment: IAvailability): void {
     if (this.appointments[user._id]) {
       const index = this.appointments[user._id].findIndex(ap1 => compareAvailabilty(ap1, appointment) === 0);
       this.appointments[user._id] = [...this.appointments[user._id].splice(0, index), ...this.appointments[user._id].splice(index + 1, this.appointments[user._id].length)];

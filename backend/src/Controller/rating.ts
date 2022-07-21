@@ -2,11 +2,10 @@ import { IProduct, IRating, Product } from '../Models/Product';
 import { SessionRequest } from '../types';
 import { Types } from 'mongoose';
 import { Response } from 'express';
-import { IUser } from '../Models/User';
 import { IOrder } from '../Models/Order';
 import { Order } from '../Models/Order';
 import mongoose from 'mongoose';
-import { Session } from 'express-session';
+
 
 export class RatingController {
   /**

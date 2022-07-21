@@ -10,12 +10,12 @@
  * {@link https://mongoosejs.com/docs/index.html mongoose}
  */
 import mongoose from 'mongoose';
-import ProductTestData from '../productTestData';
-import OrderTestData from '../orderTestData';
-import UserTestData from '../userTestData';
+import ProductTestData from '../TestData/productTestData';
+import OrderTestData from '../TestData/orderTestData';
+import UserTestData from '../TestData/userTestData';
 import {MongoMemoryServer} from 'mongodb-memory-server';
 import { AppOptions } from '../types';
-import Lazy from '../utils/lazy';
+import Lazy from '../Utils/lazy';
 
 export class MongoDBController {
 
@@ -52,7 +52,7 @@ export class MongoDBController {
       await mongoose.connect(uri, mongooseOpts);
 
   }
-  async disconnectDB() {
+  async disconnectDB(): Promise<void> {
     await mongoose.disconnect();
   }
 

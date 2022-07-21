@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router,Event,Params } from '@angular/router';
 import { Category } from 'src/app/models/Category';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -11,9 +11,9 @@ import { CategoryService } from 'src/app/services/category.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public searchTerm:string = '';
+  public searchTerm = '';
   public categories?:Category[];
-  public current_category:string = '';
+  public current_category = '';
 
 
   constructor(public authService: AuthService, private router: Router,private categoryService:CategoryService,private route : ActivatedRoute) {
@@ -21,14 +21,26 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams
-      .subscribe((params:any) => {
-        this.current_category = params.category;
+      .subscribe((params: Params ) => {
+
+        this.current_category = params['category'];
+      }
+    );
+
+    this.router.events.subscribe(
+      (event: Event) => {
+        if (event instanceof NavigationStart) {
+           if(this.isOnLandingPage())
+           {
+              this.searchTerm = '';
+           }
+        }
       }
     );
 
 
     this.authService.getUser().subscribe({
-      next: (user) => {
+      next: () => {
         /*if (!user) {
           this.router.navigate(['']);
         }*/
@@ -43,10 +55,10 @@ export class HeaderComponent implements OnInit {
   }
 
   public search(): void {
-    const queryParams:any = {search:this.searchTerm};
+    const queryParams:Params = {search:this.searchTerm};
     if(this.current_category !== '')
     {
-      queryParams.category = this.current_category;
+      queryParams['category'] = this.current_category;
     }
 
     this.router.navigate(['/'], { queryParams});
@@ -54,10 +66,10 @@ export class HeaderComponent implements OnInit {
 
   public selectCategory(category:string):void{
 
-    const queryParams:any = {category};
+    const queryParams:Params = {category};
     if(this.searchTerm !== '')
     {
-      queryParams.search = this.searchTerm;
+      queryParams['search'] = this.searchTerm;
     }
 
     if(this.current_category === category)

@@ -38,8 +38,9 @@ import { category } from './Controller/category';
 import {product} from './Controller/productCon';
 import {order} from './Controller/orderCon';
 import { mongodb, MongoDBController } from './Controller/mongoDB';
+import {asyncError} from './Utils/asyncError';
 
-// Damit im request.session user exisitiert
+// So request.session.user exists
 declare global {
   interface Session {
     user?: IUser,
@@ -49,6 +50,10 @@ declare global {
     }
   }
 }
+
+/**
+ * App instantiates every Controller an manages thier routes
+ */
 class App
 {
   app:Express;
@@ -66,10 +71,10 @@ class App
     // initialise most middleware used like express-session and json-parser
     this.initMiddleware();
 
-    // Initalise mongoDb if App is in test mode also create a userController
+    // Initalise mongoDb if App is in test mode also create a in memorydb
     this.database = mongodb.getValue(options);
 
-    // used for uploading image to server-filesystem and removed after uploading to database
+    // used for uploading image to server-filesystem ('uploads') and removed after uploading to database
     const upload = multer({ dest: './uploads/' });
 
     // About endpoints
@@ -81,93 +86,93 @@ class App
     // AuthController endpoints
 
     // register
-    this.app.post('/api/auth/register', ValidatorGroups.UserRegister, auth.register);
+    this.app.post('/api/auth/register', ValidatorGroups.UserRegister, asyncError(auth.register));
     // login
-    this.app.post('/api/auth/login', ValidatorGroups.UserLogin, auth.login);
+    this.app.post('/api/auth/login', ValidatorGroups.UserLogin, asyncError(auth.login));
     this.app.get('/api/auth/logintest', ValidatorGroups.UserAuthorized, auth.getUser);
 
-    this.app.get('/api/getUserById/:id', auth.getUserById);
+    this.app.get('/api/getUserById/:id', asyncError(auth.getUserById));
     // logout ...
     // logout
     this.app.get('/api/auth/logout', ValidatorGroups.UserAuthorized, auth.logout);
     // update
-    this.app.post('/api/auth/update', ValidatorGroups.UserUpdate, auth.update);
+    this.app.post('/api/auth/update', ValidatorGroups.UserUpdate, asyncError(auth.update));
 
     // ProductController endpoints
 
     // 10-products ...
-    this.app.get('/api/product/list', product.getList.bind(product));
+    this.app.get('/api/product/list', asyncError(product.getList.bind(product)));
 
     // product details ...
-    this.app.get('/api/product/:id', product.getProductDetail.bind(product));
+    this.app.get('/api/product/:id', asyncError(product.getProductDetail.bind(product)));
 
     // similar product
-    this.app.get('/api/product/similar/:id', product.getSimilarProduct);
+    this.app.get('/api/product/similar/:id', asyncError(product.getSimilarProduct));
 
     // reset appointment
 
     // add product
-    this.app.post('/api/product/add', ValidatorGroups.ProductAdd, product.addProduct);
+    this.app.post('/api/product/add', ValidatorGroups.ProductAdd, asyncError(product.addProduct));
 
     //  delete product
-    this.app.delete('/api/product/delete/:id', ValidatorGroups.UserAuthorized, product.removeProduct);
+    this.app.delete('/api/product/delete/:id', ValidatorGroups.UserAuthorized, asyncError(product.removeProduct));
 
     // add availability to product
-    this.app.post('/api/product/:id/availability/add', ValidatorGroup([isValidAvailability]), product.addAvailability);
+    this.app.post('/api/product/:id/availability/add', ValidatorGroup([isValidAvailability]), asyncError(product.addAvailability));
 
     // get availability of product
-    this.app.get('/api/product/:id/availability/list', ValidatorGroup([Validators.hasValidObjectId('id')]), product.getAvailabilityList);
+    this.app.get('/api/product/:id/availability/list', ValidatorGroup([Validators.hasValidObjectId('id')]), asyncError(product.getAvailabilityList));
 
     // rating controller endpoints
     // add a rating between 1 and 5 with a comment
-    this.app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,rating.addRating.bind(rating));
+    this.app.post('/api/product/:id/rate', ValidatorGroups.ValidRating ,asyncError(rating.addRating.bind(rating)));
 
-    this.app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, rating.canRate);
+    this.app.get('/api/product/:id/canRate',ValidatorGroups.UserAuthorized, asyncError(rating.canRate));
 
-    this.app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, rating.hasRated);
+    this.app.get('/api/product/:id/hasRated', ValidatorGroups.UserAuthorized, asyncError(rating.hasRated));
 
-    this.app.post('/api/product/:id/updateRating',rating.updateRating.bind(rating));
+    this.app.post('/api/product/:id/updateRating',asyncError(rating.updateRating.bind(rating)));
     // Imager Controller endpoints
-    // Add Images
+    // Add Images                   handles image upload to uploads folder
     this.app.post('/api/img/upload', upload.single('img'), image.postImage);
 
     // Removed Images
-    this.app.get('/api/img/:id', image.getImage);
+    this.app.get('/api/img/:id', asyncError(image.getImage));
 
     // OrderController endpoints
 
     // validate order
-    this.app.post('/api/order/validate', ValidatorGroup([isValidAppointment]), order.validateOrder);
+    this.app.post('/api/order/validate', ValidatorGroup([isValidAppointment]), asyncError(order.validateOrder));
 
     // add a new Order
-    this.app.post('/api/order/add', ValidatorGroups.OrderRegister, ValidatorGroup([isValidAppointment]), order.addOrder);
+    this.app.post('/api/order/add', ValidatorGroups.OrderRegister, ValidatorGroup([isValidAppointment]), asyncError(order.addOrder));
 
     // delete an order
-    this.app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, order.deleteOrder);
+    this.app.delete('/api/order/delete/:id', ValidatorGroups.UserAuthorized, asyncError(order.deleteOrder));
 
     // list all orders for the admin page
-    this.app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, order.listAllOrders);
+    this.app.get('/api/admin/order/list', ValidatorGroups.AdminAuthorized, asyncError(order.listAllOrders));
 
     // list all orders by user
-    this.app.get('/api/order/list', ValidatorGroups.UserAuthorized, order.listAllOrdersByUser);
+    this.app.get('/api/order/list', ValidatorGroups.UserAuthorized, asyncError(order.listAllOrdersByUser));
     // list all orders by the product creator
-    this.app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, order.listOrdersByCreator);
+    this.app.get('/api/order/listByCreator', ValidatorGroups.UserAuthorized, asyncError(order.listOrdersByCreator));
     // toggle the confirmation status of an order
-    this.app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, order.setStatus);
+    this.app.post('/api/order/:id/setStatus',ValidatorGroups.CanConfirm, asyncError(order.setStatus));
 
     // Category
 
-    this.app.get('/api/category/list', category.listCategory);
+    this.app.get('/api/category/list', asyncError(category.listCategory));
 
     // Admin
     this.app.use('/api/admin',ValidatorGroups.AdminAuthorized);
 
     // all orders for the admin page
-    this.app.get('/api/admin/order/list', order.listAllOrders);
+    this.app.get('/api/admin/order/list', asyncError(order.listAllOrders));
     //
-    this.app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon'),Validators.isRequired('custom')]),category.addCategory);
+    this.app.post('/api/admin/category/add', ValidatorGroup([Validators.isRequired('name'), Validators.isRequired('image_id'), Validators.isRequired('color'),Validators.isRequired('icon'),Validators.isRequired('custom')]),asyncError(category.addCategory));
     //
-    this.app.get('/api/admin/activity/list',activity.getList);
+    this.app.get('/api/admin/activity/list',asyncError(activity.getList));
 
 
 
@@ -175,9 +180,9 @@ class App
 
     // Payment
 
-    this.app.post('/api/payment/country',ValidatorGroups.CountryPayment,payment.IsFromGermany.bind(payment));
+    this.app.post('/api/payment/country',ValidatorGroups.CountryPayment,asyncError(payment.isFromGermany.bind(payment)));
 
-    this.app.post('/api/payment/pay',ValidatorGroups.PayPayment, ValidatorGroup([isValidAppointment]), payment.payment.bind(payment));
+    this.app.post('/api/payment/pay',ValidatorGroups.PayPayment, ValidatorGroup([isValidAppointment]), asyncError(payment.payment.bind(payment)));
 
     if (process.env.NODE_ENV === 'development') {
       this.app.use(errorHandler());
@@ -204,7 +209,7 @@ class App
     });
   }
 
-  public initMiddleware()
+  public initMiddleware():void
   {
     // "JSON" Daten verarbeiten falls der Request zusätzliche Daten im Request hat
     this.app.use(express.json());
@@ -213,9 +218,10 @@ class App
     // Wir erlauben alle "Cross-Origin Requests". Normalerweise ist man hier etwas strikter, aber für den Softwareprojekt Kurs
     // erlauben wir alles um eventuelle Fehler zu vermeiden.
     this.app.use(cors({ origin: true, credentials: true }));
+    //                                     secret
     this.app.use(cookieParser('6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB'));
 
-    this.app.set('trust proxy', 1); // trust first proxy
+    this.app.set('trust proxy', 1); // trust first proxy so angular works + cors issue
     this.app.use(session({
         secret: '6MJ*PEpJ8]@[!Z~rI(/vz=!8"0N}pB',
         resave: true,
@@ -226,12 +232,12 @@ class App
   }
 
 
-  public getExpressInstance()
+  public getExpressInstance():Express
   {
     return this.app;
   }
 
-  public disconnect()
+  public disconnect():void
   {
     this.database.disconnectDB();
   }

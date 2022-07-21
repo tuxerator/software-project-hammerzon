@@ -1,6 +1,6 @@
-import { Request, response, Response } from 'express';
+import { Response } from 'express';
 import { IOrder, Order, Status } from '../Models/Order';
-import { PostOrder, SessionRequest, OrderInfo } from '../types';
+import { PostOrder, SessionRequest } from '../types';
 import mongoose from 'mongoose';
 import { IAvailability, IProduct, Product } from '../Models/Product';
 import { IUser } from '../Models/User';
@@ -139,8 +139,8 @@ export class OrderController {
     });
     await dbOrder.save();
 
-    const product = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
-    //AppointmentSocket.socket.removeAppointmentWithoutSending(product.user,order.appointment);
+    const product  = await Product.findById(order.productId).populate<{ user: IUser }>('user').exec();
+    SocketServer.socket.removeAppointmentWithoutNotify(product.user,order.appointment);
 
     response.status(200);
     response.send({ code: 200, message: 'Add Successfull', id: dbOrder._id, orderRegistered: true });

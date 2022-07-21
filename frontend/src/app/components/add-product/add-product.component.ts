@@ -71,7 +71,7 @@ export class AddProductComponent implements OnInit {
   defaultTimeFrame: Availability = {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
-  }
+  };
 
 
   availabilityGroup!: FormGroup;
@@ -97,16 +97,13 @@ export class AddProductComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     const id = routeParams.get('id');
     if (id) {
+      this.productId = id;
       this.productService.getProductDetails(id).subscribe({
         next: (product) => {
-          this.productId = id;
           product.availability = product.availability.map(ava =>
             new Availability(new Date(ava.startDate), new Date(ava.endDate)));
 
           this.editProduct(product);
-        },
-        error: () => {
-
         }
       });
     }else
@@ -194,7 +191,7 @@ export class AddProductComponent implements OnInit {
     return `${number}`;
   }
 
-  updateDuration = () => {
+  updateDuration = ():void => {
     const hoursControl = this.addProductForm.get('durationHour') as FormControl;
     const minutesControl = this.addProductForm.get('durationMinute') as FormControl;
     const hours = hoursControl ? parseInt(hoursControl.value, 10) : 0;
@@ -219,9 +216,8 @@ export class AddProductComponent implements OnInit {
   );
   }
 
-  private setImageId(id:string)
+  private setImageId(id:string):void
   {
-
     this.imageId = id;
   }
 
@@ -237,7 +233,7 @@ export class AddProductComponent implements OnInit {
     this.addProductForm.markAllAsTouched();
     // Sind alle Eingaben valid
     console.log(this.addProductForm);
-    if (this.addProductForm.invalid || !this.imageId || !this.availabilities) return;
+    if (this.addProductForm.invalid || !this.imageId || !this.availabilities || !this.selectedCategory) return;
     console.log('Through Validation Debug Log');
     // Für besser lesbarkeit des Code
     const form = this.addProductForm.value;
@@ -270,12 +266,12 @@ export class AddProductComponent implements OnInit {
       },
       availabilities,
       this.imageId,
-      this.selectedCategory!._id
+      this.selectedCategory._id
     );
     //Product hinzufügen anfrage an das backend schicken
     this.uploading = true;
 
-    const uploadProduct = () => {
+    const uploadProduct = ():void => {
       this.productService.addProduct(newProduct).subscribe({
         next: (_message: IdMessageResponse) => {
           this.errorMessage = undefined;
@@ -308,7 +304,7 @@ export class AddProductComponent implements OnInit {
 
   // Availability picker ------------------------------------------------------
 
-  addAvailability(availability: Availability[]) {
+  addAvailability(availability: Availability[]):void {
     this.availabilities = availability;
     this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
@@ -316,7 +312,7 @@ export class AddProductComponent implements OnInit {
 
   // Hindrance picker ------------------------------------------------------
 
-  addHindrance(hindrances: Hindrance[]) {
+  addHindrance(hindrances: Hindrance[]):void {
     this.hindrances = hindrances;
     this.availabilities = this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
@@ -332,7 +328,7 @@ export class AddProductComponent implements OnInit {
         const result = dateNative !== null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
         return result;
       });
-    }
+    };
   }
 
   createAvailabilities = (availability: Availability): Availability[] => {

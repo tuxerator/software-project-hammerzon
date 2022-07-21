@@ -1,10 +1,9 @@
-import { IOrder, Order } from './Models/Order';
-import { IProduct, Product } from './Models/Product';
+import { IOrder, Order } from '../Models/Order';
 
 export default class OrderTestData {
 
   // productCon = new ProductController();
-  public list: any[] = [
+  public list: {product:string,orderingUser:string,timeOfOrder:Date,finalized:boolean,appointment:{date:Date,isReserved:boolean}}[] = [
     {
       product: '627e5c84abdf91cb14e80306',
       orderingUser: '627e212da0cc80c799cbefae',
