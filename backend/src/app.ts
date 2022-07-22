@@ -205,7 +205,7 @@ class App
      *  von Angular schicken müssen. Falls eine der zuvor angegebenen Routen passt, wird diese Methode nicht aufgerufen.
      */
     this.app.use((req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+      res.sendFile(path.join(__dirname, '..','..', 'public', 'index.html'));
     });
   }
 

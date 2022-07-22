@@ -327,7 +327,7 @@ class TestUtils {
     return agent;
   }
 
-  static compare(user1: IUser, user2: IUser): boolean {
+  static compare(user1: any, user2: any): boolean {
     return ((user1.firstName) === (user2.firstName)
       && (user1.lastName) === (user2.lastName)
       && (user1.address.street) === (user2.address.street)

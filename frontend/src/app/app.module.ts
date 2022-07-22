@@ -35,7 +35,7 @@ import { HindrancePickerComponent } from './components/add-product/hindrance-pic
 import { AppointmentSelectorComponent } from './components/productdetails/appointment-selector/appointment-selector.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: process.env['BACKEND_URI'] || 'http://localhost:80', options: {} };
+const config: SocketIoConfig = { url: 'http://localhost:80', options: {} };
 
 @NgModule({
   declarations: [
