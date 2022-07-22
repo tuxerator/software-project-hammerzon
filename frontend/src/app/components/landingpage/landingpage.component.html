@@ -1,14 +1,11 @@
 <div class="container mt-2 p-4">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-          <app-product-list *ngIf="!loading" [list]="productListInfo?.list"></app-product-list>
+          <app-product-list *ngIf="!loading" [list]="productListInfo.list"></app-product-list>
 
-          <div *ngIf="loading" class="d-flex align-items-center">
-            <div aria-hidden="true">
-              <span class="placeholder-glow col-12"></span>
-              <span class="placeholder-glow col-12"></span>
-              <span class="placeholder-glow col-12"></span>
-            </div>
+          <div *ngIf="loading" class="d-flex align-items-center text-secondary">
+            <strong>Lädt...</strong>
+            <div aria-hidden="true" class="spinner-border spinner-secondary ms-auto" role="status"></div>
           </div>
 
           <div *ngIf="!loading && productListInfo?.list?.length === 0" class="d-flex align-items-center">
@@ -20,9 +17,8 @@
 
 
 
-  <!-- Knöpfe um mehr Elemente and zeigen zu können -->
-
-  <div class="btn-toolbar justify-content-center mt-4">
+  <!-- Paggination only show if there are more elements than 10 -->
+  <div *ngIf="productListInfo && productListInfo.list &&  currentStart + productListInfo.list.length <= currentLimit && productListInfo.requestable === 0" class="btn-toolbar justify-content-center mt-4">
     <div class="btn-group" role="group">
       <button (click)="previous()" [class.disabled]="!(currentStart > 0)" class=" btn btn-primary" type="button">
         &laquo;

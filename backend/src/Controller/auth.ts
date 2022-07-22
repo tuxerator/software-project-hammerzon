@@ -1,23 +1,23 @@
 import { Request, Response } from 'express';
 
-import Helper from '../helpers';
+
 import { IUser, User } from '../Models/User';
 import { SessionRequest } from '../types';
 import bcrypt from 'bcrypt';
 
 import { Types } from 'mongoose';
 import { ActivityController } from './activity';
-import { green,lightBlue,red,white,yellow } from '../Models/Activity';
+import { green,lightBlue,red,yellow } from '../Models/Activity';
 
-class AuthController {
+export class AuthController {
   constructor() {
 
   }
   /**
    * register a new user
    * @param request       - {IUser}
-   * @param response 
-   * @returns 
+   * @param response
+   * @returns
    */
   async register(request: SessionRequest, response: Response): Promise<void> {
     const newUser: IUser = request.body;
@@ -47,8 +47,8 @@ class AuthController {
   /**
    * create a session for the user
    * @param request     - {email, password}
-   * @param response 
-   * @returns 
+   * @param response
+   * @returns
    */
   async login(request: SessionRequest, response: Response): Promise<void> {
     const loginRequest = request.body;
@@ -112,8 +112,8 @@ class AuthController {
   /**
    * update userdata
    * @param request { oldPassword, updatedUser }
-   * @param response 
-   * @returns 
+   * @param response
+   * @returns
    */
   async update(request: SessionRequest, response: Response): Promise<void> {
     // Find Connection to User MOdel so it is possible to save the obj afterwards
@@ -162,10 +162,10 @@ class AuthController {
 
     request.session.user = userDBObj;
     ActivityController.addActivity(userDBObj,['hat seine ', green('persönlichen Informationen bearbeitet')]);
-    response.status(200); 
+    response.status(200);
     response.send({ code: 200, message: 'Updated Successfull' });
   }
 }
 
 
-export default AuthController;
+export const auth = new AuthController();

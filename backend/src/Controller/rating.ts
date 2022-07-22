@@ -2,13 +2,12 @@ import { IProduct, IRating, Product } from '../Models/Product';
 import { SessionRequest } from '../types';
 import { Types } from 'mongoose';
 import { Response } from 'express';
-import { IUser } from '../Models/User';
 import { IOrder } from '../Models/Order';
 import { Order } from '../Models/Order';
 import mongoose from 'mongoose';
-import { Session } from 'express-session';
 
-class RatingController {
+
+export class RatingController {
   /**
    * add a rating to a product
    * validate: - rating is between 1 and 5
@@ -173,4 +172,4 @@ class RatingController {
 }
 
 
-export default RatingController;
+export const rating = new RatingController();

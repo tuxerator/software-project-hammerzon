@@ -7,18 +7,24 @@ import { ParsedQs } from 'qs';
 import { IAppointment, IOrder, Order } from '../Models/Order';
 import { User } from '../Models/User';
 
-export type Validator = (request: Request, response: Response) => boolean
+// Validator is a function which checks a request for a certain property
+export type Validator =  (request: Request, response: Response) => (boolean|Promise<boolean>);
 // used for SubValidation request object
 export type SubRequest = { body: any };
 // Spezial type of Validator which you are able to call in a sub Validation
-export type SubValidator = (request: SubRequest, response: Response) => boolean;
+export type SubValidator = (request: SubRequest, response: Response) => (boolean|Promise<boolean>);
 
-
+/**
+ * ValidatorGroup acts as a middleware whichs checks for a request given validators (if one Fails an error message is send)
+ *
+*/
 export const ValidatorGroup = (validators: Validator[]) => {
-  return (request: Request, response: Response, next: NextFunction): void => {
+  return async(request: Request, response: Response, next: NextFunction): Promise<void> => {
     console.log('requestURL: %o', request.originalUrl);
     for (const validator of validators) {
-      if (!validator(request, response)) {
+      const valid = await validator(request, response);
+
+      if (!valid) {
         return;
       }
     }
@@ -26,9 +32,16 @@ export const ValidatorGroup = (validators: Validator[]) => {
   };
 };
 
-//export const ValidatorGroup = (validator:Validator) => ValidatorGroup([validator]);
 
+/**
+ * Validator-Funktions / Vadlidator-Funktions-Factories wrapped in a class for organisations purposes
+ */
 export class Validators{
+    /**
+     * Checks whether a certain key is part a request
+     * @param key (Elements which has to be part of the request)
+     * @returns return a validator which checks whether a certain key is part of given the request
+     */
     public static isRequired(key:string):SubValidator
     {
         return (request:SubRequest,response:Response):boolean =>
@@ -42,25 +55,34 @@ export class Validators{
             return false;
         };
     }
-    // key is the key from where the subobject starts
+
+    /**
+     * Checks for a given subobject given validators are valid
+     * @param key (Subobject-Identifier)
+     * @param validators
+     * @returns a validator-funktion which checks for a given subobject given validators are valid
+     */
     public static subValidators(key:string,validators:SubValidator[]):SubValidator
     {
         const validatorArray = Validators.validatorsArray(validators);
-        return (request:SubRequest,response:Response):boolean =>
+        return (request:SubRequest,response:Response):Promise<boolean>|boolean =>
         {
             const newRequest = {body:{parent:`${request.body.parent} -> ${key}`,...request.body[key]}};
-
             return validatorArray(newRequest,response);
         };
     }
-
+    /**
+     *
+     * @param validators
+     * @returns
+     */
     public static validatorsArray(validators:SubValidator[]):SubValidator
     {
-      return (request:SubRequest,response:Response):boolean =>
+      return async (request:SubRequest,response:Response):Promise<boolean> =>
       {
           for(const validator of validators)
           {
-              if(!validator({body:request.body},response))
+              if(!(await validator({body:request.body},response)))
               {
                   return false;
               }
@@ -68,12 +90,17 @@ export class Validators{
           return true;
       };
     }
-
+    /**
+     *
+     * @param key
+     * @param validators
+     * @returns
+     */
   public static subArrayValidators(key: string, validators: SubValidator[]): SubValidator {
-    return (request: SubRequest, response: Response): boolean => {
+    return async (request: SubRequest, response: Response): Promise<boolean> => {
       for (const obj of request.body[key]) {
         for (const validator of validators) {
-          if (!validator({ body: { parent: `${ request.body.parent } -> ${ key }`, ...obj } }, response)) {
+          if (!(await validator({ body: { parent: `${ request.body.parent } -> ${ key }`, ...obj } }, response))) {
             return false;
           }
         }
@@ -83,6 +110,11 @@ export class Validators{
   }
 
 
+  /**
+   * checks the role of the current logined user and if it's the same then error
+   * @param role (if user => also checks for admin)
+   * @returns
+   */
   public static isNotAuthorized(role: 'user' | 'admin'): Validator {
     return (request: SessionRequest, response: Response): boolean => {
       if (request.session.user && (request.session.user.role === role || request.session.user.role === 'admin')) {
@@ -93,7 +125,11 @@ export class Validators{
       return true;
     };
   }
-
+  /**
+   * checks the role of the current logined user and if it's not the same then error
+   * @param role (if user => also checks for admin)
+   * @returns
+   */
   public static isAuthorized(role: 'user' | 'admin'): Validator {
     return (request: SessionRequest, response: Response): boolean => {
       if (request.session.user && (request.session.user.role === role || request.session.user.role === 'admin')) {
@@ -105,7 +141,11 @@ export class Validators{
     };
   }
 
-
+  /**
+   * checks valid email
+   * @param key (where email is )
+   * @returns
+   */
   public static isValidEmail(key: string): SubValidator {
     const correctEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return (request: SubRequest, response: Response): boolean => {
@@ -117,7 +157,11 @@ export class Validators{
       return true;
     };
   }
-
+  /**
+   * Is a valid Objectid
+   * @param key
+   * @returns
+   */
   public static isValidObjectId(key: string): SubValidator {
     return (request: SubRequest, response: Response): boolean => {
       if (Types.ObjectId.isValid(request.body[key])) {
@@ -128,7 +172,12 @@ export class Validators{
       return false;
     };
   }
-
+  /**
+   * Test for length of string (body[key].length >= length)
+   * @param key ()
+   * @param length ()
+   * @returns
+   */
   public static isMaxLength(key: string, length: number): SubValidator {
     return (request: SubRequest, response: Response): boolean => {
       if (request.body[key] && request.body[key].length >= length) {
@@ -182,11 +231,18 @@ export class Validators{
       }
     };
   }
-  // If a curtain variable is equals to
+  /**
+   * Only tests for validators if body[typeKey] is equal tor a certain value
+   * @param typeKey
+   * @param equals (certain value)
+   * @param validators ()
+   * @param check (compare function)
+   * @returns
+   */
   public static varDependentValidators(typeKey:string,equals:any,validators:SubValidator[],check = (value:any,equals:any):boolean => value === equals): SubValidator
   {
     const validatorArray = Validators.validatorsArray(validators);
-    return (request: SubRequest, response: Response): boolean => {
+    return (request: SubRequest, response: Response): Promise<boolean>|boolean => {
       if(check(request.body[typeKey], equals))
       {
          return validatorArray(request,response);
@@ -195,8 +251,11 @@ export class Validators{
     };
   }
 }
-
+/**
+ * Group a Array which test for certain group of object / type
+ */
 export class ValidatorLists {
+  // Tests for User
   public static UserValidatorList: Validator[] =
     [
       Validators.isRequired('firstName'),
@@ -213,7 +272,7 @@ export class ValidatorLists {
         ])
     ];
 
-
+  // Tests for Product
   public static ProductValidatorList: Validator[] = [
         Validators.isMaxLength('name', 4),
         //Validators.isRequired('user'),
@@ -238,7 +297,7 @@ export class ValidatorLists {
         Validators.isRequired('category'),
         Validators.isValidObjectId('category')
     ];
-
+  // Test for PostOrder
   public static PostOrderValidatorList: Validator[] = [
     Validators.isRequired('productId'),
     Validators.isValidObjectId('productId'),
@@ -250,16 +309,16 @@ export class ValidatorLists {
 // Groupen von Validatoren die für eine Bestimmte Route vorgesehen sind
 export class ValidatorGroups {
 
-  // Auth
-  public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'), ...ValidatorLists.UserValidatorList, Validators.isMaxLength('password', 8), Validators.isRequired('email'), Validators.isValidEmail('email')]);
+    // Auth
+    public static UserRegister = ValidatorGroup([Validators.isNotAuthorized('user'), ...ValidatorLists.UserValidatorList, Validators.isMaxLength('password', 8), Validators.isRequired('email'), Validators.isValidEmail('email')]);
 
-  public static UserUpdate = ValidatorGroup(
+    public static UserUpdate = ValidatorGroup(
     [
       Validators.isAuthorized('user'),
       Validators.subValidators('updatedUser', ValidatorLists.UserValidatorList),
     ]);
 
-  public static UserLogin = ValidatorGroup(
+    public static UserLogin = ValidatorGroup(
     [
       Validators.isNotAuthorized('user'),
       Validators.isRequired('email'),
@@ -267,14 +326,14 @@ export class ValidatorGroups {
       Validators.isMaxLength('password', 8),
     ]);
 
-  public static UserAuthorized = ValidatorGroup([
-    Validators.isAuthorized('user')
-  ]);
+    public static UserAuthorized = ValidatorGroup([
+      Validators.isAuthorized('user')
+    ]);
 
 
-  public static AdminAuthorized = ValidatorGroup([
-    Validators.isAuthorized('admin')
-  ]);
+    public static AdminAuthorized = ValidatorGroup([
+      Validators.isAuthorized('admin')
+    ]);
 
 
     //
@@ -290,13 +349,10 @@ export class ValidatorGroups {
       Validators.isValidCommentLength(10, 300)
     ]);
 
-
-
   // Product
   public static ProductAdd = ValidatorGroup([Validators.isAuthorized('user'), ...ValidatorLists.ProductValidatorList]);
 
   // Order
-
   public static OrderRegister = ValidatorGroup(ValidatorLists.PostOrderValidatorList);
 
     // Payment
@@ -325,14 +381,13 @@ export class ValidatorGroups {
         Validators.isRequired('merchantInfo'),
         Validators.isRequired('password')
       ]),
-
     ]);
 }
 
 /**
  * Checks if the new appointment does not overlap with any existing appointment of the user offering the product
  */
-export const isValidAppointment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const isValidAppointment = async (req: Request, res: Response): Promise<boolean> => {
   const product: IProduct = await Product.findById(new Types.ObjectId(req.body.postOrder.productId)).exec();
   const productAvailability: IAvailability[] = product.availability;
   const appointment: IAppointment = req.body.postOrder.appointment;
@@ -362,7 +417,7 @@ export const isValidAppointment = async (req: Request, res: Response, next: Next
       message: 'Appointment overlaps with existing appointment',
       optional: [overlappingAppointments]
     });
-    return;
+    return false;
   }
 
 
@@ -375,24 +430,24 @@ export const isValidAppointment = async (req: Request, res: Response, next: Next
     console.log('Validating appointment: ' + JSON.stringify(appointment) + ' validation error: outside availability all availabilities');
     res.status(400);
     res.send({ code: 400, message: 'Appointment lies outside the availability of the product' });
-    return;
+    return false;
   }
   if (getDayTime(product.defaultTimeFrame.start) > getDayTime(appointment.startDate) && getDayTime(product.defaultTimeFrame.end) < getDayTime(appointment.endDate)) {
     console.log('Validating appointment: ' + JSON.stringify(appointment) + 'outside default time frame: ' + JSON.stringify(product.defaultTimeFrame));
     res.status(400);
     res.send({ code: 400, message: 'Appointment lies outside the default time frame of the product' });
-    return;
+    return false;
   }
 
   console.log('Appointment is valid');
-  next();
+  return true;
 };
 
 
 /**
  * Checks if the new availability does not overlap with an existing one
  */
-export const isValidAvailability = async (req: Request, res: Response, next: NextFunction) => {
+export const isValidAvailability = async (req: Request, res: Response):Promise<boolean> => {
 
   const availabilityToValidate: IAvailability = req.body;
   const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
@@ -402,18 +457,12 @@ export const isValidAvailability = async (req: Request, res: Response, next: Nex
     if (availability.startDate <= availabilityToValidate.endDate && availability.endDate >= availabilityToValidate.startDate) {
       res.status(400);
       res.send({ code: 400, message: 'Availability overlaps with existing availability' });
-      return;
-
+      return false;
     }
   }
-  next();
+  return true;
 };
 
-export const asyncHandler = (callback: { (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void>; (arg0: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, arg1: Response<any, Record<string, any>>, arg2: NextFunction): Promise<any>; }) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    callback(req, res, next).catch(next);
-  };
-};
 
 // Get time without date in milliseconds
 const getDayTime = (date: Date): number => {

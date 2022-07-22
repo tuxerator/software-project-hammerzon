@@ -50,8 +50,8 @@
       <tbody>
       <tr *ngFor="let hindrance of hindrances; let i=index">
         <td>{{hindrance.date | date: 'dd.MM.yyyy'}}</td>
-        <td>{{hindrance.fromTime != null ? (addTimeZoneOffset(hindrance.fromTime) | date: 'HH:mm') : '-' }}</td>
-        <td>{{hindrance.toTime != null ? (addTimeZoneOffset(hindrance.toTime) | date: 'HH:mm') : '-'}}</td>
+        <td>{{hindrance.fromTime != null ? (addTimeZoneOffset(hindrance.fromTime) | date: 'HH:mm': '+0') : '-' }}</td>
+        <td>{{hindrance.toTime != null ? (addTimeZoneOffset(hindrance.toTime) | date: 'HH:mm': '+0') : '-'}}</td>
         <td class="text-end">
           <button (click)="removeHindrance(i)" class="btn btn-outline-danger" type="button">
             <i class="bi bi-trash"></i>

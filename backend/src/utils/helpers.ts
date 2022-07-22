@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import {  Response } from 'express';
 
 // Hilfs funktionen die Abfragen allgemein Vereinfachen
 class Helper {
@@ -37,7 +37,7 @@ class Helper {
     return true;
   }
 
-  public static isString(value:any):boolean
+  public static isString(value:unknown):boolean
   {
     return typeof value === 'string' || value instanceof String;
   }
@@ -52,13 +52,13 @@ class Helper {
    * @returns
    */
   public static ngram(word : string, minSize : number) : string[] {
-    if( word.length <= minSize) 
+    if( word.length <= minSize)
     {
       return [word];
     }
     const length = word.length;
     const startSizeRange = minSize;
-    const endSizeRange = Math.max(length, minSize); 
+    const endSizeRange = Math.max(length, minSize);
     const ngrams : string[] = [];
     for(let i = startSizeRange; i < endSizeRange; i++ )
     {
@@ -72,16 +72,16 @@ class Helper {
 
   /**
    * the first substrings of word should get more weight when searching
-   * @param word 
-   * @param minSize 
-   * @returns 
+   * @param word
+   * @param minSize
+   * @returns
    */
   public static prefixNgram(word : string, minSize : number) : string[] {
     const length = word.length;
     const prefixNgrams : string[] = [];
     const first = word.slice(0, minSize);
     prefixNgrams.push(first);
-    for(let i = minSize; i < length; i++) 
+    for(let i = minSize; i < length; i++)
     {
       prefixNgrams.push(first + word.slice(minSize, i));
     }
@@ -89,6 +89,11 @@ class Helper {
   }
 }
 
+/**
+ * create error handle for a async function
+ * @param fn function on which errors should be handled
+ * @returns errorHandler(function(req,res))
+ */
 
 
 export default Helper;

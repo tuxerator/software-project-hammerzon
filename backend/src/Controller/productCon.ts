@@ -1,15 +1,15 @@
-import { query, Request, Response } from 'express';
-import Helper from '../helpers';
+import { Request, Response } from 'express';
+import Helper from '../Utils/helpers';
 import { IAvailability, IProduct, Product } from '../Models/Product';
-import { ListInfo, SessionRequest, PostOrder } from '../types';
-import { Model, Types } from 'mongoose';
+import { ListInfo, SessionRequest } from '../types';
+import { Types } from 'mongoose';
 import { Order } from '../Models/Order';
 import { Category } from '../Models/Category';
 import { ActivityController } from './activity';
-import { green, lightBlue, lightGrey, red, white } from '../Models/Activity';
-import { yellow } from '../Models/Activity';
+import { green, lightBlue, red, } from '../Models/Activity';
 
-class ProductController {
+
+export class ProductController {
   // Gibt die ProductInfos die zwischen start und start+limit liegen
   // und eine zusätzliche Informationen requestable, also wie viele elemente es noch bis zum ende in der Liste gibt, zurück
   // z.b für die Liste [0,1,2,3] ließ er sich mit start = 1 und limit = 2
@@ -161,24 +161,12 @@ class ProductController {
     }
   }
 
-
-  public async resetAppointment(request: Request, response: Response): Promise<void> {
-    /*console.log('resetting');
-    const product: PostOrder = request.body;
-    const index = parseInt(String(product.appointmentIndex));
-    const id = product.productId;
-    if (id && Types.ObjectId.isValid(id)) {
-      const updateProduct = await Product.findById(id);
-      (await updateProduct).appointments[index].isReserved = false;
-      (await updateProduct).save();
-      console.log('appointment reset');
-      response.status(200);
-    } else {
-      response.status(500);
-      response.send('There is no product with such an id');
-    }*/
-  }
-  // test for Product id
+  /**
+  * return similar product of a given product
+  * @param request {product:string}
+  * @param response {list:Product[3], requestable:0}
+  * @returns
+  */
   public async getSimilarProduct(request:Request, response: Response):Promise<void>{
 
 
@@ -229,7 +217,11 @@ class ProductController {
 
   }
 
-
+  /**
+   * adds product to ProductDb
+   * @param request {body:Product}
+   * @param response {code:number, message:string}
+   */
   public async addProduct(request: SessionRequest, response: Response): Promise<void> {
     let product =   {...request.body,
       numberOfRatings : 0,
@@ -250,23 +242,28 @@ class ProductController {
     };
 
 
-    // Setze es auf den Angemeldeten User
+    // set owner to logged-in user
     product.user = request.session.user._id;
 
     delete product._id;
 
     const dbProduct = new Product(product);
-
+    // save it in db
     await dbProduct.save();
-
+    // send success state
     response.status(200);
     response.send({ code: 200, message: 'Add Successfull', id: dbProduct._id });
     }
-
+    /**
+     * Removes Product form DB and removes its relating orders
+     * @param request
+     * @param response
+     * @returns
+     */
     public async removeProduct(request:SessionRequest,response:Response):Promise<void>
     {
         const id = request.params.id;
-        //
+        // Find product in
         const product = await Product.findById(id);
 
         if(!product)
@@ -278,6 +275,7 @@ class ProductController {
         console.log(product);
         console.log(request.session.user);
         console.log(product.user === request.session.user._id);
+        // Test wether current loggedin-user eguals to product-owner or current user is a admin
         if(!(product.user.equals(new Types.ObjectId(request.session.user._id)) || request.session.user.role === 'admin'))
         {
             console.log(product.user);
@@ -286,7 +284,9 @@ class ProductController {
             response.send({code:403,message:'Not Authorized'});
             return;
         }
+        // Delete related rrders
         await Order.deleteMany({product: product._id});
+        // Delete Prduct
         await product.delete();
         response.status(200);
         response.send({code:200,message:'Product deleted'});
@@ -304,7 +304,6 @@ class ProductController {
     }
 
     public async addHindrance(req: Request, res: Response): Promise<void> {
-      const hindrance: IAvailability = req.body;
       const product: IProduct = await Product.findById(new Types.ObjectId(req.params.id)).exec();
 
       // Get Availabi
@@ -334,6 +333,6 @@ class ProductController {
   }
 }
 
+export const product = new ProductController();
 
-export default ProductController;
 

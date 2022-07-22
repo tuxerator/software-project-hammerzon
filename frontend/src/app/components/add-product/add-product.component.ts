@@ -97,16 +97,13 @@ export class AddProductComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     const id = routeParams.get('id');
     if (id) {
+      this.productId = id;
       this.productService.getProductDetails(id).subscribe({
         next: (product) => {
-          this.productId = id;
           product.availability = product.availability.map(ava =>
             new Availability(new Date(ava.startDate), new Date(ava.endDate)));
 
           this.editProduct(product);
-        },
-        error: () => {
-
         }
       });
     }else
@@ -194,7 +191,7 @@ export class AddProductComponent implements OnInit {
     return `${number}`;
   }
 
-  updateDuration = () => {
+  updateDuration = ():void => {
     const hoursControl = this.addProductForm.get('durationHour') as FormControl;
     const minutesControl = this.addProductForm.get('durationMinute') as FormControl;
     const hours = hoursControl ? parseInt(hoursControl.value, 10) : 0;
@@ -208,20 +205,18 @@ export class AddProductComponent implements OnInit {
     const file: File = inputElement.files[0];
     this.imageService.uploadFileImage(file,this.imageId).subscribe({
       next: (res) => {
-        this.setImageID(res.id);
+        this.setImageId(res.id);
       },
       error: (err) => {
         console.log(err);
       }
     }
   );
-    
-
   }
-  setImageID(id:string) :void {
-    console.log(this.imageId);
+
+  private setImageId(id:string):void
+  {
     this.imageId = id;
-    console.log(this.imageId);
   }
 
   public onSubmit(): void {
@@ -235,7 +230,7 @@ export class AddProductComponent implements OnInit {
     this.addProductForm.markAllAsTouched();
     // Sind alle Eingaben valid
     console.log(this.addProductForm);
-    if (this.addProductForm.invalid || !this.imageId || !this.availabilities) return;
+    if (this.addProductForm.invalid || !this.imageId || !this.availabilities || !this.selectedCategory) return;
     console.log('Through Validation Debug Log');
     // Für besser lesbarkeit des Code
     const form = this.addProductForm.value;
@@ -268,12 +263,12 @@ export class AddProductComponent implements OnInit {
       },
       availabilities,
       this.imageId,
-      this.selectedCategory!._id
+      this.selectedCategory._id
     );
     //Product hinzufügen anfrage an das backend schicken
     this.uploading = true;
 
-    const uploadProduct = () => {
+    const uploadProduct = ():void => {
       this.productService.addProduct(newProduct).subscribe({
         next: (_message: IdMessageResponse) => {
           this.errorMessage = undefined;
@@ -306,7 +301,7 @@ export class AddProductComponent implements OnInit {
 
   // Availability picker ------------------------------------------------------
 
-  addAvailability(availability: Availability[]) {
+  addAvailability(availability: Availability[]):void {
     this.availabilities = availability;
     this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
@@ -314,7 +309,7 @@ export class AddProductComponent implements OnInit {
 
   // Hindrance picker ------------------------------------------------------
 
-  addHindrance(hindrances: Hindrance[]) {
+  addHindrance(hindrances: Hindrance[]):void {
     this.hindrances = hindrances;
     this.availabilities = this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
@@ -431,8 +426,6 @@ export class AddProductComponent implements OnInit {
   };
 
   // Helper functions
-
-
   ngbTimetoDate = (ngbTime: NgbTimeStruct | null): Date => {
     return ngbTime ? new Date(Date.UTC(1970, 0, 1, ngbTime.hour, ngbTime.minute, ngbTime.second)) : new Date('Invalid Date');
   };

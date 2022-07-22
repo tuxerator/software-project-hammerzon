@@ -46,7 +46,7 @@ export class LandingpageComponent implements OnInit {
 
   parseToString(value:string,alternative:string=''):string
   {
-    return  value ? value : '';
+    return  value ? value : alternative;
   }
 
   parseToInt(value: string, alternative: number): number {
@@ -72,7 +72,7 @@ export class LandingpageComponent implements OnInit {
     this.requestListWithSearch();
   }
 
-  requestListWithSearch()
+  requestListWithSearch():void
   {
     const params = this.route.snapshot.params;
     const search = this.parseToString(params['search']);

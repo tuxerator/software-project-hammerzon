@@ -1,13 +1,13 @@
-<div class="container">
+<div class="container my-4">
   <div class="bg-dark text-white">
     <article class="card-body">
       <h4
-        class="card-title mt-3 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
+        class="card-title mt-5 mb-2 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
       <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="row gy-3" novalidate>
 
         <!--Produktname-->
         <div class="col-12">
-          <div [class.was-validated]="addProductForm.controls['productName'].touched" class="input-group">
+          <div [class.was-validated]="addProductForm.controls['productName'].touched" class="input-group has-validation">
             <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i> </span>
             <input class="form-control" formControlName="productName" placeholder="Produktname" required type="text">
             <div *ngIf="!addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger
@@ -36,7 +36,7 @@
         </div>
 
         <!--Preis-->
-        <div class="col-4">
+        <div class="col-md-4">
           <div [class.was-validated]="addProductForm.controls['prize'].touched"
                class="col input-group has-validation">
             <span class="input-group-text" id="basic-addon1"> <i class="bi bi-briefcase-fill"></i></span>
@@ -51,19 +51,18 @@
         </div>
 
         <!-- Kategorie -->
-        <label for="categoryInput" class="form-label">Kategorie</label>
+        <label for="categoryInput" class="form-label mb-1">Kategorie</label>
         <div [class.was-validated]="addProductForm.controls['productName'].touched"
-             class="mb-3 input-group has-validation">
-          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-bookmark-fill"></i></span>
-          <input class="form-control" formControlName="categoryName" list="datalistOptions" id="exampleDataList" placeholder="Kategorie ..." (change)="categoryChanged()">
-          <datalist id="datalistOptions">
-            <option *ngFor="let category of categories" value="{{category.name}}">
-          </datalist>
+             class="mb-1 input-group">
+          <span class="input-group-text"> <i class="bi bi-bookmark-fill"></i></span>
+          <select class="form-select" formControlName="categoryName" list="datalistOptions" id="exampleDataList" placeholder="Kategorie ..." (change)="categoryChanged()">
+            <option *ngFor="let category of categories; let i=index" value="{{category.name}}">{{category.name}}</option>
+          </select>
         </div>
 
-        <div class="col-8">
+        <label class="form-label mb-1" for="durationInput">Dauer</label>
+        <div class="col-md-8">
           <div class="row">
-            <label class="col-auto col-form-label" for="durationInput">Dauer:</label>
             <div
               [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"
               class="input-group has-validation col" id="durationInput">
@@ -86,7 +85,7 @@
           </div>
         </div>
 
-        <hr style="margin-bottom: 0">
+        <hr class="mb-0">
 
         <!-- Availability -->
         <app-availability-picker #availabilityPicker
@@ -97,7 +96,7 @@
                                  class="col-12"
         ></app-availability-picker>
 
-        <hr style="margin-bottom: 0">
+        <hr class="mb-0">
 
         <!-- Hindrance -->
         <app-hindrance-picker (newHindrance)="addHindrance($event)" [form]="hindranceGroup"

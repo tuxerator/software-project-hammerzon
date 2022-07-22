@@ -64,6 +64,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
                 new ServerSideFnValidation(this.getPaymentTypeDependentText('Emailadresse nicht gefunden', 'Swpsafe-Code nicht gültig', 'Karte nicht vorhanden'),undefined,'Bad Request'),
                 new ServerSideValidation('Account kommt aus nicht aus Deutschland',undefined,'Is not from germany'),
                 new ServerSideValidation('Nicht Genügend Guthaben',undefined,'Not enough balance on account'),
+                new ServerSideValidation('Dieser Termin wurde schon gebucht',undefined,'Appointment overlaps with existing appointment'),
                 new ClientSideFnValidation(this.getPaymentTypeDependentText('Email gültig','Swp-Code gültig','Kartenummer korrekt'),false)
               ],
         invalid:new ClientSideFnValidation(this.getPaymentTypeDependentText('Ungültige Email','Swp-Code erwartet','Kartennummer erwartet'))
@@ -75,7 +76,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
                 new ServerSideValidation('Sicherheits Code nicht korrekt',undefined,'Missing data: Missing payment>paymentDetails>securityCode'),
                 new ClientSideValidation('Korrektes Passwort',false)
               ],
-        invalid:new ClientSideValidation('Ungültige Eingabe')
+        invalid: new ClientSideValidation('Ungültige Eingabe')
       },
       'fullName': {
         valid:[
@@ -175,6 +176,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     this.modalState = 'confirm';
     this.accountForm.markAsUntouched();
     //this.errorMessage = undefined;
+    this.valdationdToText.setErrorMessage(undefined);
     const keys = Object.keys(this.accountForm.controls);
     keys.forEach(key => {
       this.accountForm.controls[key].setValue('');
@@ -209,14 +211,15 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     if(this.modalState === 'pay')
     {
       this.accountForm.markAllAsTouched();
+      //this.valdationdToText.setErrorMessage(undefined);
       console.log(this.accountForm);
-      if(this.accountForm.valid)
+      if(this.accountForm.valid && this.product && this.orderService.currentlySelectedAppointment)
         {
           const password = this.accountForm.value.password;
           const expirationMonth= this.accountForm.value.expirationMonth;
           const expirationYear = this.accountForm.value.expirationYear;
           const fullName = this.accountForm.value.fullName;
-          const postOrder: PostOrder = {productId:this.product!._id, appointment:this.orderService.currentlySelectedAppointment!};
+          const postOrder: PostOrder = {productId:this.product._id, appointment:this.orderService.currentlySelectedAppointment};
           this.modalState = 'waiting';
           this.payment.getPaymentFinish(this.paymentType,postOrder,password,fullName,this.merchantName,`${expirationMonth}/${expirationYear}`)
           .subscribe({
@@ -240,11 +243,11 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     this.paymentType = type;
   }
 
-  public get PaymentType() {
+  public get PaymentType():typeof PaymentType {
     return PaymentType;
   }
 
-  public get Object()
+  public get Object() : ObjectConstructor
   {
     return Object;
   }

@@ -54,3 +54,5 @@ export class CategoryController{
   }
 
 }
+
+export  const category = new CategoryController();

@@ -1,8 +1,7 @@
-import { IOrder, Order } from './Models/Order';
-import { IUser, User } from './Models/User';
+import { IUser, User } from '../Models/User';
 
 export default class UserTestData{
-    public list : any[] = [
+    public list : (Pick<IUser,'firstName'|'lastName'|'email'|'password'|'role'|'address'> &{_id:string})[] = [
         {
             _id:'6284efd5b72a93135fb79c87',
             firstName : 'Armin',
@@ -42,17 +41,16 @@ export default class UserTestData{
     }
 
     async insertIfNotExistend(): Promise<void>  {
-      await User.deleteMany({});
       const vals : IUser[] = await User.find({});
       console.log(vals);
-      //if(!vals || vals.length <= 0)
+      if(!vals || vals.length <= 0)
       {
           console.log('Inserting Users');
           await User.insertMany(this.list);
           const current: IUser[] = await User.find({}).exec();
           console.log(current);
-      }/*else{
+      }else{
           console.log('User already exist');
-      }*/
+      }
     }
 }

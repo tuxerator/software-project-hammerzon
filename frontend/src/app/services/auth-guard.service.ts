@@ -11,7 +11,7 @@ export class AuthGuardService implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {
   }
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+  async canActivate(): Promise<boolean> {
     //console.log(this.authService);
     const isLoggedIn = this.authService.isLogedIn();
    // console.log(isLoggedIn);

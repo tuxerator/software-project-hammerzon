@@ -1,40 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subscription, Observer, take, subscribeOn, SubjectLike, Unsubscribable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IdMessageResponse } from '../components/types';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) {
-  }
-}
-
-class FakeObservable<T> implements SubjectLike<T> {
-  obs:Partial<Observer<T>>[];
-
-  constructor(){
-    this.obs = [];
-  }
-
-  public subscribe( observer:Partial<Observer<T>>):Unsubscribable// Partial<Observer<T>> | undefined): Subscription)
-  {
-    this.obs.push(observer);
-    return {
-      unsubscribe : ()  => {
-          this.obs.filter(o => o !== observer);
-      },
-    };
-  }
-
-  public next(val:T):void{
-    this.obs.forEach(ob => ob.next?.call(ob,val));
-  }
-  public error(err: any):void{
-    this.obs.forEach(ob => ob.error?.call(ob,err));
-  }
-
-  public complete(): void
-  {
-    this.obs.forEach(ob => ob.complete?.call(ob));
   }
 }
 
@@ -47,11 +17,9 @@ export class ImageService {
 
   }
 
-
-
-  public uploadFileImage(file:File,replace_id?:string,is_replaceable?:boolean ):SubjectLike<IdMessageResponse>
+  public uploadFileImage(file:File,replace_id?:string,is_replaceable?:boolean ):Subject<IdMessageResponse>
   {
-    const observable = new FakeObservable<IdMessageResponse>();
+    const observable = new Subject<IdMessageResponse>();
     const reader = new FileReader();
 
 

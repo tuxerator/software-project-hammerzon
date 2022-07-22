@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Product, Rating } from '../models/Product';
+import { Product } from '../models/Product';
 
 // Product details ist das gleich wie Product info nur mit zusätzliche Infos
 
