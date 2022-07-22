@@ -1,9 +1,7 @@
-#stage 1
-FROM node:latest as node
-WORKDIR /app
-COPY . .
-RUN npm install --legacy-peer-deps
-RUN npm run build --prod
-#stage 2
-FROM nginx:alpine
-COPY --from=node /app/dist/demo-app /usr/share/nginx/html
+FROM node:18-alpine
+  WORKDIR .
+  COPY package*.json ./
+  RUN npm install --legacy-peer-deps
+  COPY . .
+  EXPOSE 4200
+CMD [ "ng", "serve" ]
