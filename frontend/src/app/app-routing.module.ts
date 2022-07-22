@@ -19,6 +19,7 @@ import { NotAvailableComponent } from './components/not-available/not-available.
 import { CategoryComponent } from './components/admin/category/category.component';
 import { AdminComponent } from './components/admin/admin.component';
 
+
 /**
  *  Hier können die verschiedenen Routen definiert werden.
  *  Jeder Eintrag ist eine URL, die von Angular selbst kontrolliert wird.
