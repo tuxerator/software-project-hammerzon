@@ -138,7 +138,7 @@ export class AppointmentSelectorComponent implements OnInit {
           // Iterate over all days in the availability and check if there is an appointment
           while (compareDates(date, availability.endDate)) {
             this.orderService.validateAppointment(this.productId, new Availability(date, new Date(date.getTime() + this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime()))).subscribe({
-              next: (val) => {
+              next: (_val) => {
 
               },
               error: (err) => {
@@ -214,11 +214,9 @@ export class AppointmentSelectorComponent implements OnInit {
           return false;
         }
 
-        if (diff >= this.duration) {
-          return false;
-        }
+        return diff < this.duration;
 
-        return true;
+
       }
     }
 
@@ -243,7 +241,7 @@ export class AppointmentSelectorComponent implements OnInit {
 
   // Validator which requires the time to be such that the appointment fits into the availability
   validateTime = (): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    return (_control: AbstractControl): ValidationErrors | null => {
       console.log('validating time: ', this.date, this.time);
       if (this.time && this.date) {
         if (this.time.getTime() - utcOffset < this.defaultTimeFrame.startDate.getTime() || this.time.getTime() - utcOffset > this.defaultTimeFrame.endDate.getTime()) {
@@ -290,7 +288,7 @@ export class AppointmentSelectorComponent implements OnInit {
  */
 @Injectable({ providedIn: 'root' })
 export class AppointmentValidator {
-  constructor(private orderService: OrderService) {
+  constructor() {
 
   }
 

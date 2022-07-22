@@ -1,6 +1,6 @@
 import { Component,  OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
-import { getAppointmentString, getDateString } from 'src/app/models/Product';
+import { getDateString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
 
 

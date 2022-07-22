@@ -46,7 +46,7 @@ export class CategoryBadgeComponent implements OnInit {
 
   isCustom():boolean
   {
-    return (this.custom || this.category?.custom)? true : false;
+    return !!(this.custom || this.category?.custom);
   }
 
   getIconStyle():{background?:string,width?:string,height?:string}{

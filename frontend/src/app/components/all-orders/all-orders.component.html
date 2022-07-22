@@ -44,14 +44,21 @@
                                               Set Status
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.NNA)">Noch nicht angenommen</a></li>
-                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.A)">Angenommen</a></li>
-                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.D)">Durchgeführt</a></li>
+                                                <li><a (click)="setStatus(indexOfOrder, status.NNA)"
+                                                       class="dropdown-item">Noch nicht
+                                                    angenommen</a></li>
+                                                <li><a (click)="setStatus(indexOfOrder, status.A)"
+                                                       class="dropdown-item">Angenommen</a>
+                                                </li>
+                                                <li><a (click)="setStatus(indexOfOrder, status.D)"
+                                                       class="dropdown-item">Durchgeführt</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
-                    </table>
-</div>
+                        </table>
+                    </div>
 
+</div>

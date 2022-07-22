@@ -1,17 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
-import {
-  AbstractControl, Form, FormBuilder,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Availability } from '../../../models/Product';
-import { utcOffset, updateGroupValidity } from '../../../../util/util';
-import { NgbTimeDateAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
+import { updateGroupValidity, utcOffset } from '../../../../util/util';
+import { NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 @Component({
   selector: 'app-availability-picker',
@@ -143,8 +135,7 @@ export class AvailabilityPickerComponent implements OnInit {
   isToDate = (date: NgbDate) => date.equals(this.toDate);
 
   isInvalid = (form: AbstractControl): boolean => {
-    const invalid = form.touched ? form.invalid : false;
-    return invalid;
+    return form.touched ? form.invalid : false;
   }
 
   public isDisabledAvailability = (date: NgbDate | null) => {
@@ -157,10 +148,8 @@ export class AvailabilityPickerComponent implements OnInit {
     if (this.disabledWeekdays.includes(this.calendar.getWeekday(date))) {
       return true;
     }
-    if (date.before(this.calendar.getToday())) {
-      return true;
-    }
-    return false;
+    return date.before(this.calendar.getToday());
+
   }
 
   toggleWeekday = (weekday: number) => {
@@ -218,7 +207,7 @@ export class AvailabilityPickerComponent implements OnInit {
    * Validator that requires that the availabilty does not overlap with any other availabilty
    */
   isOverlapping = (availabilities: AvailabilityWithWeekdays[]): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    return (_control: AbstractControl): ValidationErrors | null => {
       const validationError = availabilities.some(availability => {
         // Check for overlapping and if so return ValidationError
         return availability.availability.startDate <= this.ngbDateToDate(this.toDate) &&
@@ -233,7 +222,7 @@ export class AvailabilityPickerComponent implements OnInit {
    * Validator that requires defaultTimeFrame to be at least as long as duration.
    */
   defaultTimeFrameLongerThanDuration = (): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    return (_control: AbstractControl): ValidationErrors | null => {
       const duration = this.duration?.getTime();
 
       let validationError: ValidationErrors | null = null;
@@ -295,7 +284,6 @@ export class AvailabilityWithWeekdays {
     const availabilities: Availability[] = [];
     const startDateDay = this.availability.startDate.getDay();
     let currentDate = this.availability.startDate;
-    let i: number;
     this.disabledWeekdays.sort((a, b) => a - b);
     if (this.disabledWeekdays.length > 0) {
       // Initialize d with the amount of days to the next disabled weekday

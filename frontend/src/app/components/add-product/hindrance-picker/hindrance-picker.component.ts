@@ -1,9 +1,7 @@
-import { Component, EventEmitter, Injectable, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   NgbDate, NgbDateAdapter,
-  NgbTimeAdapter,
-  NgbTimeStruct,
-  NgbDateStruct
+  NgbTimeAdapter
 } from '@ng-bootstrap/ng-bootstrap';
 import {
   AbstractControl,
@@ -14,8 +12,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { AvailabilityPickerComponent } from '../availability-picker/availability-picker.component';
-import { addTimezoneOffset, isInteger, utcOffset } from '../../../../util/util';
+import { addTimezoneOffset } from '../../../../util/util';
 import { NgbDateNativeAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 
@@ -50,8 +47,6 @@ export class HindrancePickerComponent implements OnInit {
 
   constructor(private dateAdapter: NgbDateAdapter<Date>, private fb: FormBuilder) {
   }
-
-  disable = (date: NgbDate) => true;
 
   ngOnInit(): void {
     this.timeValidators?.push(Validators.required);

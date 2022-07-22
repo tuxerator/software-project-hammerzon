@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Activity, Highlight } from 'src/app/models/Activity';
-import { getAppointmentString, getDateString } from 'src/app/models/Product';
+import { Activity } from 'src/app/models/Activity';
+import { getDateString } from 'src/app/models/Product';
 import { ActivityService } from 'src/app/services/activity.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ActivityService } from 'src/app/services/activity.service';
   styleUrls: ['./activity.component.css']
 })
 export class ActivityComponent implements OnInit {
-  activities?:Activity[];
+  activities?: Activity[];
 
   constructor(private activityService:ActivityService) { }
 
@@ -46,25 +46,19 @@ export class ActivityComponent implements OnInit {
 
   getDesc(desc:string):string[]
   {
-    const list =  desc.replace(/\[/g,']').split(']').filter( x => x !== '');
     //console.log(list);
-    return list;
+    return desc.replace(/\[/g, ']').split(']').filter(x => x !== '');
   }
 
-  isHiglight(text:string):boolean
-  {
+  isHiglight(text: string): boolean {
     const number = parseInt(text);
     //console.log(number);
-    if(number || number === 0)
-    {
-      return true;
-    }
-    return false;
+    return !!(number || number === 0);
+
   }
 
   getIndex(text:string):number
   {
-    const number = parseInt(text);
-    return number;
+    return parseInt(text);
   }
 }

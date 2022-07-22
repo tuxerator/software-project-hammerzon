@@ -6,8 +6,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address, User } from '../../models/User';
