@@ -1,0 +1,43 @@
+  <form (ngSubmit)="createAppointment()" [formGroup]="form" class="row gy-2">
+    <div [class.is-invalid]="form.touched" class="col-12 row w-100 align-items-center">
+      <div class="col-6">
+        <form class="input-group">
+          <input #appointDatePicker="ngbDatepicker"
+                 (click)="appointDatePicker.toggle()"
+                 [(ngModel)]="date"
+                 [class.is-invalid]="dateControl.invalid && dateControl.touched"
+                 [formControl]="dateControl"
+                 [markDisabled]="markDisabled"
+                 class="form-control"
+                 name="datePicker"
+                 ngbDatepicker
+                 placeholder="YYYY-MM-DD">
+          <button (click)="appointDatePicker.toggle()" class="btn btn-secondary">
+            <i class="bi bi-calendar"></i>
+          </button>
+        </form>
+      </div>
+      <div class="col-6 row align-items-center justify-content-center">
+        <label class="col-auto col-form-label">Uhrzeit:</label>
+        <ngb-timepicker  [(ngModel)]="time" [formControl]="timeControl"(ngModelChange)="console.log(time);updateGroupValidity(form)"
+                        class="col-auto"
+                        id="timePicker"></ngb-timepicker>
+      </div>
+    </div>
+    <div class="col-12 invalid-feedback">
+      <div *ngIf="form.hasError('required', ['dateControl'])">
+        Bitte ein Datum auswählen.
+      </div>
+      <div *ngIf="form.errors?.['timeOutsideDefaultTimeFrame']">
+        Uhrzeit liegt außerhalb der verfügbaren Zeit.
+      </div>
+      <div *ngIf="form.errors?.['appointOutsideDefaultTimeFrame']">
+        Termin liegt außerhalb der verfügbaren Zeit.
+      </div>
+    </div>
+    <div class="col-12">
+      <button [disabled]="form.invalid" class="btn btn-primary" type="submit">
+        Termin buchen
+      </button>
+    </div>
+  </form>

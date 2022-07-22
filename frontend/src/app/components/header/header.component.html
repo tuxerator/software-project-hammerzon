@@ -1,0 +1,100 @@
+<div class="container p-4 bg-dark" [class]="isOnLandingPage()? ['m-5'] : ['m-2']">
+
+  <!-- Second Category Navbar -->
+  <nav *ngIf="isOnLandingPage()" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top border-bottom border-secondary p-0" style="margin-top: 74px;">
+   <button
+     type="button"
+     data-bs-toggle="collapse"
+     data-bs-target="#navbarSecond"
+     class="navbar-toggler m-2"
+     aria-controls="navbarSecond"
+     aria-expanded="false"
+     aria-label="Toggle navigation">
+     <span><i class="bi bi-bookmark-fill"></i></span>
+   </button>
+   <div  id="navbarSecond" class="collapse navbar-collapse navbar-nav navbar-nav-scroll w-100 scroll-x">
+       <div *ngFor="let category of categories" class="nav-item mx-auto">
+         <app-category-badge class="nav-link mx-2" [class]="current_category===category.name ? ['active']: []" [category]="category" (click)="selectCategory(category.name)"></app-category-badge>
+       </div>
+     </div>
+ </nav>
+ <!---... Header ... -->
+ <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark p-2 border-bottom border-secondary">
+   <a class="navbar-brand h1" routerLink="/">
+     <img alt="hammerzon" height="39" src="/assets/Hammerzon.png" width="150">
+   </a>
+   <!-- the navbar collapses into a button when there's not enough space -->
+   <button
+     type="button"
+     data-bs-toggle="collapse"
+     data-bs-target="#navbarNav"
+     class="navbar-toggler"
+     aria-controls="navbarNav"
+     aria-expanded="false"
+     aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+     </button>
+     <div
+         class="collapse navbar-collapse"
+         id="navbarNav">
+         <div class="d-flex me-auto ms-auto">
+           <input class="form-control me-2" type="search" placeholder="Suchen ..." aria-label="Search" [(ngModel)]="searchTerm" (change)="search()">
+           <button class="btn btn-outline-primary" (click)="search()" >Suchen</button>
+         </div>
+         <ul class="navbar-nav mb-2 mb-lg-0">
+             <!-- add to this List for more navbar links -->
+             <li class="nav-item active">
+                 <a class="nav-link" routerLink="/about">Über uns</a>
+             </li>
+
+             <li *ngIf="authService.isLogedIn()" class="nav-item ropdown ms-2 me-4">
+               <a class="dropdown-toggle btn btn-outline-primary position-relative" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                 <i class="bi bi-person-circle"></i>
+                 <span *ngIf="authService.isAdmin()" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                   Admin
+                   <span class="visually-hidden">Admin bagde</span>
+                 </span>
+
+               </a>
+               <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
+
+                 <li class="nav-item text-algin-left">
+                   <a class="dropdown-item" routerLink="/personalprofile"><i class="bi bi-file-earmark-person-fill"></i> Profil</a>
+                 </li>
+                 <li class="nav-item text-algin-left">
+                   <a class="dropdown-item" routerLink="/order-history"><i class="bi bi-cart-fill"></i> Ihre Bestellungen</a>
+                 </li>
+                 <li><hr class="dropdown-divider"></li>
+                 <li class="nav-item text-algin-left">
+                   <a class="dropdown-item" routerLink="/add-product"><i class="bi bi-tag-fill"></i> Produkt hinzufügen</a>
+                 </li>
+                 <li class="nav-item active text-algin-left">
+                   <a class="dropdown-item" routerLink="/ordered-services"><i class="bi bi-table"></i> Bestellte Dienstleistungen</a>
+                 </li>
+                 <li *ngIf="authService.isAdmin()"><hr class="dropdown-divider"></li>
+                 <li *ngIf="authService.isAdmin()" class="nav-item active text-algin-left">
+                   <a class="dropdown-item" routerLink="/admin"><i class="bi bi-speedometer"></i> Admin Dashboard <span class="badge bg-success">Admin</span>
+                   </a>
+                 </li>
+                 <li><hr class="dropdown-divider"></li>
+                 <li class="nav-item text-algin-left">
+                   <a class="dropdown-item" (click)="logout()"><i class="bi bi-door-open-fill"></i> Logout</a>
+                 </li>
+               </ul>
+             </li>
+
+             <li *ngIf="!authService.isLogedIn()" class="nav-item active">
+               <a class="nav-link" routerLink="/login">Login</a>
+             </li>
+             <li *ngIf="!authService.isLogedIn()" class="nav-item active me-2">
+               <a class="btn btn-outline-primary " routerLink="/register">Register</a>
+             </li>
+
+         </ul>
+
+   </div>
+ </nav>
+
+</div>
+
+

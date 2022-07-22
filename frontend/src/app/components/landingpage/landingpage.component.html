@@ -1,37 +1,33 @@
-<h2>Startseite</h2>
+<div class="container mt-2 p-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <app-product-list *ngIf="!loading" [list]="productListInfo.list"></app-product-list>
 
-<p> Auf der Startseite kann das Produkt vorgestellt werden, sowie Links auf bspw. Login-Seiten dargestellt werden. </p>
-<p class="highlight"> Bitte macht euch mit der Angular Dokumentation vertraut! </p> 
+          <div *ngIf="loading" class="d-flex align-items-center text-secondary">
+            <strong>Lädt...</strong>
+            <div aria-hidden="true" class="spinner-border spinner-secondary ms-auto" role="status"></div>
+          </div>
 
-<ul>
-    <li *ngFor="let link of links">
-        <a target="_blank" href="{{ link.url }}">
-            {{ link.name }}
-        </a>
-    </li>
-</ul>
-
-<br/>
-<hr/>
-<br/>
-
-<p>
-    Mithilfe von <code>Components</code> können Bestandteile des Frontends ausgekapselt und in anderen <code>Components</code> wiederverwendet werden.
-    Die <code>Components</code> können dann mithilfe dem (in der jeweiligen <code>.component.ts</code> Datei) definierten <code>selector</code> ganz einfach als HTML Komponente eingebunden werden.
-    Bitte verwendet entweder den <code>ng generate</code> Befehl oder das Kontextmenü von Visual Studio Code zur Erstellung neuer Komponenten, da die Komponente auch in der <code>app.module.ts</code> Datei eingetragen werden muss!
-</p>
-
-<p>
-    Hier ein Beispiel von zwei <code>Input</code> Elementen, die Daten mittels ihrem definiertem <code>@Input</code> teilen:
-</p>
-
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<app-sample [displayTextObject]="sharedTextObject"></app-sample>
-<p> Der Text lautet: {{ sharedTextObject.text }} </p>
+          <div *ngIf="!loading && productListInfo?.list?.length === 0" class="d-flex align-items-center">
+            <div class="w-100 text-center">Es konnten hierzu keine Dienstleistungen gefunden werden</div>
+          </div>
+        </div>
+    </div>
 
 
-<p>
-    Hier ein weiteres Beispiel von einem <code>Input</code> Element, das Daten mittels einem Service speichert (bis die Seite neu geladen wird):
-</p>
 
-<app-sample [displayTextObject]="sampleService.globalTextObject"></app-sample>
+
+  <!-- Paggination only show if there are more elements than 10 -->
+  <div *ngIf="productListInfo && productListInfo.list &&  currentStart + productListInfo.list.length <= currentLimit && productListInfo.requestable === 0" class="btn-toolbar justify-content-center mt-4">
+    <div class="btn-group" role="group">
+      <button (click)="previous()" [class.disabled]="!(currentStart > 0)" class=" btn btn-primary" type="button">
+        &laquo;
+      </button>
+      <button (click)="next()" [class.disabled]="!(productListInfo.requestable>0)" class="btn btn-primary"
+              type="button">&raquo;
+      </button>
+    </div>
+  </div>
+
+</div>
+

@@ -1,0 +1,59 @@
+<div>
+    <div class="container mt-5">
+        <h1>Bestellte Dienstleistungen</h1>
+                    <div class="table">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th scope="col">Bestell #</th>
+                                    <th scope="col">Produktname</th>
+                                    <th scope="col">Preis</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Termin</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Status ändern</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <tr *ngFor="let elem of orderList; let indexOfOrder=index">
+                                    <td class="text-center"></td>
+                                    <td>{{elem._id}}</td>
+                                    <td>{{elem.product?.name}} </td>
+                                    <td>{{elem.product?.prize}}</td>
+                                    <td>{{elem.orderingUser?.firstName}}
+                                        {{elem.orderingUser?.lastName}}
+                                        {{elem.orderingUser?.address?.postCode}}
+                                        {{elem.orderingUser?.address?.city}}
+                                    </td>
+                                   <td>{{getDateString(elem.appointment)}} </td>
+
+                                    <div [ngSwitch]="elem.status">
+                                        <div *ngSwitchCase="status.NNA">
+                                            <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
+                                        </div>
+                                        <div *ngSwitchCase="status.A">
+                                            <td> <span class="p-2 mb-2 bg-success text-nowrap">Angenommen</span> </td>
+                                        </div>
+                                        <div *ngSwitchCase="status.D">
+                                            <td> <span class="p-2 mb-2 bg-primary text-nowrap">Durchgeführt</span> </td>
+                                        </div>
+                                    </div>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Set Status
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.NNA)">Noch nicht angenommen</a></li>
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.A)">Angenommen</a></li>
+                                              <li><a class="dropdown-item" (click)="setStatus(indexOfOrder, status.D)">Durchgeführt</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+    </div>
+</div>

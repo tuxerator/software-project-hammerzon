@@ -1,0 +1,271 @@
+<!--suppress SyntaxError, SyntaxError -->
+<div *ngIf="!loading.product" class="container mt-2 p-4 col-lg-7 mx-auto">
+  <div class="bg-dark mx-auto">
+    <div class="row justify-content-between">
+      <!--suppress CssUnknownTarget -->
+      <nav class="col-md-8" aria-label="breadcrumb"
+           style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']">Dienstleistungen</a></li>
+          <li class="breadcrumb-item">
+            <a class="text-white" [routerLink]="['/']" [queryParams]="{ category: getCategory()?.name}">
+              {{getCategory()?.name}}
+            </a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
+        </ol>
+      </nav>
+
+      <div
+        *ngIf="authService.isLogedIn() && (user?.email === product?.user?.email && user?.email !== undefined) || user?.role === 'admin'"
+        class="col-md-auto mb-2 row justify-content-md-end">
+        <div class="col-auto">
+          <button type="button" class="btn btn-success" [routerLink]="['/add-product',product._id]"><i
+            class="bi bi-pencil-square"></i></button>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+            class="bi bi-trash-fill"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image and Product name + User Name + Price-->
+    <img src="api/img/{{product?.image_id}}" class="img-fluid ratio-16x9 rounded" alt="Lädt ..."
+         (load)="onImageLoaded()">
+
+    <div class="pt-2 bg-dark text-white">
+      <div class="row justify-content-between">
+        <div class="col-md-8 fs-3 fw-bold me-auto">{{product.name}}</div>
+        <div *ngIf="product!.numberOfRatings! > 0" class="col-md-4 text-md-end  fs-5">
+          <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
+          </ngb-rating>
+          <span class="text-warning">{{roundTo2Digits(product!.averageRating!)}}</span>
+          <span class="text-secondary"> ({{product.numberOfRatings}})</span>
+        </div>
+        <div *ngIf="product!.numberOfRatings! <= 0" class="col-md-4 text-md-end  fs-5 text-secondary">
+          Keine Bewertungen
+        </div>
+      </div>
+      <app-category-badge [category]="getCategory()" class="text-secondary" direction="hor"></app-category-badge>
+      <div class="text-secondary text-end">{{product.user?.firstName}} {{product.user?.lastName}}</div>
+    </div>
+    <hr>
+    <!-- Duration Price Total Price -->
+
+    <div class="text-white fw-bold fs-5 row justify-content-between">
+      <div class="col-md-4">
+        Dauer <span class="text-success">ca. {{getDurString()}}</span>
+      </div>
+      <div class="col-md-4 text-md-center">
+        Preis
+        <span class="text-primary"> {{product.prize}} €/Std.</span>
+      </div>
+      <div class="col-md-4 text-md-end">
+        Total Preis <span class="text-secondary"> {{getTotalPrice()}} €</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <hr>
+    <div class="fw-bold fs-5 mb-2">Beschreibung</div>
+    <div class="text-light">{{product.description}}</div>
+    <hr>
+    <h5>Termine</h5>
+    <app-appointment-selector *ngIf="defaultTimeFrame"
+                              (createAppointmentEvent)="orderProduct($event)"
+                              [duration]="product.duration.getTime()"
+                              [defaultTimeFrame]="defaultTimeFrame"
+                              [onAppointmentChanged]="appointmentChanged"
+    ></app-appointment-selector>
+    <hr>
+    <!-- Ratings/ Reviews -->
+    <!--Das ist für die Bewertung. In Zeile 34 brauchen wir eine condition (NG-IF), welches checkt, ob der aktuelle user eine
+Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung abgeschlossen ist-->
+    <div id="rating" class="fw-bold fs-5 mb-2">
+      Bewertung(en)
+      <a *ngIf="product?.numberOfRatings! > 0">
+        <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="product!.averageRating!" [readonly]="true">
+        </ngb-rating>
+        <span class="text-warning"> {{roundTo2Digits(product!.averageRating!)}}</span>
+        <span class="text-secondary"> ({{product.numberOfRatings}})</span>
+      </a>
+    </div>
+    <div *ngIf="hasOrdered && !hasRated" class="mb-4">
+      <div class="bg-dark">
+        <form class="" (ngSubmit)="onSubmit()" [formGroup]="addRatingForm">
+          <label for="">Bewertung Abgeben?</label>
+          <div class="form-group w-100 py-2">
+            <ngb-rating class="text-warning fs-5" [max]="5" [(rate)]="currentRating"></ngb-rating>
+            <label class="text-warning">{{currentRating}}</label>
+          </div>
+          <div class="form-group py-2">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="comment"
+                      placeholder="Erfahrung beschreiben"></textarea>
+          </div>
+          <input type="submit" class="btn btn-primary mt-2" value="Bewertung abschicken">
+        </form>
+      </div>
+    </div>
+    <div *ngIf="hasOrdered && hasRated && !loading.hasRated" class="mb-4">
+      <div>Bewertung abgegeben, Vielen Dank für die Bewertung!</div>
+    </div>
+
+    <!-- TOODO Loading sache-->
+
+    <div *ngIf="product.numberOfRatings !== undefined && product.numberOfRatings <= 0" class="text-center text-secondary">
+      Keine Bewertungen vorhanden
+    </div>
+    <!--Hier kommt dann mit einem NG-For alle Bewertungen des Produkts hin.-->
+
+
+    <div class="list-group">
+      <div class="list-group-item bg-dark border-secondary"
+           *ngFor="let elem of showMoreRating ? product?.ratings : product?.ratings?.slice(0,3)">
+        <div class="row justify-content-start ">
+          <div class="col-auto fs-6 fw-bold text-white">{{elem.user?.firstName}} {{elem.user?.lastName}}</div>
+          <div class="col-auto fs-6">
+            <ngb-rating [(rate)]="elem.rating" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+            <label class="text-warning">{{elem.rating}}</label>
+          </div>
+        </div>
+        <div class="text-secondary mb-2">{{getDate(elem.date)}}</div>
+        <p class="text-white align-center fw-light mb-3">
+          {{elem.comment}}
+        </p>
+
+        <div class="row pe-2"
+             [class]="elem.helpfulUsers.length == 0 ? ['justify-content-end']: ['justify-content-between']">
+          <span *ngIf="elem.helpfulUsers.length == 1" class="col-auto text-secondary">Eine Person fand diese Bewertung hilfreich.</span>
+          <span *ngIf="elem.helpfulUsers.length > 1" class="col-auto text-secondary">{{elem.helpfulUsers.length}} Personen fanden diese
+              Bewertung hilfreich.</span>
+          <button *ngIf="authService.isLogedIn() && canRateAsHelpful(elem.helpfulUsers)" (click)="rateAsHelpful(elem)"
+                  type="button" class="btn btn-outline-secondary btn-sm col-auto"><i
+            class="bi bi-hand-thumbs-up-fill"></i> Hilfreich
+          </button>
+          <button *ngIf="authService.isLogedIn() && !canRateAsHelpful(elem.helpfulUsers)"
+                  (click)="unrateAsHelpful(elem)" type="button" class="btn btn-outline-secondary btn-sm col-auto"><i
+            class="bi bi-hand-thumbs-down-fill"></i> Nicht
+            mehr hilfreich
+          </button>
+
+        </div>
+
+      </div>
+      <div *ngIf="product!.ratings!.length! > 3" class="list-group-item bg-dark border-secondary text-center">
+        <a class="btn btn-link"
+           (click)="showMoreRating = !showMoreRating">{{showMoreRating ? 'Weniger Anzeigen' : 'Mehr Anzeigen'}}</a>
+      </div>
+    </div>
+
+    <hr>
+    <!-- Similar Descriptions  -->
+    <div class="fw-bold fs-5 mb-2">Ähnliche Dienstleistungen</div>
+    <app-product-list *ngIf="!loading.similar" [list]="similarProducts" [click]="changeId.bind(this)">
+    </app-product-list>
+
+    <div *ngIf="loading.similar" class="w-100 d-flex justify-content-center">
+      <div aria-hidden="true" class="spinner-border text-secondary" role="status">
+        <span class="placeholder-glow col-6"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Screen --->
+<div *ngIf="loading.product" aria-hidden="true" class="container mt-2 p-4 col-lg-7 mx-auto">
+  <!--suppress CssUnknownTarget -->
+  <nav class="col-md-8" aria-label="breadcrumb"
+       style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-white" [routerLink]="['/']">Dienstleistungen</a></li>
+      <li class="breadcrumb-item placeholder-glow">
+        <span class="placeholder bg-secondary text-secondary">Placerholder</span>
+      </li>
+      <li class="breadcrumb-item active placeholder-glow" aria-current="page"><span
+        class="placeholder bg-secondary">Placerholder</span></li>
+    </ol>
+  </nav>
+
+  <div>
+    <svg class="placerholder-glow placeholder bg-secondary img-fluid ratio-16x9 rounded" role="img" width="100%"
+         height="450">
+      <rect width="100%" height="100%"></rect>
+    </svg>
+  </div>
+
+  <div class="placeholder-glow mt-4">
+    <div class="row justify-content-between">
+      <div class="col-6 placeholder-glow">
+        <span class="placeholder col-12 bg-secondary placeholder-lg"></span>
+        <!--Produktname-->
+      </div>
+      <div class="col-3 placeholder-glow">
+        <span class="placeholder col-12 bg-secondary placeholder-lg"></span>
+        <!--Durchschnittsbewertung-->
+      </div>
+    </div>
+
+    <span class="placeholder col-4 bg-secondary"></span>
+    <!--Kategorie-->
+    <br>
+    <div class="w-25 ms-auto">
+      <span class="placeholder col-12 bg-secondary"></span>
+    </div>
+    <!--Handwerker-->
+  </div>
+  <hr>
+  <div class="row justify-content-between fw-bold fs-5">
+    <div class="col placeholder-glow">
+      Dauer <span class="placeholder col-6 bg-secondary placeholder-lg"></span>
+      <!--Dauer-->
+    </div>
+    <div class="col placeholder-glow text-center">
+      Preis <span class="placeholder col-6 bg-secondary placeholder-lg"></span>
+      <!--Preis-->
+    </div>
+    <div class="col placeholder-glow text-end">
+      Total Preis <span class="placeholder col-6 bg-secondary placeholder-lg"></span>
+      <!--Total Preis-->
+    </div>
+  </div>
+  <hr>
+  <div class="fw-bold fs-5 mb-2">Beschreibung</div>
+  <div class="placeholder-glow card-text">
+    <span class="placeholder col-7 me-2 bg-secondary"></span>
+    <span class="placeholder col-4 bg-secondary"></span>
+    <span class="placeholder col-4 bg-secondary"></span>
+    <span class="placeholder col-6 bg-secondary"></span>
+    <span class="placeholder col-8 bg-secondary"></span>
+  </div>
+
+  <hr>
+  <div class="fw-bold fs-5 mb-2 placeholder-glow">Termine</div>
+  <span class="placeholder col-10 bg-secondary"></span>
+  <hr>
+  <div class="fw-bold fs-5 mb-2 placeholder-glow">Bewertung(en)</div>
+  <span class="placeholder col-10 bg-secondary"></span>
+  <hr>
+  <div class="fw-bold fs-5 mb-2 placeholder-glow">Ähnliche Dienstleistungen</div>
+  <span class="placeholder col-10 bg-secondary"></span>
+</div>
+
+
+<!--Delete Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="exampleModalLabel">Produkt löschen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body border-secondary">Möchten Sie das Produkt wirklich löschen?
+
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="button" (click)="deleteProduct()" data-bs-dismiss="modal" class="btn btn-danger">Löschen</button>
+      </div>
+    </div>
+  </div>
+</div>

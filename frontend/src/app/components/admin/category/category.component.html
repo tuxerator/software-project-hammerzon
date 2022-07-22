@@ -1,0 +1,68 @@
+
+<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success">+</button>
+
+
+<ul class="list-group mt-4 bg-dark border-secondary text-white">
+
+  <li class="list-group-item bg-dark border-secondary text-white" *ngFor="let category of categories">
+    <div class="row">
+      <!--Image -->
+      <div class="col-3 p-2 m-auto">
+        <img class="img-fluid col rounded"  src="api/img/{{category.image_id}}">
+      </div>
+      <!-- Infos -->
+      <div  class="col-9 p-2" >
+        <h4>
+          <app-category-badge [category]="category"></app-category-badge>
+        </h4>
+      </div>
+
+    </div>
+
+  </li>
+</ul>
+
+<!-- Modal -->
+<div class="modal fade text-white" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Neue Kategorie hinzufügen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Name" [(ngModel)]="new_name" id="name">
+        </div>
+        <div class="mb-3">
+          <input #imageInput (change)="uploadImage(imageInput)" class="form-control" id="inputGroupFile02" type="file">
+        </div>
+        <div class="mb-3">
+          <img class="img-fluid col rounded"  src="api/img/{{new_image_id}}">
+        </div>
+        <!--<input #colorInput type="color" class="form-control form-control-color mb-3" id="colorInput" (change)="colorChanged(colorInput)" [value]="new_color" title="Wähle eine Farbe">-->
+        <label>Icon</label>
+        <div class="mb-3 input-group">
+          <!-- <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" [(ngModel)]="is_custom" aria-label="Checkbox for following text input">
+          </div> -->
+          <input type="text" class="form-control" placeholder="Icon" [(ngModel)]="new_icon" id="icon">
+        </div>
+        <div>
+          <h4 class="text-algin-center">
+            <app-category-badge [name]="new_name" [color]="new_color"></app-category-badge>
+          </h4>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="addCategory()">Hinzufügen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

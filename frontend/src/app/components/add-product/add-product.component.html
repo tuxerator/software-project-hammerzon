@@ -1,0 +1,142 @@
+<div class="container my-4">
+  <div class="bg-dark text-white">
+    <article class="card-body">
+      <h4
+        class="card-title mt-5 mb-2 text-center text-white">{{productId ? 'Produkt bearbeiten' : 'Produkt hinzufügen'}}</h4>
+      <form (ngSubmit)="onSubmit()" [formGroup]="addProductForm" class="row gy-3" novalidate>
+
+        <!--Produktname-->
+        <div class="col-12">
+          <div [class.was-validated]="addProductForm.controls['productName'].touched" class="input-group has-validation">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-tag-fill"></i> </span>
+            <input class="form-control" formControlName="productName" placeholder="Produktname" required type="text">
+            <div *ngIf="!addProductForm.controls['productName']?.invalid" class="valid-feedback was-validated">Gültiger
+              Produktname.
+            </div>
+            <div *ngIf="addProductForm.controls['productName']?.invalid" class="invalid-feedback was-validated">
+              Produktname wird erwartet.
+            </div>
+          </div>
+        </div>
+
+        <!--Beschreibung-->
+        <div class="col-12">
+          <div [class.was-validated]="addProductForm.controls['description'].touched"
+               class="input-group has-validation">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-file-earmark-text-fill"></i> </span>
+            <textarea class="form-control" formControlName="description" placeholder="Beschreibung" required rows="3"
+                      type="text"></textarea>
+            <div *ngIf="!addProductForm.controls['description']?.invalid" class="valid-feedback was-validated">Gültige
+              Beschreibung.
+            </div>
+            <div *ngIf="addProductForm.controls['description']?.invalid" class="invalid-feedback was-validated">
+              Beschreibung wird erwartet.
+            </div>
+          </div>
+        </div>
+
+        <!--Preis-->
+        <div class="col-md-4">
+          <div [class.was-validated]="addProductForm.controls['prize'].touched"
+               class="col input-group has-validation">
+            <span class="input-group-text" id="basic-addon1"> <i class="bi bi-briefcase-fill"></i></span>
+            <input class="form-control" formControlName="prize" placeholder="Preis" required type="text">
+            <span class="input-group-text"> <i class="bi bi-currency-euro"></i>/std</span>
+            <div *ngIf="!addProductForm.controls['prize']?.invalid" class="valid-feedback was-validated">Gültiger Preis.
+            </div>
+            <div *ngIf="addProductForm.controls['prize']?.invalid" class="invalid-feedback was-validated">Preis wird
+              erwartet.
+            </div>
+          </div>
+        </div>
+
+        <!-- Kategorie -->
+        <label for="categoryInput" class="form-label mb-1">Kategorie</label>
+        <div [class.was-validated]="addProductForm.controls['productName'].touched"
+             class="mb-1 input-group">
+          <span class="input-group-text"> <i class="bi bi-bookmark-fill"></i></span>
+          <select class="form-select" formControlName="categoryName" list="datalistOptions" id="exampleDataList" placeholder="Kategorie ..." (change)="categoryChanged()">
+            <option *ngFor="let category of categories; let i=index" value="{{category.name}}">{{category.name}}</option>
+          </select>
+        </div>
+
+        <label class="form-label mb-1" for="durationInput">Dauer</label>
+        <div class="col-md-8">
+          <div class="row">
+            <div
+              [class.was-validated]="addProductForm.controls['durationHour'].touched ||addProductForm.controls['durationMinute'].touched"
+              class="input-group has-validation col" id="durationInput">
+              <span class="input-group-text"><i class="bi bi-clock-fill"></i> </span>
+              <input aria-label="Stunden" class="form-control" formControlName="durationHour" placeholder="Stunden"
+                     required type="number" (change)="updateDuration()">
+              <span class="input-group-text">std.</span>
+              <input aria-label="Minuten" class="form-control" formControlName="durationMinute" placeholder="Minuten"
+                     required type="number" (change)="updateDuration()">
+              <span class="input-group-text">min.</span>
+              <div
+                *ngIf="!addProductForm.controls['durationHour']?.invalid && !addProductForm.controls['durationMinute']?.invalid"
+                class="valid-feedback was-validated">Gültige Dauer
+              </div>
+              <div
+                *ngIf="addProductForm.controls['durationHour']?.invalid || addProductForm.controls['durationMinute']?.invalid"
+                class="invalid-feedback was-validated">Für Stunden und Minuten werden Zahlen erwartet
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="mb-0">
+
+        <!-- Availability -->
+        <app-availability-picker #availabilityPicker
+                                 (newAvailability)="addAvailability($event)"
+                                 [form]="availabilityGroup"
+                                 [(defaultTimeFrame)]="defaultTimeFrame"
+                                 [duration]="duration"
+                                 class="col-12"
+        ></app-availability-picker>
+
+        <hr class="mb-0">
+
+        <!-- Hindrance -->
+        <app-hindrance-picker (newHindrance)="addHindrance($event)" [form]="hindranceGroup"
+                              [markDisabled]="isOutsideAvailability()"
+                              [timeValidators]="[isInDefaultTimeFrame()]"
+                              [setFromTime]="defaultTimeFrame.startDate"
+                              [setToTime]="defaultTimeFrame.endDate"
+                              class="col-12"
+        ></app-hindrance-picker>
+
+        <!-- Bild hinzufügen -->
+        <div class="col-12">
+          <label class="form-label" for="appointmentInputs">Product Bild</label>
+          <div class="form-group input-group mb-3">
+            <input #imageInput (change)="uploadImage(imageInput)" class="form-control" id="inputGroupFile02"
+                   type="file">
+            <label class="input-group-text" for="inputGroupFile02">Upload</label>
+          </div>
+          <span *ngIf="isChecked && !imageId" class="text-danger">Es muss ein Bild hochgeladen werden</span>
+
+          <!-- Bild anzeigen -->
+          <figure *ngIf="imageId" class="figure">
+            <img alt="..." class="figure-img img-fluid rounded" src="/api/img/{{imageId}}">
+            <figcaption class="figure-caption text-end">Product Bild</figcaption>
+          </figure>
+        </div>
+
+        <!--Produkt hinzufügen-->
+        <div class="d-grid mt-4 col-12">
+          <button class="btn btn-primary btn-block"
+                  type="submit">{{productId ? 'Speichern' : 'Hinzufügen'}}
+            <div *ngIf="uploading" class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </button>
+
+
+        </div>
+      </form>
+
+    </article>
+  </div>
+</div>

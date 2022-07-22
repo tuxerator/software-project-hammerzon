@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   selector: 'app-root'
 })
 export class RootComponent {
+  constructor() {
 
-  constructor() { }
-
+  }
 }

@@ -1,0 +1,39 @@
+<div role="button" tabindex="0" (click)="onClick()" routerLink="/productdetails/{{productInfo._id}}">
+  <!--<p class="text-secondary">{{productInfo?.user?.firstName}} {{productInfo?.user?.lastName}}</p>-->
+  <div class="row">
+    <!--Image -->
+    <div class="col-4 col-lg-3 m-auto">
+        <img class="img-fluid  col rounded"  src="api/img/{{productInfo.image_id}}">
+    </div>
+    <!-- Infos -->
+    <div  class="col-8 col-lg-9 px-2 pb-2">
+      <!--- Rating -->
+      <h6 *ngIf="productInfo.numberOfRatings! > 0" class="text-warning text-end">
+        <ngb-rating [(rate)]="productInfo.averageRating!" class="text-warning" [readonly]="true" [max]="5"></ngb-rating>
+        <label class="text-warning">{{roundTo2Digits(productInfo!.averageRating!)}}</label>
+        <span class="text-secondary">({{productInfo.numberOfRatings}})</span>
+      </h6>
+      <!--- No Reviews -->
+      <h6 *ngIf="productInfo.numberOfRatings! <= 0" class="text-secondary text-end">
+        Keine Bewertungen
+      </h6>
+      <!-- Product Name -->
+      <div class="fs-4 fw-bold"> {{productInfo?.name}}</div>
+      <!-- Category Badge Horizontal -->
+      <app-category-badge class="text-secondary" [category]="getCategory()" direction="hor"></app-category-badge>
+      <!-- Price -->
+
+        <div class="text-primary">
+          {{productInfo.prize}} €/Std.
+        </div>
+        <div class="text-success">
+          ca. {{getDuration()}}
+        </div>
+
+      <!-- Creator / User of the product -->
+      <div class="mt-2 text-end text-secondary">
+        {{productInfo.user?.firstName}} {{productInfo.user?.lastName}}
+      </div>
+    </div>
+  </div>
+</div>

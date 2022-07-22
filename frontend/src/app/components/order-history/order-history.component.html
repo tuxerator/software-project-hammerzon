@@ -1,0 +1,47 @@
+<div>
+    <div class="container mt-5 p-4">
+        <h1>Bestellhistorie</h1>
+                <div class="table-responsive-lg">
+                  <table class="table align-middle table-dark">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Rechnung</th>
+                                    <th class="text-center"></th>
+                                    <th scope="col">Bestell #</th>
+                                    <th scope="col">Produktname</th>
+                                    <th scope="col">Handwerker</th>
+                                    <th scope="col">Preis</th>
+                                    <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Termin</th>
+                                    <th scope="col">Status</th>
+                            
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <tr *ngFor="let elem of orderList; let indexOfOrder=index">
+                                    <td><a class="button" (click)="makeInvoice(indexOfOrder)">Rechnung herunterladen</a></td>
+                                    <td class="text-center"></td>
+                                    <td>{{elem._id}}</td>
+                                    <td>{{elem.product?.name}} </td> <!--{{elem.product?.name}}-->
+                                    <td>{{elem.product?.user?.firstName}} {{elem.product?.user?.lastName}}</td> <!--{{elem.product?.user}}-->
+                                    <td>{{elem.product?.prize}}</td> <!--{{elem.product?.prize}}-->
+                                    <td>{{getTimeOrderString(elem.timeOfOrder)}} </td> <!--{{elem.order.timeOfOrder}}-->
+                                    <td>{{getDateString(elem.appointment)}} </td>
+                                    <div [ngSwitch]="elem.status">
+                                      <div *ngSwitchCase="status.NNA">
+                                          <td> <span class="p-2 mb-2 bg-warning text-nowrap">Noch nicht angenommen</span> </td>
+                                      </div>
+                                      <div *ngSwitchCase="status.A">
+                                          <td> <span class="p-2 mb-2 bg-success text-nowrap">Angenommen</span> </td>
+                                      </div>
+                                      <div *ngSwitchCase="status.D">
+                                          <td> <span class="p-2 mb-2 bg-primary text-nowrap">Durchgeführt</span> </td>
+                                      </div>
+                                  </div>
+                                  
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+      </div>
+</div>

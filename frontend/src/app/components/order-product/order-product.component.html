@@ -1,0 +1,186 @@
+<!-- find better colors -->
+<div class="container bg-dark mt-5">
+  <div class="row">
+    <!-- left column of cards-->
+    <div class="col-lg-8 align-self-center">
+      <!-- product info-->
+      <p class="text-ligth">Ihre Bestellung:</p>
+      <div class="card mb-4 bg-dark border-secondary">
+        <div class="card-body">
+          <table class="table table-borderless">
+            <tbody>
+
+            <tr>
+              <td> <!-- column in the table -->
+                <div class="d-flex mb-2">
+                  <div class="flex-shrink-0">
+                    <!-- product thumbnail --> <img alt="" class="img-fluid" src="api/img/{{product?.image_id}}"
+                                                    width="100">
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="flex-lg-grow1 ms3">
+                  <!-- product information -->
+                  <h6 class="small mb-0 text-white">{{product?.name}}</h6>
+                  <span class="small text-white">{{product?.user?.firstName}} {{product?.user?.lastName}}</span>
+                </div>
+              </td>
+              <td>
+                <!-- Zeitslot -->
+                <div class="text-white">{{ getAppointString() }}</div> <!-- should be only one appointment here-->
+              </td>
+              <td>
+                <!-- Preis -->
+                <div class="text-white">{{product?.prize}} €/std.</div>
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- customer info and order button -->
+      <p class="text-ligth ">Bestellung abschließen:</p>
+      <div class="card mb-4 bg-dark border-secondary text">
+        <div class="card-body text-white">
+          <div class="row">
+            <div class="col-lg-6">
+                            <span>
+                              {{user?.firstName}} {{user?.lastName}} <br>
+                              {{user?.address?.street}} {{user?.address?.houseNum}},<br>
+                              {{user?.address?.postCode}} {{user?.address?.city}},<br>
+                              {{user?.address?.country}}
+                            </span>
+              <div class="text-white">{{user?.email}}</div>
+            </div>
+            <div class="col-lg-6 align-self-center">
+              <div class="row mt-2 justify-content-center">
+
+                  <!-- <button class="btn btn-primary btn-lg" type="button">Zahlungspflichtig Bestellen</button>-->
+
+                  <button class="col ms-2 me-2 btn btn-primary" data-bs-toggle="modal" (click)="this.switchPaymentType(PaymentType.HCIPAL)" data-bs-target="#modal">
+                    <img alt="HCIPAL" class="img-fluid" src="../../../assets/hciPal.png"/>
+                  </button>
+
+                  <button class="col me-2 btn btn-primary" (click)="this.switchPaymentType(PaymentType.SWPSAFE)" data-bs-toggle="modal" data-bs-target="#modal">
+                    <img alt="SWPSAFE" class="img-fluid" src="../../../assets/SWPsafe.png"/>
+                  </button>
+                  <button class="col me-2 btn btn-primary"  (click)="this.switchPaymentType(PaymentType.BACHELORCARD)" data-bs-toggle="modal" data-bs-target="#modal">
+                    <img alt="BACHELORCARD" class="img-fluid" src="../../../assets/bachelorcard.png"/>
+                  </button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <p class="text-ligth">Bestellung ändern:</p>
+      <div class="card mb-4 bg-dark border-secondary">
+        <div class="card-body">
+          <div class="d-flex justify-content-center">
+            <a routerLink="../">
+              <button class="btn btn-primary btn-lg" type="button">Zurück zum Produkt</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade text-white" data-bs-backdrop="static" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark border-secondary">
+      <div class="modal-header border-secondary">
+        <!--<h5 class="modal-title" id="exampleModalLabel"></h5>-->
+        <img *ngIf="paymentType === PaymentType.BACHELORCARD" alt="BACHELORCARD" src="../../../assets/bachelorcard.png"
+             width="100">
+        <img *ngIf="paymentType === PaymentType.HCIPAL" alt="HCIPAL" src="../../../assets/hciPal.png" width="100">
+        <img *ngIf="paymentType === PaymentType.SWPSAFE" alt="SWPSAFE" src="../../../assets/SWPsafe.png" width="100">
+        <button (click)="abort()" *ngIf="modalState !== 'waiting'" aria-label="Close" class="btn-close btn-close-white"
+                data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body border-secondary">
+        <form [formGroup]="accountForm" class="form-group mx-auto needs-validation " novalidate>
+          <!-- Email / SWP-Safe Code-->
+          <div class="mb-3" *ngIf="paymentType === PaymentType.HCIPAL || paymentType === PaymentType.SWPSAFE">
+            <label class="col-form-label"
+                   for="exampleInputEmail1"> {{paymentType === PaymentType.HCIPAL ? 'Email:' : 'SWP-Code:'}}</label>
+            <input [class]="valdationdToText.getInputClass('account')" [readonly]="modalState === 'pay'"
+                   class="form-control" formControlName="account"
+                   id="exampleInputEmail1"
+                   placeholder="{{paymentType === PaymentType.HCIPAL? 'Email angeben...': 'Swp-Code angeben ...'}}"
+                   required
+                   type="email">
+            <div [class]="valdationdToText.getFeedbackClass('account')"
+                 class="">{{valdationdToText.getText('account')}}</div>
+          </div>
+          <!-- password -->
+          <div class="mb-3" *ngIf="modalState !== 'confirm' && paymentType === PaymentType.HCIPAL">
+            <hr>
+            <label class="col-form-label" for="passwordInput1">Password:</label>
+            <input class="form-control" [class]="valdationdToText.getInputClass('password')" type="password" formControlName="password"  id="passwordInput1" aria-describedby="password" placeholder="Passwort">
+            <div  [class]="valdationdToText.getFeedbackClass('password')">{{valdationdToText.getText('password')}}</div>
+          </div>
+          <!-- Bachelorcard -->
+          <div *ngIf="paymentType === PaymentType.BACHELORCARD">
+            <label class="col-form-label" for="cardNumberInput">Kartennummer:</label>
+            <input [class]="valdationdToText.getInputClass('account')" type="email" class="form-control"  formControlName="account" id="cardNumberInput" placeholder="Kartennummer" [readonly]="modalState === 'pay'">
+            <div [class]="valdationdToText.getFeedbackClass('account')">{{valdationdToText.getText('account')}}</div>
+          </div>
+          <div *ngIf="modalState !== 'confirm' && paymentType === PaymentType.BACHELORCARD">
+            <hr>
+            <label class="col-form-label" for="fullNameInput">Vollständiger Name:</label>
+            <input [class]="valdationdToText.getInputClass('fullName')" class="form-control"  type="text" formControlName="fullName"  id="fullNameInput" placeholder="Vollständiger Name">
+            <div [class]="valdationdToText.getFeedbackClass('fullName')">{{valdationdToText.getText('fullName')}}</div>
+            <label class="col-form-label" for="passwordInput2">Sicherheits Code:</label>
+            <input [class]="valdationdToText.getInputClass('password')" class="form-control" type="password" formControlName="password"  id="passwordInput2" placeholder="XXX">
+            <div [class]="valdationdToText.getFeedbackClass('password')">{{valdationdToText.getText('password')}}</div>
+            <div class="row">
+              <div class="col-sm-6">
+                <label class="col-form-label" for="expirationMonthInput">Monat:</label>
+                <input [class]="valdationdToText.getInputClass('expirationMonth')" class="form-control" type="text" formControlName="expirationMonth"  id="expirationMonthInput" placeholder="09">
+              </div>
+              <div class="col-sm-6">
+                <label class="col-form-label" for="expirationYearInput">Jahr:</label>
+                <input [class]="valdationdToText.getInputClass('expirationYear')" class="form-control" type="text" formControlName="expirationYear"  id="expirationYearInput" placeholder="44">
+              </div>
+            </div>
+            <div [class]="Object.assign(valdationdToText.getFeedbackClass('expirationYear'),valdationdToText.getInputClass('expirationYear'))" style="display: block;">{{valdationdToText.getText('expirationMonth')}}</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-secondary justify-content-center">
+        <div class="row d-grid gap-2 w-100">
+          <button type="button" class="btn btn-primary " *ngIf="modalState === 'confirm'" (click)="this.confirm()">Bestätigen</button>
+          <button type="button" class="btn btn-primary" *ngIf="modalState === 'pay'" (click)="this.pay()">Zahlungspflichtig Bestellen</button>
+          <button type="button" class="btn btn-primary" *ngIf="modalState === 'waiting'">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="visually-hidden">Loading...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Loading Bar after finishing Modal-->
+<!--<div *ngIf="modalState === 'waiting'" class="bg-dark opacity-75 position-fixed top-0 start-0  vh-100 vw-100" style="z-index: 2000;">
+  <div class="opacity-100 position-fixed top-50 start-50 text-center">
+    <div class="spinner-border text-white" style="width: 3rem; height: 3rem; z-index: 2000;" role="status">
+      <span class="visually-hidden ">Loading...</span>
+    </div>
+  </div>
+</div>
+-->
+
+
+
+
+
+
+

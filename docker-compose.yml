@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  swp-mongoDB:
+    restart: unless-stopped
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_DATABASE=hammerzon
+    ports:
+      - '27017:27017'
+    volumes:
+      - db-data:/data/db
+      - mongo-config:/data/configdb
+  swp-backend:
+    image: hammerzon-backend:latest
+    environment:
+      - MONGODB_URI=mongodb://swp-mongoDB:27017/hammerzon
+    ports:
+      - '80:80'
+    depends_on:
+      - swp-mongoDB
+#  swp-frontend:
+#    image: hammerzon-frontend:latest
+#    environment:
+#      - BACKEND_URI=http://swp-backend:80
+#    ports:
+#      - '4200:4200'
+#    depends_on:
+#      - swp-backend
+
+volumes:
+  db-data:
+  mongo-config:

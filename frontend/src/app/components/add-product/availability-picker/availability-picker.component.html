@@ -1,0 +1,157 @@
+<div class="col">
+  <label class="form-label" for="availabilityInput">Zeitraum auswählen</label>
+  <!-- Add Appointment -->
+  <form (ngSubmit)="addAvailability()" [formGroup]="form" class="row is-invalid has-validation"
+        id="availabilityInput" novalidate>
+
+    <div class="col-4">
+      <div class="dp-hidden position-absolute">
+        <div class="input-group">
+          <input #datepicker="ngbDatepicker"
+                 (dateSelect)="onDateSelection($event)"
+                 [autoClose]="'outside'"
+                 [dayTemplate]="t"
+                 [displayMonths]="2"
+                 [footerTemplate]="footerTemplate"
+                 [markDisabled]="isDisabledAvailability"
+                 [startDate]="fromDate!"
+                 class="form-control"
+                 placeholder="JJJJ-MM-TT"
+                 name="datepicker"
+                 ngbDatepicker
+                 outsideDays="hidden"
+                 tabindex="-1">
+          <ng-template #t let-date let-focused="focused">
+                    <span (mouseenter)="hoveredDate = date"
+                          (mouseleave)="hoveredDate = null"
+                          [class.disabled]="isDisabledAvailability(date)"
+                          [class.faded]="isHovered(date) || isInside(date) && !isDisabledAvailability(date)"
+                          [class.focused]="focused"
+                          [class.range]="isRange(date) && !isDisabledAvailability(date)"
+                          [class.today]="calendar.getToday().equals(date)"
+                          class="custom-day">
+                      {{ date.day }}
+                    </span>
+          </ng-template>
+          <ng-template #footerTemplate>
+            <hr class="my-0">
+            <div class="m-2">
+              <div><small>Aktive Wochentage:</small></div>
+              <div class="btn-group">
+                <ng-template [ngForOf]="weekdays" let-day let-i="index" ngFor>
+                  <input (change)="toggleWeekday(i + 1)" [checked]="!disabledWeekdays.includes(i + 1)"
+                         autocomplete="off"
+                         class="btn-check" id="btncheck{{i}}" type="checkbox">
+                  <label class="btn btn-outline-primary custom-day" for="btncheck{{i}}">{{ day }}</label>
+                </ng-template>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="input-group form-group">
+        <input #dpFromDate
+               (change)="updateGroupValidity(form)"
+               (click)="datepicker.toggle()"
+               (input)="setFromDate(fromDate, dpFromDate.value)"
+               [ngClass]="{
+                          'is-valid': !form.invalid && form.touched,
+                          'is-invalid': isInvalid(form)
+                       }"
+               aria-describedby="availabilityFeedback"
+               class="form-control"
+               formControlName="fromDateControl"
+               name="dpFromDate"
+               placeholder="yyyy-mm-dd">
+        <button (click)="datepicker.toggle()" class="btn btn-secondary bi-calendar-range"
+                type="button"></button>
+        <div *ngIf="form.errors?.['disabledDate']" class="invalid-feedback">
+          Der gewählte Tag ist deaktiviert.
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="input-group form-group">
+        <input #dpToDate
+               (change)="updateGroupValidity(form)"
+               (click)="datepicker.toggle()"
+               (input)="setToDate(toDate, dpToDate.value)"
+               [ngClass]="{
+                          'is-valid': !form.invalid && form.touched,
+                          'is-invalid': isInvalid(form)
+                       }"
+               aria-describedby="availabilityFeedback"
+               class="form-control"
+               formControlName="toDateControl"
+               name="dpToDate"
+               placeholder="yyyy-mm-dd">
+        <button (click)="datepicker.toggle()" class="btn btn-secondary bi-calendar-range"
+                type="button"></button>
+      </div>
+      <div *ngIf="form.errors?.['disabledDate']" class="invalid-feedback">
+        Der gewählte Tag ist deaktiviert.
+      </div>
+    </div>
+    <div class="col d-grid justify-content-md-end">
+      <button class="btn btn-outline-primary" type="submit">Hinzufügen</button>
+    </div>
+    <!--<pre class="col-12">From date: {{fromDate | json}}</pre>
+    <pre class="col-12">To date: {{toDate | json}}</pre> -->
+  </form>
+
+  <!-- Feedback -->
+  <div class="invalid-feedback is-invalid" id="availabilityFeedback">
+    <div *ngIf="form.errors?.['required']">
+      Bitte ein Datum auswählen.
+    </div>
+    <div *ngIf="form.errors?.['overlapping']">
+      Dieser Zeitraum überschneidet sich mit einem bereits vorhandenen.
+    </div>
+  </div>
+
+  <!-- DefaultTimeFrame -->
+  <label class="form-label" for="defaultTimePicker">Verfügbar</label>
+  <div class="col-12 row align-items-center" id="defaultTimePicker">
+    <label class="col-auto col-form-label" for="defaultFromTimeInput">Von:</label>
+    <div class="col-auto row align-items-center">
+      <ngb-timepicker [(ngModel)]="_defaultTimeFrame.startDate"
+                      (ngModelChange)="emitDefaultTimeFrame()"
+                      [ngModelOptions]="{ standalone: true }"
+                      id="defaultFromTimeInput"
+      ></ngb-timepicker>
+    </div>
+    <label class="col-auto col-form-label" for="defaultToTimeInput">Bis:</label>
+    <div class="col-auto row align-items-center">
+      <ngb-timepicker [(ngModel)]="_defaultTimeFrame.endDate"
+                      (ngModelChange)="emitDefaultTimeFrame()"
+                      [ngModelOptions]="{ standalone: true }"
+                      id="defaultToTimeInput"
+      ></ngb-timepicker>
+    </div>
+  </div>
+
+  <div [hidden]="!availabilities.length" class="col-12 table-responsive">
+    <table class="table table-dark">
+      <thead>
+      <tr>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Wochentage</th>
+        <th class="text-end">Aktion</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let availability of availabilities; let i=index">
+        <td>{{availability.availability.startDate | date: 'dd.MM.yyyy'}}</td>
+        <td>{{availability.availability.endDate | date: 'dd.MM.yyyy'}}</td>
+        <td>{{availability.getSelectedWeekdays(weekdays)}}</td>
+        <td class="text-end">
+          <button (click)="removeAvailability(i)" class="btn btn-outline-danger" type="button">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="container mt-2 p-4">
+<div class="bg-dark mx-auto col-lg-8">
+<article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="mt-3 text-center">Account erstellen</h4>
+	<form [formGroup]="registerForm"  (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <!-- Vorname -->
+	  <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['firstName'].touched">
+      <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+      <input class="form-control" placeholder="Vorname" formControlName="firstName" type="text" required>
+      <div *ngIf="isValid('firstName')" class="valid-feedback was-validated">Gültiger Vorname</div>
+      <div *ngIf="!isValid('firstName')" class="invalid-feedback was-validated">Vorname wird erwarted</div>
+    </div>
+    <!-- Nachname -->
+    <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['lastName'].touched">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-fill"></i> </span>
+        <input class="form-control" placeholder="Nachname" type="text" formControlName="lastName" required>
+        <div *ngIf="isValid('lastName')" class="valid-feedback was-validated">Gültiger Nachname</div>
+        <div *ngIf="!isValid('lastName')" class="invalid-feedback was-validated">Nachname wird erwarted</div>
+    </div>
+    <!-- Email -->
+    <div class="mb-3 input-group has-validation">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"></i> </span>
+        <input  class="form-control" [ngClass]="getEmailClass()"  placeholder="Email-Addresse" type="email" formControlName="email" required>
+        <div *ngIf="!isValid('email')" class="invalid-feedback was-validated">{{getEmailInvalidText()}}</div>
+        <div *ngIf="isValid('email')" class="valid-feedback was-validated">Korrekte Email</div>
+    </div>
+
+     <!-- Adresse -->
+    <div class="form-group" >
+        <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['street'].touched">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Strasse" type="text" formControlName="street" required>
+          <div *ngIf="isValid('street')" class="valid-feedback was-validated">OK.</div>
+          <div *ngIf="!isValid('street')" class="invalid-feedback was-validated">Pflichtfeld.</div>
+        </div>
+
+      <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['houseNum'].touched">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input class="form-control" placeholder="Hausnummer" type="text" formControlName="houseNum" required>
+          <div *ngIf="isValid('houseNum')" class="valid-feedback was-validated">OK.</div>
+          <div *ngIf="!isValid('houseNum')" class="invalid-feedback was-validated">Pflichtfeld.</div>
+      </div>
+
+      <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['postCode'].touched">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Postleitzahl" type="text" formControlName="postCode" required>
+          <div *ngIf="isValid('postCode')" class="valid-feedback was-validated">OK.</div>
+          <div *ngIf="!isValid('postCode')" class="invalid-feedback was-validated">Pflichtfeld.</div>
+      </div>
+
+      <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['city'].touched">
+          <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+          <input name="" class="form-control" placeholder="Stadt" type="text" formControlName="city" required>
+          <div *ngIf="isValid('city')" class="valid-feedback was-validated">OK.</div>
+      <div *ngIf="!isValid('city')" class="invalid-feedback was-validated">Pflichtfeld.</div>
+      </div>
+
+      <div class="mb-3 input-group has-validation" [class.was-validated]="registerForm.controls['country'].touched">
+        <span class="input-group-text" id="basic-addon1"> <i class="bi bi-person-lines-fill"></i> </span>
+        <input name="" class="form-control" placeholder="Land" type="text" formControlName="country" required>
+        <div *ngIf="isValid('country')" class="valid-feedback was-validated">OK.</div>
+      <div *ngIf="!isValid('country')" class="invalid-feedback was-validated">Pflichtfeld.</div>
+    </div>
+    </div>
+    <!-- Passwort -->
+    <div class="mb-3 input-group  has-validation" [class.was-validated]="registerForm.controls['password'].touched">
+		    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
+        <input class="form-control" placeholder="Passwort erstellen" type="password" formControlName="password" required>
+        <div *ngIf="isValid('password')" class="valid-feedback was-validated">Gültiges Passwort.</div>
+      <div *ngIf="!isValid('password')" class="invalid-feedback was-validated">Bitte ein gültiges Passwort angeben mit min. 8 Zeichen.</div>
+    </div>
+    <div class="mb-3 input-group  has-validation" [class.was-validated]="registerForm.controls['confirmPassword'].touched">
+        <span class="input-group-text" id="basic-addon1"> <i class="bi bi-lock-fill"></i> </span>
+        <input class="form-control" placeholder="Passwort bestätigen" type="password" formControlName="confirmPassword" required>
+        <div *ngIf="isValid('confirmPassword')" class="valid-feedback was-validated">Passwörter stimmen überein.</div>
+      <div *ngIf="!isValid('confirmPassword')" class="invalid-feedback was-validated">Passwörter stimmen nicht überein.</div>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+    </div>
+    <p class="text-center">Haben Sie sich bereits registriert? <a href="login">Log In</a> </p>
+</form>
+</article>
+</div> <!-- card.// -->
+
+</div>
+<!--container end.//-->
+

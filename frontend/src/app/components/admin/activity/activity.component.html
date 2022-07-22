@@ -1,0 +1,36 @@
+<div class="table-responsive-lg">
+  <table class="table align-middle table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Zeitpunkt</th>
+                    <th scope="col">Ereigniss</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+              <tr *ngFor="let activity of activities">
+                <td class="text-secondary">{{getDateString(activity.date)}}</td>
+                <td>
+                  <!--User Name -->
+                  <span class="text-primary fs-6 fw-bold" *ngIf="activity.user">
+                    {{activity.user.firstName}}  {{activity.user.lastName}}
+                  </span>
+                  <!--If user == undefiend-->
+                  <span class="text-primary fs-6 fw-bold" *ngIf="!activity.user">
+                    Besucher:in
+                  </span>
+                  <!--Activity with hightlights-->
+                  <span *ngFor="let text of getDesc(activity.desc)">
+                    <span *ngIf="isHiglight(text)">
+                      <span  *ngIf="activity.highlights[getIndex(text)]; let highlight" class="text-{{highlight.bsColor}}">
+                        {{highlight.text}}
+                      </span>
+                    </span>
+                    <span *ngIf="!isHiglight(text)" class="text-light">
+                      {{text}}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+  </table>
+</div>

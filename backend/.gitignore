@@ -23,8 +23,8 @@ coverage
 .env
 
 # Dependency directory
-node_modules
-bower_components
+/node_modules
+/bower_components
 
 # Editors
 .idea
@@ -39,3 +39,4 @@ dist
 
 # ignore yarn.lock
 yarn.lock
+/uploads/
