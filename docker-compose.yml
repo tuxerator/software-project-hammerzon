@@ -10,22 +10,15 @@ services:
     volumes:
       - db-data:/data/db
       - mongo-config:/data/configdb
-  swp-backend:
-    image: hammerzon-backend:latest
+
+  hammerzon:
+    image: hammerzon:latest
     environment:
       - MONGODB_URI=mongodb://swp-mongoDB:27017/hammerzon
     ports:
       - '80:80'
     depends_on:
       - swp-mongoDB
-#  swp-frontend:
-#    image: hammerzon-frontend:latest
-#    environment:
-#      - BACKEND_URI=http://swp-backend:80
-#    ports:
-#      - '4200:4200'
-#    depends_on:
-#      - swp-backend
 
 volumes:
   db-data:

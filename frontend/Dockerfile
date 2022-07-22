@@ -1,4 +1,4 @@
-FROM node:16 as node
+FROM node:latest as node
 
 WORKDIR /app
 
@@ -9,6 +9,7 @@ ENV BACKEND_URI = $BACKEND_URI
 EXPOSE 4200
 
 RUN npm run build --prod
-CMD ["npm", "start"]
 
+FROM nginx:alpine
+COPY --from=node /app/dist/frontend /usr/share/nginx/html
 

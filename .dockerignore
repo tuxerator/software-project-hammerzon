@@ -1,0 +1,8 @@
+node_modules/*
+componentTest/*
+frontend/node_modules/*
+backend/node_modules/*
+backend/specs/*
+backend/dist/specs/*
+.idea
+swp-2022-gruppe-01.iml

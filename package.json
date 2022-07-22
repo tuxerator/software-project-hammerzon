@@ -1,0 +1,11 @@
+{
+  "name": "hammerzon",
+  "version": "1.0.0",
+  "dependencies": {
+    "frontend": "file:frontend"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

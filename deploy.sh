@@ -1,14 +1,13 @@
 #!/bin/sh
 
-cd ./frontend;
+docker-compose down;
+
 echo "Building the Frontend...";
-npm install --legacy-peer-deps > /dev/null;
-npm run build;
+npm install --legacy-peer-deps --production -w frontend > /dev/null;
+npm run build --prod -w frontend;
 
-cd ../backend;
 echo "Dockerizing Backend + Frontend...";
-docker build . -t hammerzon-backend > /dev/null;
-cd ../;
+docker build . -t hammerzon > /dev/null;
 
-docker compose up;
+docker-compose up -d;
 
