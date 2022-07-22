@@ -23,11 +23,14 @@ export class ImageService {
     const reader = new FileReader();
 
 
-    reader.addEventListener('load', (event: any) => {
+    reader.addEventListener('load', (event: ProgressEvent<FileReader>) => {
+      if (!event.target || !event.target.result) {
+        return;
+      }
 
-      const selectedFile = new ImageSnippet(event.target.result, file);
+      const selectedFile = new ImageSnippet(event.target.result.toString(), file);
 
-      this.uploadImage(selectedFile.file,replace_id,is_replaceable).subscribe(observable);
+      this.uploadImage(selectedFile.file, replace_id, is_replaceable).subscribe(observable);
     });
 
     reader.readAsDataURL(file);

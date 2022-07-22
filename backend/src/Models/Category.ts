@@ -1,5 +1,5 @@
 
-import { Number, Schema, Model, model, Document, Types } from 'mongoose';
+import { Schema, Model, model, Document, Types } from 'mongoose';
 
 export interface ICategory extends Document {
   // Name of category

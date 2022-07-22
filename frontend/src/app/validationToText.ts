@@ -30,8 +30,8 @@ export class ValidationToText
     // As long as the result ist
     for(let i = 0; i <validations.length; i++)
     {
-      if(validationText = validations[i].getText(message))
-      {
+      validationText = validations[i].getText(message);
+      if (validationText) {
         break;
       }
     }
@@ -68,7 +68,7 @@ export class ValidationToText
   }
 
   ContainsKey(key:string):boolean{
-    return this.valitationTexts[key] ? true : false;
+    return !!this.valitationTexts[key];
   }
 
   getInputClass(key:string):{[key:string]:boolean}
@@ -112,8 +112,8 @@ export class ClientSideValidation implements Validation
     return this.text;
   }
 
-  getValid(_: string): boolean {
-      return this.valid;
+  getValid(): boolean {
+    return this.valid;
   }
 }
 
@@ -125,7 +125,7 @@ export class ClientSideFnValidation extends ClientSideValidation{
   }
 
 
-  override getText(_: string): string {
+  override getText(): string {
     return this.fn();
   }
 }

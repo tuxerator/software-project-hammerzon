@@ -24,17 +24,19 @@ export class CategoryComponent implements OnInit {
     this.getCategories();
   }
 
-  getCategories()
-  {
+  getCategories(): void {
     this.catergoryService.getCategoriesList().subscribe({
       next: (obj) => this.categories = obj.categories,
       error: (err) => console.log(err.error)
     });
   }
 
-  uploadImage(inputElement: any) {
+  uploadImage(inputElement: HTMLInputElement): void {
+    if (!inputElement.files || inputElement.files.length === 0) {
+      return;
+    }
     const file: File = inputElement.files[0];
-    this.imageService.uploadFileImage(file,this.new_image_id,false).subscribe({
+    this.imageService.uploadFileImage(file, this.new_image_id, false).subscribe({
       next: (res) => {
         this.new_image_id = res.id;
       },
@@ -49,12 +51,10 @@ export class CategoryComponent implements OnInit {
     this.new_color = colorElement.value;
   }
 
-  addCategory()
-  {
+  addCategory(): void {
     console.log(this.new_color);
-    if(this.new_name && this.new_image_id && this.new_color && this.new_icon)
-    {
-      this.catergoryService.addCategory(new Category(this.new_name,this.new_image_id,this.new_color,this.new_icon,this.is_custom)).subscribe({
+    if (this.new_name && this.new_image_id && this.new_color && this.new_icon) {
+      this.catergoryService.addCategory(new Category(this.new_name, this.new_image_id, this.new_color, this.new_icon, this.is_custom)).subscribe({
         next: () => {
           this.getCategories();
           this.new_name = undefined;

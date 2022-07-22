@@ -9,6 +9,7 @@ export class NotAvailableComponent implements OnInit {
   constructor() {
   }
 
+  // eslint-disable-next-line no-empty-function
   ngOnInit(): void {
   }
 

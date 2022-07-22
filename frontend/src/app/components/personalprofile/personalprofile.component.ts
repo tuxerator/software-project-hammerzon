@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient } from '@angular/common/http';
 import { Address, User } from '../../models/User';
 import {
   AbstractControl,
@@ -9,8 +8,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 
 @Component({
@@ -20,7 +18,7 @@ import {
 export class PersonalProfileComponent implements OnInit {
 
   user?: User;
-  editMode: boolean = false;
+  editMode = false;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService) {
 
@@ -72,7 +70,7 @@ export class PersonalProfileComponent implements OnInit {
     });
   }
 
-  activeEditMode() {
+  activeEditMode(): void {
     this.editMode = true;
   }
 

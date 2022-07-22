@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Order, Status } from '../models/Order';
-import { Appointment } from './productdetails.service';
 import { Availability, Product } from '../models/Product';
 import { MessageResponse } from '../components/types';
 import { Socket } from 'ngx-socket-io';

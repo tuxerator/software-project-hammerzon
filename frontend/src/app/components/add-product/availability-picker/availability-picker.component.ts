@@ -1,17 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
-import {
-  AbstractControl, Form, FormBuilder,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Availability } from '../../../models/Product';
-import { utcOffset, updateGroupValidity } from '../../../../util/util';
-import { NgbTimeDateAdapter, NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
+import { updateGroupValidity, utcOffset } from '../../../../util/util';
+import { NgbTimeUTCDateAdapter } from '../../../../util/nbgAdapter';
 
 @Component({
   selector: 'app-availability-picker',
@@ -26,7 +18,7 @@ export class AvailabilityPickerComponent implements OnInit {
   _defaultTimeFrame: Availability = {
     startDate: new Date(8 * 60 * 60 * 1000 - utcOffset),
     endDate: new Date(18 * 60 * 60 * 1000 - utcOffset),
-  }
+  };
 
   @Input() set defaultTimeFrame(value: Availability) {
     this._defaultTimeFrame = value;
@@ -80,7 +72,7 @@ export class AvailabilityPickerComponent implements OnInit {
       this.form = this.fb.group({
         fromDateControl: this.fromDateControl,
         toDateControl: this.toDateControl
-      })
+      });
     } else {
       this.form.addControl('fromDateControl', this.fromDateControl);
       this.form.addControl('toDateControl', this.toDateControl);
@@ -90,7 +82,7 @@ export class AvailabilityPickerComponent implements OnInit {
 
   }
 
-  onDateSelection(date: NgbDate) {
+  onDateSelection(date: NgbDate): void {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
       this.fromDateControl.setValue(this.formatter.format(this.fromDate));
@@ -109,16 +101,16 @@ export class AvailabilityPickerComponent implements OnInit {
     console.log(this.form);
   }
 
-  isHovered(date: NgbDate) {
+  isHovered(date: NgbDate): boolean | null {
     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) &&
       date.before(this.hoveredDate);
   }
 
-  isInside(date: NgbDate) {
+  isInside(date: NgbDate): boolean | null {
     return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
   }
 
-  isRange(date: NgbDate) {
+  isRange(date: NgbDate): boolean | null {
     return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) ||
       this.isHovered(date);
   }
@@ -131,23 +123,18 @@ export class AvailabilityPickerComponent implements OnInit {
   setFromDate = (currentValue: NgbDate | null, input: string): void => {
     this.fromDate = this.validateInput(currentValue, input);
     this.fromDateControl.updateValueAndValidity();
-  }
+  };
 
   setToDate = (currentValue: NgbDate | null, input: string): void => {
     this.toDate = this.validateInput(currentValue, input);
     this.toDateControl.updateValueAndValidity();
-  }
-
-  isFromDate = (date: NgbDate) => date.equals(this.fromDate);
-
-  isToDate = (date: NgbDate) => date.equals(this.toDate);
+  };
 
   isInvalid = (form: AbstractControl): boolean => {
-    const invalid = form.touched ? form.invalid : false;
-    return invalid;
-  }
+    return form.touched ? form.invalid : false;
+  };
 
-  public isDisabledAvailability = (date: NgbDate | null) => {
+  public isDisabledAvailability = (date: NgbDate | null): boolean => {
     if (!date) {
       return false;
     }
@@ -157,21 +144,19 @@ export class AvailabilityPickerComponent implements OnInit {
     if (this.disabledWeekdays.includes(this.calendar.getWeekday(date))) {
       return true;
     }
-    if (date.before(this.calendar.getToday())) {
-      return true;
-    }
-    return false;
-  }
+    return date.before(this.calendar.getToday());
 
-  toggleWeekday = (weekday: number) => {
+  };
+
+  toggleWeekday = (weekday: number): void => {
     this.disabledWeekdays.includes(weekday) ? this.disabledWeekdays.splice(this.disabledWeekdays.indexOf(weekday), 1) : this.disabledWeekdays.push(weekday);
     console.log('toggled weekday: ', weekday);
-  }
+  };
 
   addAvailability = (): void => {
     if (!this.fromDate || !this.toDate) {
       console.log('no date selected');
-      this.form.markAllAsTouched()
+      this.form.markAllAsTouched();
       return;
     }
     const fromDate: Date = this.ngbDateToDate(this.fromDate);
@@ -186,13 +171,13 @@ export class AvailabilityPickerComponent implements OnInit {
     this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this._defaultTimeFrame)));
 
     console.log('added avaiLability: %o\navailabilities: %o', availability, this.availabilities);
-  }
+  };
 
   removeAvailability = (index: number): void => {
     this.availabilities.splice(index, 1);
     this.newAvailability.emit(this.availabilities.flatMap(availability => availability.toAvailabilities(this._defaultTimeFrame)));
     console.log('removed avaiLability: %o\navailabilities: %o', this.availabilities);
-  }
+  };
 
   isInsideAvailability = (date: NgbDate): boolean => {
     for (const availability of this.availabilities) {
@@ -201,7 +186,7 @@ export class AvailabilityPickerComponent implements OnInit {
       }
     }
     return false;
-  }
+  };
 
 
   // Validator functions -------------------------------------------------------------
@@ -212,13 +197,14 @@ export class AvailabilityPickerComponent implements OnInit {
       console.log(validationError);
       return validationError;
     };
-  }
+  };
 
   /**
    * Validator that requires that the availabilty does not overlap with any other availabilty
    */
   isOverlapping = (availabilities: AvailabilityWithWeekdays[]): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return (_control: AbstractControl): ValidationErrors | null => {
       const validationError = availabilities.some(availability => {
         // Check for overlapping and if so return ValidationError
         return availability.availability.startDate <= this.ngbDateToDate(this.toDate) &&
@@ -227,13 +213,14 @@ export class AvailabilityPickerComponent implements OnInit {
       console.log(validationError);
       return validationError;
     };
-  }
+  };
 
   /**
    * Validator that requires defaultTimeFrame to be at least as long as duration.
    */
   defaultTimeFrameLongerThanDuration = (): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return (_control: AbstractControl): ValidationErrors | null => {
       const duration = this.duration?.getTime();
 
       let validationError: ValidationErrors | null = null;
@@ -263,19 +250,19 @@ export class AvailabilityPickerComponent implements OnInit {
 
       console.log(validationError);
       return validationError;
-    }
-  }
+    };
+  };
 
   // Emit defaultTimeFrame
   emitDefaultTimeFrame = (): void => {
     this.defaultTimeFrameChange.emit(this._defaultTimeFrame);
-  }
+  };
 
   ngbDateToDate = (ngbDate: NgbDate | null): Date => {
     const jsDate = ngbDate ? new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day) : new Date('Invalid Date');
     ngbDate ? jsDate.setFullYear(ngbDate.year) : null;
     return jsDate;
-  }
+  };
 }
 
 export class AvailabilityWithWeekdays {
@@ -295,7 +282,6 @@ export class AvailabilityWithWeekdays {
     const availabilities: Availability[] = [];
     const startDateDay = this.availability.startDate.getDay();
     let currentDate = this.availability.startDate;
-    let i: number;
     this.disabledWeekdays.sort((a, b) => a - b);
     if (this.disabledWeekdays.length > 0) {
       // Initialize d with the amount of days to the next disabled weekday
@@ -309,11 +295,10 @@ export class AvailabilityWithWeekdays {
         console.log('currentDate: %o, nextDate: %o', currentDate, nextDate);
         console.log('currendDayWeekday: %o, nextDayWeekday: %o', currentDate.getDay(), nextDate.getDay());
 
-        if (!this.disabledWeekdays.some((value => currentDate.getDay() == value % 7))) {
+        if (!this.disabledWeekdays.some((value => currentDate.getDay() === value % 7))) {
           availabilities.push(new Availability(new Date(currentDate.getTime() + defaultTimeFrame.startDate.getTime()), new Date(nextDate.getTime() - 24 * 60 * 60 * 1000 + defaultTimeFrame.endDate.getTime())));
           currentDate = new Date(nextDate.getTime() + 24 * 60 * 60 * 1000);
-        }
-        else {
+        } else {
           currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
         }
 

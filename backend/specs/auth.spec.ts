@@ -1,6 +1,6 @@
 import { IUser, User } from '../src/Models/User';
 import { appInstance } from '../src/serverTest';
-import request, { agent } from 'supertest';
+import request from 'supertest';
 import bcrypt from 'bcrypt';
 
 describe('authentication', () => {
@@ -68,8 +68,7 @@ describe('authentication', () => {
 
   it('should fail to register if email already exists', async () => {
     const password = '123456789';
-
-    const response = await request(appInstance)
+    await request(appInstance)
       .post('/api/auth/register')
       .send({
         email: 'test@test.com',
@@ -99,11 +98,10 @@ describe('authentication', () => {
       password: 'password'
     };
     const agent = request.agent(appInstance);
-    const loginResponse = await agent
+    await agent
       .post('/api/auth/login')
       .send(loginRequest)
       .expect(200);
-
     const email = loginRequest.email;
     const user = await User.findOne({ email }).exec();
 
@@ -173,10 +171,10 @@ describe('authentication', () => {
     const agent = await TestUtils.login();
 
     // logout
-    const logoutResponse = await agent
+    await agent
       .get('/api/auth/logout')
       .expect(200);
-    // did the logout work?
+// did the logout work?
     const isLoggedInResponse = await agent
       .get('/api/auth/logintest')
       .expect(403);
@@ -199,23 +197,23 @@ describe('authentication', () => {
     const updatedUser = TestUtils.updatedUser;
     const updateRequest = {
       oldPassword : 'password',
-      updatedUser  
+      updatedUser
     };
 
     const updateResponse = await agent
       .post('/api/auth/update')
       .send(updateRequest)
       .expect(200);
-    
+
     expect(updateResponse.body.message)
     .withContext('Success message from the update method')
     .toBe('Updated Successfull');
-      
+
 
     // check if the updates where saved to the database
     const id = '6284efd5b72a93135fb79c90';
     const user = await User.findOne({ id }).exec();
-    
+
     expect(TestUtils.compare(user, updatedUser))
       .withContext('saved user in the database has the data from the request')
       .toBe(true);
@@ -226,7 +224,7 @@ describe('authentication', () => {
     const updatedUser = TestUtils.updatedUser;
     const updateRequest = {
       oldPassword : 'password',
-      updatedUser  
+      updatedUser
     };
     const agent = await TestUtils.login();
 
@@ -245,7 +243,7 @@ describe('authentication', () => {
     const updatedUser = TestUtils.updatedUser;
     const updateRequest = {
       oldPassword : 'wrongpassword',
-      updatedUser  
+      updatedUser
     };
     const agent = await TestUtils.login();
 
@@ -279,7 +277,7 @@ describe('authentication', () => {
     };
     const updateRequest = {
       oldPassword : 'password',
-      updatedUser  
+      updatedUser
     };
     const agent = await TestUtils.login();
 
@@ -322,23 +320,23 @@ class TestUtils {
       password: 'password'
     };
     const agent = request.agent(appInstance);
-    const loginResponse = await agent
+    await agent
       .post('/api/auth/login')
       .send(loginRequest)
       .expect(200);
     return agent;
   }
 
-  static compare(user1 : any , user2 : any) : boolean {
-    return ( (user1.firstName) === (user2.firstName)
-    && (user1.lastName) === (user2.lastName)
-    && (user1.address.street) === (user2.address.street)
-    && (user1.address.houseNum) === (user2.address.houseNum)
-    && (user1.address.postCode) === (user2.address.postCode)
-    && (user1.address.city) === (user2.address.city)
-    && (user1.address.country) === (user2.address.country)
-    && (bcrypt.compareSync(user2.password, '' + user1.password)) );
-    
+  static compare(user1: IUser, user2: IUser): boolean {
+    return ((user1.firstName) === (user2.firstName)
+      && (user1.lastName) === (user2.lastName)
+      && (user1.address.street) === (user2.address.street)
+      && (user1.address.houseNum) === (user2.address.houseNum)
+      && (user1.address.postCode) === (user2.address.postCode)
+      && (user1.address.city) === (user2.address.city)
+      && (user1.address.country) === (user2.address.country)
+      && (bcrypt.compareSync(user2.password, '' + user1.password)));
+
   }
 }
 

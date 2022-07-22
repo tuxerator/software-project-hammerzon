@@ -1,7 +1,6 @@
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CheckRequest, CountryRequest, PaymentError, PaymentOption, Success } from './paymentoption';
-import { xml2js } from 'xml-js';
-import { BachelorCardRequest } from '../../types';
+import { ElementCompact, xml2js } from 'xml-js';
 
 export class BachelorOption implements PaymentOption {
 
@@ -28,17 +27,15 @@ export class BachelorOption implements PaymentOption {
     };
   }
 
-  public countryParser(data:any) : Success & {country:string}
-  {
-    const obj : any = xml2js(data, {compact : true});
+  public countryParser(data: never): Success & { country: string } {
+    const obj: ElementCompact = xml2js(data, { compact: true });
     const response = obj.transactionResponse.response;
     const country = response['transaction-data'].country._text;
     console.log(country);
-    if(response.status._text === '200: Success'){
-      return {success : true, country : country};
-    }
-    else{
-      return {success : false, country : country};
+    if (response.status._text === '200: Success') {
+      return { success: true, country: country };
+    } else {
+      return { success: false, country: country };
     }
   }
   public checkConfig(req : CheckRequest, amount:number) : AxiosRequestConfig
@@ -75,16 +72,14 @@ export class BachelorOption implements PaymentOption {
     };
   }
 
-  public checkParser(data:any): Success & {token:string}
-  {
-    const obj : any = xml2js(data, {compact : true});
+  public checkParser(data: never): Success & { token: string } {
+    const obj: ElementCompact = xml2js(data, { compact: true });
     const response = obj.transactionResponse.response;
-    if(response.status._text === '200: Success'){
+    if (response.status._text === '200: Success') {
       const code = response['transaction-data'].transactionCode._text;
       console.log(code);
-      return {success : true, token : code};
-    }
-    else{
+      return { success: true, token: code };
+    } else {
 
       return {success : false, token : ''};
     }
@@ -113,24 +108,21 @@ export class BachelorOption implements PaymentOption {
       };
   }
 
-  public payParser(data:any) : Success
-  {
-    const obj : any = xml2js(data, {compact : true});
+  public payParser(data: never): Success {
+    const obj: ElementCompact = xml2js(data, { compact: true });
     const response = obj.transactionResponse.response;
-    if(response.status._text === '200: Success'){
-      return {success : true};
-    }
-    else{
-      return {success : false};
+    if (response.status._text === '200: Success') {
+      return { success: true };
+    } else {
+      return { success: false };
     }
   }
 
-  public errorParser(data: any) : PaymentError
-  {
-    const obj : any = xml2js(data, {compact : true});
+  public errorParser(data: never): PaymentError {
+    const obj: ElementCompact = xml2js(data, { compact: true });
     const response = obj.transactionResponse.response;
     const message = response.error._text;
-    return {error : message};
+    return { error: message };
   }
 
 }

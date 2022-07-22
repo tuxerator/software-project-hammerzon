@@ -2,10 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { PaymentType, SessionRequest } from '../types';
 import { Types } from 'mongoose';
 import { IAvailability, IProduct, Product } from '../Models/Product';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 import { IAppointment, IOrder, Order } from '../Models/Order';
-import { User } from '../Models/User';
 
 // Validator is a function which checks a request for a certain property
 export type Validator =  (request: Request, response: Response) => (boolean|Promise<boolean>);

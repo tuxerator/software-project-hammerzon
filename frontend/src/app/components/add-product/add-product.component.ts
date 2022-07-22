@@ -14,22 +14,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ProductService } from 'src/app/services/product.service';
-import { Availability, Product, Rating, getCategory } from '../../models/Product';
+import { Availability, getCategory, Product } from '../../models/Product';
 import { IdMessageResponse } from '../types';
-import {
-  NgbDate,
-  NgbCalendar,
-  NgbDateParserFormatter,
-  NgbDateStruct,
-  NgbTimepickerConfig, NgbTimeStruct, NgbDateNativeUTCAdapter, NgbDateAdapter, NgbTimeAdapter
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbTimeAdapter, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Hindrance } from './hindrance-picker/hindrance-picker.component';
 import { compareDates, ngbDateToDate, utcOffset } from '../../../util/util';
 import { NgbTimeUTCDateAdapter } from '../../../util/nbgAdapter';
 import { AvailabilityPickerComponent } from './availability-picker/availability-picker.component';
-
-
-
 
 
 @Component({
@@ -172,38 +163,43 @@ export class AddProductComponent implements OnInit {
     this.searchForCategory();
   }
 
-  private getDateTimeString(date: Date): string {
+  // chech wether number has 2 or more digits
+  private static to2DigitString(number: number): string {
+    if (number < 10) {
+      return `0${ number }`;
+    }
+    return `${ number }`;
+  }
+
+  private static getDateTimeString(date: Date): string {
 
     // Create a Input-readable string
-    const dateString = `${ this.to2DigitString(date.getFullYear()) }-${ this.to2DigitString(date.getMonth() + 1) }-${ this.to2DigitString(date.getDate()) }T${ this.to2DigitString(date.getHours()) }:${ this.to2DigitString(date.getMinutes()) }`;
+    const dateString = `${ AddProductComponent.to2DigitString(date.getFullYear()) }-${ AddProductComponent.to2DigitString(date.getMonth() + 1) }-${ AddProductComponent.to2DigitString(date.getDate()) }T${ AddProductComponent.to2DigitString(date.getHours()) }:${ AddProductComponent.to2DigitString(date.getMinutes()) }`;
     console.log(dateString);
 
     return dateString;
   }
 
-  // chech wether number has 2 or more digits
-  private to2DigitString(number:number):string
-  {
-    if(number < 10)
-    {
-      return `0${number}`;
-    }
-    return `${number}`;
+  isOutsideAvailability(this: AddProductComponent): (date: NgbDate) => boolean {
+    return (date: NgbDate): boolean => {
+      const dateNative = ngbDateToDate(date);
+      if (this.availabilities.length === 0) {
+        return true;
+      }
+      return !this.availabilities.some(availability => {
+        return dateNative !== null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
+      });
+    };
   }
 
-  updateDuration = ():void => {
-    const hoursControl = this.addProductForm.get('durationHour') as FormControl;
-    const minutesControl = this.addProductForm.get('durationMinute') as FormControl;
-    const hours = hoursControl ? parseInt(hoursControl.value, 10) : 0;
-    const minutes = minutesControl ? parseInt(minutesControl.value, 10) : 0;
-    this.duration.setUTCHours(hours);
-    this.duration.setUTCMinutes(minutes);
-  };
+  uploadImage(inputElement: HTMLInputElement): void {
+    if (!inputElement.files || inputElement.files.length === 0) {
+      return;
+    }
 
-  uploadImage(inputElement: any):void {
     this.imageId = undefined;
     const file: File = inputElement.files[0];
-    this.imageService.uploadFileImage(file,this.imageId).subscribe({
+    this.imageService.uploadFileImage(file, this.imageId).subscribe({
       next: (res) => {
         this.setImageId(res.id);
       },
@@ -301,7 +297,7 @@ export class AddProductComponent implements OnInit {
 
   // Availability picker ------------------------------------------------------
 
-  addAvailability(availability: Availability[]):void {
+  addAvailability(availability: Availability[]): void {
     this.availabilities = availability;
     this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
@@ -309,23 +305,19 @@ export class AddProductComponent implements OnInit {
 
   // Hindrance picker ------------------------------------------------------
 
-  addHindrance(hindrances: Hindrance[]):void {
+  updateDuration = (): void => {
+    const hoursControl = this.addProductForm.get('durationHour') as FormControl;
+    const minutesControl = this.addProductForm.get('durationMinute') as FormControl;
+    const hours = hoursControl ? parseInt(hoursControl.value, 10) : 0;
+    const minutes = minutesControl ? parseInt(minutesControl.value, 10) : 0;
+    this.duration.setUTCHours(hours);
+    this.duration.setUTCMinutes(minutes);
+  };
+
+  addHindrance(hindrances: Hindrance[]): void {
     this.hindrances = hindrances;
     this.availabilities = this.availabilities.flatMap(this.createAvailabilities);
     console.log('add-product availabilities: %o', this.availabilities);
-  }
-
-  isOutsideAvailability(this: AddProductComponent) {
-    return (date: NgbDate) => {
-      const dateNative = ngbDateToDate(date);
-      if (this.availabilities.length === 0) {
-        return true;
-      }
-      return !this.availabilities.some(availability => {
-        const result = dateNative !== null ? (compareDates(availability.startDate, dateNative) <= 0 && compareDates(dateNative, availability.endDate) <= 0) : false;
-        return result;
-      });
-    };
   }
 
   createAvailabilities = (availability: Availability): Availability[] => {
@@ -333,7 +325,7 @@ export class AddProductComponent implements OnInit {
 
     // Split availability into multiple availabilities such that the hindrances are excluded
     console.log('hindrances: %o', this.hindrances);
-    const availabilities : Availability[] = this.splitAvailability(availability, this.hindrances);
+    const availabilities: Availability[] = this.splitAvailability(availability, this.hindrances);
     console.log('availabilities: %o', availabilities);
 
     return availabilities;

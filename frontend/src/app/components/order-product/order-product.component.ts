@@ -147,15 +147,14 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     };
   }
 
-  // Returns a Validatior Which check wether a given control is parseable to a int and is smaller than a given number
+  // Returns a Validator Which check weather a given control is parseable to a int and is smaller than a given number
   public maxInt (number:number)
   {
     return (control:AbstractControl) : null|ValidationErrors =>
     {
       const value = parseInt(control.value);
 
-      if(value === undefined || value === NaN)
-      {
+      if (value === undefined || isNaN(value)) {
         return {
           notAnumber: true
         };
@@ -172,7 +171,7 @@ export class OrderProductComponent implements OnInit , OnDestroy{
     };
   }
 
-  abourt(): void{
+  abort(): void {
     this.modalState = 'confirm';
     this.accountForm.markAsUntouched();
     //this.errorMessage = undefined;
