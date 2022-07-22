@@ -41,7 +41,7 @@ const routes: Routes = [
   { path: 'not-available', component: NotAvailableComponent },
   { path: 'ordered-services', component: OrderedServicesComponent },
   // product
-  { path: 'productdetails/:id/order-product', component: OrderProductComponent },  // should be: product/order-product
+  { path: 'productdetails/:id/order-product', component: OrderProductComponent, canActivate: [AuthGuardService] },  // should be: product/order-product
   { path: 'productdetails/:id', component: ProductDetailsComponent },
   { path: 'add-product/:id', component: AddProductComponent, canActivate: [AuthGuardService] },
   { path: 'add-product', component: AddProductComponent, canActivate: [AuthGuardService] },
