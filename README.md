@@ -5,7 +5,10 @@ Um den Dockercontainer zu erstellen und die Anwendung zu starten:\
 `chmod +x deploy.sh`\
 `./deploy.sh`
 
-Die Anwendung ist danach auf localhost:80 aufrufbar.
+Die Anwendung ist danach auf localhost:80 aufrufbar.\
+Bei jedem weiteren Start kann einfach\
+`docker compose up`\
+ausgeführt werden.
 
 ## Gruppenmitglieder
 
