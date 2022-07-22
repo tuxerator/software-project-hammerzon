@@ -108,8 +108,11 @@ export const getCategory = (product:Product): Category|undefined =>
   return product.category as Category;
 };
 
-export const getAppointmentString = (appointment: Availability): string => {
-  return dateFormater.format(appointment.startDate);
+export const getAppointmentString = (appointment?: Availability): string => {
+  if (appointment) {
+    return dateFormater.format(appointment.startDate);
+  }
+  return 'Keine Terminangabe';
 };
 
 export const getDateString = (date:Date): string => {

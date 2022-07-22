@@ -15,7 +15,6 @@ import {
 import { ProductService } from '../../services/product.service';
 import { Subject } from 'rxjs';
 import { AppointemntAction, OrderService } from '../../services/order.service';
-import { AppointmentSelectorComponent } from './appointment-selector/appointment-selector.component';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../models/Category';
 
@@ -61,7 +60,8 @@ export class ProductDetailsComponent implements OnInit {
               private router: Router,
               public authService: AuthService,
               public orderService: OrderService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+  ) {
   }
 
   public get roundTo2Digits(): (val: number) => string {
@@ -69,7 +69,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     //Get the Product name from the current route.
     console.log('kommt zu Params');
     const routeParams = this.route.snapshot.paramMap;
@@ -218,7 +218,6 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
 
-    
 
   }
 
@@ -333,15 +332,6 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  tryOrder() {
-    if (this.product && this.appointmentDate) {
-      const appointment = {
-        startDate: this.appointmentDate,
-        endDate: this.appointmentDate?.getTime() + this.product?.duration.getTime()
-      };
-    }
-  }
-
   getAppointString(app?: Availability): string {
     if (app) {
       return getAppointmentString(app);
@@ -367,14 +357,17 @@ export class ProductDetailsComponent implements OnInit {
    * Routs to order-product page if user is logged in otherwise routes to login page.
    */
   orderProduct(appointment: Availability) {
-    if (this.user) {
+    this.orderService.currentlySelectedAppointment = appointment;
+    this.router.navigate(['order-product'], { relativeTo: this.route }).catch(err => console.log(err));
+
+    /*if (this.user) {
       this.orderService.currentlySelectedAppointment = appointment;
       this.router.navigate(['order-product'], {
         relativeTo: this.route
-      });
+      }).catch(err => console.log(err));
     } else {
-      this.router.navigate(['login']);
-    }
+      this.router.navigate(['login', {returnUrl: this.state.url}]).catch(err => console.log(err));
+    }*/
   }
 
   getCategory(): Category | undefined {
