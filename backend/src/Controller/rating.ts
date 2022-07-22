@@ -136,14 +136,16 @@ class RatingController {
     response.send(false);
   }
 
+  /**
+   * update a rating to add users to the 'helpfulUsers' field or remove them from it
+   * @param request 
+   * @param response 
+   */
   public async updateRating(request: SessionRequest , response : Response) : Promise<void>{
     const productId = request.params.id;
     const id = request.session.user._id;
     const rating : IRating = request.body.rating;
 
-    console.log(productId);
-    console.log(id);
-    console.log(rating);
     if(id && Types.ObjectId.isValid(id)){
       console.log('before finding product');
       const product : IProduct = await Product.findById(productId).populate({
@@ -155,13 +157,11 @@ class RatingController {
       }).select('-password')
       .exec();
 
-      console.log(product);
-
       const k = product.ratings.find(elem => elem._id.toString() === rating._id);
       if(rating.helpfulUsers.length < k.helpfulUsers.length){
-        k.helpfulUsers = k.helpfulUsers.filter(elem => elem !== id);
+        k.helpfulUsers = k.helpfulUsers.filter(elem => elem !== id); // remove if new list is smaller
       }else{
-        k.helpfulUsers.push(id);
+        k.helpfulUsers.push(id); // add if new list is larger
       }
       product.save();
       response.status(200);
