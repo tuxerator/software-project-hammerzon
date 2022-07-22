@@ -8,6 +8,12 @@ services:
     volumes:
       - db-data:/data/db
       - mongo-config:/data/configdb
+  swp-backend:
+    image: ubuntu/backend-image:latest
+    ports:
+      - '80:80'
+    depends_on:
+      - swp-mongoDB
 
 volumes:
   db-data:
