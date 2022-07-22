@@ -1,4 +1,3 @@
-import { Component, Inject, OnInit } from '@angular/core';
 import { Order, Status } from 'src/app/models/Order';
 import { Availability, getAppointmentString, getDateString } from 'src/app/models/Product';
 import { OrderService } from 'src/app/services/order.service';
@@ -9,6 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/User';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 
 
 

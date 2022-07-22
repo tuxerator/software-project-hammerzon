@@ -230,7 +230,7 @@ export default class ProductTestData {
         {
           const newImg = await Image.insertMany([{
             type:'image/png',
-            data:fs.readFileSync(path.join('./uploads/' + img)),
+            data:fs.readFileSync(path.join('./TestDataImages/' + img)),
             is_replaceable:false
           }]);
           imgs.push(newImg[0]._id);
@@ -238,14 +238,14 @@ export default class ProductTestData {
         console.log(imgs);
 
 
-    const categoryLists = [
-      {name:'Schreinern',image_id:imgs[2],color:'#fd7e14',icon:'bi-hammer',custom:false},
-      {name:'Elektronik',image_id:imgs[2],color:'#fd7e14',icon:'bi-lightning-fill',custom:false},
-      {name:'Umzug',image_id:imgs[2],color:'#fd7e14',icon:'bi-box-seam',custom:false},
-      {name:'Malern',image_id:imgs[2],color:'#fd7e14',icon:'bi-brush-fill',custom:false},
-      {name:'Maurer',image_id:imgs[2],color:'#fd7e14',icon:'bi-bricks',custom:false},
-      {name:'Glaser',image_id:imgs[2],color:'#fd7e14',icon:'bi-shop-window',custom:false}
-    ];
+        const categoryLists = [
+          {name:'Schreinern',image_id:imgs[2],color:'#fd7e14',icon:'bi-hammer',custom:false},
+          {name:'Elektronik',image_id:imgs[2],color:'#fd7e14',icon:'bi-lightning-fill',custom:false},
+          {name:'Umzug',image_id:imgs[2],color:'#fd7e14',icon:'bi-box-seam',custom:false},
+          {name:'Malern',image_id:imgs[2],color:'#fd7e14',icon:'bi-brush-fill',custom:false},
+          {name:'Maurer',image_id:imgs[2],color:'#fd7e14',icon:'bi-bricks',custom:false},
+          {name:'Glaser',image_id:imgs[2],color:'#fd7e14',icon:'bi-shop-window',custom:false}
+        ];
 
         const categoryIds = await Category.insertMany(categoryLists);
 
