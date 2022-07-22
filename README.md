@@ -1,8 +1,8 @@
 # Software-Projekt 2022 Gruppe 01: Handwerkerportal
 
 ## Schnelles Setup
-Um den Dockercontainer zu erstellen und die Anwendung zu starten:
-`chmod +x deploy.sh`
+Um den Dockercontainer zu erstellen und die Anwendung zu starten:\
+`chmod +x deploy.sh`\
 `./deploy.sh`
 
 Die Anwendung ist danach auf localhost:80 aufrufbar.
