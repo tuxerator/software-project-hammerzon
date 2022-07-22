@@ -5,9 +5,10 @@ WORKDIR /app
 COPY . .
 RUN npm install --legacy-peer-deps
 
-ENV MONGODB_URI = $MONGODB_URI
-EXPOSE 80
+ENV BACKEND_URI = $BACKEND_URI
+EXPOSE 4200
 
 RUN npm run build --prod
 CMD ["npm", "start"]
+
 
