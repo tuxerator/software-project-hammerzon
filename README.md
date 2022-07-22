@@ -1,13 +1,20 @@
 # Software-Projekt 2022 Gruppe 01: Handwerkerportal
 
+## Schnelles Setup
+Um den Dockercontainer zu erstellen und die Anwendung zu starten:
+`chmod +x deploy.sh`
+`./deploy.sh`
+
+Die Anwendung ist danach auf localhost:80 aufrufbar.
+
 ## Gruppenmitglieder
 
-- Erne, Lukas *(Scrum Master)*
+- Erne, Lukas 
 - Grotzeck, Henri
 - Sanowski, Jakob
 - Unterfranz, Sophie
 - Wiese, Cedric
-- Zalac, Tino
+
 
 ## Betreuer
 
