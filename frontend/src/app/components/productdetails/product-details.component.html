@@ -88,9 +88,6 @@ Bewertung abgeben darf. also ob er das Produkt schon bestellt und die Bestellung
         <span class="text-warning"> {{roundTo2Digits(product!.averageRating!)}}</span>
         <span class="text-secondary"> ({{product.numberOfRatings}})</span>
       </a>
-      <a *ngIf="product!.numberOfRatings! <= 0">
-        <span class="text-secondary fs-6"> Keine Bewertungen </span>
-      </a>
     </div>
     <div *ngIf="hasOrdered && !hasRated" class="mb-4">
       <div class="bg-dark">
