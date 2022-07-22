@@ -45,6 +45,7 @@ export class ProductController {
       }
 
       // Wenn es einen Suchebegriff gibt
+      let searchgramString : string ;
       if(searchTerm)
       {
             // Wenn es nur eine Zahl gibt dann ntze es für preis
@@ -60,7 +61,7 @@ export class ProductController {
 
         const searchgrams : string[] = Helper.ngram(searchTerm, 3);
 
-        const searchgramString : string = searchgrams.join(' ');
+        searchgramString = searchgrams.join(' ');
 
         // dann suche mithilfe diesem in Description und Name nach passenden elementen
         /*
@@ -81,13 +82,29 @@ export class ProductController {
     let list;
     if(query.score)
     {
+      /*
       list = await Product.find(query)
+        .where('score.$meta.textScore')
+        .gt(500000000000000000000000000000)
         .sort({score : {$meta : 'textScore'}})
         .skip(start)
         .select('-ngrams -prefixNgrams')
         .populate('user', '-password -address')
         .populate('category')
         .exec();
+      */
+      list = await Product.aggregate(
+        [
+        { $match: { $text : { $search : searchgramString}}},
+        { $project: {_id:1 , name : 1, user : 1, description:1, prize:1,duration:1,category:1,image_id:1,numberOfRatings:1,averageRating:1, score : { $meta : 'textScore'}} },
+        { $match: { score : { $gt: 1 }}}
+        ]
+      )
+      .sort({score : {$meta : 'textScore'}})
+      .skip(start);
+
+      await Product.populate(list, {path: 'user'});
+      await Product.populate(list, {path: 'category'});
     }
     else
     {

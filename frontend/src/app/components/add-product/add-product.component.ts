@@ -205,9 +205,7 @@ export class AddProductComponent implements OnInit {
     const file: File = inputElement.files[0];
     this.imageService.uploadFileImage(file,this.imageId).subscribe({
       next: (res) => {
-        console.log('image response',this.imageId);
-        this.imageId = res.id;
-        console.log('image send',this.imageId);
+        this.setImageId(res.id);
       },
       error: (err) => {
         console.log(err);
@@ -220,7 +218,6 @@ export class AddProductComponent implements OnInit {
   {
     this.imageId = id;
   }
-
 
   public onSubmit(): void {
     // Wenn du gerade hochlädtst dann sollte es gehe aus submit Raus
@@ -429,8 +426,6 @@ export class AddProductComponent implements OnInit {
   };
 
   // Helper functions
-
-
   ngbTimetoDate = (ngbTime: NgbTimeStruct | null): Date => {
     return ngbTime ? new Date(Date.UTC(1970, 0, 1, ngbTime.hour, ngbTime.minute, ngbTime.second)) : new Date('Invalid Date');
   };

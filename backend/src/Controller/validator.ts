@@ -109,18 +109,6 @@ export class Validators{
     };
   }
 
-  public static canConfirm(key:string): Validator {
-    return (request: SessionRequest, response: Response): boolean => {
-      // either admin or user and product.user match
-      console.log(request.body.product);
-      if (request.session.user && (request.session.user.role === 'user' && request.session.user.id === request.body.product[key]) || request.session.user.role === 'admin') {
-        return true;
-      }
-      response.status(403);
-      response.send({ code: 403, message: 'Not Authorized' });
-      return false;
-    };
-  }
 
   /**
    * checks the role of the current logined user and if it's the same then error
@@ -347,10 +335,6 @@ export class ValidatorGroups {
       Validators.isAuthorized('admin')
     ]);
 
-    public static CanConfirm = ValidatorGroup([
-      Validators.canConfirm('user'),
-      Validators.isRequired('status')
-    ]);
 
     //
     public static ValidRating = ValidatorGroup([
