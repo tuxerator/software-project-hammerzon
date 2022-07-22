@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 export const utcOffset: number = new Date(0).getTime();
 export const dayInMilliseconds: number = 24 * 60 * 60 * 1000;
 
-export const  isInteger = (value: any): value is number => {
+export const isInteger = (value: unknown): value is number => {
   return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
 };
 

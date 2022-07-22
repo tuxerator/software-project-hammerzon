@@ -19,7 +19,7 @@ export class LandingpageComponent implements OnInit {
   public currentStart = 0;
   public currentLimit = 10;
 
-  public loading:boolean = true;
+  public loading = true;
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {
   }

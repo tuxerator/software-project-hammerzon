@@ -10,7 +10,7 @@ export class AdminAuthGuardService implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(): boolean {
 
     const isAdmin = this.authService.isAdmin();
     if (isAdmin) {

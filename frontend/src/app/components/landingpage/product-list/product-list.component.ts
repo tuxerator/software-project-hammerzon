@@ -15,6 +15,7 @@ export class ProductListComponent implements OnInit {
 
   constructor() { }
 
+  // eslint-disable-next-line no-empty-function
   ngOnInit(): void {
   }
 

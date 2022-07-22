@@ -41,7 +41,7 @@ export class HindrancePickerComponent implements OnInit {
   date: Date | null = null;
   fromTime: Date | null = null;
   toTime: Date | null = null;
-  wholeDayHindrance: boolean = true;
+  wholeDayHindrance = true;
 
   addTimeZoneOffset = addTimezoneOffset;
 
@@ -77,21 +77,21 @@ export class HindrancePickerComponent implements OnInit {
       console.log('no hindrance selected');
       return;
     }
-    const hindrance = new Hindrance(this.date!, this.fromTime, this.toTime, this.wholeDayHindrance);
+    const hindrance = new Hindrance(this.date, this.fromTime, this.toTime, this.wholeDayHindrance);
     this.hindrances.push(hindrance);
     this.hindrances.sort(Hindrance.compare);
 
     this.newHindrance.emit(this.hindrances);
     console.log('added hindrance: %o\nhindrances: %o', this.date, this.hindrances);
     this.date = null;
-  }
+  };
 
   removeHindrance = (index: number): void => {
     this.hindrances.splice(index, 1);
     this.hindrances.sort(Hindrance.compare);
     this.newHindrance.emit(this.hindrances);
     console.log('removed hindrance: %o\nhindrances: %o', this.hindrances);
-  }
+  };
 
   toggleHindranceTime = (): void => {
     this.wholeDayHindrance = !this.wholeDayHindrance;
@@ -100,11 +100,11 @@ export class HindrancePickerComponent implements OnInit {
     this.fromTimeControl.setErrors(null);
     this.toTimeControl.setErrors(null);
     console.log('wholeDayHindrance: %o', this.wholeDayHindrance);
-  }
+  };
 
   hindrancesLength = (): boolean => {
     console.log('hindrancesLength: %o', this.hindrances.length);
-    return this.hindrances.length == 0;
+    return this.hindrances.length === 0;
   };
 
   /**
@@ -112,8 +112,11 @@ export class HindrancePickerComponent implements OnInit {
    */
   fromTimeAfterToTime = (): ValidatorFn => {
     return (control: AbstractControl): ValidationErrors | null => {
-      const fromTime: Date | null = control.get('fromTimeControl') ? control.get('fromTimeControl')!.value : null;
-      const toTime: Date | null = control.get('toTimeControl') ? control.get('toTimeControl')!.value : null;
+      const fromTimeControl = control.get('fromTimeControl');
+      const toTimeControl = control.get('toTimeControl');
+
+      const fromTime: Date | null = fromTimeControl ? fromTimeControl.value : null;
+      const toTime: Date | null = toTimeControl ? toTimeControl.value : null;
       console.log('fromTime: %o, toTime: %o', fromTime, toTime);
       console.log('control: %o', control);
       if (fromTime && toTime) {
@@ -123,7 +126,7 @@ export class HindrancePickerComponent implements OnInit {
       }
       return null;
     };
-  }
+  };
 
 }
 

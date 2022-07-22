@@ -1,7 +1,7 @@
 export type MessageResponse = {
   message: string,
   code: number,
-  optional?: [any]
+  optional?: [unknown]
 }
 
 export type IdMessageResponse = MessageResponse & { id: string };

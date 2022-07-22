@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { Schema, Model, model, Document } from 'mongoose';
 
 

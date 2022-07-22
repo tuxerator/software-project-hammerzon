@@ -1,4 +1,4 @@
-import {Request,Express} from 'express';
+import { Request } from 'express';
 import { IAppointment } from './Models/Order';
 interface ListInfo<T> {
   list: T[], // Ergebnis Liste der Abfrage

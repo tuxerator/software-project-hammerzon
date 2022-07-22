@@ -32,18 +32,18 @@ export class ProductDetailsComponent implements OnInit {
 
   //@ViewChild('selector') appointmentSelector:AppointmentSelectorComponent;
 
-  showRatingForm: boolean = false;
-  showMoreRating: boolean = false;
-  hasOrdered: boolean = false;
-  hasRated: boolean = false;
-  currentRating: number = 1;
+  showRatingForm = false;
+  showMoreRating = false;
+  hasOrdered = false;
+  hasRated = false;
+  currentRating = 1;
   public addRatingForm: FormGroup = this.formBuilder.group({
     comment: new FormControl('', [Validators.required])
   });
 
   similarProducts?: Product[];
 
-  id: string = '';
+  id = '';
 
   // Zum formatieren der Daten
   public loading: { product: boolean, similar: boolean, hasRated: boolean, hasOrdered: boolean, image: boolean } = {
@@ -141,7 +141,7 @@ export class ProductDetailsComponent implements OnInit {
     );*/
   }
 
-  public onImageLoaded() {
+  public onImageLoaded(): void {
     this.loading.image = false;
     console.log(this.loading.image);
   }
@@ -233,7 +233,10 @@ export class ProductDetailsComponent implements OnInit {
 
     if (this.product.ratings) {
       for (let i = 0; i < this.product.ratings.length; i++) {
-        this.product.ratings[i].date = new Date(this.product.ratings[i].date!);
+        const currentRating = this.product.ratings[i];
+        if (currentRating.date) {
+          this.product.ratings[i].date = new Date(currentRating.date);
+        }
       }
     }
 
@@ -254,7 +257,7 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     console.log('On Submit');
     const form = this.addRatingForm.value;
     if (this.user) {
@@ -339,7 +342,7 @@ export class ProductDetailsComponent implements OnInit {
     return 'Fehler';
   }
 
-  deleteProduct() {
+  deleteProduct(): void {
     this.productService.removeProduct(this.id).subscribe({
         next: () => {
           this.router.navigate(['/']);
@@ -356,7 +359,7 @@ export class ProductDetailsComponent implements OnInit {
   /**
    * Routs to order-product page if user is logged in otherwise routes to login page.
    */
-  orderProduct(appointment: Availability) {
+  orderProduct(appointment: Availability): void {
     this.orderService.currentlySelectedAppointment = appointment;
     this.router.navigate(['order-product'], { relativeTo: this.route }).catch(err => console.log(err));
 

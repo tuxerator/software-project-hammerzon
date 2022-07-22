@@ -17,6 +17,7 @@ export class ProductListItemComponent implements OnInit {
 
   constructor() { }
 
+  // eslint-disable-next-line no-empty-function
   ngOnInit(): void {
 
   }
@@ -32,10 +33,8 @@ export class ProductListItemComponent implements OnInit {
     return this.productInfo ? getDurationString(this.productInfo.duration) : '';
   }
 
-  public onClick()
-  {
-    if(this.click)
-    {
+  public onClick(): void {
+    if (this.click) {
       this.click(this.productInfo._id);
     }
   }

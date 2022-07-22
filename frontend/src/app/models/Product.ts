@@ -14,7 +14,7 @@ export class Product {
   // Zeit dauer der Dienstleistung
   duration: Date;
   // Default timeframe for availability
-  defaultTimeFrame: { start: Date, end: Date }
+  defaultTimeFrame: { start: Date, end: Date };
   // Möglichen daten wo man die Dienstleistung kaufen kann
   availability: Availability[];
   image_id: string;
@@ -84,7 +84,7 @@ export class Availability {
     }
 
     return startDiff;
-  }
+  };
 }
 
 const dateFormater = Intl.DateTimeFormat(

@@ -26,8 +26,8 @@ export class NgbTimeUTCDateAdapter extends NgbTimeAdapter<Date> {
    * Converts from NgbTimeStruct to Date
    */
   toModel(time: NgbTimeStruct | null): Date | null {
-    const timeUTC = time != null ? Date.UTC(1970, 0, 1, time.hour, time.minute, time.second) : null;
-    return timeUTC != null ? new Date(timeUTC) : null;
+    const timeUTC = time !== null ? Date.UTC(1970, 0, 1, time.hour, time.minute, time.second) : null;
+    return timeUTC !== null ? new Date(timeUTC) : null;
   }
 }
 

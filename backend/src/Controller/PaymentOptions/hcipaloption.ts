@@ -1,5 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
-import { HciPalSWPRequest } from '../../types';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CheckRequest, CountryRequest, PaymentError, PaymentOption, Success } from './paymentoption';
 
 
@@ -17,9 +16,8 @@ export class HciPalOption implements PaymentOption {
     };
   }
 
-  public countryParser(data:any) : Success & {country:string}
-  {
-    return {success:data.success,country:data.country};
+  public countryParser(data: any): Success & { country: string } {
+    return { success: data.success, country: data.country };
   }
 
   public checkConfig(req:CheckRequest,amount:number):AxiosRequestConfig
@@ -31,9 +29,8 @@ export class HciPalOption implements PaymentOption {
     };
   }
 
-  public checkParser(data:any):Success & {token:string}
-  {
-      return {success:data.success,token:data.token};
+  public checkParser(data: any): Success & { token: string } {
+    return { success: data.success, token: data.token };
   }
 
   public payConfig(token:string):AxiosRequestConfig

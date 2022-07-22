@@ -32,7 +32,7 @@ import {
   ]
 })
 export class AppointmentSelectorComponent implements OnInit {
-  @Input() duration: number = 0;
+  @Input() duration = 0;
   @Input() defaultTimeFrame: Availability = new Availability(new Date(0), new Date(0));
 
   @Input() onAppointmentChanged!: Subject<AppointemntAction>;
@@ -100,7 +100,7 @@ export class AppointmentSelectorComponent implements OnInit {
             }
           } else if (appAction.action === 'remove') {
             const index = this.existingAppointments.findIndex(ap1 => Availability.compare(ap1, appAction.appointment) === 0);
-            this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)]
+            this.existingAppointments = [...this.existingAppointments.splice(0, index), ...this.existingAppointments.splice(index + 1, this.existingAppointments.length)];
             if (this.datePicker.isOpen()) {
               this.datePicker.close();
               this.datePicker.open();
@@ -138,9 +138,6 @@ export class AppointmentSelectorComponent implements OnInit {
           // Iterate over all days in the availability and check if there is an appointment
           while (compareDates(date, availability.endDate)) {
             this.orderService.validateAppointment(this.productId, new Availability(date, new Date(date.getTime() + this.defaultTimeFrame.endDate.getTime() - this.defaultTimeFrame.startDate.getTime()))).subscribe({
-              next: (_val) => {
-
-              },
               error: (err) => {
                 console.log(err);
                 if (err.error.optional) {
@@ -241,6 +238,7 @@ export class AppointmentSelectorComponent implements OnInit {
 
   // Validator which requires the time to be such that the appointment fits into the availability
   validateTime = (): ValidatorFn => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return (_control: AbstractControl): ValidationErrors | null => {
       console.log('validating time: ', this.date, this.time);
       if (this.time && this.date) {
@@ -255,7 +253,7 @@ export class AppointmentSelectorComponent implements OnInit {
 
         existingAppoint.sort(Availability.compare);
 
-        const selectedAppoint = createAppointment(new Date(this.time!.getTime() + this.date!.getTime()), this.duration, this.defaultTimeFrame);
+        const selectedAppoint = createAppointment(new Date(this.time.getTime() + this.date.getTime()), this.duration, this.defaultTimeFrame);
 
         for (const appoint of existingAppoint) {
           console.log('appoint: %o, selectedAppoint: %o', appoint, selectedAppoint);

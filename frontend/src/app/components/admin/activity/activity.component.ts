@@ -32,9 +32,11 @@ export class ActivityComponent implements OnInit {
     });
 
     this.activityService.getLastAddedActivity().subscribe((activity) => {
-      console.log('Added Activity',activity);
+      console.log('Added Activity', activity);
       activity.date = new Date(activity.date);
-      this.activities = [activity].concat(this.activities!);
+      if (this.activities) {
+        this.activities = [activity].concat(this.activities);
+      }
       //console.log('Added Activity',this.activities);
     });
   }

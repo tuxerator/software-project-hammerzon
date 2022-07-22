@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Number, Schema, Model, model, Document } from 'mongoose';
-import { IUser, User } from './User';
+import { User } from './User';
 
 // Model for Products
 interface IProduct extends Document {

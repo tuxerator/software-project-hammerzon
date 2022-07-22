@@ -18,7 +18,7 @@ import {
 export class PersonalProfileComponent implements OnInit {
 
   user?: User;
-  editMode: boolean = false;
+  editMode = false;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService) {
 
@@ -70,7 +70,7 @@ export class PersonalProfileComponent implements OnInit {
     });
   }
 
-  activeEditMode() {
+  activeEditMode(): void {
     this.editMode = true;
   }
 

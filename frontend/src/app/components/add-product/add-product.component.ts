@@ -180,8 +180,8 @@ export class AddProductComponent implements OnInit {
     return dateString;
   }
 
-  isOutsideAvailability(this: AddProductComponent) {
-    return (date: NgbDate) => {
+  isOutsideAvailability(this: AddProductComponent): (date: NgbDate) => boolean {
+    return (date: NgbDate): boolean => {
       const dateNative = ngbDateToDate(date);
       if (this.availabilities.length === 0) {
         return true;
@@ -192,7 +192,11 @@ export class AddProductComponent implements OnInit {
     };
   }
 
-  uploadImage(inputElement: any): void {
+  uploadImage(inputElement: HTMLInputElement): void {
+    if (!inputElement.files || inputElement.files.length === 0) {
+      return;
+    }
+
     this.imageId = undefined;
     const file: File = inputElement.files[0];
     this.imageService.uploadFileImage(file, this.imageId).subscribe({

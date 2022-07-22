@@ -112,8 +112,8 @@ export class ClientSideValidation implements Validation
     return this.text;
   }
 
-  getValid(_: string): boolean {
-      return this.valid;
+  getValid(): boolean {
+    return this.valid;
   }
 }
 
@@ -125,7 +125,7 @@ export class ClientSideFnValidation extends ClientSideValidation{
   }
 
 
-  override getText(_: string): string {
+  override getText(): string {
     return this.fn();
   }
 }

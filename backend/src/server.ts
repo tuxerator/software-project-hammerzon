@@ -21,4 +21,4 @@ const server = appInstance.listen(appInstance.get('port'), () => {
 });
 
 // Socket for Aktivity-Channels + Appointment-Channels
-const socketServer = new SocketServer(server);
+new SocketServer(server);

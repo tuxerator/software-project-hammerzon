@@ -24,7 +24,6 @@ export class ActivityService {
 
   // Return every Activity form Server
   getActivityList():Observable<Activity[]>{
-    const observable = this.http.get<Activity[]>('/api/admin/activity/list');
     // Cast every activity objects date (=type String) to a date-object
     /*observable.subscribe({
       next:(activities) => {
@@ -35,7 +34,7 @@ export class ActivityService {
       }
     });*/
 
-    return observable;
+    return this.http.get<Activity[]>('/api/admin/activity/list');
   }
 
 
